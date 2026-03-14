@@ -1,8 +1,9 @@
 # Funcionalidades do Sistema
 
 ## Estatísticas
-F1. Registrar gols e assistências da partida  
-F2. Calcular automaticamente a nota estatística dos jogadores
+F1. Calcular automaticamente a nota estatística dos jogadores
+F2. Registrar gols e assistências da partida  
+
 
 ## Organização do torneio
 

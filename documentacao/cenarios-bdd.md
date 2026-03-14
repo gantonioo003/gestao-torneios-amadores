@@ -2,17 +2,17 @@
 
 ## Funcionalidades com cenários definidos
 
-### F10. Registrar gols e assistências da partida
-Arquivo: features/registrar-eventos-partida.feature
-
-Cenário principal:
-- registrar gol e assistência de jogadores em uma partida válida
-
-### F12. Calcular automaticamente a nota estatística dos jogadores
+### F1. Calcular automaticamente a nota estatística dos jogadores
 Arquivo: features/calcular-nota-estatistica.feature
 
 Cenário principal:
 - calcular a nota estatística do jogador com base em eventos registrados
+
+### F2. Registrar gols e assistências da partida
+Arquivo: features/registrar-eventos-partida.feature
+
+Cenário principal:
+- registrar gol e assistência de jogadores em uma partida válida
 
 ## Regras de negócio cobertas
 
