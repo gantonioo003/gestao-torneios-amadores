@@ -88,6 +88,8 @@ gestao-torneios-amadores
 ├── README.md
 └── .gitignore
 
+```
+
 ## ⚙️ Principais Conceitos do Domínio
 
 O sistema foi modelado a partir dos principais conceitos presentes em competições de futebol:
