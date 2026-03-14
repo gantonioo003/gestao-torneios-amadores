@@ -20,10 +20,19 @@ Arquivo: features/registrar-cartoes.feature
 Cenário principal:
 - registrar cartão amarelo e cartão vermelho para jogadores em uma partida válida.
 
+### F4. Criar um torneio
+Arquivo: features/criar-torneio.feature
+
+Cenários principais:
+- criar um novo torneio com formatos válidos (mata-mata, fase de grupos com mata-mata, pontos corridos, final única).
+- impedir a criação de um torneio sem um formato definido.
+
 ---
 
 ## Regras de negócio cobertas
 
+- RN01. Todo torneio deve possuir um formato definido.
+- RN02. Um torneio pode ser criado nos formatos mata-mata, fase de grupos com mata-mata, pontos corridos ou final única.
 - RN07. O sistema deve permitir registrar gols, assistências, cartões amarelos e cartões vermelhos dos jogadores em cada partida.
 - RN08. A nota estatística de cada jogador deve ser calculada automaticamente a partir dos eventos registrados na partida.
 - RN09. A nota estatística do jogador deve ser calculada por meio de uma fórmula baseada em pesos associados aos eventos registrados na partida.
