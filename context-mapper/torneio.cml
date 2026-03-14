@@ -1,0 +1,9 @@
+Domain GestaoTorneiosAmadores {
+  Subdomain Organizacao
+  Subdomain Competicao
+  Subdomain Estatisticas
+}
+
+BoundedContext OrganizacaoTorneio implements Organizacao
+BoundedContext PartidasEClassificacao implements Competicao
+BoundedContext EstatisticasPartida implements Estatisticas
