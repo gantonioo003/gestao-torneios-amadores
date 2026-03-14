@@ -116,7 +116,7 @@ Esses conceitos são descritos formalmente no arquivo **linguagem-onipresente.md
 
 O sistema calcula automaticamente uma **nota estatística de desempenho** para cada jogador em uma partida.
 
-Todos os jogadores iniciam com **nota base 5.0**, e eventos registrados durante a partida alteram essa pontuação.
+A nota estatística do jogador é calculada automaticamente pelo sistema por meio de uma fórmula baseada em pesos atribuídos aos eventos registrados na partida.
 
 Eventos considerados:
 

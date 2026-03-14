@@ -46,4 +46,4 @@ Os principais conceitos do domínio são:
 
 O usuário organizador cria um torneio, define seu formato, cadastra ou associa times e jogadores, e acompanha as partidas da competição.
 
-Ao editar uma partida, o organizador registra eventos como gols, assistências e cartões. A partir desses dados, o sistema calcula automaticamente a nota estatística dos jogadores e atualiza informações da competição, como classificação, artilharia e andamento do torneio.
+Ao editar uma partida, o organizador registra eventos como gols, assistências e cartões. A partir desses dados, o sistema calcula automaticamente a nota estatística dos jogadores por meio de uma fórmula baseada em pesos associados aos eventos registrados na partida e atualiza informações da competição, como classificação, artilharia e andamento do torneio.

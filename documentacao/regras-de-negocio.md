@@ -16,11 +16,11 @@ RN07. O sistema deve permitir registrar gols, assistências, cartões amarelos e
 
 RN08. A nota estatística de cada jogador deve ser calculada automaticamente a partir dos eventos registrados na partida.
 
-RN09. A nota estatística inicial do jogador em uma partida é 5,0.
+RN09. A nota estatística do jogador deve ser calculada por meio de uma fórmula baseada em pesos associados aos eventos registrados na partida.
 
-RN10. Gols e assistências aumentam a nota estatística do jogador.
+RN10. Na versão inicial do sistema, a fórmula de cálculo da nota estatística deve considerar gols, assistências, cartões amarelos e cartões vermelhos.
 
-RN11. Cartões amarelos e vermelhos reduzem a nota estatística do jogador.
+RN11. Eventos positivos devem aumentar a nota estatística do jogador, enquanto eventos negativos devem reduzi-la.
 
 RN12. O sistema deve atualizar automaticamente a artilharia do torneio com base nos gols registrados.
 
