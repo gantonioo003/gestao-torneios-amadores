@@ -2,7 +2,7 @@
 
 Projeto acadêmico desenvolvido para a disciplina de **Requisitos e Projeto de Software**, com foco em **Domain-Driven Design (DDD)** e **Behavior-Driven Development (BDD)**.
 
-O sistema tem como objetivo permitir a **gestão de torneios amadores de futebol**, incluindo organização da competição, registro de partidas e geração de estatísticas de desempenho dos jogadores.
+O sistema tem como objetivo permitir a **gestão de torneios amadores de futebol**, incluindo organização da competição, participação de usuários e geração de estatísticas de desempenho dos jogadores.
 
 ---
 
@@ -10,33 +10,35 @@ O sistema tem como objetivo permitir a **gestão de torneios amadores de futebol
 
 O projeto busca resolver o problema da **organização manual de competições amadoras**, oferecendo um sistema que permita:
 
-- ⚽ Criar e gerenciar torneios de futebol
-- 🏆 Definir formatos de competição  
-  *(mata-mata, fase de grupos, pontos corridos, etc.)*
-- 📅 Registrar partidas e resultados
-- 📊 Registrar eventos da partida *(gols, assistências e cartões)*
-- 👤 Gerar estatísticas de jogadores
-- ⭐ Calcular automaticamente notas estatísticas de desempenho
-- 📈 Acompanhar classificação, artilharia e andamento do torneio
+- ⚽ Criar e gerenciar torneios de futebol  
+- 🏆 Definir formatos de competição *(mata-mata, fase de grupos, pontos corridos, etc.)*  
+- 👥 Permitir participação de times por meio de solicitações  
+- 📅 Gerar estrutura e partidas automaticamente  
+- 📊 Registrar eventos da partida *(gols, assistências e cartões)*  
+- 👤 Gerar estatísticas de jogadores  
+- ⭐ Calcular automaticamente notas estatísticas de desempenho  
+- 📈 Acompanhar classificação, artilharia e andamento do torneio  
 
 ---
 
 # 📌 Escopo do Projeto
 
-O sistema permitirá que um **organizador** crie e gerencie torneios e registre informações das partidas para acompanhar o desempenho dos times e jogadores.
+O sistema permite interação entre diferentes tipos de usuários:
+
+- **Visitante**: pode visualizar torneios disponíveis  
+- **Usuário autenticado**: pode criar times, solicitar participação e gerenciar torneios  
+- **Organizador**: responsável por configurar e controlar a competição  
 
 Entre as principais funcionalidades previstas estão:
 
-- criação de torneios
-- definição do formato da competição
-- cadastro de times
-- cadastro de jogadores
-- registro de partidas
-- registro de gols e assistências
-- registro de cartões
-- cálculo automático da nota estatística dos jogadores
-- geração de classificação
-- acompanhamento da artilharia
+- criação e configuração de torneios  
+- solicitação e aprovação de participação de times  
+- gerenciamento de times, jogadores e técnicos  
+- geração automática da estrutura da competição  
+- registro de partidas e resultados  
+- registro de eventos estatísticos  
+- cálculo automático de nota estatística  
+- geração de classificação e artilharia  
 
 ---
 
@@ -78,9 +80,22 @@ gestao-torneios-amadores
 │   └── cenarios-bdd.md
 │
 ├── features
-│   ├── registrar-gols-assistencias.feature
-│   ├── registrar-cartoes.feature
-│   └── calcular-nota-estatistica.feature
+│   ├── visualizar-torneios-disponiveis.feature
+│   ├── acesso-autenticado-gerenciamento-torneios.feature
+│   ├── solicitar-participacao-em-torneio-aberto.feature
+│   ├── avaliar-solicitacoes-de-participacao.feature
+│   ├── gerenciar-times-do-usuario.feature
+│   ├── gerenciar-elenco-de-jogadores.feature
+│   ├── gerenciar-comissao-tecnica.feature
+│   ├── vincular-time-a-usuario-responsavel.feature
+│   ├── criar-e-configurar-torneio.feature
+│   ├── gerenciar-participantes-aprovados-do-torneio.feature
+│   ├── gerar-estrutura-da-competicao.feature
+│   ├── gerar-partidas-do-torneio.feature
+│   ├── registrar-resultado-da-partida.feature
+│   ├── visualizar-classificacao-ou-chaveamento.feature
+│   ├── registrar-eventos-estatisticos-da-partida.feature
+│   └── calcular-e-visualizar-estatisticas.feature
 │
 ├── context-mapper
 │   └── torneio.cml
@@ -94,19 +109,29 @@ gestao-torneios-amadores
 
 O sistema foi modelado a partir dos principais conceitos presentes em competições de futebol:
 
-- Torneio  
-- Time  
-- Jogador  
-- Técnico  
-- Partida  
-- Rodada  
-- Gol  
-- Assistência  
-- Cartão  
-- Estatísticas  
-- Nota estatística do jogador  
-- Classificação  
-- Artilharia  
+⚙️ Principais Conceitos do Domínio
+
+O sistema foi modelado a partir dos principais conceitos presentes em competições de futebol:
+
+- Usuário
+- Usuário organizador
+- Torneio
+- Time
+- Jogador
+- Técnico
+- Partida
+- Rodada
+- Grupo
+- Classificação
+- Chaveamento
+- Gol
+- Assistência
+- Cartão
+- Estatísticas
+- Nota estatística do jogador
+- Artilharia
+
+Esses conceitos são descritos formalmente no arquivo linguagem-onipresente.md.
 
 Esses conceitos são descritos formalmente no arquivo **linguagem-onipresente.md**.
 
@@ -114,32 +139,33 @@ Esses conceitos são descritos formalmente no arquivo **linguagem-onipresente.md
 
 ## ⭐ Nota Estatística do Jogador
 
-O sistema calcula automaticamente uma **nota estatística de desempenho** para cada jogador em uma partida.
+O sistema calcula automaticamente uma nota estatística de desempenho para cada jogador em uma partida.
 
-A nota estatística do jogador é calculada automaticamente pelo sistema por meio de uma fórmula baseada em pesos atribuídos aos eventos registrados na partida.
+A nota estatística é calculada automaticamente pelo sistema por meio de uma fórmula baseada em pesos atribuídos aos eventos registrados na partida.
 
 Eventos considerados:
 
-- ⚽ gol  
-- 🎯 assistência  
-- 🟨 cartão amarelo  
-- 🟥 cartão vermelho  
+- ⚽ gol
+- 🎯 assistência
+- 🟨 cartão amarelo
+- 🟥 cartão vermelho
 
-A nota é calculada automaticamente pelo sistema com base nesses eventos.
+A partir desses eventos, o sistema calcula a nota do jogador e atualiza estatísticas da competição.
 
 ---
 
 ## 🧩 Modelagem do Domínio
 
-A modelagem inicial do domínio foi realizada utilizando **Context Mapper**, permitindo a identificação dos principais **Bounded Contexts** do sistema.
+A modelagem inicial do domínio foi realizada utilizando Context Mapper, permitindo a identificação dos principais Bounded Contexts do sistema.
 
 Exemplo de contextos identificados:
 
-- Organização do Torneio  
-- Competição *(partidas e resultados)*  
-- Estatísticas de jogadores  
+- Acesso e participação
+- Organização do torneio
+- Competição (partidas e resultados)
+- Estatísticas de jogadores
 
-Essa modelagem representa o **DDD estratégico**, que orientará a fase seguinte de **DDD tático** e implementação do sistema.
+Essa modelagem representa o DDD estratégico, que orientará a fase seguinte de DDD tático e implementação do sistema.
 
 ---
 
@@ -147,12 +173,13 @@ Essa modelagem representa o **DDD estratégico**, que orientará a fase seguinte
 
 Após a definição do domínio e das funcionalidades, as próximas etapas incluem:
 
-1️⃣ Modelagem tática do domínio *(DDD Tático)*  
-2️⃣ Definição da arquitetura da aplicação  
-3️⃣ Implementação das entidades e serviços do domínio  
-4️⃣ Implementação da camada de aplicação  
-5️⃣ Implementação da persistência *(JPA)*  
-6️⃣ Desenvolvimento da interface web  
+1️⃣ Modelagem tática do domínio (DDD Tático)
+2️⃣ Definição da arquitetura da aplicação
+3️⃣ Implementação das entidades e serviços do domínio
+4️⃣ Implementação da camada de aplicação
+5️⃣ Implementação da persistência (JPA)
+6️⃣ Desenvolvimento da interface web
+7️⃣ Automação dos cenários BDD com Cucumber
 
 ---
 
@@ -172,3 +199,4 @@ O sistema será desenvolvido utilizando:
 ## 👨‍💻 Autor
 
 Projeto desenvolvido como parte da disciplina de **Requisitos e Projeto de Software**.
+
