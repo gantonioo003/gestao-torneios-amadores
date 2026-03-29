@@ -1,37 +1,27 @@
 # Funcionalidades do Sistema
 
-## Estatísticas
-F1. Calcular automaticamente a nota estatística dos jogadores
+## Acesso e participação
+F1. Visualizar torneios disponíveis na plataforma  
+F2. Permitir acesso autenticado às funcionalidades de criação e gerenciamento de torneios  
+F3. Solicitar participação de um time em torneio aberto  
+F4. Avaliar solicitações de participação de times no torneio  
 
-F2. Registrar gols e assistências da partida  
-
-F3. Registrar cartões amarelos e vermelhos da partida
-
-F4. Gerar ranking de artilharia e estatísticas do torneio
+## Gestão de times e elenco
+F5. Gerenciar times do usuário  
+F6. Gerenciar elenco de jogadores de um time  
+F7. Gerenciar comissão técnica de um time  
+F8. Vincular um time a um usuário responsável  
 
 ## Organização do torneio
-F5. Criar torneio  
+F9. Criar e configurar torneio  
+F10. Gerenciar participantes aprovados do torneio  
+F11. Gerar estrutura da competição  
+F12. Gerar partidas do torneio  
 
-F6. Definir formato do torneio (grupos, mata-mata, pontos corridos)  
+## Gestão da competição
+F13. Registrar resultado da partida  
+F14. Atualizar e visualizar classificação ou chaveamento da competição  
 
-F7. Gerar automaticamente a estrutura da competição  
-
-F8. Iniciar o torneio após definição dos participantes  
-
-## Gestão de participantes
-F9. Inscrever time em um torneio  
-
-F10. Registrar elenco de jogadores de um time  
-
-F11. Associar técnico responsável a um time  
-
-F12. Definir os times participantes do torneio  
-
-## Gestão de partidas
-F13. Gerar calendário ou chaveamento das partidas  
-
-F14. Registrar resultado da partida  
-
-F15. Atualizar automaticamente classificação ou chaveamento  
-
-F16. Visualizar classificação do torneio ou chaveamento da competição 
+## Estatísticas
+F15. Registrar eventos estatísticos da partida  
+F16. Calcular e visualizar nota estatística, artilharia e estatísticas do torneio
