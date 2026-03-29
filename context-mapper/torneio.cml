@@ -1,9 +1,66 @@
-Domain GestaoTorneiosAmadores {
-  Subdomain Organizacao
-  Subdomain Competicao
-  Subdomain Estatisticas
-}
+ContextMap TorneioAmador {
 
-BoundedContext OrganizacaoTorneio implements Organizacao
-BoundedContext PartidasEClassificacao implements Competicao
-BoundedContext EstatisticasPartida implements Estatisticas
+  /**
+   * =========================
+   * CONTEXTOS DO SISTEMA
+   * =========================
+   */
+
+  BoundedContext AcessoParticipacao {
+    type = CORE_DOMAIN
+    description = "Responsável por autenticação, visualização de torneios e solicitação de participação de times"
+  }
+
+  BoundedContext OrganizacaoTorneio {
+    type = CORE_DOMAIN
+    description = "Responsável pela criação, configuração e gestão dos torneios e seus participantes"
+  }
+
+  BoundedContext Competicao {
+    type = CORE_DOMAIN
+    description = "Responsável pela gestão das partidas, resultados e andamento da competição"
+  }
+
+  BoundedContext Estatisticas {
+    type = SUPPORTING_DOMAIN
+    description = "Responsável pelo cálculo de nota estatística, artilharia e dados de desempenho"
+  }
+
+  BoundedContext GestaoTimes {
+    type = CORE_DOMAIN
+    description = "Responsável pelo gerenciamento de times, jogadores e comissão técnica"
+  }
+
+
+  /**
+   * =========================
+   * RELAÇÕES ENTRE CONTEXTOS
+   * =========================
+   */
+
+  AcessoParticipacao -> GestaoTimes
+  AcessoParticipacao -> OrganizacaoTorneio
+
+  GestaoTimes -> OrganizacaoTorneio
+
+  OrganizacaoTorneio -> Competicao
+
+  Competicao -> Estatisticas
+
+
+  /**
+   * =========================
+   * RELAÇÕES DETALHADAS (DDD)
+   * =========================
+   */
+
+  AcessoParticipacao [C] -> [U] GestaoTimes
+  AcessoParticipacao [C] -> [U] OrganizacaoTorneio
+
+  GestaoTimes [C] -> [U] OrganizacaoTorneio
+
+  OrganizacaoTorneio [U] -> [D] Competicao
+
+  Competicao [U] -> [D] Estatisticas
+
+}
