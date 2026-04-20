@@ -11,7 +11,8 @@ O sistema tem como objetivo permitir a **gestão de torneios amadores de futebol
 O projeto busca resolver o problema da **organização manual de competições amadoras**, oferecendo um sistema que permita:
 
 - ⚽ Criar e gerenciar torneios de futebol  
-- 🏆 Definir formatos de competição *(mata-mata, fase de grupos, pontos corridos, etc.)*  
+- 🏆 Definir formatos de competição *(mata-mata, fase de grupos, pontos corridos, etc.)*
+- 🔢 Definir o **formato de equipe** (ex: 3x3, 5x5, 7x7, 11x11)
 - 👥 Permitir participação de times por meio de solicitações  
 - 📅 Gerar estrutura e partidas automaticamente  
 - 📊 Registrar eventos da partida *(gols, assistências e cartões)*  
@@ -27,20 +28,23 @@ O sistema permite interação entre diferentes tipos de usuários:
 
 - **Visitante**: pode visualizar torneios disponíveis  
 - **Usuário autenticado**: pode criar times, solicitar participação e gerenciar torneios  
-- **Organizador**: responsável por configurar e controlar a competição  
+- **Organizador**: usuário responsável por configurar e gerenciar um torneio  
 
 Entre as principais funcionalidades previstas estão:
 
-- criação e configuração de torneios  
-- solicitação e aprovação de participação de times  
-- gerenciamento de times, jogadores e técnicos  
-- geração automática da estrutura da competição  
-- registro de partidas e resultados  
-- registro de eventos estatísticos  
-- cálculo automático de nota estatística  
-- geração de classificação e artilharia  
-
----
+- criação de torneios  
+- definição do formato da competição  
+- definição da quantidade de jogadores por equipe  
+- cadastro de times  
+- cadastro de jogadores  
+- solicitação de participação em torneios  
+- aprovação de participantes pelo organizador  
+- registro de partidas  
+- registro de gols e assistências  
+- registro de cartões  
+- cálculo automático da nota estatística dos jogadores  
+- geração de classificação  
+- acompanhamento da artilharia  
 
 # 🧠 Abordagem de Engenharia de Software
 
@@ -116,6 +120,7 @@ O sistema foi modelado a partir dos principais conceitos presentes em competiç�
 - Usuário
 - Usuário organizador
 - Torneio
+- Formato de equipe (3x3, 5x5, 7x7, 11x11)
 - Time
 - Jogador
 - Técnico
@@ -130,8 +135,6 @@ O sistema foi modelado a partir dos principais conceitos presentes em competiç�
 - Estatísticas
 - Nota estatística do jogador
 - Artilharia
-
-Esses conceitos são descritos formalmente no arquivo linguagem-onipresente.md.
 
 Esses conceitos são descritos formalmente no arquivo **linguagem-onipresente.md**.
 
