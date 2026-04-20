@@ -92,10 +92,10 @@ Cenários principais:
 Arquivo: features/criar-e-configurar-torneio.feature
 
 Cenários principais:
-- criar torneio com formato válido.
-- impedir criação de torneio sem formato definido.
-- criar torneio com vagas abertas para participação.
-- criar torneio com participantes previamente definidos.
+- criar torneio com formato de competição e formato de equipe válidos.
+- impedir criação de torneio sem formato de competição.
+- impedir criação de torneio sem definição da quantidade de jogadores por equipe.
+- definir se o torneio será aberto para solicitação ou com participantes definidos.
 
 ---
 
@@ -192,23 +192,25 @@ Cenários principais:
 - RN09. Todo torneio possui organizador responsável.
 - RN10. Torneio só pode iniciar com participantes suficientes.
 - RN11. Estrutura depende do formato.
+- RN12. O torneio deve definir a quantidade de jogadores por equipe.
+- RN13. As partidas devem respeitar a quantidade de jogadores definida.
 
 ### Times, jogadores e técnicos
-- RN12. Time só participa se aprovado.
-- RN13. Jogador pertence a um time.
-- RN14. Técnico associado ao time.
-- RN15. Apenas jogadores válidos podem ter eventos registrados.
+- RN14. Time só participa se aprovado.
+- RN15. Jogador pertence a um time.
+- RN16. Técnico associado ao time.
+- RN17. Apenas jogadores válidos podem ter eventos registrados.
 
 ### Partidas e competição
-- RN16. Partida pertence a um torneio e dois times válidos.
-- RN17. Apenas partidas válidas geram impacto no sistema.
-- RN18. Resultado atualiza classificação automaticamente.
-- RN19. Não permitir resultados inválidos.
+- RN18. Partida pertence a um torneio e dois times válidos.
+- RN19. Apenas partidas válidas geram impacto no sistema.
+- RN20. Resultado atualiza classificação automaticamente.
+- RN21. Não permitir resultados inválidos.
 
 ### Estatísticas
-- RN20. Registrar gols, assistências e cartões.
-- RN21. Nota estatística calculada automaticamente.
-- RN22. Nota baseada em fórmula com pesos.
-- RN23. Considera eventos básicos na versão inicial.
-- RN24. Eventos positivos e negativos afetam a nota.
-- RN25. Artilharia atualizada automaticamente.
+- RN22. Registrar gols, assistências e cartões.
+- RN23. Nota estatística calculada automaticamente.
+- RN24. Nota baseada em fórmula com pesos.
+- RN25. Considera eventos básicos na versão inicial.
+- RN26. Eventos positivos e negativos afetam a nota.
+- RN27. Artilharia atualizada automaticamente.

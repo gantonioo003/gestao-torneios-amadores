@@ -62,6 +62,8 @@ O sistema permite que usuários visualizem torneios disponíveis mesmo sem auten
 
 Usuários autenticados podem criar torneios e cadastrar seus próprios times. Um torneio pode ser criado já com participantes definidos ou com vagas abertas para solicitação de entrada de times.
 
+Durante a criação do torneio, o organizador define tanto o formato da competição quanto o formato de equipe, indicando quantos jogadores cada time deve ter em campo (por exemplo, 3x3, 5x5 ou 11x11).
+
 Usuários com times cadastrados podem solicitar participação em torneios abertos, cabendo ao organizador aprovar ou rejeitar essas solicitações.
 
 O organizador define o formato do torneio, gerencia os participantes aprovados e gera a estrutura da competição e as partidas.

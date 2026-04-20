@@ -28,42 +28,46 @@ RN10. Um torneio só pode ser iniciado quando possuir a quantidade mínima de ti
 
 RN11. A estrutura da competição deve ser gerada de acordo com o formato definido para o torneio.
 
+RN12. Todo torneio deve definir a quantidade de jogadores por equipe em campo.
+
+RN13. As partidas do torneio devem respeitar a quantidade de jogadores definida no formato de equipe.
+
 ---
 
 ## Times, jogadores e técnicos
 
-RN12. Um time só pode participar de um torneio se estiver devidamente inscrito ou aprovado nele.
+RN14. Um time só pode participar de um torneio se estiver devidamente inscrito ou aprovado nele.
 
-RN13. Um jogador só pode participar de partidas por um time ao qual esteja vinculado.
+RN15. Um jogador só pode participar de partidas por um time ao qual esteja vinculado.
 
-RN14. Técnicos devem estar associados aos times do torneio.
+RN16. Técnicos devem estar associados aos times do torneio.
 
-RN15. Apenas jogadores vinculados aos times participantes podem ter eventos registrados em partidas do torneio.
+RN17. Apenas jogadores vinculados aos times participantes podem ter eventos registrados em partidas do torneio.
 
 ---
 
 ## Partidas e andamento da competição
 
-RN16. Toda partida deve estar associada a um torneio e a dois times participantes desse torneio.
+RN18. Toda partida deve estar associada a um torneio e a dois times participantes desse torneio.
 
-RN17. Apenas partidas registradas dentro de um torneio podem influenciar classificação, chaveamento, artilharia e estatísticas.
+RN19. Apenas partidas registradas dentro de um torneio podem influenciar classificação, chaveamento, artilharia e estatísticas.
 
-RN18. Ao registrar o resultado de uma partida, o sistema deve atualizar automaticamente a classificação ou o avanço no chaveamento, conforme o formato do torneio.
+RN20. Ao registrar o resultado de uma partida, o sistema deve atualizar automaticamente a classificação ou o avanço no chaveamento, conforme o formato do torneio.
 
-RN19. O sistema não deve permitir registrar resultado para uma partida inexistente ou para times que não pertencem ao torneio.
+RN21. O sistema não deve permitir registrar resultado para uma partida inexistente ou para times que não pertencem ao torneio.
 
 ---
 
 ## Estatísticas e nota dos jogadores
 
-RN20. O sistema deve permitir registrar gols, assistências, cartões amarelos e cartões vermelhos dos jogadores em cada partida.
+RN22. O sistema deve permitir registrar gols, assistências, cartões amarelos e cartões vermelhos dos jogadores em cada partida.
 
-RN21. A nota estatística de cada jogador deve ser calculada automaticamente a partir dos eventos registrados na partida.
+RN23. A nota estatística de cada jogador deve ser calculada automaticamente a partir dos eventos registrados na partida.
 
-RN22. A nota estatística do jogador deve ser calculada por meio de uma fórmula baseada em pesos associados aos eventos registrados.
+RN24. A nota estatística do jogador deve ser calculada por meio de uma fórmula baseada em pesos associados aos eventos registrados.
 
-RN23. Na versão inicial do sistema, a fórmula da nota estatística deve considerar gols, assistências, cartões amarelos e cartões vermelhos.
+RN25. Na versão inicial do sistema, a fórmula da nota estatística deve considerar gols, assistências, cartões amarelos e cartões vermelhos.
 
-RN24. Eventos positivos devem aumentar a nota estatística do jogador, enquanto eventos negativos devem reduzi-la.
+RN26. Eventos positivos devem aumentar a nota estatística do jogador, enquanto eventos negativos devem reduzi-la.
 
-RN25. O sistema deve atualizar automaticamente a artilharia do torneio com base nos gols registrados.
+RN27. O sistema deve atualizar automaticamente a artilharia do torneio com base nos gols registrados.

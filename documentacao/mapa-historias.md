@@ -8,6 +8,7 @@
 ## 2. Criação e configuração do torneio
 - Como organizador, quero criar um torneio para iniciar uma competição.
 - Como organizador, quero definir o formato do torneio para estruturar a competição.
+- Como organizador, quero definir a quantidade de jogadores por equipe (ex: 3x3, 5x5, 11x11) para adequar o torneio ao formato desejado.
 - Como organizador, quero escolher se o torneio será criado já com todos os participantes ou com vagas abertas para solicitação de entrada.
 - Como organizador, quero gerar a estrutura da competição para visualizar grupos, tabela ou chaveamento.
 - Como organizador, quero iniciar o torneio apenas quando houver times suficientes para o formato escolhido.

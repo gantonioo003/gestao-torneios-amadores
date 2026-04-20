@@ -18,6 +18,9 @@ Estrutura do torneio. Pode ser:
 - pontos corridos
 - final única
 
+### Formato de equipe
+Define a quantidade de jogadores em campo por time em uma partida, como 3x3, 5x5, 7x7 ou 11x11.
+
 ### Solicitação de participação
 Pedido realizado por um usuário para inscrever seu time em um torneio aberto.
 
