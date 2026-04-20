@@ -1,66 +1,191 @@
-ContextMap TorneioAmador {
+Domain GestaoTorneiosAmadores {
+	Subdomain Participacao
+	Subdomain Torneio
+	Subdomain Competicao
+	Subdomain Estatisticas
+	Subdomain Compartilhado
+}
 
-  /**
-   * =========================
-   * CONTEXTOS DO SISTEMA
-   * =========================
-   */
+ContextMap {
+	contains Participacao
+	contains Torneio
+	contains Competicao
+	contains Estatisticas
+	contains Compartilhado
 
-  BoundedContext AcessoParticipacao {
-    type = CORE_DOMAIN
-    description = "Responsável por autenticação, visualização de torneios e solicitação de participação de times"
-  }
+	Participacao Shared-Kernel Compartilhado
+	Torneio Shared-Kernel Compartilhado
+	Competicao Shared-Kernel Compartilhado
+	Estatisticas Shared-Kernel Compartilhado
 
-  BoundedContext OrganizacaoTorneio {
-    type = CORE_DOMAIN
-    description = "Responsável pela criação, configuração e gestão dos torneios e seus participantes"
-  }
+	Torneio Customer-Supplier Competicao
+	Competicao Customer-Supplier Estatisticas
+}
 
-  BoundedContext Competicao {
-    type = CORE_DOMAIN
-    description = "Responsável pela gestão das partidas, resultados e andamento da competição"
-  }
+BoundedContext Participacao implements Participacao {
+	Aggregate Usuario {
+		Entity Usuario {
+			aggregateRoot
 
-  BoundedContext Estatisticas {
-    type = SUPPORTING_DOMAIN
-    description = "Responsável pelo cálculo de nota estatística, artilharia e dados de desempenho"
-  }
+			-UsuarioId id
+			String nome
+		}
 
-  BoundedContext GestaoTimes {
-    type = CORE_DOMAIN
-    description = "Responsável pelo gerenciamento de times, jogadores e comissão técnica"
-  }
+		ValueObject UsuarioId {
+			int id
+		}
+	}
 
+	Aggregate SolicitacaoParticipacao {
+		Entity SolicitacaoParticipacao {
+			aggregateRoot
 
-  /**
-   * =========================
-   * RELAÇÕES ENTRE CONTEXTOS
-   * =========================
-   */
+			-SolicitacaoParticipacaoId id
+			-TimeId time
+			-TorneioId torneio
+			StatusSolicitacao status
+		}
 
-  AcessoParticipacao -> GestaoTimes
-  AcessoParticipacao -> OrganizacaoTorneio
+		ValueObject SolicitacaoParticipacaoId {
+			int id
+		}
 
-  GestaoTimes -> OrganizacaoTorneio
+		ValueObject StatusSolicitacao {
+			String valor
+		}
+	}
+}
 
-  OrganizacaoTorneio -> Competicao
+BoundedContext Torneio implements Torneio {
+	Aggregate Torneio {
+		Entity Torneio {
+			aggregateRoot
 
-  Competicao -> Estatisticas
+			-TorneioId id
+			String nome
+			-FormatoTorneio formato
+			-FormatoEquipe formatoEquipe
+			-UsuarioId organizador
+		}
 
+		ValueObject TorneioId {
+			int id
+		}
 
-  /**
-   * =========================
-   * RELAÇÕES DETALHADAS (DDD)
-   * =========================
-   */
+		ValueObject FormatoTorneio {
+			String tipo
+		}
 
-  AcessoParticipacao [C] -> [U] GestaoTimes
-  AcessoParticipacao [C] -> [U] OrganizacaoTorneio
+		ValueObject FormatoEquipe {
+			int quantidadeJogadores
+		}
+	}
 
-  GestaoTimes [C] -> [U] OrganizacaoTorneio
+	Aggregate Participante {
+		Entity Participante {
+			aggregateRoot
 
-  OrganizacaoTorneio [U] -> [D] Competicao
+			-TimeId time
+			-TorneioId torneio
+		}
+	}
+}
 
-  Competicao [U] -> [D] Estatisticas
+BoundedContext Competicao implements Competicao {
+	Aggregate Partida {
+		Entity Partida {
+			aggregateRoot
 
+			-PartidaId id
+			-TimeId timeA
+			-TimeId timeB
+			-Resultado resultado nullable
+		}
+
+		ValueObject PartidaId {
+			int id
+		}
+
+		ValueObject Resultado {
+			int golsTimeA
+			int golsTimeB
+		}
+	}
+
+	Aggregate Classificacao {
+		Entity Classificacao {
+			aggregateRoot
+
+			-TimeId time
+			int pontos
+			int saldoGols
+		}
+	}
+}
+
+BoundedContext Estatisticas implements Estatisticas {
+	Aggregate EventoEstatistico {
+		Entity EventoEstatistico {
+			aggregateRoot
+
+			-JogadorId jogador
+			String tipo
+		}
+	}
+
+	Aggregate NotaEstatistica {
+		Entity NotaEstatistica {
+			aggregateRoot
+
+			-JogadorId jogador
+			double nota
+		}
+	}
+
+	Aggregate Artilharia {
+		Entity Artilharia {
+			aggregateRoot
+
+			-JogadorId jogador
+			int gols
+		}
+	}
+}
+
+BoundedContext Compartilhado implements Compartilhado {
+	Aggregate Time {
+		Entity Time {
+			aggregateRoot
+
+			-TimeId id
+			String nome
+		}
+
+		ValueObject TimeId {
+			int id
+		}
+	}
+
+	Aggregate Jogador {
+		Entity Jogador {
+			aggregateRoot
+
+			-JogadorId id
+			String nome
+			-TimeId time
+		}
+
+		ValueObject JogadorId {
+			int id
+		}
+	}
+
+	Aggregate Tecnico {
+		Entity Tecnico {
+			aggregateRoot
+
+			String nome
+			-TimeId time
+		}
+	}
 }
