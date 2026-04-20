@@ -61,7 +61,7 @@ O projeto adota DDD como base para organizacao do conhecimento de negocio e para
 - Estatisticas
 - Compartilhado
 
-A modelagem estrategica foi registrada em [context-mapper/torneio.cml](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/context-mapper/torneio.cml).
+A modelagem estrategica foi registrada em [torneio.cml](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/torneio.cml).
 
 ## Behavior-Driven Development
 
@@ -84,9 +84,6 @@ Cada modulo tambem possui uma estrutura base de teste com:
 
 ```text
 gestao-torneios-amadores
-|
-|-- context-mapper/
-|   `-- torneio.cml
 |
 |-- documentacao/
 |   |-- descricao-dominio.md
