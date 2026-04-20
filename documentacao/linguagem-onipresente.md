@@ -2,11 +2,14 @@
 
 ## Termos principais do domínio
 
+### Usuário
+Pessoa que utiliza o sistema, podendo visualizar torneios e, quando autenticada, interagir com funcionalidades avançadas.
+
 ### Usuário organizador
-Pessoa responsável por criar e gerenciar torneios dentro do sistema.
+Usuário responsável por criar e gerenciar um torneio.
 
 ### Torneio
-Competição de futebol amador criada pelo organizador.
+Competição de futebol amador criada por um organizador.
 
 ### Formato de torneio
 Estrutura do torneio. Pode ser:
@@ -15,8 +18,11 @@ Estrutura do torneio. Pode ser:
 - pontos corridos
 - final única
 
+### Solicitação de participação
+Pedido realizado por um usuário para inscrever seu time em um torneio aberto.
+
 ### Time
-Equipe participante do torneio.
+Equipe participante de um torneio, vinculada a um usuário responsável.
 
 ### Técnico
 Responsável por um time.
@@ -40,10 +46,10 @@ Tabela com a pontuação e posição dos times na competição.
 Estrutura visual e lógica das fases eliminatórias do torneio.
 
 ### Gol
-Evento registrado para indicar que um jogador marcou para seu time em uma partida.
+Evento registrado quando um jogador marca para seu time em uma partida.
 
 ### Assistência
-Evento registrado para indicar que um jogador contribuiu diretamente para um gol.
+Evento registrado quando um jogador contribui diretamente para um gol.
 
 ### Cartão amarelo
 Advertência recebida por um jogador durante a partida.
@@ -55,4 +61,4 @@ Expulsão recebida por um jogador durante a partida.
 Ranking dos jogadores com maior número de gols no torneio.
 
 ### Nota estatística
-Pontuação calculada automaticamente pelo sistema com base nos eventos registrados para um jogador em uma partida.
+Pontuação calculada automaticamente pelo sistema com base em uma fórmula que considera os eventos registrados para um jogador em uma partida.
