@@ -177,11 +177,17 @@ Essa modelagem representa o DDD estratégico, que orientará a fase seguinte de 
 Após a definição do domínio e das funcionalidades, as próximas etapas incluem:
 
 1️⃣ Modelagem tática do domínio (DDD Tático)
+
 2️⃣ Definição da arquitetura da aplicação
+
 3️⃣ Implementação das entidades e serviços do domínio
+
 4️⃣ Implementação da camada de aplicação
+
 5️⃣ Implementação da persistência (JPA)
+
 6️⃣ Desenvolvimento da interface web
+
 7️⃣ Automação dos cenários BDD com Cucumber
 
 ---
