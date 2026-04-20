@@ -1,0 +1,288 @@
+Domain GestaoTorneiosAmadores {
+	Subdomain Participacao
+	Subdomain Torneio
+	Subdomain Competicao
+	Subdomain Estatisticas
+	Subdomain Compartilhado
+}
+
+ContextMap {
+	contains Participacao
+	contains Torneio
+	contains Competicao
+	contains Estatisticas
+	contains Compartilhado
+
+	Participacao Shared-Kernel Compartilhado
+	Torneio Shared-Kernel Compartilhado
+	Competicao Shared-Kernel Compartilhado
+	Estatisticas Shared-Kernel Compartilhado
+
+	Participacao Customer-Supplier Torneio
+	Torneio Customer-Supplier Competicao
+	Competicao Customer-Supplier Estatisticas
+}
+
+BoundedContext Participacao implements Participacao {
+	Aggregate SolicitacaoParticipacao {
+		Service SolicitacaoParticipacaoServico {
+			void solicitarParticipacao(@UsuarioId usuario, @TimeId time, @TorneioId torneio);
+			void aprovarSolicitacao(@SolicitacaoParticipacaoId solicitacao, @UsuarioId organizador);
+			void rejeitarSolicitacao(@SolicitacaoParticipacaoId solicitacao, @UsuarioId organizador);
+		}
+
+		Entity SolicitacaoParticipacao {
+			aggregateRoot
+
+			-SolicitacaoParticipacaoId id
+			-UsuarioId solicitante
+			-TimeId time
+			-TorneioId torneio
+			StatusSolicitacao status
+
+			Repository SolicitacaoParticipacaoRepository {
+				@SolicitacaoParticipacao obter(@SolicitacaoParticipacaoId id);
+			}
+		}
+
+		ValueObject SolicitacaoParticipacaoId {
+			int id
+		}
+
+		ValueObject StatusSolicitacao {
+			String valor
+		}
+	}
+}
+
+BoundedContext Torneio implements Torneio {
+	Aggregate Torneio {
+		Service TorneioServico {
+			void criarTorneio(String nome, @FormatoTorneio formato, @FormatoEquipe formatoEquipe, @UsuarioId organizador);
+			void gerarEstrutura(@TorneioId torneio);
+		}
+
+		Entity Torneio {
+			aggregateRoot
+
+			-TorneioId id
+			String nome
+			-FormatoTorneio formato
+			-FormatoEquipe formatoEquipe
+			-UsuarioId organizador
+			boolean aceitaSolicitacoes
+			-StatusTorneio status
+
+			Repository TorneioRepository {
+				@Torneio obter(@TorneioId id);
+			}
+		}
+
+		ValueObject TorneioId {
+			int id
+		}
+
+		ValueObject FormatoTorneio {
+			String tipo
+		}
+
+		ValueObject FormatoEquipe {
+			int quantidadeJogadores
+		}
+
+		ValueObject StatusTorneio {
+			String valor
+		}
+	}
+
+	Aggregate ParticipanteTorneio {
+		Entity ParticipanteTorneio {
+			aggregateRoot
+
+			-TimeId time
+			-TorneioId torneio
+			StatusParticipante status
+		}
+
+		ValueObject StatusParticipante {
+			String valor
+		}
+	}
+
+	Aggregate EstruturaCompeticao {
+		Entity EstruturaCompeticao {
+			aggregateRoot
+
+			-TorneioId torneio
+			String tipo
+			boolean gerada
+		}
+	}
+}
+
+BoundedContext Competicao implements Competicao {
+	Aggregate Partida {
+		Service PartidaServico {
+			void gerarPartidas(@TorneioId torneio);
+			void registrarResultado(@PartidaId partida, @Resultado resultado);
+		}
+
+		Entity Partida {
+			aggregateRoot
+
+			-PartidaId id
+			-TorneioId torneio
+			-TimeId timeA
+			-TimeId timeB
+			-Resultado resultado nullable
+
+			Repository PartidaRepository {
+				@Partida obter(@PartidaId id);
+			}
+		}
+
+		ValueObject PartidaId {
+			int id
+		}
+
+		ValueObject Resultado {
+			int golsTimeA
+			int golsTimeB
+		}
+	}
+
+	Aggregate Classificacao {
+		Entity Classificacao {
+			aggregateRoot
+
+			-TorneioId torneio
+			-TimeId time
+			int pontos
+			int saldoGols
+		}
+	}
+
+	Aggregate Chaveamento {
+		Entity Chaveamento {
+			aggregateRoot
+
+			-TorneioId torneio
+			String fase
+		}
+	}
+}
+
+BoundedContext Estatisticas implements Estatisticas {
+	Aggregate EventoEstatistico {
+		Service EventoEstatisticoServico {
+			void registrarEvento(@PartidaId partida, @JogadorId jogador, @TipoEventoEstatistico tipo);
+		}
+
+		Entity EventoEstatistico {
+			aggregateRoot
+
+			-EventoEstatisticoId id
+			-PartidaId partida
+			-JogadorId jogador
+			-TipoEventoEstatistico tipo
+		}
+
+		ValueObject EventoEstatisticoId {
+			int id
+		}
+
+		ValueObject TipoEventoEstatistico {
+			String valor
+		}
+	}
+
+	Aggregate NotaEstatistica {
+		Entity NotaEstatistica {
+			aggregateRoot
+
+			-PartidaId partida
+			-JogadorId jogador
+			double nota
+		}
+	}
+
+	Aggregate Artilharia {
+		Entity Artilharia {
+			aggregateRoot
+
+			-TorneioId torneio
+			-JogadorId jogador
+			int gols
+		}
+	}
+
+	Aggregate EstatisticaJogador {
+		Entity EstatisticaJogador {
+			aggregateRoot
+
+			-TorneioId torneio
+			-JogadorId jogador
+			int gols
+			int assistencias
+			int cartoesAmarelos
+			int cartoesVermelhos
+		}
+	}
+}
+
+BoundedContext Compartilhado implements Compartilhado {
+	Aggregate Usuario {
+		Entity Usuario {
+			aggregateRoot
+
+			-UsuarioId id
+			String nome
+		}
+
+		ValueObject UsuarioId {
+			int id
+		}
+	}
+
+	Aggregate Time {
+		Entity Time {
+			aggregateRoot
+
+			-TimeId id
+			String nome
+			-UsuarioId responsavel
+		}
+
+		ValueObject TimeId {
+			int id
+		}
+	}
+
+	Aggregate Jogador {
+		Entity Jogador {
+			aggregateRoot
+
+			-JogadorId id
+			String nome
+			-TimeId time
+		}
+
+		ValueObject JogadorId {
+			int id
+		}
+	}
+
+	Aggregate Tecnico {
+		Entity Tecnico {
+			aggregateRoot
+
+			-TecnicoId id
+			String nome
+			-TimeId time
+		}
+
+		ValueObject TecnicoId {
+			int id
+		}
+	}
+}
