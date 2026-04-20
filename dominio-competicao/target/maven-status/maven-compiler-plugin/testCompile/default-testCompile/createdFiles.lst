@@ -1,0 +1,3 @@
+com\torneios\dominio\competicao\steps\package-info.class
+com\torneios\dominio\competicao\CompeticaoFuncionalidade.class
+com\torneios\dominio\competicao\RunCucumber.class

@@ -1,0 +1,11 @@
+com\torneios\dominio\participacao\solicitacao\SolicitacaoParticipacaoServico.class
+com\torneios\dominio\participacao\solicitacao\SolicitacaoParticipacao.class
+com\torneios\dominio\participacao\solicitacao\SolicitacaoParticipacaoId.class
+com\torneios\dominio\participacao\solicitacao\SolicitacaoParticipacaoRepositorio.class
+com\torneios\dominio\participacao\time\TimeRepositorio.class
+com\torneios\dominio\participacao\responsavel\ResponsavelTimeServico.class
+com\torneios\dominio\participacao\time\TimeServico.class
+com\torneios\dominio\participacao\jogador\Jogador.class
+com\torneios\dominio\participacao\time\Time.class
+com\torneios\dominio\participacao\acesso\AutenticacaoServico.class
+com\torneios\dominio\participacao\tecnico\Tecnico.class

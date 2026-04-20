@@ -1,0 +1,9 @@
+com\torneios\dominio\competicao\partida\Partida.class
+com\torneios\dominio\competicao\resultado\ResultadoPartida.class
+com\torneios\dominio\competicao\classificacao\ClassificacaoServico.class
+com\torneios\dominio\competicao\partida\PartidaRepositorio.class
+com\torneios\dominio\competicao\chaveamento\Chaveamento.class
+com\torneios\dominio\competicao\geracao\GeradorPartidasServico.class
+com\torneios\dominio\competicao\partida\PartidaServico.class
+com\torneios\dominio\competicao\rodada\Rodada.class
+com\torneios\dominio\competicao\classificacao\Classificacao.class

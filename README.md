@@ -1,211 +1,224 @@
-# ⚽ Gestão de Torneios Amadores de Futebol com Estatísticas
+﻿# Gestao de Torneios Amadores de Futebol com Estatisticas
 
-Projeto acadêmico desenvolvido para a disciplina de **Requisitos e Projeto de Software**, com foco em **Domain-Driven Design (DDD)** e **Behavior-Driven Development (BDD)**.
+Projeto academico desenvolvido para a disciplina de Requisitos e Projeto de Software, com foco em Domain-Driven Design (DDD), Behavior-Driven Development (BDD) e arquitetura modular com Maven.
 
-O sistema tem como objetivo permitir a **gestão de torneios amadores de futebol**, incluindo organização da competição, participação de usuários e geração de estatísticas de desempenho dos jogadores.
+O sistema tem como objetivo apoiar a gestao de torneios amadores de futebol, incluindo cadastro e organizacao de torneios, participacao de times, gerenciamento da competicao e consolidacao de estatisticas de desempenho.
 
----
+## Visao Geral
 
-# 🎯 Objetivo do Sistema
+O projeto foi modelado para atender um cenario em que competicoes amadoras sao organizadas manualmente, com pouca padronizacao e alto risco de inconsistencias em inscricoes, partidas, classificacao e estatisticas.
 
-O projeto busca resolver o problema da **organização manual de competições amadoras**, oferecendo um sistema que permita:
+O sistema proposto permite:
 
-- ⚽ Criar e gerenciar torneios de futebol  
-- 🏆 Definir formatos de competição *(mata-mata, fase de grupos, pontos corridos, etc.)*
-- 🔢 Definir o **formato de equipe** (ex: 3x3, 5x5, 7x7, 11x11)
-- 👥 Permitir participação de times por meio de solicitações  
-- 📅 Gerar estrutura e partidas automaticamente  
-- 📊 Registrar eventos da partida *(gols, assistências e cartões)*  
-- 👤 Gerar estatísticas de jogadores  
-- ⭐ Calcular automaticamente notas estatísticas de desempenho  
-- 📈 Acompanhar classificação, artilharia e andamento do torneio  
+- criar e configurar torneios
+- definir formato de competicao e formato de equipe
+- cadastrar times, jogadores e tecnico
+- solicitar e avaliar participacao de times
+- gerenciar participantes aprovados
+- gerar estrutura da competicao e partidas
+- registrar resultados de partidas
+- registrar gols, assistencias e cartoes
+- calcular nota estatistica de jogadores
+- acompanhar classificacao, chaveamento e artilharia
 
----
+## Estado Atual do Projeto
 
-# 📌 Escopo do Projeto
+O projeto encontra-se estruturado em modulos de dominio e ja possui:
 
-O sistema permite interação entre diferentes tipos de usuários:
+- documentacao funcional e de negocio
+- linguagem onipresente
+- mapa de historias do usuario
+- modelagem com Context Mapper
+- cenarios BDD em arquivos `.feature`
+- estrutura inicial de automacao com Cucumber por dominio
+- implementacao inicial da camada de dominio nos modulos principais
+- Maven Wrapper configurado no repositorio
 
-- **Visitante**: pode visualizar torneios disponíveis  
-- **Usuário autenticado**: pode criar times, solicitar participação e gerenciar torneios  
-- **Organizador**: usuário responsável por configurar e gerenciar um torneio  
+No estado atual, o foco principal esta na Entrega 1, com enfase em modelagem de dominio, especificacao comportamental e organizacao da base para a implementacao posterior das demais camadas.
 
-Entre as principais funcionalidades previstas estão:
+## Abordagem Arquitetural
 
-- criação de torneios  
-- definição do formato da competição  
-- definição da quantidade de jogadores por equipe  
-- cadastro de times  
-- cadastro de jogadores  
-- solicitação de participação em torneios  
-- aprovação de participantes pelo organizador  
-- registro de partidas  
-- registro de gols e assistências  
-- registro de cartões  
-- cálculo automático da nota estatística dos jogadores  
-- geração de classificação  
-- acompanhamento da artilharia  
+O projeto segue uma organizacao modular orientada a contexto de negocio. Cada modulo representa um conjunto coeso de responsabilidades do dominio.
 
-# 🧠 Abordagem de Engenharia de Software
+### Modulos atuais
 
-O desenvolvimento do sistema segue práticas modernas de engenharia de software.
+- `dominio-compartilhado`: ids, entidades compartilhadas, enumeracoes, excecoes e eventos de dominio reutilizaveis
+- `dominio-participacao`: autenticacao de acesso, solicitacoes de participacao, times, jogadores, tecnico e responsavel do time
+- `dominio-torneio`: criacao e configuracao do torneio, participantes aprovados, organizador e estrutura da competicao
+- `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento e geracao de partidas
+- `dominio-estatisticas`: eventos estatisticos, nota estatistica, desempenho e artilharia
+- `pai`: modulo pai Maven com configuracao compartilhada
 
-## 🏗 Domain-Driven Design (DDD)
+## Domain-Driven Design
 
-Utilizado para modelar o domínio do problema de forma clara e alinhada com a realidade da aplicação.
+O projeto adota DDD como base para organizacao do conhecimento de negocio e para separacao de responsabilidades entre contextos.
 
-O projeto utiliza:
+### Subdominios e contextos principais
 
-- **linguagem onipresente**
-- **bounded contexts**
-- **modelagem estratégica do domínio**
+- Participacao
+- Torneio
+- Competicao
+- Estatisticas
+- Compartilhado
 
----
+A modelagem estrategica foi registrada em [context-mapper/torneio.cml](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/context-mapper/torneio.cml).
 
-## 🧪 Behavior-Driven Development (BDD)
+## Behavior-Driven Development
 
-Utilizado para especificar o comportamento esperado do sistema através de cenários.
+Os comportamentos esperados do sistema foram especificados com Cucumber e Gherkin.
 
-Os cenários são descritos em arquivos `.feature` utilizando **Gherkin**, permitindo uma especificação clara das funcionalidades.
+As features estao distribuidas por dominio em:
 
----
+- `dominio-participacao/src/test/resources`
+- `dominio-torneio/src/test/resources`
+- `dominio-competicao/src/test/resources`
+- `dominio-estatisticas/src/test/resources`
 
-# 🗂 Estrutura do Projeto
+Cada modulo tambem possui uma estrutura base de teste com:
+
+- `RunCucumber.java`
+- classe auxiliar de funcionalidade do dominio
+- pasta `steps/` para implementacao das step definitions
+
+## Estrutura do Repositorio
 
 ```text
 gestao-torneios-amadores
-│
-├── documentacao
-│   ├── descricao-dominio.md
-│   ├── linguagem-onipresente.md
-│   ├── funcionalidades.md
-│   ├── regras-de-negocio.md
-│   ├── mapa-historias.md
-│   └── cenarios-bdd.md
-│
-├── features
-│   ├── visualizar-torneios-disponiveis.feature
-│   ├── acesso-autenticado-gerenciamento-torneios.feature
-│   ├── solicitar-participacao-em-torneio-aberto.feature
-│   ├── avaliar-solicitacoes-de-participacao.feature
-│   ├── gerenciar-times-do-usuario.feature
-│   ├── gerenciar-elenco-de-jogadores.feature
-│   ├── gerenciar-comissao-tecnica.feature
-│   ├── vincular-time-a-usuario-responsavel.feature
-│   ├── criar-e-configurar-torneio.feature
-│   ├── gerenciar-participantes-aprovados-do-torneio.feature
-│   ├── gerar-estrutura-da-competicao.feature
-│   ├── gerar-partidas-do-torneio.feature
-│   ├── registrar-resultado-da-partida.feature
-│   ├── visualizar-classificacao-ou-chaveamento.feature
-│   ├── registrar-eventos-estatisticos-da-partida.feature
-│   └── calcular-e-visualizar-estatisticas.feature
-│
-├── context-mapper
-│   └── torneio.cml
-│
-├── README.md
-└── .gitignore
-
+|
+|-- context-mapper/
+|   `-- torneio.cml
+|
+|-- documentacao/
+|   |-- descricao-dominio.md
+|   |-- linguagem-onipresente.md
+|   |-- funcionalidades.md
+|   |-- regras-de-negocio.md
+|   |-- mapa-historias.md
+|   `-- cenarios-bdd.md
+|
+|-- dominio-compartilhado/
+|-- dominio-participacao/
+|-- dominio-torneio/
+|-- dominio-competicao/
+|-- dominio-estatisticas/
+|
+|-- pai/
+|-- pom.xml
+|-- mvnw
+|-- mvnw.cmd
+`-- README.md
 ```
 
-## ⚙️ Principais Conceitos do Domínio
+## Estrutura de Dominio Implementada
 
-O sistema foi modelado a partir dos principais conceitos presentes em competições de futebol:
+Atualmente, a camada `src/main/java` ja possui uma base inicial de implementacao em todos os modulos de dominio.
 
-⚙️ Principais Conceitos do Domínio
+### `dominio-compartilhado`
 
-O sistema foi modelado a partir dos principais conceitos presentes em competições de futebol:
+Inclui elementos comuns reutilizados por outros modulos, como:
 
-- Usuário
-- Usuário organizador
-- Torneio
-- Formato de equipe (3x3, 5x5, 7x7, 11x11)
-- Time
-- Jogador
-- Técnico
-- Partida
-- Rodada
-- Grupo
-- Classificação
-- Chaveamento
-- Gol
-- Assistência
-- Cartão
-- Estatísticas
-- Nota estatística do jogador
-- Artilharia
+- `Usuario` e `UsuarioId`
+- `Time` e `TimeId`
+- `TorneioId`
+- `PartidaId`
+- `Resultado`
+- enumeracoes de formato, status e tipo de evento
+- excecoes de dominio
+- eventos de dominio
 
-Esses conceitos são descritos formalmente no arquivo **linguagem-onipresente.md**.
+### `dominio-participacao`
 
----
+Inclui classes voltadas a:
 
-## ⭐ Nota Estatística do Jogador
+- autenticacao de acesso
+- solicitacao de participacao
+- gestao de times
+- gestao de jogadores
+- gestao de tecnico
+- definicao de responsavel do time
 
-O sistema calcula automaticamente uma nota estatística de desempenho para cada jogador em uma partida.
+### `dominio-torneio`
 
-A nota estatística é calculada automaticamente pelo sistema por meio de uma fórmula baseada em pesos atribuídos aos eventos registrados na partida.
+Inclui classes voltadas a:
 
-Eventos considerados:
+- torneio
+- participante do torneio
+- estrutura da competicao
+- regras do organizador
 
-- ⚽ gol
-- 🎯 assistência
-- 🟨 cartão amarelo
-- 🟥 cartão vermelho
+### `dominio-competicao`
 
-A partir desses eventos, o sistema calcula a nota do jogador e atualiza estatísticas da competição.
+Inclui classes voltadas a:
 
----
+- partida
+- resultado da partida
+- classificacao
+- chaveamento
+- rodada
+- geracao de partidas
 
-## 🧩 Modelagem do Domínio
+### `dominio-estatisticas`
 
-A modelagem inicial do domínio foi realizada utilizando Context Mapper, permitindo a identificação dos principais Bounded Contexts do sistema.
+Inclui classes voltadas a:
 
-Exemplo de contextos identificados:
+- eventos estatisticos
+- subclasses de eventos como gol e cartoes
+- nota estatistica
+- consolidacao de desempenho
+- artilharia
 
-- Acesso e participação
-- Organização do torneio
-- Competição (partidas e resultados)
-- Estatísticas de jogadores
+## Documentacao do Projeto
 
-Essa modelagem representa o DDD estratégico, que orientará a fase seguinte de DDD tático e implementação do sistema.
+Os principais artefatos da Entrega 1 estao organizados em [documentacao](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao):
 
----
+- [descricao-dominio.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/descricao-dominio.md)
+- [linguagem-onipresente.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/linguagem-onipresente.md)
+- [funcionalidades.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/funcionalidades.md)
+- [regras-de-negocio.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/regras-de-negocio.md)
+- [mapa-historias.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/mapa-historias.md)
+- [cenarios-bdd.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/cenarios-bdd.md)
 
-## 🚀 Próximas Etapas do Projeto
+## Tecnologias Utilizadas
 
-Após a definição do domínio e das funcionalidades, as próximas etapas incluem:
+- Java
+- Maven
+- Maven Wrapper
+- Spring Boot Parent no modulo pai
+- JUnit 5
+- Cucumber
+- Context Mapper
 
-1️⃣ Modelagem tática do domínio (DDD Tático)
+## Como Executar
 
-2️⃣ Definição da arquitetura da aplicação
+### Verificar a versao do Maven Wrapper
 
-3️⃣ Implementação das entidades e serviços do domínio
+```powershell
+.\mvnw.cmd -v
+```
 
-4️⃣ Implementação da camada de aplicação
+### Executar testes Maven
 
-5️⃣ Implementação da persistência (JPA)
+```powershell
+.\mvnw.cmd test
+```
 
-6️⃣ Desenvolvimento da interface web
+### Executar um modulo especifico
 
-7️⃣ Automação dos cenários BDD com Cucumber
+```powershell
+.\mvnw.cmd test -pl dominio-torneio -am
+```
 
----
+## Proximas Etapas
 
-## 🛠 Tecnologias Previstas
+As proximas evolucoes previstas para o projeto incluem:
 
-O sistema será desenvolvido utilizando:
+- ampliar a implementacao dos comportamentos de dominio
+- preencher as step definitions do Cucumber
+- consolidar repositorios em memoria para testes
+- introduzir camada de aplicacao
+- implementar persistencia objeto-relacional
+- desenvolver camada de apresentacao web
 
-- Java  
-- Spring Boot  
-- JPA / Hibernate  
-- Banco de dados relacional  
-- Angular ou Vaadin  
-- Cucumber *(BDD)*  
+## Autor
 
----
-
-## 👨‍💻 Autor
-
-Projeto desenvolvido como parte da disciplina de **Requisitos e Projeto de Software**.
-
+Projeto desenvolvido como parte da disciplina de Requisitos e Projeto de Software.
