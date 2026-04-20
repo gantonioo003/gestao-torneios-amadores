@@ -1,31 +1,31 @@
-Feature: Gerenciar comissÃ£o tÃ©cnica de um time
+Feature: Gerenciar comissão técnica de um time
 
-  As a usuÃ¡rio responsÃ¡vel por um time
-  I want gerenciar a comissÃ£o tÃ©cnica
-  So that eu possa definir os responsÃ¡veis pela equipe
+  As a usuário responsável por um time
+  I want gerenciar a comissão técnica
+  So that eu possa definir os responsáveis pela equipe
 
-  Scenario: Associar tÃ©cnico a um time
-    Given que o usuÃ¡rio estÃ¡ autenticado
-    And que ele Ã© responsÃ¡vel por um time
-    When ele associar um tÃ©cnico com dados vÃ¡lidos ao time
-    Then o sistema deve registrar o tÃ©cnico na comissÃ£o tÃ©cnica do time
+  Scenario: Associar técnico a um time
+    Given que o usuário está autenticado
+    And que ele é responsável por um time
+    When ele associar um técnico com dados válidos ao time
+    Then o sistema deve registrar o técnico na comissão técnica do time
 
-  Scenario: Editar dados de um tÃ©cnico do time
-    Given que o usuÃ¡rio estÃ¡ autenticado
-    And que ele Ã© responsÃ¡vel por um time
-    And que o time possui tÃ©cnico associado
-    When ele alterar os dados do tÃ©cnico
-    Then o sistema deve atualizar os dados do tÃ©cnico
+  Scenario: Editar dados de um técnico do time
+    Given que o usuário está autenticado
+    And que ele é responsável por um time
+    And que o time possui técnico associado
+    When ele alterar os dados do técnico
+    Then o sistema deve atualizar os dados do técnico
 
-  Scenario: Remover tÃ©cnico da comissÃ£o tÃ©cnica do time
-    Given que o usuÃ¡rio estÃ¡ autenticado
-    And que ele Ã© responsÃ¡vel por um time
-    And que o time possui tÃ©cnico associado
-    When ele solicitar a remoÃ§Ã£o do tÃ©cnico
-    Then o sistema deve remover o tÃ©cnico da comissÃ£o tÃ©cnica do time
+  Scenario: Remover técnico da comissão técnica do time
+    Given que o usuário está autenticado
+    And que ele é responsável por um time
+    And que o time possui técnico associado
+    When ele solicitar a remoção do técnico
+    Then o sistema deve remover o técnico da comissão técnica do time
 
-  Scenario: Impedir gerenciamento da comissÃ£o tÃ©cnica por usuÃ¡rio nÃ£o responsÃ¡vel
-    Given que o usuÃ¡rio estÃ¡ autenticado
-    And que ele nÃ£o Ã© responsÃ¡vel pelo time
-    When ele tentar associar um tÃ©cnico ao time
-    Then o sistema deve impedir a operaÃ§Ã£o
+  Scenario: Impedir gerenciamento da comissão técnica por usuário não responsável
+    Given que o usuário está autenticado
+    And que ele não é responsável pelo time
+    When ele tentar associar um técnico ao time
+    Then o sistema deve impedir a operação

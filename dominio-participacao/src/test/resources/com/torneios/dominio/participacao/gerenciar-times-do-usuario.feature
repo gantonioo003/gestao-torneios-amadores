@@ -1,30 +1,30 @@
-Feature: Gerenciar times do usuÃ¡rio
+Feature: Gerenciar times do usuário
 
-  As a usuÃ¡rio autenticado
+  As a usuário autenticado
   I want gerenciar meus times
-  So that eu possa utilizÃ¡-los em torneios
+  So that eu possa utilizá-los em torneios
 
   Scenario: Criar um novo time com sucesso
-    Given que o usuÃ¡rio estÃ¡ autenticado
-    When ele cadastrar um novo time com informaÃ§Ãµes vÃ¡lidas
-    Then o sistema deve registrar o time para esse usuÃ¡rio
+    Given que o usuário está autenticado
+    When ele cadastrar um novo time com informações válidas
+    Then o sistema deve registrar o time para esse usuário
 
-  Scenario: Editar informaÃ§Ãµes de um time do usuÃ¡rio
-    Given que o usuÃ¡rio estÃ¡ autenticado
+  Scenario: Editar informações de um time do usuário
+    Given que o usuário está autenticado
     And que ele possui um time cadastrado
-    When ele alterar as informaÃ§Ãµes do time
+    When ele alterar as informações do time
     Then o sistema deve atualizar os dados do time
 
-  Scenario: Excluir um time do usuÃ¡rio sem vÃ­nculo em torneio
-    Given que o usuÃ¡rio estÃ¡ autenticado
+  Scenario: Excluir um time do usuário sem vínculo em torneio
+    Given que o usuário está autenticado
     And que ele possui um time cadastrado
-    And que o time nÃ£o estÃ¡ vinculado a nenhum torneio
-    When ele solicitar a exclusÃ£o do time
+    And que o time não está vinculado a nenhum torneio
+    When ele solicitar a exclusão do time
     Then o sistema deve remover o time
 
-  Scenario: Impedir exclusÃ£o de time vinculado a torneio
-    Given que o usuÃ¡rio estÃ¡ autenticado
+  Scenario: Impedir exclusão de time vinculado a torneio
+    Given que o usuário está autenticado
     And que ele possui um time cadastrado
-    And que o time estÃ¡ vinculado a um torneio
-    When ele solicitar a exclusÃ£o do time
-    Then o sistema deve impedir a exclusÃ£o
+    And que o time está vinculado a um torneio
+    When ele solicitar a exclusão do time
+    Then o sistema deve impedir a exclusão

@@ -1,28 +1,28 @@
-Feature: Vincular um time a um usuÃ¡rio responsÃ¡vel
+Feature: Vincular um time a um usuário responsável
 
-  As a usuÃ¡rio autenticado
-  I want vincular um time a um responsÃ¡vel
+  As a usuário autenticado
+  I want vincular um time a um responsável
   So that o sistema saiba quem pode gerenciar a equipe
 
-  Scenario: Vincular time a um usuÃ¡rio responsÃ¡vel com sucesso
-    Given que o usuÃ¡rio estÃ¡ autenticado
+  Scenario: Vincular time a um usuário responsável com sucesso
+    Given que o usuário está autenticado
     And que existe um time cadastrado
-    When ele for definido como responsÃ¡vel pelo time
-    Then o sistema deve vincular o time a esse usuÃ¡rio
+    When ele for definido como responsável pelo time
+    Then o sistema deve vincular o time a esse usuário
 
-  Scenario: Alterar o responsÃ¡vel de um time
-    Given que o usuÃ¡rio estÃ¡ autenticado
-    And que existe um time com responsÃ¡vel definido
-    When for registrado um novo usuÃ¡rio responsÃ¡vel pelo time
-    Then o sistema deve atualizar o vÃ­nculo de responsabilidade
+  Scenario: Alterar o responsável de um time
+    Given que o usuário está autenticado
+    And que existe um time com responsável definido
+    When for registrado um novo usuário responsável pelo time
+    Then o sistema deve atualizar o vínculo de responsabilidade
 
-  Scenario: Impedir vÃ­nculo de time a usuÃ¡rio inexistente
+  Scenario: Impedir vínculo de time a usuário inexistente
     Given que existe um time cadastrado
-    When for informado um usuÃ¡rio inexistente como responsÃ¡vel
-    Then o sistema deve impedir o vÃ­nculo
+    When for informado um usuário inexistente como responsável
+    Then o sistema deve impedir o vínculo
 
-  Scenario: Impedir gerenciamento do time por usuÃ¡rio nÃ£o vinculado
-    Given que existe um time vinculado a um usuÃ¡rio responsÃ¡vel
-    And que outro usuÃ¡rio autenticado nÃ£o Ã© o responsÃ¡vel pelo time
+  Scenario: Impedir gerenciamento do time por usuário não vinculado
+    Given que existe um time vinculado a um usuário responsável
+    And que outro usuário autenticado não é o responsável pelo time
     When ele tentar gerenciar o time
-    Then o sistema deve impedir a operaÃ§Ã£o
+    Then o sistema deve impedir a operação

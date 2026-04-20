@@ -1,21 +1,21 @@
-Feature: Visualizar torneios disponÃ­veis na plataforma
+Feature: Visualizar torneios disponíveis na plataforma
 
-  As a visitante ou usuÃ¡rio autenticado
-  I want visualizar os torneios disponÃ­veis na plataforma
-  So that eu possa conhecer as competiÃ§Ãµes existentes
+  As a visitante ou usuário autenticado
+  I want visualizar os torneios disponíveis na plataforma
+  So that eu possa conhecer as competições existentes
 
-  Scenario: Visitante visualiza torneios disponÃ­veis
+  Scenario: Visitante visualiza torneios disponíveis
     Given que existem torneios cadastrados na plataforma
-    When o visitante acessar a pÃ¡gina inicial
-    Then o sistema deve exibir os torneios disponÃ­veis para visualizaÃ§Ã£o
+    When o visitante acessar a página inicial
+    Then o sistema deve exibir os torneios disponíveis para visualização
 
-  Scenario: UsuÃ¡rio autenticado visualiza torneios disponÃ­veis
+  Scenario: Usuário autenticado visualiza torneios disponíveis
     Given que existem torneios cadastrados na plataforma
-    And que o usuÃ¡rio estÃ¡ autenticado
-    When o usuÃ¡rio acessar a pÃ¡gina inicial
-    Then o sistema deve exibir os torneios disponÃ­veis para visualizaÃ§Ã£o
+    And que o usuário está autenticado
+    When o usuário acessar a página inicial
+    Then o sistema deve exibir os torneios disponíveis para visualização
 
-  Scenario: Nenhum torneio disponÃ­vel para visualizaÃ§Ã£o
-    Given que nÃ£o existem torneios cadastrados na plataforma
-    When o visitante acessar a pÃ¡gina inicial
-    Then o sistema deve informar que nÃ£o hÃ¡ torneios disponÃ­veis no momento
+  Scenario: Nenhum torneio disponível para visualização
+    Given que não existem torneios cadastrados na plataforma
+    When o visitante acessar a página inicial
+    Then o sistema deve informar que não há torneios disponíveis no momento

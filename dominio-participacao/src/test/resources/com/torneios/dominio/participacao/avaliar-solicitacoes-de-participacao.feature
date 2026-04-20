@@ -1,29 +1,29 @@
-Feature: Avaliar solicitaÃ§Ãµes de participaÃ§Ã£o de times no torneio
+Feature: Avaliar solicitações de participação de times no torneio
 
   As a organizador do torneio
-  I want avaliar solicitaÃ§Ãµes de participaÃ§Ã£o de times
-  So that eu possa definir quais equipes entrarÃ£o na competiÃ§Ã£o
+  I want avaliar solicitações de participação de times
+  So that eu possa definir quais equipes entrarão na competição
 
-  Scenario: Organizador aprova solicitaÃ§Ã£o de participaÃ§Ã£o
-    Given que existe uma solicitaÃ§Ã£o pendente de participaÃ§Ã£o para um torneio
-    And que o usuÃ¡rio autenticado Ã© o organizador do torneio
-    When o organizador aprovar a solicitaÃ§Ã£o
+  Scenario: Organizador aprova solicitação de participação
+    Given que existe uma solicitação pendente de participação para um torneio
+    And que o usuário autenticado é o organizador do torneio
+    When o organizador aprovar a solicitação
     Then o sistema deve registrar o time como participante aprovado do torneio
 
-  Scenario: Organizador rejeita solicitaÃ§Ã£o de participaÃ§Ã£o
-    Given que existe uma solicitaÃ§Ã£o pendente de participaÃ§Ã£o para um torneio
-    And que o usuÃ¡rio autenticado Ã© o organizador do torneio
-    When o organizador rejeitar a solicitaÃ§Ã£o
-    Then o sistema deve registrar a solicitaÃ§Ã£o como rejeitada
+  Scenario: Organizador rejeita solicitação de participação
+    Given que existe uma solicitação pendente de participação para um torneio
+    And que o usuário autenticado é o organizador do torneio
+    When o organizador rejeitar a solicitação
+    Then o sistema deve registrar a solicitação como rejeitada
 
-  Scenario: UsuÃ¡rio que nÃ£o Ã© organizador tenta avaliar solicitaÃ§Ã£o
-    Given que existe uma solicitaÃ§Ã£o pendente de participaÃ§Ã£o para um torneio
-    And que o usuÃ¡rio autenticado nÃ£o Ã© o organizador do torneio
-    When ele tentar aprovar a solicitaÃ§Ã£o
-    Then o sistema deve impedir a operaÃ§Ã£o
+  Scenario: Usuário que não é organizador tenta avaliar solicitação
+    Given que existe uma solicitação pendente de participação para um torneio
+    And que o usuário autenticado não é o organizador do torneio
+    When ele tentar aprovar a solicitação
+    Then o sistema deve impedir a operação
 
-  Scenario: Organizador tenta avaliar solicitaÃ§Ã£o inexistente
-    Given que nÃ£o existe solicitaÃ§Ã£o pendente para o torneio
-    And que o usuÃ¡rio autenticado Ã© o organizador do torneio
-    When ele tentar avaliar uma solicitaÃ§Ã£o
-    Then o sistema deve informar que nÃ£o hÃ¡ solicitaÃ§Ã£o pendente para avaliaÃ§Ã£o
+  Scenario: Organizador tenta avaliar solicitação inexistente
+    Given que não existe solicitação pendente para o torneio
+    And que o usuário autenticado é o organizador do torneio
+    When ele tentar avaliar uma solicitação
+    Then o sistema deve informar que não há solicitação pendente para avaliação
