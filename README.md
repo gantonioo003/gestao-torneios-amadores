@@ -104,6 +104,7 @@ gestao-torneios-amadores
 |-- mvnw
 |-- mvnw.cmd
 `-- README.md
+|--torneio.cml
 ```
 
 ## Estrutura de Dominio Implementada
