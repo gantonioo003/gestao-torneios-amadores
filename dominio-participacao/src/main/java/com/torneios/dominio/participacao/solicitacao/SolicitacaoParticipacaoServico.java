@@ -3,10 +3,14 @@ package com.torneios.dominio.participacao.solicitacao;
 import java.util.List;
 import java.util.Objects;
 
+import com.torneios.dominio.compartilhado.excecao.EntidadeNaoEncontradaException;
+import com.torneios.dominio.compartilhado.excecao.OperacaoNaoPermitidaException;
+import com.torneios.dominio.compartilhado.excecao.RegraDeNegocioException;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.acesso.AutenticacaoServico;
+import com.torneios.dominio.participacao.time.Time;
 import com.torneios.dominio.participacao.time.TimeRepositorio;
 
 public class SolicitacaoParticipacaoServico {
@@ -14,15 +18,19 @@ public class SolicitacaoParticipacaoServico {
     private final SolicitacaoParticipacaoRepositorio solicitacaoParticipacaoRepositorio;
     private final TimeRepositorio timeRepositorio;
     private final AutenticacaoServico autenticacaoServico;
+    private final PoliticaParticipacaoTorneio politicaParticipacaoTorneio;
 
     public SolicitacaoParticipacaoServico(SolicitacaoParticipacaoRepositorio solicitacaoParticipacaoRepositorio,
                                           TimeRepositorio timeRepositorio,
-                                          AutenticacaoServico autenticacaoServico) {
+                                          AutenticacaoServico autenticacaoServico,
+                                          PoliticaParticipacaoTorneio politicaParticipacaoTorneio) {
         this.solicitacaoParticipacaoRepositorio = Objects.requireNonNull(solicitacaoParticipacaoRepositorio,
                 "O repositorio de solicitacoes e obrigatorio.");
         this.timeRepositorio = Objects.requireNonNull(timeRepositorio, "O repositorio de times e obrigatorio.");
         this.autenticacaoServico = Objects.requireNonNull(autenticacaoServico,
                 "O servico de autenticacao e obrigatorio.");
+        this.politicaParticipacaoTorneio = Objects.requireNonNull(politicaParticipacaoTorneio,
+                "A politica de participacao do torneio e obrigatoria.");
     }
 
     public SolicitacaoParticipacao solicitarParticipacao(SolicitacaoParticipacaoId solicitacaoId,
@@ -30,32 +38,55 @@ public class SolicitacaoParticipacaoServico {
                                                          TimeId timeId,
                                                          TorneioId torneioId) {
         autenticacaoServico.exigirAutenticacao(usuarioId);
-        timeRepositorio.buscarPorId(timeId)
-                .orElseThrow(() -> new IllegalStateException("E necessario possuir um time cadastrado."));
+        Time time = timeRepositorio.buscarPorId(timeId)
+                .orElseThrow(() -> new RegraDeNegocioException("E necessario possuir um time cadastrado."));
+        if (!time.getResponsavel().equals(usuarioId)) {
+            throw new OperacaoNaoPermitidaException(
+                    "A solicitacao de participacao deve ser realizada pelo responsavel do time.");
+        }
+        if (!politicaParticipacaoTorneio.aceitaSolicitacoes(torneioId)) {
+            throw new OperacaoNaoPermitidaException("O torneio nao aceita novas solicitacoes de participacao.");
+        }
+        if (solicitacaoParticipacaoRepositorio.existePendentePorTimeETorneio(timeId, torneioId)) {
+            throw new RegraDeNegocioException("Ja existe uma solicitacao pendente para esse time no torneio.");
+        }
 
         SolicitacaoParticipacao solicitacao = new SolicitacaoParticipacao(solicitacaoId, usuarioId, timeId, torneioId);
         solicitacaoParticipacaoRepositorio.salvar(solicitacao);
         return solicitacao;
     }
 
-    public void aprovarSolicitacao(SolicitacaoParticipacaoId solicitacaoId) {
+    public void aprovarSolicitacao(SolicitacaoParticipacaoId solicitacaoId, UsuarioId organizadorId) {
+        autenticacaoServico.exigirAutenticacao(organizadorId);
         SolicitacaoParticipacao solicitacao = obterSolicitacao(solicitacaoId);
+        validarOrganizador(solicitacao.getTorneioId(), organizadorId);
         solicitacao.aprovar();
         solicitacaoParticipacaoRepositorio.salvar(solicitacao);
     }
 
-    public void rejeitarSolicitacao(SolicitacaoParticipacaoId solicitacaoId) {
+    public void rejeitarSolicitacao(SolicitacaoParticipacaoId solicitacaoId, UsuarioId organizadorId) {
+        autenticacaoServico.exigirAutenticacao(organizadorId);
         SolicitacaoParticipacao solicitacao = obterSolicitacao(solicitacaoId);
+        validarOrganizador(solicitacao.getTorneioId(), organizadorId);
         solicitacao.rejeitar();
         solicitacaoParticipacaoRepositorio.salvar(solicitacao);
     }
 
-    public List<SolicitacaoParticipacao> listarPendentes(TorneioId torneioId) {
+    public List<SolicitacaoParticipacao> listarPendentesParaAvaliacao(TorneioId torneioId, UsuarioId organizadorId) {
+        autenticacaoServico.exigirAutenticacao(organizadorId);
+        validarOrganizador(torneioId, organizadorId);
         return solicitacaoParticipacaoRepositorio.listarPendentesPorTorneio(torneioId);
     }
 
     public SolicitacaoParticipacao obterSolicitacao(SolicitacaoParticipacaoId solicitacaoId) {
         return solicitacaoParticipacaoRepositorio.buscarPorId(solicitacaoId)
-                .orElseThrow(() -> new IllegalArgumentException("Solicitacao de participacao nao encontrada."));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Solicitacao de participacao nao encontrada."));
+    }
+
+    private void validarOrganizador(TorneioId torneioId, UsuarioId organizadorId) {
+        if (!politicaParticipacaoTorneio.usuarioEhOrganizador(torneioId, organizadorId)) {
+            throw new OperacaoNaoPermitidaException(
+                    "Apenas o organizador do torneio pode avaliar solicitacoes de participacao.");
+        }
     }
 }

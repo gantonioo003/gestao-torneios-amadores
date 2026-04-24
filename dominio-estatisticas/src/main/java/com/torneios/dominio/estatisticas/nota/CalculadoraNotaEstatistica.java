@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 import com.torneios.dominio.compartilhado.enumeracao.TipoEventoEstatistico;
+import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.estatisticas.evento.EventoEstatistico;
@@ -18,19 +19,17 @@ public class CalculadoraNotaEstatistica {
 
     public NotaEstatistica calcular(TorneioId torneioId,
                                     PartidaId partidaId,
-                                    long jogadorId,
+                                    JogadorId jogadorId,
                                     Collection<EventoEstatistico> eventos) {
         Objects.requireNonNull(torneioId, "O torneio e obrigatorio para calcular a nota.");
         Objects.requireNonNull(partidaId, "A partida e obrigatoria para calcular a nota.");
         Objects.requireNonNull(eventos, "Os eventos sao obrigatorios para calcular a nota.");
-        if (jogadorId <= 0) {
-            throw new IllegalArgumentException("O jogador deve ser informado para calcular a nota.");
-        }
+        Objects.requireNonNull(jogadorId, "O jogador deve ser informado para calcular a nota.");
 
         double valor = NOTA_BASE;
 
         for (EventoEstatistico evento : eventos) {
-            if (evento.getJogadorId() != jogadorId) {
+            if (!evento.getJogadorId().equals(jogadorId)) {
                 continue;
             }
             if (!evento.getPartidaId().equals(partidaId)) {

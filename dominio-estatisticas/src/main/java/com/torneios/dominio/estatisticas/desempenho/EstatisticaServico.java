@@ -3,6 +3,7 @@ package com.torneios.dominio.estatisticas.desempenho;
 import java.util.List;
 import java.util.Objects;
 
+import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.estatisticas.evento.EventoEstatistico;
@@ -30,13 +31,21 @@ public class EstatisticaServico {
         return estatisticaTorneio;
     }
 
-    public NotaEstatistica calcularNotaJogador(TorneioId torneioId, PartidaId partidaId, long jogadorId) {
+    public NotaEstatistica calcularNotaJogador(TorneioId torneioId, PartidaId partidaId, JogadorId jogadorId) {
         List<EventoEstatistico> eventos = eventoEstatisticoRepositorio.listarPorPartida(partidaId);
         return calculadoraNotaEstatistica.calcular(torneioId, partidaId, jogadorId, eventos);
     }
 
-    public EstatisticaJogador obterEstatisticaJogador(TorneioId torneioId, long jogadorId) {
+    public EstatisticaJogador obterEstatisticaJogador(TorneioId torneioId, JogadorId jogadorId) {
         EstatisticaTorneio estatisticaTorneio = consolidarTorneio(torneioId);
         return estatisticaTorneio.obterOuCriar(jogadorId);
+    }
+
+    public List<EstatisticaJogador> listarEstatisticasJogadores(TorneioId torneioId) {
+        return estatisticaTorneioComoLista(consolidarTorneio(torneioId));
+    }
+
+    private List<EstatisticaJogador> estatisticaTorneioComoLista(EstatisticaTorneio estatisticaTorneio) {
+        return estatisticaTorneio.getEstatisticasJogadores().stream().toList();
     }
 }

@@ -2,28 +2,32 @@ package com.torneios.dominio.torneio.participante;
 
 import java.util.Objects;
 
-import com.torneios.dominio.torneio.torneio.TorneioId;
+import com.torneios.dominio.compartilhado.enumeracao.StatusParticipante;
+import com.torneios.dominio.compartilhado.time.TimeId;
+import com.torneios.dominio.compartilhado.torneio.TorneioId;
 
 public final class ParticipanteTorneio {
 
-    private final long timeId;
+    private final TimeId timeId;
     private final TorneioId torneioId;
+    private final StatusParticipante status;
 
-    public ParticipanteTorneio(long timeId, TorneioId torneioId) {
-        if (timeId <= 0) {
-            throw new IllegalArgumentException("O id do time deve ser maior que zero.");
-        }
-
-        this.timeId = timeId;
+    public ParticipanteTorneio(TimeId timeId, TorneioId torneioId) {
+        this.timeId = Objects.requireNonNull(timeId, "O id do time do participante e obrigatorio.");
         this.torneioId = Objects.requireNonNull(torneioId, "O torneio do participante e obrigatorio.");
+        this.status = StatusParticipante.APROVADO;
     }
 
-    public long getTimeId() {
+    public TimeId getTimeId() {
         return timeId;
     }
 
     public TorneioId getTorneioId() {
         return torneioId;
+    }
+
+    public StatusParticipante getStatus() {
+        return status;
     }
 
     @Override

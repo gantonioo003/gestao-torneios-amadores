@@ -1,6 +1,10 @@
 package com.torneios.dominio.torneio.estrutura;
 
-import com.torneios.dominio.torneio.torneio.FormatoTorneio;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.torneios.dominio.compartilhado.enumeracao.FormatoTorneio;
+import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.torneio.torneio.Torneio;
 
 public class GeradorEstruturaCompeticaoServico {
@@ -25,6 +29,7 @@ public class GeradorEstruturaCompeticaoServico {
             case GRUPOS -> {
                 estrutura.adicionarEtapa("Fase de grupos");
                 estrutura.adicionarEtapa("Transicao para mata-mata");
+                gerarGrupos(torneio, estrutura);
             }
         }
 
@@ -38,5 +43,23 @@ public class GeradorEstruturaCompeticaoServico {
             case PONTOS_CORRIDOS -> TipoEstruturaCompeticao.TABELA;
             case FASE_DE_GRUPOS_COM_MATA_MATA -> TipoEstruturaCompeticao.GRUPOS;
         };
+    }
+
+    private void gerarGrupos(Torneio torneio, EstruturaCompeticao estrutura) {
+        List<TimeId> participantes = torneio.getParticipantesAprovados()
+                .stream()
+                .map(participante -> participante.getTimeId())
+                .toList();
+
+        List<Grupo> grupos = new ArrayList<>();
+        grupos.add(new Grupo("Grupo A"));
+        grupos.add(new Grupo("Grupo B"));
+
+        for (int i = 0; i < participantes.size(); i++) {
+            Grupo grupo = grupos.get(i % grupos.size());
+            grupo.adicionarParticipante(participantes.get(i));
+        }
+
+        grupos.forEach(estrutura::adicionarGrupo);
     }
 }

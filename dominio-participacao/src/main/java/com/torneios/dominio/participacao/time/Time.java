@@ -1,28 +1,36 @@
 package com.torneios.dominio.participacao.time;
 
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import com.torneios.dominio.compartilhado.excecao.EntidadeNaoEncontradaException;
+import com.torneios.dominio.compartilhado.excecao.RegraDeNegocioException;
+import com.torneios.dominio.compartilhado.jogador.Jogador;
+import com.torneios.dominio.compartilhado.jogador.JogadorId;
+import com.torneios.dominio.compartilhado.tecnico.Tecnico;
+import com.torneios.dominio.compartilhado.tecnico.TecnicoId;
 import com.torneios.dominio.compartilhado.time.TimeId;
+import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
-import com.torneios.dominio.participacao.jogador.Jogador;
-import com.torneios.dominio.participacao.tecnico.Tecnico;
 
 public class Time {
 
     private final TimeId id;
     private String nome;
     private UsuarioId responsavel;
-    private final Set<Jogador> jogadores;
-    private final Set<Long> torneiosVinculados;
+    private final Map<JogadorId, Jogador> jogadores;
+    private final Set<TorneioId> torneiosVinculados;
     private Tecnico tecnico;
 
     public Time(TimeId id, String nome, UsuarioId responsavel) {
         this.id = Objects.requireNonNull(id, "O id do time e obrigatorio.");
         this.nome = validarNome(nome);
         this.responsavel = Objects.requireNonNull(responsavel, "O responsavel do time e obrigatorio.");
-        this.jogadores = new LinkedHashSet<>();
+        this.jogadores = new LinkedHashMap<>();
         this.torneiosVinculados = new LinkedHashSet<>();
     }
 
@@ -38,8 +46,8 @@ public class Time {
         return responsavel;
     }
 
-    public Set<Jogador> getJogadores() {
-        return Set.copyOf(jogadores);
+    public Collection<Jogador> getJogadores() {
+        return java.util.List.copyOf(jogadores.values());
     }
 
     public Tecnico getTecnico() {
@@ -55,25 +63,50 @@ public class Time {
     }
 
     public void adicionarJogador(Jogador jogador) {
-        jogadores.add(Objects.requireNonNull(jogador, "O jogador do time e obrigatorio."));
+        Objects.requireNonNull(jogador, "O jogador do time e obrigatorio.");
+        if (!jogador.getTimeId().equals(id)) {
+            throw new RegraDeNegocioException("O jogador deve estar vinculado ao proprio time.");
+        }
+        if (jogadores.containsKey(jogador.getId())) {
+            throw new RegraDeNegocioException("Ja existe um jogador com esse id no elenco do time.");
+        }
+        jogadores.put(jogador.getId(), jogador);
     }
 
-    public void removerJogador(long jogadorId) {
-        jogadores.removeIf(jogador -> jogador.getId() == jogadorId);
+    public void editarJogador(JogadorId jogadorId, String novoNome) {
+        obterJogador(jogadorId).renomear(novoNome);
+    }
+
+    public void removerJogador(JogadorId jogadorId) {
+        if (jogadores.remove(jogadorId) == null) {
+            throw new EntidadeNaoEncontradaException("Jogador nao encontrado no elenco do time.");
+        }
     }
 
     public void associarTecnico(Tecnico tecnico) {
-        this.tecnico = Objects.requireNonNull(tecnico, "O tecnico do time e obrigatorio.");
+        Objects.requireNonNull(tecnico, "O tecnico do time e obrigatorio.");
+        if (!tecnico.getTimeId().equals(id)) {
+            throw new RegraDeNegocioException("O tecnico deve estar vinculado ao proprio time.");
+        }
+        this.tecnico = tecnico;
+    }
+
+    public void editarTecnico(TecnicoId tecnicoId, String novoNome) {
+        if (tecnico == null || !tecnico.getId().equals(tecnicoId)) {
+            throw new EntidadeNaoEncontradaException("Tecnico nao encontrado no time.");
+        }
+        tecnico.renomear(novoNome);
     }
 
     public void removerTecnico() {
+        if (tecnico == null) {
+            throw new EntidadeNaoEncontradaException("Nao existe tecnico associado ao time.");
+        }
         this.tecnico = null;
     }
 
-    public void vincularAoTorneio(long torneioId) {
-        if (torneioId <= 0) {
-            throw new IllegalArgumentException("O id do torneio vinculado deve ser maior que zero.");
-        }
+    public void vincularAoTorneio(TorneioId torneioId) {
+        Objects.requireNonNull(torneioId, "O torneio vinculado e obrigatorio.");
         torneiosVinculados.add(torneioId);
     }
 
@@ -81,8 +114,16 @@ public class Time {
         return !torneiosVinculados.isEmpty();
     }
 
-    public boolean possuiJogador(long jogadorId) {
-        return jogadores.stream().anyMatch(jogador -> jogador.getId() == jogadorId);
+    public boolean possuiJogador(JogadorId jogadorId) {
+        return jogadores.containsKey(jogadorId);
+    }
+
+    public boolean estaVinculadoAoTorneio(TorneioId torneioId) {
+        return torneiosVinculados.contains(torneioId);
+    }
+
+    public void removerVinculoTorneio(TorneioId torneioId) {
+        torneiosVinculados.remove(torneioId);
     }
 
     private String validarNome(String valor) {
@@ -90,5 +131,13 @@ public class Time {
             throw new IllegalArgumentException("O nome do time e obrigatorio.");
         }
         return valor.trim();
+    }
+
+    private Jogador obterJogador(JogadorId jogadorId) {
+        Jogador jogador = jogadores.get(jogadorId);
+        if (jogador == null) {
+            throw new EntidadeNaoEncontradaException("Jogador nao encontrado no elenco do time.");
+        }
+        return jogador;
     }
 }

@@ -1,7 +1,10 @@
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-competicao\src\main\java\com\torneios\dominio\competicao\chaveamento\Chaveamento.java
+C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-competicao\src\main\java\com\torneios\dominio\competicao\chaveamento\ChaveamentoServico.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-competicao\src\main\java\com\torneios\dominio\competicao\classificacao\Classificacao.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-competicao\src\main\java\com\torneios\dominio\competicao\classificacao\ClassificacaoServico.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-competicao\src\main\java\com\torneios\dominio\competicao\geracao\GeradorPartidasServico.java
+C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-competicao\src\main\java\com\torneios\dominio\competicao\partida\AtualizacaoCompeticao.java
+C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-competicao\src\main\java\com\torneios\dominio\competicao\partida\ConsultaCompeticaoTorneio.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-competicao\src\main\java\com\torneios\dominio\competicao\partida\Partida.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-competicao\src\main\java\com\torneios\dominio\competicao\partida\PartidaRepositorio.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-competicao\src\main\java\com\torneios\dominio\competicao\partida\PartidaServico.java

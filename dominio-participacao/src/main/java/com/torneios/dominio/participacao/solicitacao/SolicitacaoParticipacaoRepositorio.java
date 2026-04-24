@@ -3,6 +3,7 @@ package com.torneios.dominio.participacao.solicitacao;
 import java.util.List;
 import java.util.Optional;
 
+import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 
 public interface SolicitacaoParticipacaoRepositorio {
@@ -12,4 +13,6 @@ public interface SolicitacaoParticipacaoRepositorio {
     Optional<SolicitacaoParticipacao> buscarPorId(SolicitacaoParticipacaoId solicitacaoId);
 
     List<SolicitacaoParticipacao> listarPendentesPorTorneio(TorneioId torneioId);
+
+    boolean existePendentePorTimeETorneio(TimeId timeId, TorneioId torneioId);
 }

@@ -5,8 +5,10 @@ C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-estat
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-estatisticas\src\main\java\com\torneios\dominio\estatisticas\evento\Assistencia.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-estatisticas\src\main\java\com\torneios\dominio\estatisticas\evento\CartaoAmarelo.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-estatisticas\src\main\java\com\torneios\dominio\estatisticas\evento\CartaoVermelho.java
+C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-estatisticas\src\main\java\com\torneios\dominio\estatisticas\evento\ConsultaEstatisticaCompeticao.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-estatisticas\src\main\java\com\torneios\dominio\estatisticas\evento\EventoEstatistico.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-estatisticas\src\main\java\com\torneios\dominio\estatisticas\evento\EventoEstatisticoRepositorio.java
+C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-estatisticas\src\main\java\com\torneios\dominio\estatisticas\evento\EventoEstatisticoServico.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-estatisticas\src\main\java\com\torneios\dominio\estatisticas\evento\Gol.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-estatisticas\src\main\java\com\torneios\dominio\estatisticas\nota\CalculadoraNotaEstatistica.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-estatisticas\src\main\java\com\torneios\dominio\estatisticas\nota\NotaEstatistica.java

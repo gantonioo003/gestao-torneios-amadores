@@ -12,9 +12,11 @@ C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compa
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\excecao\EntidadeNaoEncontradaException.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\excecao\OperacaoNaoPermitidaException.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\excecao\RegraDeNegocioException.java
+C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\jogador\Jogador.java
+C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\jogador\JogadorId.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\partida\PartidaId.java
-C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\partida\Resultado.java
-C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\time\Time.java
+C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\tecnico\Tecnico.java
+C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\tecnico\TecnicoId.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\time\TimeId.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\torneio\TorneioId.java
 C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\src\main\java\com\torneios\dominio\compartilhado\usuario\Usuario.java

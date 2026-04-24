@@ -4,13 +4,14 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.estatisticas.evento.EventoEstatistico;
 
 public class EstatisticaTorneio {
 
     private final TorneioId torneioId;
-    private final Map<Long, EstatisticaJogador> estatisticasPorJogador;
+    private final Map<JogadorId, EstatisticaJogador> estatisticasPorJogador;
 
     public EstatisticaTorneio(TorneioId torneioId) {
         if (torneioId == null) {
@@ -37,6 +38,10 @@ public class EstatisticaTorneio {
     }
 
     public EstatisticaJogador obterOuCriar(long jogadorId) {
+        return obterOuCriar(new JogadorId(jogadorId));
+    }
+
+    public EstatisticaJogador obterOuCriar(JogadorId jogadorId) {
         return estatisticasPorJogador.computeIfAbsent(
                 jogadorId,
                 id -> new EstatisticaJogador(torneioId, id));

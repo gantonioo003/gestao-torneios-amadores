@@ -20,7 +20,7 @@ public class ArtilhariaServico {
                 .getEstatisticasJogadores()
                 .stream()
                 .sorted(Comparator.comparingInt(EstatisticaJogador::getGols).reversed()
-                        .thenComparingLong(EstatisticaJogador::getJogadorId))
+                        .thenComparingLong(estatisticaJogador -> estatisticaJogador.getJogadorId().valor()))
                 .toList();
     }
 }

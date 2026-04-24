@@ -1,33 +1,31 @@
 package com.torneios.dominio.estatisticas.desempenho;
 
 import com.torneios.dominio.compartilhado.enumeracao.TipoEventoEstatistico;
+import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 
 public class EstatisticaJogador {
 
     private final TorneioId torneioId;
-    private final long jogadorId;
+    private final JogadorId jogadorId;
     private int gols;
     private int assistencias;
     private int cartoesAmarelos;
     private int cartoesVermelhos;
 
-    public EstatisticaJogador(TorneioId torneioId, long jogadorId) {
+    public EstatisticaJogador(TorneioId torneioId, JogadorId jogadorId) {
         if (torneioId == null) {
             throw new IllegalArgumentException("O torneio da estatistica e obrigatorio.");
         }
-        if (jogadorId <= 0) {
-            throw new IllegalArgumentException("O jogador da estatistica e obrigatorio.");
-        }
         this.torneioId = torneioId;
-        this.jogadorId = jogadorId;
+        this.jogadorId = java.util.Objects.requireNonNull(jogadorId, "O jogador da estatistica e obrigatorio.");
     }
 
     public TorneioId getTorneioId() {
         return torneioId;
     }
 
-    public long getJogadorId() {
+    public JogadorId getJogadorId() {
         return jogadorId;
     }
 

@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.torneios.dominio.torneio.torneio.TorneioId;
+import com.torneios.dominio.compartilhado.torneio.TorneioId;
 
 public class EstruturaCompeticao {
 
     private final TorneioId torneioId;
     private final TipoEstruturaCompeticao tipo;
     private final List<String> etapas;
+    private final List<Grupo> grupos;
 
     public EstruturaCompeticao(TorneioId torneioId, TipoEstruturaCompeticao tipo) {
         this.torneioId = Objects.requireNonNull(torneioId, "O torneio da estrutura e obrigatorio.");
         this.tipo = Objects.requireNonNull(tipo, "O tipo da estrutura e obrigatorio.");
         this.etapas = new ArrayList<>();
+        this.grupos = new ArrayList<>();
     }
 
     public TorneioId getTorneioId() {
@@ -30,8 +32,12 @@ public class EstruturaCompeticao {
         return List.copyOf(etapas);
     }
 
+    public List<Grupo> getGrupos() {
+        return List.copyOf(grupos);
+    }
+
     public boolean foiGerada() {
-        return !etapas.isEmpty();
+        return !etapas.isEmpty() || !grupos.isEmpty();
     }
 
     public void adicionarEtapa(String etapa) {
@@ -39,5 +45,9 @@ public class EstruturaCompeticao {
             throw new IllegalArgumentException("A etapa da estrutura nao pode ser vazia.");
         }
         etapas.add(etapa.trim());
+    }
+
+    public void adicionarGrupo(Grupo grupo) {
+        grupos.add(Objects.requireNonNull(grupo, "O grupo da estrutura e obrigatorio."));
     }
 }

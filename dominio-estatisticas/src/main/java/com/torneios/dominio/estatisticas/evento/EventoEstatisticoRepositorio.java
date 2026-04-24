@@ -2,6 +2,7 @@ package com.torneios.dominio.estatisticas.evento;
 
 import java.util.List;
 
+import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 
@@ -15,5 +16,5 @@ public interface EventoEstatisticoRepositorio {
 
     List<EventoEstatistico> listarPorPartida(PartidaId partidaId);
 
-    List<EventoEstatistico> listarPorJogadorNoTorneio(long jogadorId, TorneioId torneioId);
+    List<EventoEstatistico> listarPorJogadorNoTorneio(JogadorId jogadorId, TorneioId torneioId);
 }

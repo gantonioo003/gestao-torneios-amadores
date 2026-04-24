@@ -13,4 +13,6 @@ public interface TimeRepositorio {
     Optional<Time> buscarPorId(TimeId timeId);
 
     List<Time> listarPorResponsavel(UsuarioId usuarioId);
+
+    void remover(TimeId timeId);
 }
