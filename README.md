@@ -2,11 +2,13 @@
 
 Projeto academico desenvolvido para a disciplina de Requisitos e Projeto de Software, com foco em Domain-Driven Design (DDD), Behavior-Driven Development (BDD) e arquitetura modular com Maven.
 
-O sistema tem como objetivo apoiar a gestao de torneios amadores de futebol, incluindo cadastro e organizacao de torneios, participacao de times, gerenciamento da competicao e consolidacao de estatisticas de desempenho.
+O sistema tem como objetivo apoiar a gestao de torneios amadores de futebol, incluindo cadastro e organizacao de torneios, participacao de times, gerenciamento da competicao e consolidacao opcional de estatisticas de desempenho.
 
 ## Visao Geral
 
 O projeto foi modelado para atender um cenario em que competicoes amadoras sao organizadas manualmente, com pouca padronizacao e alto risco de inconsistencias em inscricoes, partidas, classificacao e estatisticas.
+
+O fluxo principal do sistema depende do registro de torneios, participantes, partidas e placares. O registro de eventos detalhados, como gols por jogador, assistencias e cartoes, e complementar: o torneio pode acontecer normalmente apenas com o resultado oficial de cada partida, e as estatisticas so aparecem quando esses eventos forem informados.
 
 O sistema proposto permite:
 
@@ -16,10 +18,10 @@ O sistema proposto permite:
 - solicitar e avaliar participacao de times
 - gerenciar participantes aprovados
 - gerar estrutura da competicao e partidas
-- registrar resultados de partidas
-- registrar gols, assistencias e cartoes
-- calcular nota estatistica de jogadores
-- acompanhar classificacao, chaveamento e artilharia
+- registrar resultados oficiais de partidas
+- registrar gols, assistencias e cartoes de forma opcional
+- calcular nota estatistica de jogadores quando houver eventos registrados
+- acompanhar classificacao, chaveamento e artilharia quando houver dados suficientes
 
 ## Estado Atual do Projeto
 
@@ -30,8 +32,9 @@ O projeto encontra-se estruturado em modulos de dominio e ja possui:
 - mapa de historias do usuario
 - modelagem com Context Mapper
 - cenarios BDD em arquivos `.feature`
-- estrutura inicial de automacao com Cucumber por dominio
-- implementacao inicial da camada de dominio nos modulos principais
+- automacao Cucumber distribuida por dominio com `steps` e repositorios em memoria
+- implementacao da camada de dominio nos modulos principais
+- prototipos de baixa e alta fidelidade na documentacao
 - Maven Wrapper configurado no repositorio
 
 No estado atual, o foco principal esta na Entrega 1, com enfase em modelagem de dominio, especificacao comportamental e organizacao da base para a implementacao posterior das demais camadas.
@@ -46,7 +49,7 @@ O projeto segue uma organizacao modular orientada a contexto de negocio. Cada mo
 - `dominio-participacao`: autenticacao de acesso, solicitacoes de participacao, times, jogadores, tecnico e responsavel do time
 - `dominio-torneio`: criacao e configuracao do torneio, participantes aprovados, organizador e estrutura da competicao
 - `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento e geracao de partidas
-- `dominio-estatisticas`: eventos estatisticos, nota estatistica, desempenho e artilharia
+- `dominio-estatisticas`: eventos estatisticos opcionais, nota estatistica, desempenho e artilharia
 - `pai`: modulo pai Maven com configuracao compartilhada
 
 ## Domain-Driven Design
@@ -74,11 +77,12 @@ As features estao distribuidas por dominio em:
 - `dominio-competicao/src/test/resources`
 - `dominio-estatisticas/src/test/resources`
 
-Cada modulo tambem possui uma estrutura base de teste com:
+Cada modulo tambem possui automacao de teste com:
 
 - `RunCucumber.java`
 - classe auxiliar de funcionalidade do dominio
-- pasta `steps/` para implementacao das step definitions
+- `steps/` com step definitions
+- repositorios e consultas em memoria para sustentar os cenarios BDD
 
 ## Estrutura do Repositorio
 
@@ -91,7 +95,10 @@ gestao-torneios-amadores
 |   |-- funcionalidades.md
 |   |-- regras-de-negocio.md
 |   |-- mapa-historias.md
-|   `-- cenarios-bdd.md
+|   |-- cenarios-bdd.md
+|   `-- prototipos/
+|       |-- baixa-fidelidade/
+|       `-- alta-fidelidade/
 |
 |-- dominio-compartilhado/
 |-- dominio-participacao/
@@ -99,12 +106,13 @@ gestao-torneios-amadores
 |-- dominio-competicao/
 |-- dominio-estatisticas/
 |
+|-- .mvn/
 |-- pai/
 |-- pom.xml
 |-- mvnw
 |-- mvnw.cmd
-`-- README.md
-|--torneio.cml
+|-- README.md
+`-- torneio.cml
 ```
 
 ## Estrutura de Dominio Implementada
@@ -116,10 +124,11 @@ Atualmente, a camada `src/main/java` ja possui uma base inicial de implementacao
 Inclui elementos comuns reutilizados por outros modulos, como:
 
 - `Usuario` e `UsuarioId`
-- `Time` e `TimeId`
+- `Jogador` e `JogadorId`
+- `Tecnico` e `TecnicoId`
+- `TimeId`
 - `TorneioId`
 - `PartidaId`
-- `Resultado`
 - enumeracoes de formato, status e tipo de evento
 - excecoes de dominio
 - eventos de dominio
@@ -161,9 +170,9 @@ Inclui classes voltadas a:
 
 - eventos estatisticos
 - subclasses de eventos como gol e cartoes
-- nota estatistica
+- nota estatistica quando houver eventos registrados
 - consolidacao de desempenho
-- artilharia
+- artilharia baseada nos gols registrados
 
 ## Documentacao do Projeto
 
@@ -175,6 +184,8 @@ Os principais artefatos da Entrega 1 estao organizados em [documentacao](C:/User
 - [regras-de-negocio.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/regras-de-negocio.md)
 - [mapa-historias.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/mapa-historias.md)
 - [cenarios-bdd.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/cenarios-bdd.md)
+- [prototipo-baixa-fidelidade.png](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/prototipos/baixa-fidelidade/prototipo-baixa-fidelidade.png)
+- [prototipo-alta-fidelidade.png](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/prototipos/alta-fidelidade/prototipo-alta-fidelidade.png)
 
 ## Tecnologias Utilizadas
 
@@ -200,6 +211,8 @@ Os principais artefatos da Entrega 1 estao organizados em [documentacao](C:/User
 .\mvnw.cmd test
 ```
 
+No estado atual, a suite cobre os modulos de dominio com cenarios Cucumber e testes auxiliares, incluindo os fluxos de torneio, participacao, competicao e estatisticas.
+
 ### Executar um modulo especifico
 
 ```powershell
@@ -211,8 +224,6 @@ Os principais artefatos da Entrega 1 estao organizados em [documentacao](C:/User
 As proximas evolucoes previstas para o projeto incluem:
 
 - ampliar a implementacao dos comportamentos de dominio
-- preencher as step definitions do Cucumber
-- consolidar repositorios em memoria para testes
 - introduzir camada de aplicacao
 - implementar persistencia objeto-relacional
 - desenvolver camada de apresentacao web
