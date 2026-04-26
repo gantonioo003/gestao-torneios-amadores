@@ -24,9 +24,40 @@ ContextMap {
 }
 
 BoundedContext Participacao implements Participacao {
+	Service VisualizacaoTorneioServico {
+		void visualizarTorneiosDisponiveis();
+	}
+
+	Service AcessoGerenciamentoTorneioServico {
+		void exigirAcessoCriacaoTorneio(@UsuarioId usuario);
+		void exigirAcessoGerenciamentoTorneios(@UsuarioId usuario);
+	}
+
+	Aggregate Time {
+		Service TimeServico {
+			void criarTime(@TimeId time, String nome, @UsuarioId responsavel);
+			void editarTime(@TimeId time, @UsuarioId usuario, String nome);
+			void excluirTime(@TimeId time, @UsuarioId usuario);
+			void adicionarJogador(@TimeId time, @UsuarioId usuario, @JogadorId jogador, String nomeJogador);
+			void associarTecnico(@TimeId time, @UsuarioId usuario, @TecnicoId tecnico, String nomeTecnico);
+		}
+
+		Entity Time {
+			aggregateRoot
+
+			-TimeId id
+			String nome
+			-UsuarioId responsavel
+
+			Repository TimeRepository {
+				@Time obter(@TimeId id);
+			}
+		}
+	}
+
 	Aggregate SolicitacaoParticipacao {
 		Service SolicitacaoParticipacaoServico {
-			void solicitarParticipacao(@UsuarioId usuario, @TimeId time, @TorneioId torneio);
+			void solicitarParticipacao(@SolicitacaoParticipacaoId solicitacao, @UsuarioId usuario, @TimeId time, @TorneioId torneio);
 			void aprovarSolicitacao(@SolicitacaoParticipacaoId solicitacao, @UsuarioId organizador);
 			void rejeitarSolicitacao(@SolicitacaoParticipacaoId solicitacao, @UsuarioId organizador);
 		}
@@ -38,7 +69,7 @@ BoundedContext Participacao implements Participacao {
 			-UsuarioId solicitante
 			-TimeId time
 			-TorneioId torneio
-			StatusSolicitacao status
+			-StatusSolicitacao status
 
 			Repository SolicitacaoParticipacaoRepository {
 				@SolicitacaoParticipacao obter(@SolicitacaoParticipacaoId id);
@@ -48,18 +79,20 @@ BoundedContext Participacao implements Participacao {
 		ValueObject SolicitacaoParticipacaoId {
 			int id
 		}
-
-		ValueObject StatusSolicitacao {
-			String valor
-		}
 	}
 }
 
 BoundedContext Torneio implements Torneio {
 	Aggregate Torneio {
 		Service TorneioServico {
-			void criarTorneio(String nome, @FormatoTorneio formato, @FormatoEquipe formatoEquipe, @UsuarioId organizador);
-			void gerarEstrutura(@TorneioId torneio);
+			void criarTorneio(@TorneioId id, String nome, @FormatoTorneio formato, @FormatoEquipe formatoEquipe, @UsuarioId organizador, boolean aceitaSolicitacoes);
+			void definirParticipantesIniciais(@TorneioId torneio, @UsuarioId organizador);
+			void aprovarParticipante(@TorneioId torneio, @UsuarioId organizador, @TimeId time);
+			void removerParticipante(@TorneioId torneio, @UsuarioId organizador, @TimeId time);
+			void abrirSolicitacoes(@TorneioId torneio, @UsuarioId organizador);
+			void fecharSolicitacoes(@TorneioId torneio, @UsuarioId organizador);
+			void iniciarTorneio(@TorneioId torneio, @UsuarioId organizador);
+			void finalizarTorneio(@TorneioId torneio, @UsuarioId organizador);
 		}
 
 		Entity Torneio {
@@ -77,22 +110,6 @@ BoundedContext Torneio implements Torneio {
 				@Torneio obter(@TorneioId id);
 			}
 		}
-
-		ValueObject TorneioId {
-			int id
-		}
-
-		ValueObject FormatoTorneio {
-			String tipo
-		}
-
-		ValueObject FormatoEquipe {
-			int quantidadeJogadores
-		}
-
-		ValueObject StatusTorneio {
-			String valor
-		}
 	}
 
 	Aggregate ParticipanteTorneio {
@@ -101,15 +118,15 @@ BoundedContext Torneio implements Torneio {
 
 			-TimeId time
 			-TorneioId torneio
-			StatusParticipante status
-		}
-
-		ValueObject StatusParticipante {
-			String valor
+			-StatusParticipante status
 		}
 	}
 
 	Aggregate EstruturaCompeticao {
+		Service GeradorEstruturaCompeticaoServico {
+			void gerar(@TorneioId torneio);
+		}
+
 		Entity EstruturaCompeticao {
 			aggregateRoot
 
@@ -117,14 +134,20 @@ BoundedContext Torneio implements Torneio {
 			String tipo
 			boolean gerada
 		}
+
+		Entity Grupo {
+			String nome
+		}
 	}
 }
 
 BoundedContext Competicao implements Competicao {
 	Aggregate Partida {
 		Service PartidaServico {
-			void gerarPartidas(@TorneioId torneio);
-			void registrarResultado(@PartidaId partida, @Resultado resultado);
+			void gerarPartidas(@TorneioId torneio, @UsuarioId organizador);
+			void registrarResultado(@TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @ResultadoPartida resultado);
+			void visualizarClassificacao(@TorneioId torneio);
+			void visualizarChaveamento(@TorneioId torneio);
 		}
 
 		Entity Partida {
@@ -132,37 +155,51 @@ BoundedContext Competicao implements Competicao {
 
 			-PartidaId id
 			-TorneioId torneio
-			-TimeId timeA
-			-TimeId timeB
-			-Resultado resultado nullable
+			-TimeId mandante
+			-TimeId visitante
+			String etapa
+			int quantidadeJogadoresPorEquipe
+			boolean encerrada
+			-ResultadoPartida resultado nullable
 
 			Repository PartidaRepository {
 				@Partida obter(@PartidaId id);
 			}
 		}
 
-		ValueObject PartidaId {
-			int id
+		Entity Rodada {
+			-TorneioId torneio
+			int numero
 		}
 
-		ValueObject Resultado {
-			int golsTimeA
-			int golsTimeB
+		ValueObject ResultadoPartida {
+			int golsMandante
+			int golsVisitante
 		}
 	}
 
 	Aggregate Classificacao {
+		Service ClassificacaoServico {
+			void gerar(@TorneioId torneio);
+		}
+
 		Entity Classificacao {
 			aggregateRoot
 
 			-TorneioId torneio
 			-TimeId time
 			int pontos
+			int golsPro
+			int golsContra
 			int saldoGols
 		}
 	}
 
 	Aggregate Chaveamento {
+		Service ChaveamentoServico {
+			void gerar(@TorneioId torneio);
+		}
+
 		Entity Chaveamento {
 			aggregateRoot
 
@@ -175,31 +212,41 @@ BoundedContext Competicao implements Competicao {
 BoundedContext Estatisticas implements Estatisticas {
 	Aggregate EventoEstatistico {
 		Service EventoEstatisticoServico {
-			void registrarEvento(@PartidaId partida, @JogadorId jogador, @TipoEventoEstatistico tipo);
+			void registrarGol(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador);
+			void registrarAssistencia(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador);
+			void registrarCartaoAmarelo(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador);
+			void registrarCartaoVermelho(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador);
 		}
 
 		Entity EventoEstatistico {
 			aggregateRoot
 
 			-EventoEstatisticoId id
+			-TorneioId torneio
 			-PartidaId partida
 			-JogadorId jogador
 			-TipoEventoEstatistico tipo
+
+			Repository EventoEstatisticoRepository {
+				@EventoEstatistico obter(@EventoEstatisticoId id);
+			}
 		}
 
 		ValueObject EventoEstatisticoId {
 			int id
 		}
-
-		ValueObject TipoEventoEstatistico {
-			String valor
-		}
 	}
 
 	Aggregate NotaEstatistica {
+		Service EstatisticaServico {
+			void consolidarTorneio(@TorneioId torneio);
+			void calcularNotaJogador(@TorneioId torneio, @PartidaId partida, @JogadorId jogador);
+		}
+
 		Entity NotaEstatistica {
 			aggregateRoot
 
+			-TorneioId torneio
 			-PartidaId partida
 			-JogadorId jogador
 			double nota
@@ -207,6 +254,10 @@ BoundedContext Estatisticas implements Estatisticas {
 	}
 
 	Aggregate Artilharia {
+		Service ArtilhariaServico {
+			void gerarRanking(@TorneioId torneio);
+		}
+
 		Entity Artilharia {
 			aggregateRoot
 
@@ -244,20 +295,6 @@ BoundedContext Compartilhado implements Compartilhado {
 		}
 	}
 
-	Aggregate Time {
-		Entity Time {
-			aggregateRoot
-
-			-TimeId id
-			String nome
-			-UsuarioId responsavel
-		}
-
-		ValueObject TimeId {
-			int id
-		}
-	}
-
 	Aggregate Jogador {
 		Entity Jogador {
 			aggregateRoot
@@ -283,6 +320,44 @@ BoundedContext Compartilhado implements Compartilhado {
 
 		ValueObject TecnicoId {
 			int id
+		}
+	}
+
+	Aggregate ReferenciasCompartilhadas {
+		ValueObject TimeId {
+			int id
+		}
+
+		ValueObject TorneioId {
+			int id
+		}
+
+		ValueObject PartidaId {
+			int id
+		}
+
+		ValueObject FormatoTorneio {
+			String tipo
+		}
+
+		ValueObject FormatoEquipe {
+			int quantidadeJogadores
+		}
+
+		ValueObject StatusTorneio {
+			String valor
+		}
+
+		ValueObject StatusSolicitacao {
+			String valor
+		}
+
+		ValueObject StatusParticipante {
+			String valor
+		}
+
+		ValueObject TipoEventoEstatistico {
+			String valor
 		}
 	}
 }
