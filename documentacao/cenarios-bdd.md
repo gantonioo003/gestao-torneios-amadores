@@ -3,7 +3,8 @@
 ## Funcionalidades com cenarios definidos
 
 ### F1. Visualizar torneios disponiveis na plataforma
-Arquivo: features/visualizar-torneios-disponiveis.feature
+Dominio: dominio-participacao
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/visualizar-torneios-disponiveis.feature
 
 Cenarios principais:
 - visualizar torneios disponiveis como visitante
@@ -13,7 +14,8 @@ Cenarios principais:
 ---
 
 ### F2. Permitir acesso autenticado as funcionalidades de criacao e gerenciamento de torneios
-Arquivo: features/acesso-autenticado-gerenciamento-torneios.feature
+Dominio: dominio-participacao
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/acesso-autenticado-gerenciamento-torneios.feature
 
 Cenarios principais:
 - permitir acesso as funcionalidades de criacao de torneio para usuario autenticado
@@ -23,7 +25,8 @@ Cenarios principais:
 ---
 
 ### F3. Solicitar participacao de um time em torneio aberto
-Arquivo: features/solicitar-participacao-em-torneio-aberto.feature
+Dominio: dominio-participacao
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/solicitar-participacao-em-torneio-aberto.feature
 
 Cenarios principais:
 - solicitar participacao com sucesso quando o usuario possui time cadastrado
@@ -34,7 +37,8 @@ Cenarios principais:
 ---
 
 ### F4. Avaliar solicitacoes de participacao de times no torneio
-Arquivo: features/avaliar-solicitacoes-de-participacao.feature
+Dominio: dominio-participacao
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/avaliar-solicitacoes-de-participacao.feature
 
 Cenarios principais:
 - aprovar solicitacao de participacao de um time
@@ -45,7 +49,8 @@ Cenarios principais:
 ---
 
 ### F5. Gerenciar times do usuario
-Arquivo: features/gerenciar-times-do-usuario.feature
+Dominio: dominio-participacao
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/gerenciar-times-do-usuario.feature
 
 Cenarios principais:
 - criar um novo time com sucesso
@@ -56,7 +61,8 @@ Cenarios principais:
 ---
 
 ### F6. Gerenciar elenco de jogadores de um time
-Arquivo: features/gerenciar-elenco-de-jogadores.feature
+Dominio: dominio-participacao
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/gerenciar-elenco-de-jogadores.feature
 
 Cenarios principais:
 - adicionar jogador ao elenco do time
@@ -67,7 +73,8 @@ Cenarios principais:
 ---
 
 ### F7. Gerenciar comissao tecnica de um time
-Arquivo: features/gerenciar-comissao-tecnica.feature
+Dominio: dominio-participacao
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/gerenciar-comissao-tecnica.feature
 
 Cenarios principais:
 - associar tecnico a um time
@@ -78,7 +85,8 @@ Cenarios principais:
 ---
 
 ### F8. Vincular um time a um usuario responsavel
-Arquivo: features/vincular-time-a-usuario-responsavel.feature
+Dominio: dominio-participacao
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/vincular-time-a-usuario-responsavel.feature
 
 Cenarios principais:
 - vincular um time a um usuario responsavel com sucesso
@@ -89,7 +97,8 @@ Cenarios principais:
 ---
 
 ### F9. Criar e configurar torneio
-Arquivo: features/criar-e-configurar-torneio.feature
+Dominio: dominio-torneio
+Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/criar-e-configurar-torneio.feature
 
 Cenarios principais:
 - criar torneio com formato de competicao e formato de equipe validos
@@ -100,7 +109,8 @@ Cenarios principais:
 ---
 
 ### F10. Gerenciar participantes aprovados do torneio
-Arquivo: features/gerenciar-participantes-aprovados-do-torneio.feature
+Dominio: dominio-torneio
+Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/gerenciar-participantes-aprovados-do-torneio.feature
 
 Cenarios principais:
 - aprovar solicitacao de participacao de um time
@@ -111,7 +121,8 @@ Cenarios principais:
 ---
 
 ### F11. Gerar estrutura da competicao
-Arquivo: features/gerar-estrutura-da-competicao.feature
+Dominio: dominio-torneio
+Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/gerar-estrutura-da-competicao.feature
 
 Cenarios principais:
 - gerar estrutura para torneio mata-mata
@@ -122,7 +133,8 @@ Cenarios principais:
 ---
 
 ### F12. Gerar partidas do torneio
-Arquivo: features/gerar-partidas-do-torneio.feature
+Dominio: dominio-competicao
+Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/gerar-partidas-do-torneio.feature
 
 Cenarios principais:
 - gerar partidas para pontos corridos
@@ -133,7 +145,8 @@ Cenarios principais:
 ---
 
 ### F13. Registrar resultado da partida
-Arquivo: features/registrar-resultado-da-partida.feature
+Dominio: dominio-competicao
+Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/registrar-resultado-da-partida.feature
 
 Cenarios principais:
 - registrar resultado valido de uma partida
@@ -145,7 +158,8 @@ Cenarios principais:
 ---
 
 ### F14. Atualizar e visualizar classificacao ou chaveamento da competicao
-Arquivo: features/visualizar-classificacao-ou-chaveamento.feature
+Dominio: dominio-competicao
+Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/visualizar-classificacao-ou-chaveamento.feature
 
 Cenarios principais:
 - visualizar classificacao em torneio de pontos corridos
@@ -156,7 +170,8 @@ Cenarios principais:
 ---
 
 ### F15. Registrar eventos estatisticos opcionais da partida
-Arquivo: features/registrar-eventos-estatisticos-da-partida.feature
+Dominio: dominio-estatisticas
+Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/registrar-eventos-estatisticos-da-partida.feature
 
 Cenarios principais:
 - registrar gols e assistencias de jogadores
@@ -168,7 +183,8 @@ Cenarios principais:
 ---
 
 ### F16. Calcular e visualizar estatisticas do torneio
-Arquivo: features/calcular-e-visualizar-estatisticas.feature
+Dominio: dominio-estatisticas
+Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/calcular-e-visualizar-estatisticas.feature
 
 Cenarios principais:
 - calcular nota estatistica com base nos eventos registrados

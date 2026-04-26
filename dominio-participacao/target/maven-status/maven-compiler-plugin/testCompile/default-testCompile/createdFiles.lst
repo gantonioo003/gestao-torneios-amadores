@@ -1,7 +1,0 @@
-com\torneios\infraestrutura\persistencia\memoria\ConsultaUsuarioMemoria.class
-com\torneios\infraestrutura\persistencia\memoria\PoliticaParticipacaoTorneioMemoria.class
-com\torneios\infraestrutura\persistencia\memoria\CatalogoTorneiosDisponiveisMemoria.class
-com\torneios\infraestrutura\persistencia\memoria\SolicitacaoParticipacaoRepositorioMemoria.class
-com\torneios\infraestrutura\persistencia\memoria\TimeRepositorioMemoria.class
-com\torneios\dominio\participacao\steps\ParticipacaoSteps.class
-com\torneios\dominio\participacao\steps\ParticipacaoSteps$1.class

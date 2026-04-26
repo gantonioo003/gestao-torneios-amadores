@@ -28,3 +28,33 @@ Feature: Gerenciar times do usuário
     And que o time está vinculado a um torneio
     When ele solicitar a exclusão do time
     Then o sistema deve impedir a exclusão
+
+  Scenario: Usuário não autenticado tenta criar time
+    Given que o usuário não está autenticado
+    When ele tentar cadastrar um novo time
+    Then o sistema deve exigir autenticação
+
+  Scenario: Responsável visualiza torneios em que o time está vinculado
+    Given que o usuário está autenticado
+    And que ele é responsável por um time
+    And que o time está vinculado a pelo menos um torneio
+    When ele acessar a área de torneios do time
+    Then o sistema deve exibir os torneios em que o time participa
+
+  Scenario: Responsável acessa torneios quando o time não está em nenhum torneio
+    Given que o usuário está autenticado
+    And que ele é responsável por um time
+    And que o time não está vinculado a nenhum torneio
+    When ele acessar a área de torneios do time
+    Then o sistema deve informar que o time não está vinculado a nenhum torneio
+
+  Scenario: Usuário não autenticado tenta visualizar torneios do time
+    Given que o usuário não está autenticado
+    When ele tentar acessar os torneios do time
+    Then o sistema deve exigir autenticação
+
+  Scenario: Usuário não responsável tenta visualizar torneios do time
+    Given que o usuário está autenticado
+    And que ele não é responsável pelo time
+    When ele tentar acessar os torneios do time
+    Then o sistema deve impedir a operação

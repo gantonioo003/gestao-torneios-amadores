@@ -29,3 +29,10 @@ Feature: Gerenciar elenco de jogadores de um time
     And que ele não é responsável pelo time
     When ele tentar adicionar um jogador ao elenco
     Then o sistema deve impedir a operação
+
+  Scenario: Responsável tenta remover jogador inexistente do elenco
+    Given que o usuário está autenticado
+    And que ele é responsável por um time
+    And que o time não possui jogadores cadastrados
+    When ele tentar remover um jogador do elenco
+    Then o sistema deve informar que o jogador não foi encontrado no elenco

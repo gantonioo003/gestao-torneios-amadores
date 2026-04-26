@@ -27,3 +27,9 @@ Feature: Avaliar solicitações de participação de times no torneio
     And que o usuário autenticado é o organizador do torneio
     When ele tentar avaliar uma solicitação
     Then o sistema deve informar que não há solicitação pendente para avaliação
+
+  Scenario: Organizador visualiza lista de times candidatos pendentes
+    Given que o usuário autenticado é o organizador do torneio
+    And que existem solicitações pendentes de times para o torneio
+    When o organizador acessar a lista de candidatos
+    Then o sistema deve exibir os times com solicitações pendentes

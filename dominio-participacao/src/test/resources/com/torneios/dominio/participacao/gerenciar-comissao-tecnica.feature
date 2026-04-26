@@ -29,3 +29,10 @@ Feature: Gerenciar comissão técnica de um time
     And que ele não é responsável pelo time
     When ele tentar associar um técnico ao time
     Then o sistema deve impedir a operação
+
+  Scenario: Responsável tenta remover técnico quando não há técnico associado
+    Given que o usuário está autenticado
+    And que ele é responsável por um time
+    And que o time não possui técnico associado
+    When ele tentar remover o técnico do time
+    Then o sistema deve informar que não existe técnico associado ao time
