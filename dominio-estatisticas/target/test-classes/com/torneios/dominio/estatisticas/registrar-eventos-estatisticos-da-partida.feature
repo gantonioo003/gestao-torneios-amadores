@@ -1,4 +1,4 @@
-Feature: Registrar eventos estatísticos da partida
+Feature: Registrar eventos estatisticos opcionais da partida
 
   As a organizador do torneio
   I want registrar eventos estatísticos da partida

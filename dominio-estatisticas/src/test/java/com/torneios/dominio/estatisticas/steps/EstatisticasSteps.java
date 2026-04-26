@@ -107,7 +107,8 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
     @Quando("o sistema calcular a nota estatística")
     public void o_sistema_calcular_nota() {
         try {
-            notaEstatistica = estatisticaServico.calcularNotaJogador(TORNEIO_ID, PARTIDA_ID, JOGADOR_A_ID);
+            notaEstatistica = estatisticaServico.calcularNotaJogador(TORNEIO_ID, PARTIDA_ID, JOGADOR_A_ID)
+                    .orElse(null);
         } catch (Exception e) {
             excecaoCapturada = e;
         }
@@ -190,5 +191,32 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
         assertNotNull(estatB);
         assertEquals(1, estatA.getGols());
         assertEquals(1, estatB.getCartoesVermelhos());
+    }
+
+    @Dado("que existe uma partida sem eventos estatisticos registrados")
+    public void que_existe_uma_partida_sem_eventos_estatisticos_registrados() {
+        configurarCenarioPadrao();
+    }
+
+    @Quando("o usuario acessar as estatisticas sem eventos")
+    public void o_usuario_acessar_as_estatisticas_sem_eventos() {
+        try {
+            estatisticasJogadores = estatisticaServico.listarEstatisticasJogadores(TORNEIO_ID);
+            rankingArtilharia = artilhariaServico.gerarRanking(TORNEIO_ID);
+            notaEstatistica = estatisticaServico.calcularNotaJogador(TORNEIO_ID, PARTIDA_ID, JOGADOR_A_ID)
+                    .orElse(null);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve manter apenas o placar oficial sem dados estatisticos")
+    public void o_sistema_deve_manter_apenas_o_placar_oficial_sem_dados_estatisticos() {
+        assertNull(excecaoCapturada);
+        assertNotNull(estatisticasJogadores);
+        assertTrue(estatisticasJogadores.isEmpty());
+        assertNotNull(rankingArtilharia);
+        assertTrue(rankingArtilharia.isEmpty());
+        assertNull(notaEstatistica);
     }
 }

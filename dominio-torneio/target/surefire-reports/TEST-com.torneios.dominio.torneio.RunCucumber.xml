@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.torneios.dominio.torneio.RunCucumber" time="0.317" tests="12" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="25"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-torneio\target\test-classes;C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-torneio\target\classes;C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\target\classes;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-java\7.21.1\cucumber-java-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-core\7.21.1\cucumber-core-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-gherkin\7.21.1\cucumber-gherkin-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-gherkin-messages\7.21.1\cucumber-gherkin-messages-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\gherkin\31.0.0\gherkin-31.0.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\messages\27.2.0\messages-27.2.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\testng-xml-formatter\0.3.1\testng-xml-formatter-0.3.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\query\13.2.0\query-13.2.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\tag-expressions\6.1.2\tag-expressions-6.1.2.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-expressions\18.0.1\cucumber-expressions-18.0.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\datatable\7.21.1\datatable-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-plugin\7.21.1\cucumber-plugin-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\docstring\7.21.1\docstring-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\html-formatter\21.9.0\html-formatter-21.9.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\junit-xml-formatter\0.7.1\junit-xml-formatter-0.7.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\ci-environment\10.0.1\ci-environment-10.0.1.jar;C:\Users\ganto\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-junit-platform-engine\7.21.1\cucumber-junit-platform-engine-7.21.1.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-engine\1.12.2\junit-platform-engine-1.12.2.jar;C:\Users\ganto\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-commons\1.12.2\junit-platform-commons-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter\5.12.2\junit-jupiter-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.12.2\junit-jupiter-api-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.12.2\junit-jupiter-params-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.12.2\junit-jupiter-engine-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite\1.12.2\junit-platform-suite-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-api\1.12.2\junit-platform-suite-api-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-engine\1.12.2\junit-platform-suite-engine-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-commons\1.12.2\junit-platform-suite-commons-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-launcher\1.12.2\junit-platform-launcher-1.12.2.jar;"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="user.timezone" value="America/Fortaleza"/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="java.vm.specification.version" value="25"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="BR"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.2.10-hotspot\bin"/>
+    <property name="sun.java.command" value="C:\Users\ganto\AppData\Local\Temp\surefire8408493771589664182\surefirebooter-20260426155106315_3.jar C:\Users\ganto\AppData\Local\Temp\surefire8408493771589664182 2026-04-26T15-51-02_291-jvmRun1 surefire-20260426155106315_1tmp surefire_0-20260426155106315_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-torneio\target\test-classes;C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-torneio\target\classes;C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\target\classes;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-java\7.21.1\cucumber-java-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-core\7.21.1\cucumber-core-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-gherkin\7.21.1\cucumber-gherkin-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-gherkin-messages\7.21.1\cucumber-gherkin-messages-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\gherkin\31.0.0\gherkin-31.0.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\messages\27.2.0\messages-27.2.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\testng-xml-formatter\0.3.1\testng-xml-formatter-0.3.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\query\13.2.0\query-13.2.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\tag-expressions\6.1.2\tag-expressions-6.1.2.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-expressions\18.0.1\cucumber-expressions-18.0.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\datatable\7.21.1\datatable-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-plugin\7.21.1\cucumber-plugin-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\docstring\7.21.1\docstring-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\html-formatter\21.9.0\html-formatter-21.9.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\junit-xml-formatter\0.7.1\junit-xml-formatter-0.7.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\ci-environment\10.0.1\ci-environment-10.0.1.jar;C:\Users\ganto\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-junit-platform-engine\7.21.1\cucumber-junit-platform-engine-7.21.1.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-engine\1.12.2\junit-platform-engine-1.12.2.jar;C:\Users\ganto\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-commons\1.12.2\junit-platform-commons-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter\5.12.2\junit-jupiter-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.12.2\junit-jupiter-api-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.12.2\junit-jupiter-params-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.12.2\junit-jupiter-engine-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite\1.12.2\junit-platform-suite-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-api\1.12.2\junit-platform-suite-api-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-engine\1.12.2\junit-platform-suite-engine-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-commons\1.12.2\junit-platform-suite-commons-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-launcher\1.12.2\junit-platform-launcher-1.12.2.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\ganto"/>
+    <property name="user.language" value="pt"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-01-20"/>
+    <property name="java.home" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.2.10-hotspot"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-torneio"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="C:\Users\ganto\AppData\Local\Temp\surefire8408493771589664182\surefirebooter-20260426155106315_3.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="25.0.2+10-LTS"/>
+    <property name="user.name" value="ganto"/>
+    <property name="stdout.encoding" value="Cp1252"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Temurin-25.0.2+10"/>
+    <property name="localRepository" value="C:\Users\ganto\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="C:\Users\ganto\AppData\Local\Temp\"/>
+    <property name="java.version" value="25.0.2"/>
+    <property name="user.dir" value="C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-torneio"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="native.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.2.10-hotspot\bin;C:\windows\Sun\Java\bin;C:\windows\system32;C:\windows;C:\Users\ganto\.codex\tmp\arg0\codex-arg0rZN05K;C:\Program Files\Eclipse Adoptium\jdk-25.0.2.10-hotspot\bin;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\dotnet\;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files\Git\cmd;C:\Program Files\Docker\Docker\resources\bin;C:\Users\ganto\AppData\Local\Microsoft\WindowsApps;C:\Users\ganto\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\ganto\AppData\Local\Python\bin;C:\Users\ganto\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\ganto\Downloads\apache-maven-3.9.15-bin\apache-maven-3.9.15\bin;C:\Users\ganto\AppData\Local\OpenAI\Codex\bin;C:\Program Files\WindowsApps\OpenAI.Codex_26.422.3464.0_x64__2p2nqsd0c76g0\app\resources;."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="Cp1252"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vm.version" value="25.0.2+10-LTS"/>
+    <property name="stdin.encoding" value="Cp1252"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="69.0"/>
+  </properties>
+  <testcase name="Criar torneio completo com configuração válida" classname="RunCucumber" time="0.103">
+    <system-out><![CDATA[
+Scenario: Criar torneio completo com configuração válida                            &amp#27;[90m# com/torneios/dominio/torneio/criar-e-configurar-torneio.feature:7&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                              &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele criar um torneio informando nome, formato válido e formato de equipe 5x5&amp#27;[0m &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.ele_criar_torneio_5x5()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mdefinir que o torneio aceita solicitações de participação&amp#27;[0m                     &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.definir_torneio_aceita_solicitacoes()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar o torneio com sucesso&amp#27;[0m                               &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_registrar_torneio_com_sucesso()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mdeve permitir entrada de times por solicitação&amp#27;[0m                                &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.deve_permitir_entrada_de_times_por_solicitacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Criar torneio com participantes previamente definidos" classname="RunCucumber" time="0.009">
+    <system-out><![CDATA[
+Scenario: Criar torneio com participantes previamente definidos                       &amp#27;[90m# com/torneios/dominio/torneio/criar-e-configurar-torneio.feature:14&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                                &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele criar um torneio informando nome, formato válido e formato de equipe 11x11&amp#27;[0m &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.ele_criar_torneio_11x11()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32minformar os participantes iniciais&amp#27;[0m                                              &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.informar_participantes_iniciais()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar o torneio com os times definidos&amp#27;[0m                      &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_registrar_torneio_com_times_definidos()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Impedir criação de torneio sem formato de competição" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Impedir criação de torneio sem formato de competição         &amp#27;[90m# com/torneios/dominio/torneio/criar-e-configurar-torneio.feature:20&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                 &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar criar um torneio sem definir o formato da competição&amp#27;[0m &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.ele_tentar_criar_torneio_sem_formato()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a criação do torneio&amp#27;[0m                     &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_impedir_criacao_do_torneio()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Impedir criação de torneio sem formato de equipe" classname="RunCucumber" time="0.006">
+    <system-out><![CDATA[
+Scenario: Impedir criação de torneio sem formato de equipe                          &amp#27;[90m# com/torneios/dominio/torneio/criar-e-configurar-torneio.feature:25&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                              &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar criar um torneio sem definir a quantidade de jogadores por equipe&amp#27;[0m &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.ele_tentar_criar_torneio_sem_formato_equipe()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a criação do torneio&amp#27;[0m                                  &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_impedir_criacao_do_torneio()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Gerar estrutura de torneio mata-mata" classname="RunCucumber" time="0.006">
+    <system-out><![CDATA[
+Scenario: Gerar estrutura de torneio mata-mata         &amp#27;[90m# com/torneios/dominio/torneio/gerar-estrutura-da-competicao.feature:7&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe um torneio com formato mata-mata&amp#27;[0m    &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_existe_torneio_mata_mata()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio possui participantes suficientes&amp#27;[0m   &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_torneio_possui_participantes_suficientes()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo organizador gerar a estrutura da competição&amp#27;[0m   &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_organizador_gerar_estrutura()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve gerar o chaveamento eliminatório&amp#27;[0m &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_gerar_chaveamento_eliminatorio()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Gerar estrutura de torneio por pontos corridos" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Gerar estrutura de torneio por pontos corridos        &amp#27;[90m# com/torneios/dominio/torneio/gerar-estrutura-da-competicao.feature:13&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe um torneio com formato pontos corridos&amp#27;[0m       &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_existe_torneio_pontos_corridos()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio possui participantes suficientes&amp#27;[0m            &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_torneio_possui_participantes_suficientes()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo organizador gerar a estrutura da competição&amp#27;[0m            &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_organizador_gerar_estrutura()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve gerar a estrutura de tabela da competição&amp#27;[0m &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_gerar_estrutura_tabela()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Gerar estrutura de torneio com fase de grupos e mata-mata" classname="RunCucumber" time="0.006">
+    <system-out><![CDATA[
+Scenario: Gerar estrutura de torneio com fase de grupos e mata-mata    &amp#27;[90m# com/torneios/dominio/torneio/gerar-estrutura-da-competicao.feature:19&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe um torneio com formato fase de grupos com mata-mata&amp#27;[0m &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_existe_torneio_fase_grupos()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio possui participantes suficientes&amp#27;[0m                   &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_torneio_possui_participantes_suficientes()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo organizador gerar a estrutura da competição&amp#27;[0m                   &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_organizador_gerar_estrutura()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve gerar os grupos da competição&amp#27;[0m                    &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_gerar_grupos()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Impedir geração de estrutura sem participantes suficientes" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Impedir geração de estrutura sem participantes suficientes &amp#27;[90m# com/torneios/dominio/torneio/gerar-estrutura-da-competicao.feature:25&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe um torneio configurado&amp#27;[0m                            &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_existe_torneio_configurado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio não possui participantes suficientes&amp#27;[0m             &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_torneio_nao_possui_participantes_suficientes()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo organizador gerar a estrutura da competição&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_organizador_gerar_estrutura()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a geração da estrutura&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_impedir_geracao_estrutura()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Aprovar time para participar do torneio" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Aprovar time para participar do torneio                     &amp#27;[90m# com/torneios/dominio/torneio/gerenciar-participantes-aprovados-do-torneio.feature:7&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe um torneio com vagas abertas&amp#27;[0m                       &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_existe_torneio_com_vagas_abertas()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque existe uma solicitação pendente de participação&amp#27;[0m             &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_existe_solicitacao_pendente()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o usuário autenticado é o organizador do torneio&amp#27;[0m            &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_usuario_e_organizador()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele aprovar a solicitação do time&amp#27;[0m                              &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.ele_aprovar_solicitacao_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve incluir o time entre os participantes aprovados&amp#27;[0m &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_incluir_time_entre_participantes_aprovados()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Remover time aprovado antes do início do torneio" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Remover time aprovado antes do início do torneio    &amp#27;[90m# com/torneios/dominio/torneio/gerenciar-participantes-aprovados-do-torneio.feature:14&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe um torneio ainda não iniciado&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_existe_torneio_nao_iniciado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque existe um time aprovado no torneio&amp#27;[0m                  &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_existe_time_aprovado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o usuário autenticado é o organizador do torneio&amp#27;[0m    &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_usuario_e_organizador()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele remover o time da lista de participantes aprovados&amp#27;[0m &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.ele_remover_time_dos_participantes()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve retirar o time do torneio&amp#27;[0m               &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_retirar_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Impedir gerenciamento de participantes por usuário não organizador" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Impedir gerenciamento de participantes por usuário não organizador &amp#27;[90m# com/torneios/dominio/torneio/gerenciar-participantes-aprovados-do-torneio.feature:21&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe um torneio&amp#27;[0m                                                &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_existe_torneio()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o usuário autenticado não é o organizador do torneio&amp#27;[0m               &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_usuario_nao_e_organizador()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar aprovar ou remover participantes&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.ele_tentar_aprovar_ou_remover_participantes()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                                     &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Impedir alteração de participantes após início do torneio" classname="RunCucumber" time="0.003">
+    <system-out><![CDATA[
+Scenario: Impedir alteração de participantes após início do torneio &amp#27;[90m# com/torneios/dominio/torneio/gerenciar-participantes-aprovados-do-torneio.feature:27&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe um torneio já iniciado&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_existe_torneio_ja_iniciado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o usuário autenticado é o organizador do torneio&amp#27;[0m          &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.que_usuario_e_organizador()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar alterar a lista de participantes aprovados&amp#27;[0m        &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.ele_tentar_alterar_participantes()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                            &amp#27;[90m# com.torneios.dominio.torneio.steps.TorneioSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+</testsuite>

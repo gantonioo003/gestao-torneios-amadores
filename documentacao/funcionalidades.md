@@ -1,27 +1,27 @@
 # Funcionalidades do Sistema
 
-## Acesso e participação
-F1. Visualizar torneios disponíveis na plataforma  
-F2. Permitir acesso autenticado às funcionalidades de criação e gerenciamento de torneios  
-F3. Solicitar participação de um time em torneio aberto  
-F4. Avaliar solicitações de participação de times no torneio  
+## Acesso e participacao
+F1. Visualizar torneios disponiveis na plataforma
+F2. Permitir acesso autenticado as funcionalidades de criacao e gerenciamento de torneios
+F3. Solicitar participacao de um time em torneio aberto
+F4. Avaliar solicitacoes de participacao de times no torneio
 
-## Gestão de times e elenco
-F5. Gerenciar times do usuário  
-F6. Gerenciar elenco de jogadores de um time  
-F7. Gerenciar comissão técnica de um time  
-F8. Vincular um time a um usuário responsável  
+## Gestao de times e elenco
+F5. Gerenciar times do usuario
+F6. Gerenciar elenco de jogadores de um time
+F7. Gerenciar comissao tecnica de um time
+F8. Vincular um time a um usuario responsavel
 
-## Organização do torneio
-F9. Criar e configurar torneio  
-F10. Gerenciar participantes aprovados do torneio  
-F11. Gerar estrutura da competição  
-F12. Gerar partidas do torneio  
+## Organizacao do torneio
+F9. Criar e configurar torneio
+F10. Gerenciar participantes aprovados do torneio
+F11. Gerar estrutura da competicao
+F12. Gerar partidas do torneio
 
-## Gestão da competição
-F13. Registrar resultado da partida  
-F14. Atualizar e visualizar classificação ou chaveamento da competição  
+## Gestao da competicao
+F13. Registrar resultado da partida
+F14. Atualizar e visualizar classificacao ou chaveamento da competicao
 
-## Estatísticas
-F15. Registrar eventos estatísticos da partida  
-F16. Calcular e visualizar nota estatística, artilharia e estatísticas do torneio
+## Estatisticas
+F15. Registrar eventos estatisticos opcionais da partida
+F16. Calcular e visualizar nota estatistica, artilharia e estatisticas do torneio somente quando houver eventos registrados

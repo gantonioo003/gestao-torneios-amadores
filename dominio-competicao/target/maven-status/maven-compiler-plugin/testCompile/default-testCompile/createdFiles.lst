@@ -1,0 +1,4 @@
+com\torneios\dominio\competicao\steps\CompeticaoSteps.class
+com\torneios\infraestrutura\persistencia\memoria\PartidaRepositorioMemoria.class
+com\torneios\infraestrutura\persistencia\memoria\ConsultaCompeticaoTorneioMemoria.class
+com\torneios\infraestrutura\persistencia\memoria\ConsultaCompeticaoTorneioMemoria$DadosTorneio.class

@@ -3,6 +3,7 @@ package com.torneios.dominio.estatisticas.desempenho;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
@@ -37,17 +38,11 @@ public class EstatisticaTorneio {
         estatistica.registrarEvento(evento.getTipo());
     }
 
-    public EstatisticaJogador obterOuCriar(long jogadorId) {
-        return obterOuCriar(new JogadorId(jogadorId));
-    }
-
-    public EstatisticaJogador obterOuCriar(JogadorId jogadorId) {
-        return estatisticasPorJogador.computeIfAbsent(
-                jogadorId,
-                id -> new EstatisticaJogador(torneioId, id));
+    public Optional<EstatisticaJogador> obter(JogadorId jogadorId) {
+        return Optional.ofNullable(estatisticasPorJogador.get(jogadorId));
     }
 
     public Collection<EstatisticaJogador> getEstatisticasJogadores() {
-        return estatisticasPorJogador.values();
+        return java.util.List.copyOf(estatisticasPorJogador.values());
     }
 }

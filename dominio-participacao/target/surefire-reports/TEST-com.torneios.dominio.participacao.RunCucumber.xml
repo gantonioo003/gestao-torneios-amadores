@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.torneios.dominio.participacao.RunCucumber" time="0.807" tests="69" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="25"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-participacao\target\test-classes;C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-participacao\target\classes;C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\target\classes;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-java\7.21.1\cucumber-java-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-core\7.21.1\cucumber-core-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-gherkin\7.21.1\cucumber-gherkin-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-gherkin-messages\7.21.1\cucumber-gherkin-messages-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\gherkin\31.0.0\gherkin-31.0.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\messages\27.2.0\messages-27.2.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\testng-xml-formatter\0.3.1\testng-xml-formatter-0.3.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\query\13.2.0\query-13.2.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\tag-expressions\6.1.2\tag-expressions-6.1.2.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-expressions\18.0.1\cucumber-expressions-18.0.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\datatable\7.21.1\datatable-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-plugin\7.21.1\cucumber-plugin-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\docstring\7.21.1\docstring-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\html-formatter\21.9.0\html-formatter-21.9.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\junit-xml-formatter\0.7.1\junit-xml-formatter-0.7.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\ci-environment\10.0.1\ci-environment-10.0.1.jar;C:\Users\ganto\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-junit-platform-engine\7.21.1\cucumber-junit-platform-engine-7.21.1.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-engine\1.12.2\junit-platform-engine-1.12.2.jar;C:\Users\ganto\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-commons\1.12.2\junit-platform-commons-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter\5.12.2\junit-jupiter-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.12.2\junit-jupiter-api-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.12.2\junit-jupiter-params-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.12.2\junit-jupiter-engine-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite\1.12.2\junit-platform-suite-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-api\1.12.2\junit-platform-suite-api-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-engine\1.12.2\junit-platform-suite-engine-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-commons\1.12.2\junit-platform-suite-commons-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-launcher\1.12.2\junit-platform-launcher-1.12.2.jar;"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="user.timezone" value="America/Fortaleza"/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="java.vm.specification.version" value="25"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="BR"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.2.10-hotspot\bin"/>
+    <property name="sun.java.command" value="C:\Users\ganto\AppData\Local\Temp\surefire5092534568010688462\surefirebooter-20260426155113075_18.jar C:\Users\ganto\AppData\Local\Temp\surefire5092534568010688462 2026-04-26T15-51-02_291-jvmRun1 surefire-20260426155113075_16tmp surefire_1-20260426155113075_17tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-participacao\target\test-classes;C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-participacao\target\classes;C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-compartilhado\target\classes;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-java\7.21.1\cucumber-java-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-core\7.21.1\cucumber-core-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-gherkin\7.21.1\cucumber-gherkin-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-gherkin-messages\7.21.1\cucumber-gherkin-messages-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\gherkin\31.0.0\gherkin-31.0.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\messages\27.2.0\messages-27.2.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\testng-xml-formatter\0.3.1\testng-xml-formatter-0.3.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\query\13.2.0\query-13.2.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\tag-expressions\6.1.2\tag-expressions-6.1.2.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-expressions\18.0.1\cucumber-expressions-18.0.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\datatable\7.21.1\datatable-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-plugin\7.21.1\cucumber-plugin-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\docstring\7.21.1\docstring-7.21.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\html-formatter\21.9.0\html-formatter-21.9.0.jar;C:\Users\ganto\.m2\repository\io\cucumber\junit-xml-formatter\0.7.1\junit-xml-formatter-0.7.1.jar;C:\Users\ganto\.m2\repository\io\cucumber\ci-environment\10.0.1\ci-environment-10.0.1.jar;C:\Users\ganto\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\ganto\.m2\repository\io\cucumber\cucumber-junit-platform-engine\7.21.1\cucumber-junit-platform-engine-7.21.1.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-engine\1.12.2\junit-platform-engine-1.12.2.jar;C:\Users\ganto\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-commons\1.12.2\junit-platform-commons-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter\5.12.2\junit-jupiter-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.12.2\junit-jupiter-api-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.12.2\junit-jupiter-params-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.12.2\junit-jupiter-engine-5.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite\1.12.2\junit-platform-suite-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-api\1.12.2\junit-platform-suite-api-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-engine\1.12.2\junit-platform-suite-engine-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-suite-commons\1.12.2\junit-platform-suite-commons-1.12.2.jar;C:\Users\ganto\.m2\repository\org\junit\platform\junit-platform-launcher\1.12.2\junit-platform-launcher-1.12.2.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\ganto"/>
+    <property name="user.language" value="pt"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-01-20"/>
+    <property name="java.home" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.2.10-hotspot"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-participacao"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="C:\Users\ganto\AppData\Local\Temp\surefire5092534568010688462\surefirebooter-20260426155113075_18.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="25.0.2+10-LTS"/>
+    <property name="user.name" value="ganto"/>
+    <property name="stdout.encoding" value="Cp1252"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Temurin-25.0.2+10"/>
+    <property name="localRepository" value="C:\Users\ganto\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="C:\Users\ganto\AppData\Local\Temp\"/>
+    <property name="java.version" value="25.0.2"/>
+    <property name="user.dir" value="C:\Users\ganto\OneDrive\Área de Trabalho\gestao-torneios-amadores\dominio-participacao"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="native.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.2.10-hotspot\bin;C:\windows\Sun\Java\bin;C:\windows\system32;C:\windows;C:\Users\ganto\.codex\tmp\arg0\codex-arg0rZN05K;C:\Program Files\Eclipse Adoptium\jdk-25.0.2.10-hotspot\bin;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\dotnet\;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files\Git\cmd;C:\Program Files\Docker\Docker\resources\bin;C:\Users\ganto\AppData\Local\Microsoft\WindowsApps;C:\Users\ganto\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\ganto\AppData\Local\Python\bin;C:\Users\ganto\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\ganto\Downloads\apache-maven-3.9.15-bin\apache-maven-3.9.15\bin;C:\Users\ganto\AppData\Local\OpenAI\Codex\bin;C:\Program Files\WindowsApps\OpenAI.Codex_26.422.3464.0_x64__2p2nqsd0c76g0\app\resources;."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="Cp1252"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vm.version" value="25.0.2+10-LTS"/>
+    <property name="stdin.encoding" value="Cp1252"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="69.0"/>
+  </properties>
+  <testcase name="Responsável aceita solicitação de participação aprovada pelo organizador" classname="RunCucumber" time="0.108">
+    <system-out><![CDATA[
+Scenario: Responsável aceita solicitação de participação aprovada pelo organizador     &amp#27;[90m# com/torneios/dominio/participacao/aceitar-ou-recusar-solicitacao.feature:9&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                                                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque existe uma solicitação de participação aprovada pelo organizador para o time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_solicitacao_aprovada_pelo_organizador()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo responsável aceitar a participação no torneio&amp#27;[0m                                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_responsavel_aceitar_participacao()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve vincular o time ao torneio&amp#27;[0m                                       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_vincular_time_ao_torneio()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável recusa solicitação de participação aprovada pelo organizador" classname="RunCucumber" time="0.014">
+    <system-out><![CDATA[
+Scenario: Responsável recusa solicitação de participação aprovada pelo organizador     &amp#27;[90m# com/torneios/dominio/participacao/aceitar-ou-recusar-solicitacao.feature:16&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                                                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque existe uma solicitação de participação aprovada pelo organizador para o time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_solicitacao_aprovada_pelo_organizador()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo responsável recusar a participação no torneio&amp#27;[0m                                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_responsavel_recusar_participacao()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar a recusa e não vincular o time ao torneio&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_a_recusa()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário não responsável tenta aceitar solicitação do time" classname="RunCucumber" time="0.011">
+    <system-out><![CDATA[
+Scenario: Usuário não responsável tenta aceitar solicitação do time                    &amp#27;[90m# com/torneios/dominio/participacao/aceitar-ou-recusar-solicitacao.feature:23&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele não é responsável pelo time&amp#27;[0m                                              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_nao_e_responsavel_pelo_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque existe uma solicitação de participação aprovada pelo organizador para o time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_solicitacao_aprovada_pelo_organizador()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar aceitar a solicitação de participação&amp#27;[0m                                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_aceitar_solicitacao()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                                               &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável tenta aceitar solicitação inexistente" classname="RunCucumber" time="0.011">
+    <system-out><![CDATA[
+Scenario: Responsável tenta aceitar solicitação inexistente        &amp#27;[90m# com/torneios/dominio/participacao/aceitar-ou-recusar-solicitacao.feature:30&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque não existe solicitação de participação para o time&amp#27;[0m       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_nao_existe_solicitacao_para_o_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo responsável tentar aceitar a participação&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_responsavel_tentar_aceitar_participacao_inexistente()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve informar que não há solicitação para aceitar&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_informar_sem_solicitacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário autenticado acessa funcionalidade de criação de torneio" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Usuário autenticado acessa funcionalidade de criação de torneio &amp#27;[90m# com/torneios/dominio/participacao/acesso-autenticado-gerenciamento-torneios.feature:7&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele solicitar acesso à funcionalidade de criação de torneio&amp#27;[0m        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_solicitar_acesso_criacao_torneio()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve permitir o acesso&amp#27;[0m                                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_permitir_o_acesso()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário autenticado acessa seus torneios criados" classname="RunCucumber" time="0.008">
+    <system-out><![CDATA[
+Scenario: Usuário autenticado acessa seus torneios criados &amp#27;[90m# com/torneios/dominio/participacao/acesso-autenticado-gerenciamento-torneios.feature:12&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele possui torneios cadastrados&amp#27;[0m                  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_possui_torneios_cadastrados()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele acessar a área de gerenciamento de torneios&amp#27;[0m     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_acessar_area_gerenciamento_torneios()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exibir os torneios criados por ele&amp#27;[0m   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exibir_torneios_criados_por_ele()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário não autenticado tenta acessar funcionalidade de criação de torneio" classname="RunCucumber" time="0.006">
+    <system-out><![CDATA[
+Scenario: Usuário não autenticado tenta acessar funcionalidade de criação de torneio &amp#27;[90m# com/torneios/dominio/participacao/acesso-autenticado-gerenciamento-torneios.feature:18&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário não está autenticado&amp#27;[0m                                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_nao_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele solicitar acesso à funcionalidade de criação de torneio&amp#27;[0m                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_solicitar_acesso_criacao_torneio()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exigir autenticação&amp#27;[0m                                            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exigir_autenticacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário não autenticado tenta acessar gerenciamento de torneios" classname="RunCucumber" time="0.006">
+    <system-out><![CDATA[
+Scenario: Usuário não autenticado tenta acessar gerenciamento de torneios &amp#27;[90m# com/torneios/dominio/participacao/acesso-autenticado-gerenciamento-torneios.feature:23&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário não está autenticado&amp#27;[0m                                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_nao_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar acessar a área de gerenciamento de torneios&amp#27;[0m             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_acessar_area_gerenciamento_torneios()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exigir autenticação&amp#27;[0m                                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exigir_autenticacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Organizador aprova solicitação de participação" classname="RunCucumber" time="0.009">
+    <system-out><![CDATA[
+Scenario: Organizador aprova solicitação de participação                     &amp#27;[90m# com/torneios/dominio/participacao/avaliar-solicitacoes-de-participacao.feature:7&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe uma solicitação pendente de participação para um torneio&amp#27;[0m  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_solicitacao_pendente_de_participacao_para_torneio()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o usuário autenticado é o organizador do torneio&amp#27;[0m                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_e_organizador_do_torneio()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo organizador aprovar a solicitação&amp#27;[0m                                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_organizador_aprovar_a_solicitacao()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar o time como participante aprovado do torneio&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_time_como_aprovado()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Organizador rejeita solicitação de participação" classname="RunCucumber" time="0.006">
+    <system-out><![CDATA[
+Scenario: Organizador rejeita solicitação de participação                   &amp#27;[90m# com/torneios/dominio/participacao/avaliar-solicitacoes-de-participacao.feature:13&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe uma solicitação pendente de participação para um torneio&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_solicitacao_pendente_de_participacao_para_torneio()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o usuário autenticado é o organizador do torneio&amp#27;[0m                  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_e_organizador_do_torneio()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo organizador rejeitar a solicitação&amp#27;[0m                                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_organizador_rejeitar_a_solicitacao()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar a solicitação como rejeitada&amp#27;[0m                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_como_rejeitada()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário que não é organizador tenta avaliar solicitação" classname="RunCucumber" time="0.007">
+    <system-out><![CDATA[
+Scenario: Usuário que não é organizador tenta avaliar solicitação           &amp#27;[90m# com/torneios/dominio/participacao/avaliar-solicitacoes-de-participacao.feature:19&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe uma solicitação pendente de participação para um torneio&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_solicitacao_pendente_de_participacao_para_torneio()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o usuário autenticado não é o organizador do torneio&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_nao_e_organizador_do_torneio()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar aprovar a solicitação&amp#27;[0m                                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_aprovar_a_solicitacao()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                                    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Organizador tenta avaliar solicitação inexistente" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Organizador tenta avaliar solicitação inexistente                   &amp#27;[90m# com/torneios/dominio/participacao/avaliar-solicitacoes-de-participacao.feature:25&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque não existe solicitação pendente para o torneio&amp#27;[0m                    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_nao_existe_solicitacao_pendente_para_torneio()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o usuário autenticado é o organizador do torneio&amp#27;[0m                    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_e_organizador_do_torneio()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar avaliar uma solicitação&amp#27;[0m                                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_avaliar_uma_solicitacao()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve informar que não há solicitação pendente para avaliação&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_informar_sem_solicitacao_pendente_para_avaliacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Organizador aprova time candidato com solicitação pendente" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Organizador aprova time candidato com solicitação pendente &amp#27;[90m# com/torneios/dominio/participacao/avaliar-times.feature:9&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário autenticado é o organizador do torneio&amp#27;[0m         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_e_organizador_do_torneio()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque existe uma solicitação pendente de um time para o torneio&amp#27;[0m  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_solicitacao_pendente_de_um_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo organizador aprovar o time candidato&amp#27;[0m                        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_organizador_aprovar_time_candidato()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar a solicitação como aprovada&amp#27;[0m          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_como_aprovada()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Organizador rejeita time candidato com solicitação pendente" classname="RunCucumber" time="0.007">
+    <system-out><![CDATA[
+Scenario: Organizador rejeita time candidato com solicitação pendente &amp#27;[90m# com/torneios/dominio/participacao/avaliar-times.feature:15&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário autenticado é o organizador do torneio&amp#27;[0m          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_e_organizador_do_torneio()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque existe uma solicitação pendente de um time para o torneio&amp#27;[0m   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_solicitacao_pendente_de_um_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo organizador rejeitar o time candidato&amp#27;[0m                        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_organizador_rejeitar_time_candidato()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar a solicitação como rejeitada&amp#27;[0m          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_como_rejeitada()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Organizador visualiza lista de times candidatos pendentes" classname="RunCucumber" time="0.008">
+    <system-out><![CDATA[
+Scenario: Organizador visualiza lista de times candidatos pendentes &amp#27;[90m# com/torneios/dominio/participacao/avaliar-times.feature:21&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário autenticado é o organizador do torneio&amp#27;[0m        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_e_organizador_do_torneio()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque existem solicitações pendentes de times para o torneio&amp#27;[0m    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existem_solicitacoes_pendentes()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo organizador acessar a lista de candidatos&amp#27;[0m                  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_organizador_acessar_lista_de_candidatos()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exibir os times com solicitações pendentes&amp#27;[0m    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exibir_times_candidatos_pendentes()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Organizador tenta avaliar time quando não há candidatos pendentes" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Organizador tenta avaliar time quando não há candidatos pendentes &amp#27;[90m# com/torneios/dominio/participacao/avaliar-times.feature:27&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário autenticado é o organizador do torneio&amp#27;[0m                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_e_organizador_do_torneio()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque não existem solicitações pendentes para o torneio&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_nao_existem_solicitacoes_pendentes()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo organizador tentar acessar a lista de candidatos&amp#27;[0m                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_organizador_tentar_acessar_lista_de_candidatos()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve informar que não há candidatos pendentes&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_informar_sem_candidatos_pendentes()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário que não é organizador tenta avaliar time candidato" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Usuário que não é organizador tenta avaliar time candidato &amp#27;[90m# com/torneios/dominio/participacao/avaliar-times.feature:33&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                               &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele não é organizador do torneio&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_nao_e_organizador_do_torneio()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque existe uma solicitação pendente de um time para o torneio&amp#27;[0m  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_solicitacao_pendente_de_um_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar aprovar o time candidato&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_aprovar_time_candidato()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Associar técnico a um time" classname="RunCucumber" time="0.006">
+    <system-out><![CDATA[
+Scenario: Associar técnico a um time                                  &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-comissao-tecnica.feature:7&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                               &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele associar um técnico com dados válidos ao time&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_associar_tecnico_com_dados_validos()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar o técnico na comissão técnica do time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_o_tecnico()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Editar dados de um técnico do time" classname="RunCucumber" time="0.007">
+    <system-out><![CDATA[
+Scenario: Editar dados de um técnico do time        &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-comissao-tecnica.feature:13&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time possui técnico associado&amp#27;[0m           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_possui_tecnico_associado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele alterar os dados do técnico&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_alterar_dados_do_tecnico()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve atualizar os dados do técnico&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_atualizar_dados_do_tecnico()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Remover técnico da comissão técnica do time" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Remover técnico da comissão técnica do time               &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-comissao-tecnica.feature:20&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time possui técnico associado&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_possui_tecnico_associado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele solicitar a remoção do técnico&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_solicitar_remocao_do_tecnico()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve remover o técnico da comissão técnica do time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_remover_o_tecnico()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Impedir gerenciamento da comissão técnica por usuário não responsável" classname="RunCucumber" time="0.006">
+    <system-out><![CDATA[
+Scenario: Impedir gerenciamento da comissão técnica por usuário não responsável &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-comissao-tecnica.feature:27&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele não é responsável pelo time&amp#27;[0m                                       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_nao_e_responsavel_pelo_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar associar um técnico ao time&amp#27;[0m                                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_associar_tecnico_ao_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                                        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Adicionar jogador ao elenco do time" classname="RunCucumber" time="0.006">
+    <system-out><![CDATA[
+Scenario: Adicionar jogador ao elenco do time               &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-elenco-de-jogadores.feature:7&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                      &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele adicionar um jogador com dados válidos ao elenco&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_adicionar_jogador_com_dados_validos()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar o jogador no time&amp#27;[0m           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_jogador_no_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Editar dados de um jogador do elenco" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Editar dados de um jogador do elenco      &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-elenco-de-jogadores.feature:13&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time possui jogadores cadastrados&amp#27;[0m       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_possui_jogadores_cadastrados()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele alterar os dados de um jogador do elenco&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_alterar_dados_de_jogador_do_elenco()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve atualizar os dados do jogador&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_atualizar_dados_do_jogador()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Remover jogador do elenco do time" classname="RunCucumber" time="0.007">
+    <system-out><![CDATA[
+Scenario: Remover jogador do elenco do time            &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-elenco-de-jogadores.feature:20&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time possui jogadores cadastrados&amp#27;[0m          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_possui_jogadores_cadastrados()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele solicitar a remoção de um jogador do elenco&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_solicitar_remocao_de_jogador_do_elenco()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve remover o jogador do time&amp#27;[0m        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_remover_o_jogador()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Impedir gerenciamento do elenco por usuário não responsável" classname="RunCucumber" time="0.006">
+    <system-out><![CDATA[
+Scenario: Impedir gerenciamento do elenco por usuário não responsável &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-elenco-de-jogadores.feature:27&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele não é responsável pelo time&amp#27;[0m                             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_nao_e_responsavel_pelo_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar adicionar um jogador ao elenco&amp#27;[0m                      &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_adicionar_jogador_ao_elenco()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável adiciona jogador ao elenco com dados válidos" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Responsável adiciona jogador ao elenco com dados válidos &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-elenco.feature:8&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele adicionar um jogador com dados válidos ao elenco&amp#27;[0m        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_adicionar_jogador_com_dados_validos()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar o jogador no elenco do time&amp#27;[0m        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_o_jogador()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável edita dados de jogador existente no elenco" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Responsável edita dados de jogador existente no elenco &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-elenco.feature:14&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time possui jogadores cadastrados&amp#27;[0m                    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_possui_jogadores_cadastrados()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele alterar o nome de um jogador do elenco&amp#27;[0m                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_alterar_nome_de_jogador_do_elenco()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve atualizar os dados do jogador&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_atualizar_dados_do_jogador()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável remove jogador do elenco" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Responsável remove jogador do elenco         &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-elenco.feature:21&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time possui jogadores cadastrados&amp#27;[0m          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_possui_jogadores_cadastrados()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele solicitar a remoção de um jogador do elenco&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_solicitar_remocao_de_jogador_do_elenco()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve remover o jogador do time&amp#27;[0m        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_remover_o_jogador()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário não responsável tenta adicionar jogador ao elenco" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Usuário não responsável tenta adicionar jogador ao elenco &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-elenco.feature:28&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele não é responsável pelo time&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_nao_e_responsavel_pelo_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar adicionar um jogador ao elenco&amp#27;[0m                    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_adicionar_jogador_ao_elenco()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável tenta remover jogador inexistente do elenco" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Responsável tenta remover jogador inexistente do elenco         &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-elenco.feature:34&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time não possui jogadores cadastrados&amp#27;[0m                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_nao_possui_jogadores_cadastrados()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar remover um jogador do elenco&amp#27;[0m                            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_remover_jogador_do_elenco()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve informar que o jogador não foi encontrado no elenco&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_informar_jogador_nao_encontrado()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável associa técnico ao time com dados válidos" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Responsável associa técnico ao time com dados válidos       &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-tecnico.feature:8&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                               &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time não possui técnico associado&amp#27;[0m                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_nao_possui_tecnico_associado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele associar um técnico com dados válidos ao time&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_associar_tecnico_com_dados_validos()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar o técnico na comissão técnica do time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_o_tecnico()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável edita dados do técnico associado" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Responsável edita dados do técnico associado &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-tecnico.feature:15&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time possui técnico associado&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_possui_tecnico_associado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele alterar o nome do técnico&amp#27;[0m                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_alterar_nome_do_tecnico()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve atualizar os dados do técnico&amp#27;[0m    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_atualizar_dados_do_tecnico()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável remove técnico da comissão técnica" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Responsável remove técnico da comissão técnica            &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-tecnico.feature:22&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time possui técnico associado&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_possui_tecnico_associado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele solicitar a remoção do técnico&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_solicitar_remocao_do_tecnico()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve remover o técnico da comissão técnica do time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_remover_o_tecnico()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário não responsável tenta gerenciar técnico do time" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Usuário não responsável tenta gerenciar técnico do time &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-tecnico.feature:29&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele não é responsável pelo time&amp#27;[0m                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_nao_e_responsavel_pelo_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar associar um técnico ao time&amp#27;[0m                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_associar_tecnico_ao_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável tenta remover técnico quando não há técnico associado" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Responsável tenta remover técnico quando não há técnico associado &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-tecnico.feature:35&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                      &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time não possui técnico associado&amp#27;[0m                               &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_nao_possui_tecnico_associado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar remover o técnico do time&amp#27;[0m                                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_remover_tecnico_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve informar que não existe técnico associado ao time&amp#27;[0m     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_informar_tecnico_nao_encontrado()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário autenticado cria um novo time com dados válidos" classname="RunCucumber" time="0.006">
+    <system-out><![CDATA[
+Scenario: Usuário autenticado cria um novo time com dados válidos &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-time.feature:8&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele cadastrar um novo time com nome válido&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_cadastrar_novo_time_com_nome_valido()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar o time para esse usuário&amp#27;[0m          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_o_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário edita o nome do time cadastrado" classname="RunCucumber" time="0.007">
+    <system-out><![CDATA[
+Scenario: Usuário edita o nome do time cadastrado &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-time.feature:13&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele alterar o nome do time&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_alterar_nome_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve atualizar os dados do time&amp#27;[0m  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_atualizar_dados_do_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário exclui time sem vínculo em torneio" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Usuário exclui time sem vínculo em torneio &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-time.feature:19&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m               &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time não está vinculado a nenhum torneio&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_nao_esta_vinculado_a_nenhum_torneio()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele solicitar a exclusão do time&amp#27;[0m              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_solicitar_exclusao_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve remover o time&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_remover_o_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário tenta excluir time vinculado a torneio" classname="RunCucumber" time="0.007">
+    <system-out><![CDATA[
+Scenario: Usuário tenta excluir time vinculado a torneio &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-time.feature:26&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time está vinculado a um torneio&amp#27;[0m             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_esta_vinculado_a_um_torneio()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele solicitar a exclusão do time&amp#27;[0m                  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_solicitar_exclusao_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a exclusão&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_a_exclusao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário não autenticado tenta criar time" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Usuário não autenticado tenta criar time &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-time.feature:33&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário não está autenticado&amp#27;[0m         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_nao_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar cadastrar um novo time&amp#27;[0m           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_cadastrar_novo_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exigir autenticação&amp#27;[0m          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exigir_autenticacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Criar um novo time com sucesso" classname="RunCucumber" time="0.003">
+    <system-out><![CDATA[
+Scenario: Criar um novo time com sucesso                  &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-times-do-usuario.feature:7&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele cadastrar um novo time com informações válidas&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_cadastrar_novo_time_com_informacoes_validas()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar o time para esse usuário&amp#27;[0m  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_o_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Editar informações de um time do usuário" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Editar informações de um time do usuário &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-times-do-usuario.feature:12&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele possui um time cadastrado&amp#27;[0m            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_possui_um_time_cadastrado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele alterar as informações do time&amp#27;[0m          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_alterar_informacoes_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve atualizar os dados do time&amp#27;[0m   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_atualizar_dados_do_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Excluir um time do usuário sem vínculo em torneio" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Excluir um time do usuário sem vínculo em torneio &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-times-do-usuario.feature:18&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                      &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele possui um time cadastrado&amp#27;[0m                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_possui_um_time_cadastrado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time não está vinculado a nenhum torneio&amp#27;[0m        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_nao_esta_vinculado_a_nenhum_torneio()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele solicitar a exclusão do time&amp#27;[0m                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_solicitar_exclusao_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve remover o time&amp#27;[0m                        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_remover_o_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Impedir exclusão de time vinculado a torneio" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Impedir exclusão de time vinculado a torneio &amp#27;[90m# com/torneios/dominio/participacao/gerenciar-times-do-usuario.feature:25&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele possui um time cadastrado&amp#27;[0m                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_possui_um_time_cadastrado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time está vinculado a um torneio&amp#27;[0m           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_esta_vinculado_a_um_torneio()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele solicitar a exclusão do time&amp#27;[0m                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_solicitar_exclusao_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a exclusão&amp#27;[0m               &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_a_exclusao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário autenticado solicita participação com time cadastrado" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Usuário autenticado solicita participação com time cadastrado     &amp#27;[90m# com/torneios/dominio/participacao/solicitar-participacao-em-torneio-aberto.feature:7&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                      &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele possui um time cadastrado&amp#27;[0m                                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_possui_um_time_cadastrado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio está com vagas abertas para solicitação de participação&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_torneio_esta_com_vagas_abertas()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo usuário solicitar a participação do seu time no torneio&amp#27;[0m            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_usuario_solicitar_participacao_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar a solicitação de participação&amp#27;[0m               &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_solicitacao_de_participacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário sem time cadastrado tenta solicitar participação" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Usuário sem time cadastrado tenta solicitar participação          &amp#27;[90m# com/torneios/dominio/participacao/solicitar-participacao-em-torneio-aberto.feature:14&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                      &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele não possui time cadastrado&amp#27;[0m                                    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_nao_possui_time_cadastrado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio está com vagas abertas para solicitação de participação&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_torneio_esta_com_vagas_abertas()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo usuário solicitar a participação em um torneio&amp#27;[0m                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_usuario_solicitar_participacao_em_um_torneio()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a solicitação&amp#27;[0m                                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_solicitacao()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mdeve informar que é necessário possuir um time cadastrado&amp#27;[0m             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.deve_informar_necessidade_de_time_cadastrado()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário sem time cadastrado tenta solicitar participação" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Usuário sem time cadastrado tenta solicitar participação          &amp#27;[90m# com/torneios/dominio/participacao/solicitar-participacao-em-torneio.feature:15&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                      &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele não possui time cadastrado&amp#27;[0m                                    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_nao_possui_time_cadastrado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio está com vagas abertas para solicitação de participação&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_torneio_esta_com_vagas_abertas()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo usuário tentar solicitar participação no torneio&amp#27;[0m                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_usuario_tentar_solicitar_participacao()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a solicitação&amp#27;[0m                                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_solicitacao()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mdeve informar que é necessário possuir um time cadastrado&amp#27;[0m             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.deve_informar_necessidade_de_time_cadastrado()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário não autenticado tenta solicitar participação" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Usuário não autenticado tenta solicitar participação              &amp#27;[90m# com/torneios/dominio/participacao/solicitar-participacao-em-torneio-aberto.feature:22&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário não está autenticado&amp#27;[0m                                  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_nao_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio está com vagas abertas para solicitação de participação&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_torneio_esta_com_vagas_abertas()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele solicitar participação em um torneio&amp#27;[0m                             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_solicitar_participacao_em_um_torneio()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exigir autenticação&amp#27;[0m                                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exigir_autenticacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário não autenticado tenta solicitar participação" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Usuário não autenticado tenta solicitar participação              &amp#27;[90m# com/torneios/dominio/participacao/solicitar-participacao-em-torneio.feature:23&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário não está autenticado&amp#27;[0m                                  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_nao_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio está com vagas abertas para solicitação de participação&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_torneio_esta_com_vagas_abertas()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar solicitar participação no torneio&amp#27;[0m                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_solicitar_participacao()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exigir autenticação&amp#27;[0m                                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exigir_autenticacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário tenta solicitar participação em torneio sem vagas abertas" classname="RunCucumber" time="0.011">
+    <system-out><![CDATA[
+Scenario: Usuário tenta solicitar participação em torneio sem vagas abertas     &amp#27;[90m# com/torneios/dominio/participacao/solicitar-participacao-em-torneio-aberto.feature:28&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele possui um time cadastrado&amp#27;[0m                                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_possui_um_time_cadastrado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio não está com vagas abertas para solicitação de participação&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_torneio_nao_esta_com_vagas_abertas()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo usuário solicitar a participação do seu time no torneio&amp#27;[0m                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_usuario_solicitar_participacao_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a solicitação&amp#27;[0m                                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_solicitacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável solicita participação com time cadastrado em torneio aberto" classname="RunCucumber" time="0.003">
+    <system-out><![CDATA[
+Scenario: Responsável solicita participação com time cadastrado em torneio aberto &amp#27;[90m# com/torneios/dominio/participacao/solicitar-participacao-em-torneio.feature:8&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio está com vagas abertas para solicitação de participação&amp#27;[0m       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_torneio_esta_com_vagas_abertas()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo usuário solicitar a participação do seu time no torneio&amp#27;[0m                  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_usuario_solicitar_participacao_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve registrar a solicitação de participação como pendente&amp#27;[0m       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_registrar_solicitacao_como_pendente()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável tenta solicitar participação em torneio sem vagas abertas" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Responsável tenta solicitar participação em torneio sem vagas abertas &amp#27;[90m# com/torneios/dominio/participacao/solicitar-participacao-em-torneio.feature:29&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio não está com vagas abertas para solicitação de participação&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_torneio_nao_esta_com_vagas_abertas()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo usuário solicitar a participação do seu time no torneio&amp#27;[0m                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_usuario_solicitar_participacao_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a solicitação&amp#27;[0m                                     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_solicitacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável tenta solicitar participação duplicada no mesmo torneio" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Responsável tenta solicitar participação duplicada no mesmo torneio &amp#27;[90m# com/torneios/dominio/participacao/solicitar-participacao-em-torneio.feature:36&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                                       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o torneio está com vagas abertas para solicitação de participação&amp#27;[0m   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_torneio_esta_com_vagas_abertas()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque já existe uma solicitação pendente do time para esse torneio&amp#27;[0m        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ja_existe_solicitacao_pendente()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo usuário solicitar novamente a participação do seu time no torneio&amp#27;[0m    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_usuario_solicitar_participacao_novamente()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a solicitação duplicada&amp#27;[0m                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_solicitacao_duplicada()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Vincular time a um usuário responsável com sucesso" classname="RunCucumber" time="0.003">
+    <system-out><![CDATA[
+Scenario: Vincular time a um usuário responsável com sucesso &amp#27;[90m# com/torneios/dominio/participacao/vincular-time-a-usuario-responsavel.feature:7&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque existe um time cadastrado&amp#27;[0m                          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_um_time_cadastrado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele for definido como responsável pelo time&amp#27;[0m           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_for_definido_como_responsavel_pelo_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve vincular o time a esse usuário&amp#27;[0m         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_vincular_time_a_esse_usuario()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Alterar o responsável de um time" classname="RunCucumber" time="0.003">
+    <system-out><![CDATA[
+Scenario: Alterar o responsável de um time                    &amp#27;[90m# com/torneios/dominio/participacao/vincular-time-a-usuario-responsavel.feature:13&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque existe um time com responsável definido&amp#27;[0m             &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_um_time_com_responsavel_definido()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mfor registrado um novo usuário responsável pelo time&amp#27;[0m   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.for_registrado_novo_responsavel_pelo_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve atualizar o vínculo de responsabilidade&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_atualizar_vinculo_de_responsabilidade()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Impedir vínculo de time a usuário inexistente" classname="RunCucumber" time="0.003">
+    <system-out><![CDATA[
+Scenario: Impedir vínculo de time a usuário inexistente      &amp#27;[90m# com/torneios/dominio/participacao/vincular-time-a-usuario-responsavel.feature:19&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe um time cadastrado&amp#27;[0m                        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_um_time_cadastrado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mfor informado um usuário inexistente como responsável&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.for_informado_usuario_inexistente_como_responsavel()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir o vínculo&amp#27;[0m                      &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_o_vinculo()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Impedir gerenciamento do time por usuário não vinculado" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Impedir gerenciamento do time por usuário não vinculado &amp#27;[90m# com/torneios/dominio/participacao/vincular-time-a-usuario-responsavel.feature:24&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existe um time vinculado a um usuário responsável&amp#27;[0m     &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existe_um_time_vinculado_a_um_usuario_responsavel()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque outro usuário autenticado não é o responsável pelo time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_outro_usuario_nao_e_responsavel()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar gerenciar o time&amp#27;[0m                                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_gerenciar_o_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável visualiza solicitações pendentes do time" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Responsável visualiza solicitações pendentes do time &amp#27;[90m# com/torneios/dominio/participacao/visualizar-convites-do-time.feature:8&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time possui solicitações de participação pendentes&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_possui_solicitacoes_pendentes()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele acessar a área de convites e solicitações do time&amp#27;[0m   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_acessar_area_de_convites()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exibir as solicitações pendentes do time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exibir_solicitacoes_pendentes_do_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável visualiza solicitações aprovadas do time" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Responsável visualiza solicitações aprovadas do time &amp#27;[90m# com/torneios/dominio/participacao/visualizar-convites-do-time.feature:15&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time possui solicitações de participação aprovadas&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_possui_solicitacoes_aprovadas()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele acessar a área de convites e solicitações do time&amp#27;[0m   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_acessar_area_de_convites()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exibir as solicitações aprovadas do time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exibir_solicitacoes_aprovadas_do_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável visualiza solicitações rejeitadas do time" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Responsável visualiza solicitações rejeitadas do time &amp#27;[90m# com/torneios/dominio/participacao/visualizar-convites-do-time.feature:22&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time possui solicitações de participação rejeitadas&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_possui_solicitacoes_rejeitadas()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele acessar a área de convites e solicitações do time&amp#27;[0m    &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_acessar_area_de_convites()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exibir as solicitações rejeitadas do time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exibir_solicitacoes_rejeitadas_do_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável acessa área de convites quando não há solicitações" classname="RunCucumber" time="0.005">
+    <system-out><![CDATA[
+Scenario: Responsável acessa área de convites quando não há solicitações       &amp#27;[90m# com/torneios/dominio/participacao/visualizar-convites-do-time.feature:29&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                                        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time não possui solicitações de participação&amp#27;[0m                       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_nao_possui_solicitacoes()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele acessar a área de convites e solicitações do time&amp#27;[0m                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_acessar_area_de_convites()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve informar que não há convites ou solicitações para o time&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_informar_sem_convites()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário não responsável tenta visualizar convites do time" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Usuário não responsável tenta visualizar convites do time &amp#27;[90m# com/torneios/dominio/participacao/visualizar-convites-do-time.feature:36&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele não é responsável pelo time&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_nao_e_responsavel_pelo_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar acessar os convites do time&amp#27;[0m                       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_acessar_convites()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Visitante visualiza torneios disponíveis" classname="RunCucumber" time="0.009">
+    <system-out><![CDATA[
+Scenario: Visitante visualiza torneios disponíveis                     &amp#27;[90m# com/torneios/dominio/participacao/visualizar-torneios-disponiveis.feature:7&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existem torneios cadastrados na plataforma&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existem_torneios_cadastrados_na_plataforma()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo visitante acessar a página inicial&amp#27;[0m                            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_visitante_acessar_pagina_inicial()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exibir os torneios disponíveis para visualização&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exibir_torneios_disponiveis()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário autenticado visualiza torneios disponíveis" classname="RunCucumber" time="0.01">
+    <system-out><![CDATA[
+Scenario: Usuário autenticado visualiza torneios disponíveis           &amp#27;[90m# com/torneios/dominio/participacao/visualizar-torneios-disponiveis.feature:12&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque existem torneios cadastrados na plataforma&amp#27;[0m                 &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_existem_torneios_cadastrados_na_plataforma()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                   &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo usuário acessar a página inicial&amp#27;[0m                              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_usuario_acessar_pagina_inicial()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exibir os torneios disponíveis para visualização&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exibir_torneios_disponiveis()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Nenhum torneio disponível para visualização" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Nenhum torneio disponível para visualização                     &amp#27;[90m# com/torneios/dominio/participacao/visualizar-torneios-disponiveis.feature:18&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque não existem torneios cadastrados na plataforma&amp#27;[0m                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_nao_existem_torneios_cadastrados_na_plataforma()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mo visitante acessar a página inicial&amp#27;[0m                               &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_visitante_acessar_pagina_inicial()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve informar que não há torneios disponíveis no momento&amp#27;[0m &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_informar_sem_torneios_disponiveis()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável visualiza torneios em que o time está vinculado" classname="RunCucumber" time="0.004">
+    <system-out><![CDATA[
+Scenario: Responsável visualiza torneios em que o time está vinculado &amp#27;[90m# com/torneios/dominio/participacao/visualizar-torneios-do-time.feature:8&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                               &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time está vinculado a pelo menos um torneio&amp#27;[0m               &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_esta_vinculado_a_um_torneio()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele acessar a área de torneios do time&amp#27;[0m                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_acessar_area_de_torneios_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exibir os torneios em que o time participa&amp#27;[0m      &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exibir_torneios_do_time()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Responsável acessa torneios quando o time não está em nenhum torneio" classname="RunCucumber" time="0.003">
+    <system-out><![CDATA[
+Scenario: Responsável acessa torneios quando o time não está em nenhum torneio &amp#27;[90m# com/torneios/dominio/participacao/visualizar-torneios-do-time.feature:15&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                                         &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele é responsável por um time&amp#27;[0m                                        &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_e_responsavel_por_um_time()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque o time não está vinculado a nenhum torneio&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_time_nao_esta_vinculado_a_nenhum_torneio()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele acessar a área de torneios do time&amp#27;[0m                                  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_acessar_area_de_torneios_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve informar que o time não está vinculado a nenhum torneio&amp#27;[0m  &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_informar_sem_torneios()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário não autenticado tenta visualizar torneios do time" classname="RunCucumber" time="0.002">
+    <system-out><![CDATA[
+Scenario: Usuário não autenticado tenta visualizar torneios do time &amp#27;[90m# com/torneios/dominio/participacao/visualizar-torneios-do-time.feature:22&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário não está autenticado&amp#27;[0m                          &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_nao_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar acessar os torneios do time&amp#27;[0m                       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_acessar_torneios_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve exigir autenticação&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_exigir_autenticacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+  <testcase name="Usuário não responsável tenta visualizar torneios do time" classname="RunCucumber" time="0.003">
+    <system-out><![CDATA[
+Scenario: Usuário não responsável tenta visualizar torneios do time &amp#27;[90m# com/torneios/dominio/participacao/visualizar-torneios-do-time.feature:27&amp#27;[0m
+  &amp#27;[32mGiven &amp#27;[0m&amp#27;[32mque o usuário está autenticado&amp#27;[0m                              &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_o_usuario_esta_autenticado()&amp#27;[0m
+  &amp#27;[32mAnd &amp#27;[0m&amp#27;[32mque ele não é responsável pelo time&amp#27;[0m                           &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.que_ele_nao_e_responsavel_pelo_time()&amp#27;[0m
+  &amp#27;[32mWhen &amp#27;[0m&amp#27;[32mele tentar acessar os torneios do time&amp#27;[0m                       &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.ele_tentar_acessar_torneios_do_time()&amp#27;[0m
+  &amp#27;[32mThen &amp#27;[0m&amp#27;[32mo sistema deve impedir a operação&amp#27;[0m                            &amp#27;[90m# com.torneios.dominio.participacao.steps.ParticipacaoSteps.o_sistema_deve_impedir_operacao()&amp#27;[0m
+]]></system-out>
+  </testcase>
+</testsuite>

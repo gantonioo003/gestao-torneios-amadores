@@ -23,3 +23,8 @@ Feature: Calcular e visualizar estatísticas do torneio
     Given que novos eventos foram registrados em uma partida
     When o usuário acessar as estatísticas
     Then o sistema deve exibir os dados atualizados
+
+  Scenario: Nao exibir estatisticas quando nao houver eventos registrados
+    Given que existe uma partida sem eventos estatisticos registrados
+    When o usuario acessar as estatisticas sem eventos
+    Then o sistema deve manter apenas o placar oficial sem dados estatisticos

@@ -4,7 +4,7 @@ Feature: Registrar resultado da partida
   I want registrar o resultado de uma partida
   So that o sistema atualize o andamento da competição
 
-  Scenario: Registrar resultado válido de uma partida
+  Scenario: Registrar apenas o placar oficial da partida sem informar eventos estatisticos
     Given que existe uma partida cadastrada no torneio
     And que o usuário autenticado é o organizador do torneio
     When ele registrar o placar da partida

@@ -1,216 +1,221 @@
-# Cenários BDD
+# Cenarios BDD
 
-## Funcionalidades com cenários definidos
+## Funcionalidades com cenarios definidos
 
-### F1. Visualizar torneios disponíveis na plataforma
+### F1. Visualizar torneios disponiveis na plataforma
 Arquivo: features/visualizar-torneios-disponiveis.feature
 
-Cenários principais:
-- visualizar torneios disponíveis como visitante.
-- visualizar torneios disponíveis como usuário autenticado.
-- exibir mensagem quando não houver torneios disponíveis.
+Cenarios principais:
+- visualizar torneios disponiveis como visitante
+- visualizar torneios disponiveis como usuario autenticado
+- exibir mensagem quando nao houver torneios disponiveis
 
 ---
 
-### F2. Permitir acesso autenticado às funcionalidades de criação e gerenciamento de torneios
+### F2. Permitir acesso autenticado as funcionalidades de criacao e gerenciamento de torneios
 Arquivo: features/acesso-autenticado-gerenciamento-torneios.feature
 
-Cenários principais:
-- permitir acesso às funcionalidades de criação de torneio para usuário autenticado.
-- permitir acesso à área de gerenciamento de torneios para usuário autenticado.
-- impedir acesso às funcionalidades de criação e gerenciamento para usuário não autenticado.
+Cenarios principais:
+- permitir acesso as funcionalidades de criacao de torneio para usuario autenticado
+- permitir acesso a area de gerenciamento de torneios para usuario autenticado
+- impedir acesso as funcionalidades de criacao e gerenciamento para usuario nao autenticado
 
 ---
 
-### F3. Solicitar participação de um time em torneio aberto
+### F3. Solicitar participacao de um time em torneio aberto
 Arquivo: features/solicitar-participacao-em-torneio-aberto.feature
 
-Cenários principais:
-- solicitar participação com sucesso quando o usuário possui time cadastrado.
-- impedir solicitação quando o usuário não possui time cadastrado.
-- impedir solicitação quando o usuário não está autenticado.
-- impedir solicitação quando o torneio não aceita novas participações.
+Cenarios principais:
+- solicitar participacao com sucesso quando o usuario possui time cadastrado
+- impedir solicitacao quando o usuario nao possui time cadastrado
+- impedir solicitacao quando o usuario nao esta autenticado
+- impedir solicitacao quando o torneio nao aceita novas participacoes
 
 ---
 
-### F4. Avaliar solicitações de participação de times no torneio
+### F4. Avaliar solicitacoes de participacao de times no torneio
 Arquivo: features/avaliar-solicitacoes-de-participacao.feature
 
-Cenários principais:
-- aprovar solicitação de participação de um time.
-- rejeitar solicitação de participação de um time.
-- impedir avaliação por usuário que não é organizador do torneio.
-- informar ausência de solicitações pendentes para avaliação.
+Cenarios principais:
+- aprovar solicitacao de participacao de um time
+- rejeitar solicitacao de participacao de um time
+- impedir avaliacao por usuario que nao e organizador do torneio
+- informar ausencia de solicitacoes pendentes para avaliacao
 
 ---
 
-### F5. Gerenciar times do usuário
+### F5. Gerenciar times do usuario
 Arquivo: features/gerenciar-times-do-usuario.feature
 
-Cenários principais:
-- criar um novo time com sucesso.
-- editar informações de um time do usuário.
-- excluir um time sem vínculo em torneio.
-- impedir exclusão de time vinculado a torneio.
+Cenarios principais:
+- criar um novo time com sucesso
+- editar informacoes de um time do usuario
+- excluir um time sem vinculo em torneio
+- impedir exclusao de time vinculado a torneio
 
 ---
 
 ### F6. Gerenciar elenco de jogadores de um time
 Arquivo: features/gerenciar-elenco-de-jogadores.feature
 
-Cenários principais:
-- adicionar jogador ao elenco do time.
-- editar dados de um jogador do elenco.
-- remover jogador do elenco do time.
-- impedir gerenciamento do elenco por usuário não responsável.
+Cenarios principais:
+- adicionar jogador ao elenco do time
+- editar dados de um jogador do elenco
+- remover jogador do elenco do time
+- impedir gerenciamento do elenco por usuario nao responsavel
 
 ---
 
-### F7. Gerenciar comissão técnica de um time
+### F7. Gerenciar comissao tecnica de um time
 Arquivo: features/gerenciar-comissao-tecnica.feature
 
-Cenários principais:
-- associar técnico a um time.
-- editar dados de um técnico do time.
-- remover técnico da comissão técnica do time.
-- impedir gerenciamento da comissão técnica por usuário não responsável.
+Cenarios principais:
+- associar tecnico a um time
+- editar dados de um tecnico do time
+- remover tecnico da comissao tecnica do time
+- impedir gerenciamento da comissao tecnica por usuario nao responsavel
 
 ---
 
-### F8. Vincular um time a um usuário responsável
+### F8. Vincular um time a um usuario responsavel
 Arquivo: features/vincular-time-a-usuario-responsavel.feature
 
-Cenários principais:
-- vincular um time a um usuário responsável com sucesso.
-- alterar o responsável de um time.
-- impedir vínculo de time a usuário inexistente.
-- impedir gerenciamento do time por usuário não vinculado.
+Cenarios principais:
+- vincular um time a um usuario responsavel com sucesso
+- alterar o responsavel de um time
+- impedir vinculo de time a usuario inexistente
+- impedir gerenciamento do time por usuario nao vinculado
 
 ---
 
 ### F9. Criar e configurar torneio
 Arquivo: features/criar-e-configurar-torneio.feature
 
-Cenários principais:
-- criar torneio com formato de competição e formato de equipe válidos.
-- impedir criação de torneio sem formato de competição.
-- impedir criação de torneio sem definição da quantidade de jogadores por equipe.
-- definir se o torneio será aberto para solicitação ou com participantes definidos.
+Cenarios principais:
+- criar torneio com formato de competicao e formato de equipe validos
+- impedir criacao de torneio sem formato de competicao
+- impedir criacao de torneio sem definicao da quantidade de jogadores por equipe
+- definir se o torneio sera aberto para solicitacao ou com participantes definidos
 
 ---
 
 ### F10. Gerenciar participantes aprovados do torneio
 Arquivo: features/gerenciar-participantes-aprovados-do-torneio.feature
 
-Cenários principais:
-- aprovar solicitação de participação de um time.
-- remover time aprovado antes do início do torneio.
-- impedir gerenciamento por usuário não organizador.
-- impedir alteração após início do torneio.
+Cenarios principais:
+- aprovar solicitacao de participacao de um time
+- remover time aprovado antes do inicio do torneio
+- impedir gerenciamento por usuario nao organizador
+- impedir alteracao apos inicio do torneio
 
 ---
 
-### F11. Gerar estrutura da competição
+### F11. Gerar estrutura da competicao
 Arquivo: features/gerar-estrutura-da-competicao.feature
 
-Cenários principais:
-- gerar estrutura para torneio mata-mata.
-- gerar estrutura para pontos corridos.
-- gerar estrutura para fase de grupos.
-- impedir geração sem participantes suficientes.
+Cenarios principais:
+- gerar estrutura para torneio mata-mata
+- gerar estrutura para pontos corridos
+- gerar estrutura para fase de grupos
+- impedir geracao sem participantes suficientes
 
 ---
 
 ### F12. Gerar partidas do torneio
 Arquivo: features/gerar-partidas-do-torneio.feature
 
-Cenários principais:
-- gerar partidas para pontos corridos.
-- gerar partidas para mata-mata.
-- gerar partidas para fase de grupos.
-- impedir geração sem estrutura prévia.
+Cenarios principais:
+- gerar partidas para pontos corridos
+- gerar partidas para mata-mata
+- gerar partidas para fase de grupos
+- impedir geracao sem estrutura previa
 
 ---
 
 ### F13. Registrar resultado da partida
 Arquivo: features/registrar-resultado-da-partida.feature
 
-Cenários principais:
-- registrar resultado válido de uma partida.
-- atualizar automaticamente classificação ou chaveamento após resultado.
-- impedir registro por usuário não organizador.
-- impedir registro para partida inexistente ou inválida.
+Cenarios principais:
+- registrar resultado valido de uma partida
+- registrar apenas o placar da partida sem informar eventos estatisticos
+- atualizar automaticamente classificacao ou chaveamento apos resultado
+- impedir registro por usuario nao organizador
+- impedir registro para partida inexistente ou invalida
 
 ---
 
-### F14. Atualizar e visualizar classificação ou chaveamento da competição
+### F14. Atualizar e visualizar classificacao ou chaveamento da competicao
 Arquivo: features/visualizar-classificacao-ou-chaveamento.feature
 
-Cenários principais:
-- visualizar classificação em torneio de pontos corridos.
-- visualizar chaveamento em torneio mata-mata.
-- exibir dados atualizados após resultados.
-- impedir visualização antes da geração da estrutura.
+Cenarios principais:
+- visualizar classificacao em torneio de pontos corridos
+- visualizar chaveamento em torneio mata-mata
+- exibir dados atualizados apos resultados
+- impedir visualizacao antes da geracao da estrutura
 
 ---
 
-### F15. Registrar eventos estatísticos da partida
+### F15. Registrar eventos estatisticos opcionais da partida
 Arquivo: features/registrar-eventos-estatisticos-da-partida.feature
 
-Cenários principais:
-- registrar gols e assistências de jogadores.
-- registrar cartões amarelos e vermelhos.
-- impedir registro por usuário não autorizado.
-- impedir registro para jogador que não pertence aos times da partida.
+Cenarios principais:
+- registrar gols e assistencias de jogadores
+- registrar cartoes amarelos e vermelhos
+- impedir registro por usuario nao autorizado
+- impedir registro para jogador que nao pertence aos times da partida
+- permitir que o resultado da partida exista mesmo sem registro de eventos estatisticos
 
 ---
 
-### F16. Calcular e visualizar estatísticas do torneio
+### F16. Calcular e visualizar estatisticas do torneio
 Arquivo: features/calcular-e-visualizar-estatisticas.feature
 
-Cenários principais:
-- calcular nota estatística com base nos eventos registrados.
-- gerar ranking de artilharia do torneio.
-- visualizar estatísticas dos jogadores.
-- atualizar estatísticas após novos eventos registrados.
+Cenarios principais:
+- calcular nota estatistica com base nos eventos registrados
+- gerar ranking de artilharia do torneio
+- visualizar estatisticas dos jogadores
+- atualizar estatisticas apos novos eventos registrados
+- exibir estatisticas apenas quando houver eventos registrados
 
 ---
 
-## Regras de negócio cobertas
+## Regras de negocio cobertas
 
-### Acesso e participação
-- RN01. Usuários não autenticados podem visualizar os torneios disponíveis.
-- RN02. Apenas usuários autenticados podem criar torneios.
-- RN03. Apenas usuários autenticados podem solicitar participação em torneios.
-- RN04. Usuário deve possuir time cadastrado para solicitar participação.
-- RN05. Torneio pode ser aberto ou fechado para participação.
-- RN06. Apenas organizador pode aprovar ou rejeitar solicitações.
+### Acesso e participacao
+- RN01. Usuarios nao autenticados podem visualizar os torneios disponiveis.
+- RN02. Apenas usuarios autenticados podem criar torneios.
+- RN03. Apenas usuarios autenticados podem solicitar participacao em torneios.
+- RN04. Usuario deve possuir time cadastrado para solicitar participacao.
+- RN05. Torneio pode ser aberto ou fechado para participacao.
+- RN06. Apenas organizador pode aprovar ou rejeitar solicitacoes.
 
-### Organização do torneio
+### Organizacao do torneio
 - RN07. Todo torneio deve possuir formato definido.
-- RN08. Formatos válidos: mata-mata, grupos + mata-mata, pontos corridos, final única.
-- RN09. Todo torneio possui organizador responsável.
-- RN10. Torneio só pode iniciar com participantes suficientes.
+- RN08. Formatos validos: mata-mata, grupos + mata-mata, pontos corridos, final unica.
+- RN09. Todo torneio possui organizador responsavel.
+- RN10. Torneio so pode iniciar com participantes suficientes.
 - RN11. Estrutura depende do formato.
 - RN12. O torneio deve definir a quantidade de jogadores por equipe.
 - RN13. As partidas devem respeitar a quantidade de jogadores definida.
 
-### Times, jogadores e técnicos
-- RN14. Time só participa se aprovado.
+### Times, jogadores e tecnicos
+- RN14. Time so participa se aprovado.
 - RN15. Jogador pertence a um time.
-- RN16. Técnico associado ao time.
-- RN17. Apenas jogadores válidos podem ter eventos registrados.
+- RN16. Tecnico associado ao time participante.
+- RN17. Apenas jogadores validos podem ter eventos registrados.
 
-### Partidas e competição
-- RN18. Partida pertence a um torneio e dois times válidos.
-- RN19. Apenas partidas válidas geram impacto no sistema.
-- RN20. Resultado atualiza classificação automaticamente.
-- RN21. Não permitir resultados inválidos.
+### Partidas e competicao
+- RN18. Partida pertence a um torneio e dois times validos.
+- RN19. Apenas partidas validas geram impacto no sistema.
+- RN20. Resultado atualiza classificacao ou chaveamento automaticamente.
+- RN21. Nao permitir resultados invalidos.
+- RN22. O resultado da partida pode ser registrado sem eventos estatisticos.
 
-### Estatísticas
-- RN22. Registrar gols, assistências e cartões.
-- RN23. Nota estatística calculada automaticamente.
-- RN24. Nota baseada em fórmula com pesos.
-- RN25. Considera eventos básicos na versão inicial.
-- RN26. Eventos positivos e negativos afetam a nota.
-- RN27. Artilharia atualizada automaticamente.
+### Estatisticas
+- RN23. Registrar gols, assistencias e cartoes quando desejado.
+- RN24. Nota estatistica calculada automaticamente quando houver eventos.
+- RN25. Nota baseada em formula com pesos.
+- RN26. Considera eventos basicos na versao inicial.
+- RN27. Eventos positivos e negativos afetam a nota.
+- RN28. Artilharia atualizada automaticamente quando houver gols registrados.
+- RN29. Na ausencia de eventos, apenas o placar oficial da partida deve ser exibido.
