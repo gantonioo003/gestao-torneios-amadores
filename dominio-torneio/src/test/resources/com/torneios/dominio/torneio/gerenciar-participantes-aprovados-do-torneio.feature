@@ -1,10 +1,10 @@
-Feature: Gerenciar participantes aprovados do torneio
+Feature: Gerenciar participantes aprovados antes do inicio do torneio
 
   As a organizador do torneio
-  I want gerenciar os participantes aprovados
-  So that eu possa definir quem disputará a competição
+  I want gerenciar a lista final de participantes aprovados antes do inicio do torneio
+  So that eu possa definir quem disputará a competição quando ela começar
 
-  Scenario: Aprovar time para participar do torneio
+  Scenario: Incluir time na lista de participantes aprovados antes do inicio do torneio
     Given que existe um torneio com vagas abertas
     And que existe uma solicitação pendente de participação
     And que o usuário autenticado é o organizador do torneio

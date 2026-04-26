@@ -36,7 +36,7 @@ Cenarios principais:
 
 ---
 
-### F4. Avaliar solicitacoes de participacao de times no torneio
+### F4. Avaliar solicitacoes de participacao de times
 Dominio: dominio-participacao
 Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/avaliar-solicitacoes-de-participacao.feature
 
@@ -108,7 +108,7 @@ Cenarios principais:
 
 ---
 
-### F10. Gerenciar participantes aprovados do torneio
+### F10. Gerenciar participantes aprovados antes do inicio do torneio
 Dominio: dominio-torneio
 Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/gerenciar-participantes-aprovados-do-torneio.feature
 

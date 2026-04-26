@@ -7,7 +7,7 @@ F2. Permitir acesso autenticado as funcionalidades de criacao e gerenciamento de
 
 F3. Solicitar participacao de um time em torneio aberto
 
-F4. Avaliar solicitacoes de participacao de times no torneio
+F4. Avaliar solicitacoes de participacao de times
 
 ## Gestao de times e elenco
 F5. Gerenciar times do usuario
@@ -21,7 +21,7 @@ F8. Vincular um time a um usuario responsavel
 ## Organizacao do torneio
 F9. Criar e configurar torneio
 
-F10. Gerenciar participantes aprovados do torneio
+F10. Gerenciar participantes aprovados antes do inicio do torneio
 
 F11. Gerar estrutura da competicao
 

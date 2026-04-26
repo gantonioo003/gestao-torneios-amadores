@@ -1,4 +1,4 @@
-Feature: Avaliar solicitações de participação de times no torneio
+Feature: Avaliar solicitações de participação de times
 
   As a organizador do torneio
   I want avaliar solicitações de participação de times
