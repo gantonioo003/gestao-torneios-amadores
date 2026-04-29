@@ -7,7 +7,7 @@ F2. Gerenciar conta de usuario e autenticacao, permitindo cadastro, login, edica
 
 F3. Solicitar participacao de um time em torneio aberto
 
-F4. Avaliar solicitacoes de participacao de times
+F4. Gerenciar inscricoes e participantes do torneio, avaliando solicitacoes, aprovando ou rejeitando times e ajustando a lista final antes do inicio
 
 ## Gestao de times e elenco
 F5. Gerenciar times do usuario
@@ -21,7 +21,7 @@ F8. Definir escalacao do time para uma partida, incluindo esquema tatico, titula
 ## Organizacao do torneio
 F9. Criar e configurar torneio
 
-F10. Gerenciar participantes aprovados antes do inicio do torneio*4
+F10. Gerenciar desafios e amistosos entre times, permitindo propor confrontos, aceitar ou recusar convites, agendar partidas e registrar o resultado no historico dos times
 
 F11. Preparar competicao do torneio, gerando estrutura, rodadas e partidas conforme o formato definido
 

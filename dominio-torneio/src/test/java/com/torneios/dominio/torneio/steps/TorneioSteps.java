@@ -178,7 +178,7 @@ public class TorneioSteps extends TorneioFuncionalidade {
     }
 
     // =====================================================================
-    // F10: Gerenciar participantes aprovados do torneio
+    // Steps historicos de apoio para participantes do torneio
     // =====================================================================
 
     @Dado("que existe um torneio com vagas abertas")

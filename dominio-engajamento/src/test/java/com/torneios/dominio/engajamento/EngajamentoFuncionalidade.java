@@ -3,8 +3,12 @@ package com.torneios.dominio.engajamento;
 import java.util.List;
 
 import com.torneios.dominio.compartilhado.partida.PartidaId;
+import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
+import com.torneios.dominio.engajamento.desafio.DesafioAmistoso;
+import com.torneios.dominio.engajamento.desafio.DesafioAmistosoId;
+import com.torneios.dominio.engajamento.desafio.DesafioAmistosoServico;
 import com.torneios.dominio.engajamento.feed.FeedTorneioServico;
 import com.torneios.dominio.engajamento.feed.PublicacaoFeed;
 import com.torneios.dominio.engajamento.feed.PublicacaoFeedId;
@@ -15,6 +19,8 @@ import com.torneios.dominio.engajamento.palpite.PalpiteServico;
 import com.torneios.dominio.engajamento.palpite.PercentuaisPalpite;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaSuporteFeedTorneioMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaSuportePalpiteMemoria;
+import com.torneios.infraestrutura.persistencia.memoria.ConsultaSuporteDesafioAmistosoMemoria;
+import com.torneios.infraestrutura.persistencia.memoria.DesafioAmistosoRepositorioMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.FeedTorneioRepositorioMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.PalpiteRepositorioMemoria;
 
@@ -27,6 +33,8 @@ public abstract class EngajamentoFuncionalidade {
     protected static final PartidaId PARTIDA_ID = new PartidaId(1L);
     protected static final long TIME_A_ID = 1L;
     protected static final long TIME_B_ID = 2L;
+    protected static final TimeId TIME_DESAFIANTE_ID = new TimeId(1L);
+    protected static final TimeId TIME_DESAFIADO_ID = new TimeId(2L);
     protected static final long JOGADOR_A_ID = 11L;
     protected static final long JOGADOR_B_ID = 12L;
 
@@ -38,6 +46,11 @@ public abstract class EngajamentoFuncionalidade {
     protected final ConsultaSuporteFeedTorneioMemoria consultaFeed = new ConsultaSuporteFeedTorneioMemoria();
     protected final FeedTorneioServico feedTorneioServico = new FeedTorneioServico(feedRepositorio, consultaFeed);
 
+    protected final DesafioAmistosoRepositorioMemoria desafioAmistosoRepositorio = new DesafioAmistosoRepositorioMemoria();
+    protected final ConsultaSuporteDesafioAmistosoMemoria consultaDesafio = new ConsultaSuporteDesafioAmistosoMemoria();
+    protected final DesafioAmistosoServico desafioAmistosoServico = new DesafioAmistosoServico(
+            desafioAmistosoRepositorio, consultaDesafio);
+
     protected EventoAlvo eventoAlvo;
     protected Palpite palpite;
     protected List<Palpite> palpitesApurados;
@@ -46,6 +59,8 @@ public abstract class EngajamentoFuncionalidade {
 
     protected PublicacaoFeed publicacaoFeed;
     protected List<PublicacaoFeed> publicacoesFeed;
+    protected DesafioAmistoso desafioAmistoso;
+    protected List<DesafioAmistoso> historicoAmistosos;
     protected Exception excecaoCapturada;
 
     protected void configurarEventoDePartidaAberto() {
@@ -79,5 +94,9 @@ public abstract class EngajamentoFuncionalidade {
 
     protected PalpiteId palpiteId(long valor) {
         return new PalpiteId(valor);
+    }
+
+    protected DesafioAmistosoId desafioId(long valor) {
+        return new DesafioAmistosoId(valor);
     }
 }

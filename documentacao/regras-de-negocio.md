@@ -12,7 +12,7 @@ RN04. Para solicitar participacao em um torneio, o usuario deve possuir ao menos
 
 RN05. Um torneio pode ser criado ja com todos os times participantes definidos ou pode ser criado com vagas abertas para solicitacoes de participacao.
 
-RN06. Apenas o organizador do torneio pode aprovar ou rejeitar solicitacoes de participacao de times.
+RN06. Apenas o organizador do torneio pode aprovar, rejeitar e ajustar a lista final de participantes antes do inicio do torneio.
 
 RN54. O usuario pode cadastrar uma conta informando nome, email e senha validos.
 
@@ -23,6 +23,22 @@ RN56. O login deve autenticar o usuario apenas quando email e senha forem valido
 RN57. O usuario pode editar os dados cadastrais da propria conta.
 
 RN58. O usuario pode excluir a propria conta, removendo seu acesso ao sistema.
+
+---
+
+## Desafios e amistosos
+
+RN59. Apenas usuario autenticado responsavel por um time pode propor desafio amistoso para outro time.
+
+RN60. Um time nao pode desafiar ele mesmo.
+
+RN61. O responsavel pelo time desafiado pode aceitar ou recusar o convite de amistoso.
+
+RN62. Responsaveis pelos times envolvidos podem reagendar data e local do amistoso antes do encerramento.
+
+RN63. Responsaveis pelos times envolvidos podem registrar o resultado de um amistoso aceito.
+
+RN64. O resultado do amistoso deve ficar disponivel no historico dos dois times envolvidos.
 
 ---
 

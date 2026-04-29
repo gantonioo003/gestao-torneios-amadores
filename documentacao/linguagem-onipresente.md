@@ -30,8 +30,20 @@ Define a quantidade de jogadores em campo por time em uma partida, como 3x3, 5x5
 ### Solicitacao de participacao
 Pedido realizado por um usuario para inscrever seu time em um torneio aberto.
 
+### Lista final de participantes
+Conjunto de times aprovados pelo organizador para disputar o torneio antes do inicio da competicao.
+
 ### Time
 Equipe participante de um torneio, vinculada a um usuario responsavel.
+
+### Desafio amistoso
+Convite feito por um time a outro para realizar uma partida fora de torneios oficiais da plataforma.
+
+### Amistoso
+Partida combinada entre dois times por meio de um desafio aceito. Pode ter data, local e resultado registrado no historico.
+
+### Historico de amistosos
+Registro dos amistosos disputados por um time, incluindo adversario, data, local e placar.
 
 ### Tecnico
 Responsavel tecnico associado a um time.

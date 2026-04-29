@@ -6,7 +6,7 @@ O dominio do sistema e a gestao de torneios amadores de futebol com suporte ao r
 
 O sistema tem como objetivo permitir que usuarios criem, gerenciem e participem de torneios de futebol amador em diferentes formatos, como mata-mata, fase de grupos com mata-mata, pontos corridos e final unica.
 
-Alem da gestao da competicao, o sistema permite a participacao de diferentes usuarios, possibilitando cadastro, login, edicao e exclusao da propria conta, solicitacao de entrada de times, gerenciamento completo por parte do organizador, definicao da escalacao de cada time para cada partida, registro de palpites sobre o andamento da competicao e publicacao de comunicados e interacoes sociais no feed do torneio.
+Alem da gestao da competicao, o sistema permite a participacao de diferentes usuarios, possibilitando cadastro, login, edicao e exclusao da propria conta, solicitacao de entrada de times, gerenciamento completo por parte do organizador, desafios amistosos entre times, definicao da escalacao de cada time para cada partida, registro de palpites sobre o andamento da competicao e publicacao de comunicados e interacoes sociais no feed do torneio.
 
 O sistema tambem permite o gerenciamento da sumula estatistica das partidas, com registro, correcao e remocao de gols, assistencias e cartoes, para que sejam consolidadas estatisticas e notas dos jogadores quando essas informacoes forem registradas.
 
@@ -19,6 +19,7 @@ Competicoes amadoras costumam ser organizadas manualmente, o que dificulta o con
 - torneios e campeonatos criados
 - contas de usuario e autenticacao
 - participacao de times e controle de inscricoes
+- desafios e amistosos entre times
 - jogadores e tecnicos
 - escalacao dos times em cada partida
 - partidas e resultados
@@ -45,6 +46,8 @@ Os principais conceitos do dominio sao:
 - Torneio
 - Formato de torneio
 - Solicitacao de participacao
+- Desafio amistoso
+- Historico de amistosos
 - Time
 - Tecnico
 - Jogador
@@ -85,7 +88,9 @@ Um torneio pode ser criado ja com participantes definidos ou com vagas abertas p
 
 Durante a criacao do torneio, o organizador define tanto o formato da competicao quanto o formato de equipe, indicando quantos jogadores cada time deve ter em campo, por exemplo 3x3, 5x5, 7x7 ou 11x11.
 
-Usuarios com times cadastrados podem solicitar participacao em torneios abertos, cabendo ao organizador aprovar ou rejeitar essas solicitacoes.
+Usuarios com times cadastrados podem solicitar participacao em torneios abertos, cabendo ao organizador aprovar ou rejeitar essas solicitacoes e ajustar a lista final de participantes antes do inicio da competicao.
+
+Fora do fluxo formal dos torneios, responsaveis por times podem propor desafios amistosos para outros times, aceitar ou recusar convites, reagendar data e local e registrar o placar no historico dos times envolvidos. Isso reforca a ideia da plataforma como uma rede social de times amadores, nao apenas como um gerenciador de campeonato.
 
 O organizador define o formato do torneio, gerencia os participantes aprovados e prepara a competicao, gerando estrutura, rodadas e partidas conforme o formato escolhido.
 

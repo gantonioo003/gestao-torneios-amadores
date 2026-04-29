@@ -29,28 +29,34 @@
 - Como usuario autenticado, quero ser impedido de solicitar participacao caso eu nao tenha time cadastrado.
 - Como organizador, quero aprovar solicitacoes de participacao para definir os times que entrarao no torneio.
 - Como organizador, quero rejeitar solicitacoes de participacao para controlar os participantes da competicao.
-- Como organizador, quero definir os times participantes do torneio para montar a competicao.
+- Como organizador, quero ajustar a lista final de participantes antes do inicio para montar a competicao corretamente.
 
-## 4. Gestao de times e elenco
+## 4. Desafios e amistosos entre times
+- Como responsavel por um time, quero propor um desafio amistoso para outro time para encontrar adversarios fora dos torneios.
+- Como responsavel pelo time desafiado, quero aceitar ou recusar o convite para controlar a agenda do meu time.
+- Como responsavel por um dos times envolvidos, quero reagendar data e local do amistoso para combinar melhor a partida.
+- Como responsavel por um dos times envolvidos, quero registrar o resultado do amistoso para alimentar o historico dos times.
+
+## 5. Gestao de times e elenco
 - Como usuario autenticado, quero cadastrar um time para poder utiliza-lo em torneios.
 - Como responsavel por um time, quero registrar o elenco de jogadores para formar a equipe.
 - Como responsavel por um time, quero associar um tecnico ao time para identificar seu responsavel tecnico.
 - Como organizador, quero visualizar elenco e tecnico dos times participantes para validar a composicao das equipes.
 
-## 5. Escalacao da partida
+## 6. Escalacao da partida
 - Como responsavel por um time, quero escolher o esquema tatico da minha escalacao para uma partida para definir como meu time se posicionara em campo.
 - Como responsavel por um time, quero indicar os jogadores titulares por posicao para montar minha escalacao inicial.
 - Como responsavel por um time, quero indicar os jogadores reservas da partida para deixar a equipe completa e organizada antes do jogo.
 - Como tecnico associado ao time, quero definir e ajustar a escalacao da partida ate seu inicio para garantir a melhor formacao possivel.
 - Como organizador, quero visualizar as escalacoes confirmadas dos times antes da partida para validar a competicao.
 
-## 6. Gestao de partidas e andamento da competicao
+## 7. Gestao de partidas e andamento da competicao
 - Como organizador, quero registrar o resultado de uma partida para atualizar o andamento do torneio.
 - Como organizador, quero registrar apenas o placar da partida quando nao quiser detalhar eventos individuais.
 - Como organizador, quero que a classificacao, o chaveamento e o status das partidas sejam atualizados automaticamente apos o registro do resultado.
 - Como organizador, quero visualizar a classificacao ou o chaveamento para acompanhar a evolucao da competicao.
 
-## 7. Estatisticas e desempenho dos jogadores
+## 8. Estatisticas e desempenho dos jogadores
 - Como organizador, quero registrar gols e assistencias de uma partida para acompanhar o desempenho ofensivo dos jogadores.
 - Como organizador, quero registrar cartoes amarelos e vermelhos para refletir eventos disciplinares da partida.
 - Como organizador, quero corrigir ou remover eventos da sumula estatistica para manter os dados da partida consistentes.

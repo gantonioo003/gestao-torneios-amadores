@@ -71,6 +71,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     private boolean torneioAceitaSolicitacoes = false;
     private boolean usuarioEhOrganizador       = false;
     private boolean usuarioExiste              = true;
+    private boolean torneioIniciado             = false;
 
     private final PoliticaParticipacaoTorneio politicaParticipacao = new PoliticaParticipacaoTorneio() {
         @Override
@@ -81,6 +82,11 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         @Override
         public boolean usuarioEhOrganizador(TorneioId torneioId, UsuarioId usuarioId) {
             return usuarioEhOrganizador && usuarioId != null && usuarioId.equals(ORGANIZADOR_ID);
+        }
+
+        @Override
+        public boolean torneioIniciado(TorneioId torneioId) {
+            return torneioIniciado;
         }
     };
 
@@ -110,6 +116,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         torneioAceitaSolicitacoes = false;
         usuarioEhOrganizador = false;
         usuarioExiste = true;
+        torneioIniciado = false;
         usuarioAtual = null;
     }
 
@@ -370,6 +377,24 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
                 SOLICITACAO_ID, usuarioAtual, TIME_A_ID, TORNEIO_ID);
         sol.aprovar();
         solicitacaoRepositorio.salvar(sol);
+    }
+
+    @Dado("que existe um time aprovado na lista final de participantes")
+    public void que_existe_time_aprovado_na_lista_final() {
+        Time time = timeRepositorio.buscarPorId(TIME_A_ID)
+                .orElseGet(() -> new Time(TIME_A_ID, "Time Alpha", USUARIO_AUTENTICADO_ID));
+        time.vincularAoTorneio(TORNEIO_ID);
+        timeRepositorio.salvar(time);
+    }
+
+    @Dado("que o torneio ainda nao foi iniciado")
+    public void que_torneio_ainda_nao_foi_iniciado() {
+        torneioIniciado = false;
+    }
+
+    @Dado("que o torneio ja foi iniciado")
+    public void que_torneio_ja_foi_iniciado() {
+        torneioIniciado = true;
     }
 
     @Dado("que não existe solicitação de participação para o time")
@@ -1224,6 +1249,24 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         }
     }
 
+    @Quando("o organizador remover o time da lista final")
+    public void organizador_remover_time_lista_final() {
+        try {
+            solicitacaoServico.removerParticipanteAprovado(TORNEIO_ID, TIME_A_ID, usuarioAtual);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele tentar alterar a lista final de participantes")
+    public void ele_tentar_alterar_lista_final_participantes() {
+        try {
+            solicitacaoServico.removerParticipanteAprovado(TORNEIO_ID, TIME_A_ID, usuarioAtual);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
     @Quando("ele tentar aprovar a solicitação")
     public void ele_tentar_aprovar_a_solicitacao() {
         try {
@@ -1317,6 +1360,15 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         assertNull(excecaoCapturada);
         SolicitacaoParticipacao sol = solicitacaoRepositorio.buscarPorId(SOLICITACAO_ID).orElseThrow();
         assertEquals(StatusSolicitacao.APROVADA, sol.getStatus());
+        Time time = timeRepositorio.buscarPorId(TIME_A_ID).orElseThrow();
+        assertTrue(time.estaVinculadoAoTorneio(TORNEIO_ID));
+    }
+
+    @Entao("o sistema deve retirar o time da lista final do torneio")
+    public void sistema_deve_retirar_time_lista_final() {
+        assertNull(excecaoCapturada);
+        Time time = timeRepositorio.buscarPorId(TIME_A_ID).orElseThrow();
+        assertFalse(time.estaVinculadoAoTorneio(TORNEIO_ID));
     }
 
     @Entao("o sistema deve informar que não há solicitação pendente para avaliação")
@@ -1336,5 +1388,74 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         assertNull(excecaoCapturada);
         Time time = timeRepositorio.buscarPorId(TIME_A_ID).orElseThrow();
         assertTrue(time.possuiJogador(JOGADOR_ID));
+    }
+
+    // =====================================================================
+    // Steps sem acento para os cenarios oficiais revisados
+    // =====================================================================
+
+    @Dado("que o usuario autenticado e o organizador do torneio")
+    public void que_o_usuario_autenticado_e_o_organizador_do_torneio_sem_acento() {
+        que_o_usuario_e_organizador_do_torneio();
+    }
+
+    @Dado("que existe uma solicitacao pendente de participacao para um torneio")
+    public void que_existe_solicitacao_pendente_de_participacao_para_torneio_sem_acento() {
+        que_existe_solicitacao_pendente_de_participacao_para_torneio();
+    }
+
+    @Dado("que nao existe solicitacao pendente para o torneio")
+    public void que_nao_existe_solicitacao_pendente_para_torneio_sem_acento() {
+        que_nao_existe_solicitacao_pendente_para_torneio();
+    }
+
+    @Dado("que o usuario autenticado nao e o organizador do torneio")
+    public void que_o_usuario_autenticado_nao_e_o_organizador_do_torneio_sem_acento() {
+        que_o_usuario_nao_e_organizador_do_torneio();
+    }
+
+    @Dado("que existem solicitacoes pendentes de times para o torneio")
+    public void que_existem_solicitacoes_pendentes_de_times_para_o_torneio_sem_acento() {
+        que_existem_solicitacoes_pendentes();
+    }
+
+    @Quando("o organizador aprovar a solicitacao")
+    public void o_organizador_aprovar_a_solicitacao_sem_acento() {
+        o_organizador_aprovar_a_solicitacao();
+    }
+
+    @Quando("o organizador rejeitar a solicitacao")
+    public void o_organizador_rejeitar_a_solicitacao_sem_acento() {
+        o_organizador_rejeitar_a_solicitacao();
+    }
+
+    @Quando("ele tentar aprovar a solicitacao")
+    public void ele_tentar_aprovar_a_solicitacao_sem_acento() {
+        ele_tentar_aprovar_a_solicitacao();
+    }
+
+    @Quando("ele tentar avaliar uma solicitacao")
+    public void ele_tentar_avaliar_uma_solicitacao_sem_acento() {
+        ele_tentar_avaliar_uma_solicitacao();
+    }
+
+    @Entao("o sistema deve impedir a operacao")
+    public void o_sistema_deve_impedir_operacao_sem_acento() {
+        o_sistema_deve_impedir_operacao();
+    }
+
+    @Entao("o sistema deve registrar a solicitacao como rejeitada")
+    public void o_sistema_deve_registrar_a_solicitacao_como_rejeitada_sem_acento() {
+        o_sistema_deve_registrar_como_rejeitada();
+    }
+
+    @Entao("o sistema deve exibir os times com solicitacoes pendentes")
+    public void o_sistema_deve_exibir_os_times_com_solicitacoes_pendentes_sem_acento() {
+        o_sistema_deve_exibir_times_candidatos_pendentes();
+    }
+
+    @Entao("o sistema deve informar que nao ha solicitacao pendente para avaliacao")
+    public void o_sistema_deve_informar_sem_solicitacao_pendente_para_avaliacao_sem_acento() {
+        o_sistema_deve_informar_sem_solicitacao_pendente_para_avaliacao();
     }
 }

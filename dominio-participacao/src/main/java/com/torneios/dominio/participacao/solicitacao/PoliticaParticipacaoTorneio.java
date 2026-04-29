@@ -8,4 +8,8 @@ public interface PoliticaParticipacaoTorneio {
     boolean aceitaSolicitacoes(TorneioId torneioId);
 
     boolean usuarioEhOrganizador(TorneioId torneioId, UsuarioId usuarioId);
+
+    default boolean torneioIniciado(TorneioId torneioId) {
+        return false;
+    }
 }

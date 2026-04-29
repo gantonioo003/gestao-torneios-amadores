@@ -17,7 +17,8 @@ O sistema proposto permite:
 - definir formato de competicao e formato de equipe
 - cadastrar times, jogadores e tecnico
 - solicitar e avaliar participacao de times
-- gerenciar participantes aprovados
+- gerenciar inscricoes e lista final de participantes
+- propor, aceitar, reagendar e registrar desafios amistosos entre times
 - preparar a competicao com estrutura, rodadas e partidas
 - publicar comunicados, comentarios e atualizacoes automaticas no feed social do torneio
 - registrar resultados oficiais de partidas
@@ -52,7 +53,7 @@ O projeto segue uma organizacao modular orientada a contexto de negocio. Cada mo
 - `dominio-torneio`: criacao e configuracao do torneio, participantes aprovados, organizador e estrutura da competicao
 - `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento e preparacao da competicao
 - `dominio-estatisticas`: eventos estatisticos opcionais, nota estatistica, desempenho e artilharia
-- `dominio-engajamento`: palpites, comunicados oficiais, comentarios e feed social do torneio
+- `dominio-engajamento`: palpites, desafios amistosos entre times, comunicados oficiais, comentarios e feed social do torneio
 - `pai`: modulo pai Maven com configuracao compartilhada
 
 ## Domain-Driven Design
@@ -177,6 +178,8 @@ Inclui classes voltadas a:
 
 - palpites de usuarios autenticados
 - apuracao automatica de palpites
+- desafios e amistosos entre times
+- historico de amistosos dos times
 - comunicados oficiais do torneio
 - comentarios em partidas
 - atualizacoes automaticas no feed social

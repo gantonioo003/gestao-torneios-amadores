@@ -60,16 +60,33 @@ public class SolicitacaoParticipacaoServico {
         autenticacaoServico.exigirAutenticacao(organizadorId);
         SolicitacaoParticipacao solicitacao = obterSolicitacao(solicitacaoId);
         validarOrganizador(solicitacao.getTorneioId(), organizadorId);
+        validarTorneioNaoIniciado(solicitacao.getTorneioId());
         solicitacao.aprovar();
         solicitacaoParticipacaoRepositorio.salvar(solicitacao);
+        Time time = obterTime(solicitacao.getTimeId());
+        time.vincularAoTorneio(solicitacao.getTorneioId());
+        timeRepositorio.salvar(time);
     }
 
     public void rejeitarSolicitacao(SolicitacaoParticipacaoId solicitacaoId, UsuarioId organizadorId) {
         autenticacaoServico.exigirAutenticacao(organizadorId);
         SolicitacaoParticipacao solicitacao = obterSolicitacao(solicitacaoId);
         validarOrganizador(solicitacao.getTorneioId(), organizadorId);
+        validarTorneioNaoIniciado(solicitacao.getTorneioId());
         solicitacao.rejeitar();
         solicitacaoParticipacaoRepositorio.salvar(solicitacao);
+    }
+
+    public void removerParticipanteAprovado(TorneioId torneioId, TimeId timeId, UsuarioId organizadorId) {
+        autenticacaoServico.exigirAutenticacao(organizadorId);
+        validarOrganizador(torneioId, organizadorId);
+        validarTorneioNaoIniciado(torneioId);
+        Time time = obterTime(timeId);
+        if (!time.estaVinculadoAoTorneio(torneioId)) {
+            throw new RegraDeNegocioException("O time informado nao esta aprovado no torneio.");
+        }
+        time.removerVinculoTorneio(torneioId);
+        timeRepositorio.salvar(time);
     }
 
     public List<SolicitacaoParticipacao> listarPendentesParaAvaliacao(TorneioId torneioId, UsuarioId organizadorId) {
@@ -88,5 +105,17 @@ public class SolicitacaoParticipacaoServico {
             throw new OperacaoNaoPermitidaException(
                     "Apenas o organizador do torneio pode avaliar solicitacoes de participacao.");
         }
+    }
+
+    private void validarTorneioNaoIniciado(TorneioId torneioId) {
+        if (politicaParticipacaoTorneio.torneioIniciado(torneioId)) {
+            throw new OperacaoNaoPermitidaException(
+                    "Nao e permitido alterar participantes apos o inicio do torneio.");
+        }
+    }
+
+    private Time obterTime(TimeId timeId) {
+        return timeRepositorio.buscarPorId(timeId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Time nao encontrado."));
     }
 }

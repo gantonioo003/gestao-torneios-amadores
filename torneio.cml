@@ -78,6 +78,7 @@ BoundedContext Participacao implements Participacao {
 			void solicitarParticipacao(@SolicitacaoParticipacaoId solicitacao, @UsuarioId usuario, @TimeId time, @TorneioId torneio);
 			void aprovarSolicitacao(@SolicitacaoParticipacaoId solicitacao, @UsuarioId organizador);
 			void rejeitarSolicitacao(@SolicitacaoParticipacaoId solicitacao, @UsuarioId organizador);
+			void removerParticipanteAprovado(@TorneioId torneio, @TimeId time, @UsuarioId organizador);
 		}
 
 		Entity SolicitacaoParticipacao {
@@ -298,6 +299,48 @@ BoundedContext Engajamento implements Engajamento {
 		}
 
 		ValueObject TipoPublicacaoFeed {
+			String valor
+		}
+	}
+
+	Aggregate DesafioAmistoso {
+		Service DesafioAmistosoServico {
+			void proporConfronto(@DesafioAmistosoId desafio, @UsuarioId usuario, @TimeId desafiante, @TimeId desafiado, String dataHora, String local);
+			void aceitarConvite(@DesafioAmistosoId desafio, @UsuarioId usuario);
+			void recusarConvite(@DesafioAmistosoId desafio, @UsuarioId usuario);
+			void reagendarAmistoso(@DesafioAmistosoId desafio, @UsuarioId usuario, String dataHora, String local);
+			void registrarResultado(@DesafioAmistosoId desafio, @UsuarioId usuario, @ResultadoAmistoso resultado);
+			void listarHistoricoDoTime(@TimeId time);
+		}
+
+		Entity DesafioAmistoso {
+			aggregateRoot
+
+			-DesafioAmistosoId id
+			-UsuarioId proponente
+			-TimeId timeDesafiante
+			-TimeId timeDesafiado
+			String dataHora
+			String local
+			-StatusDesafioAmistoso status
+			-ResultadoAmistoso resultado nullable
+
+			Repository DesafioAmistosoRepository {
+				@DesafioAmistoso obter(@DesafioAmistosoId id);
+				List<DesafioAmistoso> listarHistoricoDoTime(@TimeId time);
+			}
+		}
+
+		ValueObject DesafioAmistosoId {
+			int id
+		}
+
+		ValueObject ResultadoAmistoso {
+			int golsDesafiante
+			int golsDesafiado
+		}
+
+		ValueObject StatusDesafioAmistoso {
 			String valor
 		}
 	}

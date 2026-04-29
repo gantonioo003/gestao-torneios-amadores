@@ -49,14 +49,17 @@ Cenarios principais:
 
 ---
 
-### F4. Avaliar solicitacoes de participacao de times
+### F4. Gerenciar inscricoes e participantes do torneio
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F4-avaliar-solicitacoes-de-participacao.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F4-gerenciar-inscricoes-e-participantes-do-torneio.feature
 
 Cenarios principais:
-- aprovar solicitacao de participacao de um time
-- rejeitar solicitacao de participacao de um time
-- impedir avaliacao por usuario que nao e organizador do torneio
+- aprovar solicitacao e incluir time na lista final
+- rejeitar solicitacao de participacao
+- remover time aprovado antes do inicio do torneio
+- impedir gerenciamento por usuario que nao e organizador
+- impedir alteracao da lista final apos inicio do torneio
+- visualizar lista de times candidatos pendentes
 - informar ausencia de solicitacoes pendentes para avaliacao
 
 ---
@@ -127,15 +130,18 @@ Cenarios principais:
 
 ---
 
-### F10. Gerenciar participantes aprovados antes do inicio do torneio
-Dominio: dominio-torneio
-Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/F10-gerenciar-participantes-aprovados-do-torneio.feature
+### F10. Gerenciar desafios e amistosos entre times
+Dominio: dominio-engajamento
+Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F10-gerenciar-desafios-e-amistosos-entre-times.feature
 
 Cenarios principais:
-- aprovar solicitacao de participacao de um time
-- remover time aprovado antes do inicio do torneio
-- impedir gerenciamento por usuario nao organizador
-- impedir alteracao apos inicio do torneio
+- propor confronto amistoso para outro time
+- aceitar convite de amistoso
+- recusar convite de amistoso
+- reagendar amistoso aceito
+- registrar resultado no historico dos times
+- impedir desafio contra o proprio time
+- impedir aceite por usuario sem responsabilidade pelos times
 
 ---
 
@@ -225,7 +231,7 @@ Cenarios principais:
 - RN03. Apenas usuarios autenticados podem solicitar participacao em torneios.
 - RN04. Usuario deve possuir time cadastrado para solicitar participacao.
 - RN05. Torneio pode ser aberto ou fechado para participacao.
-- RN06. Apenas organizador pode aprovar ou rejeitar solicitacoes.
+- RN06. Apenas organizador pode aprovar, rejeitar e ajustar a lista final de participantes antes do inicio do torneio.
 - RN54. Usuario pode cadastrar conta informando nome, email e senha.
 - RN55. Email de conta de usuario deve ser unico.
 - RN56. Login exige email e senha validos.
@@ -248,6 +254,14 @@ Cenarios principais:
 - RN50. Usuarios nao autenticados nao podem comentar no feed social.
 - RN51. Atualizacoes automaticas sobre jogos podem ser publicadas pelo sistema apos eventos relevantes da partida.
 - RN52. Comentarios podem ser editados pelo proprio autor.
+
+### Desafios e amistosos
+- RN59. Apenas usuario autenticado responsavel por um time pode propor desafio amistoso.
+- RN60. Um time nao pode desafiar ele mesmo.
+- RN61. O responsavel pelo time desafiado pode aceitar ou recusar o convite.
+- RN62. Responsaveis pelos times envolvidos podem reagendar data e local do amistoso antes do encerramento.
+- RN63. Responsaveis pelos times envolvidos podem registrar o resultado do amistoso aceito.
+- RN64. Resultados de amistosos ficam no historico dos times envolvidos.
 
 ### Organizacao do torneio
 - RN07. Todo torneio deve possuir formato definido.

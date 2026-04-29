@@ -12,6 +12,7 @@ import com.torneios.dominio.participacao.solicitacao.PoliticaParticipacaoTorneio
 public class PoliticaParticipacaoTorneioMemoria implements PoliticaParticipacaoTorneio {
 
     private final Set<TorneioId> torneiosAbertos = new HashSet<>();
+    private final Set<TorneioId> torneiosIniciados = new HashSet<>();
     private final Map<TorneioId, UsuarioId> organizadores = new HashMap<>();
 
     public void abrirParaSolicitacoes(TorneioId torneioId) {
@@ -26,8 +27,13 @@ public class PoliticaParticipacaoTorneioMemoria implements PoliticaParticipacaoT
         organizadores.put(torneioId, organizadorId);
     }
 
+    public void iniciarTorneio(TorneioId torneioId) {
+        torneiosIniciados.add(torneioId);
+    }
+
     public void limpar() {
         torneiosAbertos.clear();
+        torneiosIniciados.clear();
         organizadores.clear();
     }
 
@@ -39,5 +45,10 @@ public class PoliticaParticipacaoTorneioMemoria implements PoliticaParticipacaoT
     @Override
     public boolean usuarioEhOrganizador(TorneioId torneioId, UsuarioId usuarioId) {
         return usuarioId != null && usuarioId.equals(organizadores.get(torneioId));
+    }
+
+    @Override
+    public boolean torneioIniciado(TorneioId torneioId) {
+        return torneiosIniciados.contains(torneioId);
     }
 }
