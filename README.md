@@ -16,7 +16,8 @@ O sistema proposto permite:
 - cadastrar conta, realizar login, editar dados e excluir conta
 - definir formato de competicao e formato de equipe
 - cadastrar times, jogadores e tecnico
-- solicitar e avaliar participacao de times
+- gerenciar candidaturas de times, com solicitacao, acompanhamento de status e cancelamento quando pendente
+- avaliar inscricoes e lista final de participantes
 - gerenciar inscricoes e lista final de participantes
 - propor, aceitar, reagendar e registrar desafios amistosos entre times
 - preparar a competicao com estrutura, rodadas e partidas
@@ -49,7 +50,7 @@ O projeto segue uma organizacao modular orientada a contexto de negocio. Cada mo
 ### Modulos atuais
 
 - `dominio-compartilhado`: ids, entidades compartilhadas, enumeracoes, excecoes e eventos de dominio reutilizaveis
-- `dominio-participacao`: conta de usuario, autenticacao, solicitacoes de participacao, times, jogadores, tecnico e responsavel do time
+- `dominio-participacao`: conta de usuario, autenticacao, candidaturas de participacao, times, jogadores, tecnico e responsavel do time
 - `dominio-torneio`: criacao e configuracao do torneio, participantes aprovados, organizador e estrutura da competicao
 - `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento e preparacao da competicao
 - `dominio-estatisticas`: eventos estatisticos opcionais, nota estatistica, desempenho e artilharia
@@ -146,7 +147,7 @@ Inclui classes voltadas a:
 
 - autenticacao de acesso
 - conta de usuario e login
-- solicitacao de participacao
+- candidatura de participacao em torneio aberto
 - gestao de times
 - gestao de jogadores
 - gestao de tecnico

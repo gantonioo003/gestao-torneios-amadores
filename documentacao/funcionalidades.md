@@ -5,7 +5,7 @@ F1. Registrar palpites de usuarios autenticados sobre vencedores de partidas, ca
 
 F2. Gerenciar conta de usuario e autenticacao, permitindo cadastro, login, edicao de dados e exclusao da conta
 
-F3. Solicitar participacao de um time em torneio aberto
+F3. Gerenciar candidatura de time em torneio aberto, permitindo solicitar participacao, acompanhar status e cancelar solicitacao pendente
 
 F4. Gerenciar inscricoes e participantes do torneio, avaliando solicitacoes, aprovando ou rejeitando times e ajustando a lista final antes do inicio
 

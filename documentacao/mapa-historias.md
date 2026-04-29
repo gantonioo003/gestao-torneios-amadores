@@ -20,13 +20,16 @@
 - Como organizador, quero criar um torneio para iniciar uma competicao.
 - Como organizador, quero definir o formato do torneio para estruturar a competicao.
 - Como organizador, quero definir a quantidade de jogadores por equipe, como 3x3, 5x5 ou 11x11, para adequar o torneio ao formato desejado.
-- Como organizador, quero escolher se o torneio sera criado ja com todos os participantes ou com vagas abertas para solicitacao de entrada.
+- Como organizador, quero escolher se o torneio sera criado ja com todos os participantes ou com vagas abertas para candidaturas de entrada.
 - Como organizador, quero preparar a competicao gerando estrutura, rodadas e partidas para visualizar grupos, tabela, chaveamento e jogos.
 - Como organizador, quero iniciar o torneio apenas quando houver times suficientes para o formato escolhido.
 
 ## 3. Participacao de times no torneio
-- Como usuario autenticado, quero solicitar a participacao do meu time em um torneio aberto para disputar a competicao.
-- Como usuario autenticado, quero ser impedido de solicitar participacao caso eu nao tenha time cadastrado.
+- Como usuario autenticado, quero enviar a candidatura do meu time em um torneio aberto para disputar a competicao.
+- Como usuario autenticado, quero acompanhar o status das candidaturas do meu time para saber se estao pendentes, aprovadas, rejeitadas ou canceladas.
+- Como usuario autenticado, quero cancelar uma candidatura pendente caso eu desista de participar do torneio.
+- Como usuario autenticado, quero ser impedido de enviar candidatura caso eu nao tenha time cadastrado.
+- Como usuario autenticado, quero ser impedido de enviar candidatura duplicada para o mesmo torneio.
 - Como organizador, quero aprovar solicitacoes de participacao para definir os times que entrarao no torneio.
 - Como organizador, quero rejeitar solicitacoes de participacao para controlar os participantes da competicao.
 - Como organizador, quero ajustar a lista final de participantes antes do inicio para montar a competicao corretamente.

@@ -6,9 +6,9 @@ RN01. Apenas usuarios autenticados podem registrar palpites sobre eventos do sis
 
 RN02. Apenas usuarios autenticados podem criar torneios.
 
-RN03. Apenas usuarios autenticados podem solicitar participacao em torneios.
+RN03. Apenas usuarios autenticados podem gerenciar candidaturas de participacao em torneios.
 
-RN04. Para solicitar participacao em um torneio, o usuario deve possuir ao menos um time previamente cadastrado no sistema.
+RN04. Para enviar candidatura de participacao em um torneio, o usuario deve possuir ao menos um time previamente cadastrado no sistema.
 
 RN05. Um torneio pode ser criado ja com todos os times participantes definidos ou pode ser criado com vagas abertas para solicitacoes de participacao.
 
@@ -23,6 +23,12 @@ RN56. O login deve autenticar o usuario apenas quando email e senha forem valido
 RN57. O usuario pode editar os dados cadastrais da propria conta.
 
 RN58. O usuario pode excluir a propria conta, removendo seu acesso ao sistema.
+
+RN65. O usuario pode acompanhar o status das candidaturas de participacao enviadas por ele.
+
+RN66. O usuario pode cancelar uma candidatura de participacao enquanto ela estiver pendente.
+
+RN67. Candidaturas ja avaliadas pelo organizador nao podem ser canceladas pelo solicitante.
 
 ---
 

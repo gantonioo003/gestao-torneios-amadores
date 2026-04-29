@@ -29,6 +29,7 @@ public abstract class EngajamentoFuncionalidade {
     protected static final UsuarioId USUARIO_ID = new UsuarioId(1L);
     protected static final UsuarioId OUTRO_USUARIO_ID = new UsuarioId(2L);
     protected static final UsuarioId ORGANIZADOR_ID = new UsuarioId(10L);
+    protected static final String VISITANTE_ID = "visitante-123";
     protected static final TorneioId TORNEIO_ID = new TorneioId(1L);
     protected static final PartidaId PARTIDA_ID = new PartidaId(1L);
     protected static final long TIME_A_ID = 1L;

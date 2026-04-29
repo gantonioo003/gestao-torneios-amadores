@@ -89,6 +89,18 @@ public class SolicitacaoParticipacaoServico {
         timeRepositorio.salvar(time);
     }
 
+    public List<SolicitacaoParticipacao> acompanharCandidaturas(UsuarioId usuarioId) {
+        autenticacaoServico.exigirAutenticacao(usuarioId);
+        return solicitacaoParticipacaoRepositorio.listarPorSolicitante(usuarioId);
+    }
+
+    public void cancelarCandidatura(SolicitacaoParticipacaoId solicitacaoId, UsuarioId usuarioId) {
+        autenticacaoServico.exigirAutenticacao(usuarioId);
+        SolicitacaoParticipacao solicitacao = obterSolicitacao(solicitacaoId);
+        solicitacao.cancelar(usuarioId);
+        solicitacaoParticipacaoRepositorio.salvar(solicitacao);
+    }
+
     public List<SolicitacaoParticipacao> listarPendentesParaAvaliacao(TorneioId torneioId, UsuarioId organizadorId) {
         autenticacaoServico.exigirAutenticacao(organizadorId);
         validarOrganizador(torneioId, organizadorId);

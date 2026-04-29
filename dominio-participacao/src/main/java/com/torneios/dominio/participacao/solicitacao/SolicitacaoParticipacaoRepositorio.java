@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
+import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 
 public interface SolicitacaoParticipacaoRepositorio {
 
@@ -13,6 +14,8 @@ public interface SolicitacaoParticipacaoRepositorio {
     Optional<SolicitacaoParticipacao> buscarPorId(SolicitacaoParticipacaoId solicitacaoId);
 
     List<SolicitacaoParticipacao> listarPendentesPorTorneio(TorneioId torneioId);
+
+    List<SolicitacaoParticipacao> listarPorSolicitante(UsuarioId usuarioId);
 
     boolean existePendentePorTimeETorneio(TimeId timeId, TorneioId torneioId);
 }

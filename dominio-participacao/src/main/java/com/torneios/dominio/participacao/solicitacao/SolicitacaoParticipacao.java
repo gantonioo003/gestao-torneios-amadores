@@ -60,6 +60,14 @@ public class SolicitacaoParticipacao {
         this.status = StatusSolicitacao.REJEITADA;
     }
 
+    public void cancelar(UsuarioId usuarioId) {
+        validarPendente();
+        if (!solicitante.equals(usuarioId)) {
+            throw new IllegalStateException("Apenas o solicitante pode cancelar a candidatura.");
+        }
+        this.status = StatusSolicitacao.CANCELADA;
+    }
+
     private void validarPendente() {
         if (!estaPendente()) {
             throw new IllegalStateException("A solicitacao ja foi avaliada.");

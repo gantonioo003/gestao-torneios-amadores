@@ -17,12 +17,17 @@ public class PalpiteRepositorioMemoria implements PalpiteRepositorio {
 
     @Override
     public void salvar(Palpite palpite) {
-        palpites.put(chave(palpite.getUsuarioId(), palpite.getEventoAlvo()), palpite);
+        palpites.put(chave(palpite.getIdentificadorVotante(), palpite.getEventoAlvo()), palpite);
     }
 
     @Override
     public Optional<Palpite> buscarPorUsuarioEEvento(UsuarioId usuarioId, EventoAlvo eventoAlvo) {
-        return Optional.ofNullable(palpites.get(chave(usuarioId, eventoAlvo)));
+        return buscarPorVotanteEEvento("USUARIO:" + usuarioId.valor(), eventoAlvo);
+    }
+
+    @Override
+    public Optional<Palpite> buscarPorVotanteEEvento(String identificadorVotante, EventoAlvo eventoAlvo) {
+        return Optional.ofNullable(palpites.get(chave(identificadorVotante, eventoAlvo)));
     }
 
     @Override
@@ -36,7 +41,7 @@ public class PalpiteRepositorioMemoria implements PalpiteRepositorio {
         return new ArrayList<>(palpites.values());
     }
 
-    private String chave(UsuarioId usuarioId, EventoAlvo eventoAlvo) {
-        return usuarioId.valor() + ":" + eventoAlvo.hashCode();
+    private String chave(String identificadorVotante, EventoAlvo eventoAlvo) {
+        return identificadorVotante + ":" + eventoAlvo.hashCode();
     }
 }

@@ -1,10 +1,10 @@
-Feature: Registrar palpites de usuarios autenticados
+Feature: Gerenciar palpites publicos sobre partidas e torneios
 
-  As a usuario autenticado
+  As a visitante ou usuario autenticado
   I want registrar palpites sobre vencedores de partidas, campeao do torneio, artilheiro e lider de assistencias
   So that eu possa participar ativamente da competicao e acompanhar minha taxa de acerto
 
-  Scenario: Registrar palpite sobre vencedor de partida com sucesso
+  Scenario: Registrar palpite de usuario autenticado sobre vencedor de partida
     Given que o usuario esta autenticado
     And que existe uma partida cadastrada com janela de votacao aberta
     When ele registrar um palpite indicando o time vencedor da partida
@@ -28,10 +28,11 @@ Feature: Registrar palpites de usuarios autenticados
     When ele registrar um palpite indicando o jogador lider de assistencias do torneio
     Then o sistema deve armazenar o palpite do usuario para o torneio
 
-  Scenario: Impedir palpite de usuario nao autenticado
-    Given que o usuario nao esta autenticado
-    When ele tentar registrar um palpite
-    Then o sistema deve impedir a operacao
+  Scenario: Registrar palpite de visitante nao autenticado sobre vencedor de partida
+    Given que o visitante nao esta autenticado
+    And que existe uma partida cadastrada com janela de votacao aberta
+    When ele registrar um palpite publico indicando o time vencedor da partida
+    Then o sistema deve armazenar o palpite do visitante para a partida
 
   Scenario: Substituir palpite anterior do mesmo usuario para o mesmo evento alvo
     Given que o usuario esta autenticado

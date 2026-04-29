@@ -76,6 +76,8 @@ BoundedContext Participacao implements Participacao {
 	Aggregate SolicitacaoParticipacao {
 		Service SolicitacaoParticipacaoServico {
 			void solicitarParticipacao(@SolicitacaoParticipacaoId solicitacao, @UsuarioId usuario, @TimeId time, @TorneioId torneio);
+			void acompanharCandidaturas(@UsuarioId usuario);
+			void cancelarCandidatura(@SolicitacaoParticipacaoId solicitacao, @UsuarioId usuario);
 			void aprovarSolicitacao(@SolicitacaoParticipacaoId solicitacao, @UsuarioId organizador);
 			void rejeitarSolicitacao(@SolicitacaoParticipacaoId solicitacao, @UsuarioId organizador);
 			void removerParticipanteAprovado(@TorneioId torneio, @TimeId time, @UsuarioId organizador);
@@ -92,6 +94,7 @@ BoundedContext Participacao implements Participacao {
 
 			Repository SolicitacaoParticipacaoRepository {
 				@SolicitacaoParticipacao obter(@SolicitacaoParticipacaoId id);
+				List<SolicitacaoParticipacao> listarPorSolicitante(@UsuarioId usuario);
 			}
 		}
 

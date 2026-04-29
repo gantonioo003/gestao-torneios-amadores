@@ -27,8 +27,14 @@ Estrutura do torneio. Pode ser:
 ### Formato de equipe
 Define a quantidade de jogadores em campo por time em uma partida, como 3x3, 5x5, 7x7 ou 11x11.
 
+### Candidatura de participacao
+Fluxo realizado por um usuario responsavel por um time para tentar entrar em um torneio aberto. Inclui o envio da solicitacao, o acompanhamento do status e a possibilidade de cancelar a candidatura enquanto ela estiver pendente.
+
 ### Solicitacao de participacao
-Pedido realizado por um usuario para inscrever seu time em um torneio aberto.
+Registro criado dentro da candidatura para pedir a entrada de um time em um torneio aberto.
+
+### Status da candidatura
+Situacao atual da candidatura de participacao. Pode ser pendente, aprovada, rejeitada ou cancelada.
 
 ### Lista final de participantes
 Conjunto de times aprovados pelo organizador para disputar o torneio antes do inicio da competicao.

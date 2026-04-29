@@ -18,7 +18,7 @@ import io.cucumber.java.pt.Quando;
 public class EngajamentoSteps extends EngajamentoFuncionalidade {
 
     // =====================================================================
-    // F1: Registrar palpites de usuarios autenticados
+    // F1: Gerenciar palpites publicos
     // =====================================================================
 
     @Dado("que o usuario esta autenticado")
@@ -98,14 +98,25 @@ public class EngajamentoSteps extends EngajamentoFuncionalidade {
         configurarTorneioComPartidaNoFeed();
     }
 
-    @Quando("ele tentar registrar um palpite")
-    public void ele_tentar_registrar_palpite() {
+    @Dado("que o visitante nao esta autenticado")
+    public void que_o_visitante_nao_esta_autenticado() {
+        configurarEventoDePartidaAberto();
+    }
+
+    @Quando("ele registrar um palpite publico indicando o time vencedor da partida")
+    public void ele_registrar_palpite_publico_vencedor_partida() {
         try {
-            palpite = palpiteServico.registrarOuAtualizar(
-                    palpiteId(5L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(TIME_A_ID));
+            palpite = palpiteServico.registrarOuAtualizarComoVisitante(
+                    palpiteId(5L), VISITANTE_ID, eventoAlvo, new OpcaoPalpite(TIME_A_ID));
         } catch (Exception e) {
             excecaoCapturada = e;
         }
+    }
+
+    @Entao("o sistema deve armazenar o palpite do visitante para a partida")
+    public void o_sistema_deve_armazenar_palpite_visitante_partida() {
+        assertNull(excecaoCapturada);
+        assertTrue(palpiteRepositorio.buscarPorVotanteEEvento("VISITANTE:" + VISITANTE_ID, eventoAlvo).isPresent());
     }
 
     @Dado("que ele ja registrou um palpite para um evento com janela de votacao aberta")
@@ -156,7 +167,12 @@ public class EngajamentoSteps extends EngajamentoFuncionalidade {
 
     @Quando("ele tentar registrar ou alterar um palpite sobre o vencedor dessa partida")
     public void ele_tentar_registrar_alterar_palpite_partida_iniciada() {
-        ele_tentar_registrar_palpite();
+        try {
+            palpite = palpiteServico.registrarOuAtualizar(
+                    palpiteId(5L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(TIME_A_ID));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
     }
 
     @Quando("ele tentar registrar um palpite indicando um time que nao participa da partida")

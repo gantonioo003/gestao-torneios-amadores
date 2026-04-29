@@ -134,6 +134,16 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         usuarioAtual = USUARIO_NAO_AUTENTICADO_ID;
     }
 
+    @Dado("que o usuario esta autenticado")
+    public void que_o_usuario_esta_autenticado_sem_acento() {
+        que_o_usuario_esta_autenticado();
+    }
+
+    @Dado("que o usuario nao esta autenticado")
+    public void que_o_usuario_nao_esta_autenticado_sem_acento() {
+        que_o_usuario_nao_esta_autenticado();
+    }
+
     // =====================================================================
     // F2: Conta de usuario e autenticacao
     // =====================================================================
@@ -265,6 +275,16 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         timeRepositorio.salvar(time);
     }
 
+    @Dado("que ele e responsavel por um time")
+    public void que_ele_e_responsavel_por_um_time_sem_acento() {
+        que_ele_e_responsavel_por_um_time();
+    }
+
+    @Dado("que ele nao e responsavel pelo time")
+    public void que_ele_nao_e_responsavel_pelo_time_sem_acento() {
+        que_ele_nao_e_responsavel_pelo_time();
+    }
+
     @Dado("que ele possui um time cadastrado")
     public void que_ele_possui_um_time_cadastrado() {
         que_ele_e_responsavel_por_um_time();
@@ -273,6 +293,11 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Dado("que ele não possui time cadastrado")
     public void que_ele_nao_possui_time_cadastrado() {
         // Nenhum time salvo para o usuário atual
+    }
+
+    @Dado("que ele nao possui time cadastrado")
+    public void que_ele_nao_possui_time_cadastrado_sem_acento() {
+        que_ele_nao_possui_time_cadastrado();
     }
 
     @Dado("que o time está vinculado a um torneio")
@@ -330,6 +355,16 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Dado("que o torneio não está com vagas abertas para solicitação de participação")
     public void que_o_torneio_nao_esta_com_vagas_abertas() {
         torneioAceitaSolicitacoes = false;
+    }
+
+    @Dado("que o torneio esta com vagas abertas para solicitacao de participacao")
+    public void que_o_torneio_esta_com_vagas_abertas_sem_acento() {
+        que_o_torneio_esta_com_vagas_abertas();
+    }
+
+    @Dado("que o torneio nao esta com vagas abertas para solicitacao de participacao")
+    public void que_o_torneio_nao_esta_com_vagas_abertas_sem_acento() {
+        que_o_torneio_nao_esta_com_vagas_abertas();
     }
 
     @Dado("que o usuário autenticado é o organizador do torneio")
@@ -405,6 +440,21 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Dado("que já existe uma solicitação pendente do time para esse torneio")
     public void que_ja_existe_solicitacao_pendente() {
         que_existe_solicitacao_pendente_de_um_time();
+    }
+
+    @Dado("que ja existe uma solicitacao pendente do time para esse torneio")
+    public void que_ja_existe_solicitacao_pendente_sem_acento() {
+        que_ja_existe_solicitacao_pendente();
+    }
+
+    @Dado("que existe uma candidatura pendente do time")
+    public void que_existe_uma_candidatura_pendente_do_time() {
+        que_existe_solicitacao_pendente_de_um_time();
+    }
+
+    @Dado("que existe uma candidatura ja avaliada do time")
+    public void que_existe_uma_candidatura_ja_avaliada_do_time() {
+        que_existe_solicitacao_aprovada_pelo_organizador();
     }
 
     @Dado("que o time possui solicitações de participação pendentes")
@@ -611,6 +661,53 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         try {
             solicitacaoCapturada = solicitacaoServico.solicitarParticipacao(
                     novaId, usuarioAtual, TIME_A_ID, TORNEIO_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o usuario solicitar a participacao do seu time no torneio")
+    public void o_usuario_solicitar_participacao_do_time_sem_acento() {
+        o_usuario_solicitar_participacao_do_time();
+    }
+
+    @Quando("o usuario solicitar a participacao em um torneio")
+    public void o_usuario_solicitar_participacao_em_um_torneio_sem_acento() {
+        o_usuario_solicitar_participacao_em_um_torneio();
+    }
+
+    @Quando("ele solicitar participacao em um torneio")
+    public void ele_solicitar_participacao_em_um_torneio_sem_acento() {
+        ele_solicitar_participacao_em_um_torneio();
+    }
+
+    @Quando("o usuario solicitar novamente a participacao do seu time no torneio")
+    public void o_usuario_solicitar_participacao_novamente_sem_acento() {
+        o_usuario_solicitar_participacao_novamente();
+    }
+
+    @Quando("o usuario acompanhar suas candidaturas")
+    public void o_usuario_acompanhar_suas_candidaturas() {
+        try {
+            solicitacoesCapturadas = solicitacaoServico.acompanharCandidaturas(usuarioAtual);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o usuario cancelar a candidatura pendente")
+    public void o_usuario_cancelar_a_candidatura_pendente() {
+        try {
+            solicitacaoServico.cancelarCandidatura(SOLICITACAO_ID, usuarioAtual);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o usuario tentar cancelar uma candidatura ja avaliada")
+    public void o_usuario_tentar_cancelar_uma_candidatura_ja_avaliada() {
+        try {
+            solicitacaoServico.cancelarCandidatura(SOLICITACAO_ID, usuarioAtual);
         } catch (Exception e) {
             excecaoCapturada = e;
         }
@@ -916,6 +1013,55 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve impedir a solicitação duplicada")
     public void o_sistema_deve_impedir_solicitacao_duplicada() {
         assertNotNull(excecaoCapturada);
+    }
+
+    @Entao("o sistema deve registrar a candidatura como pendente")
+    public void o_sistema_deve_registrar_a_candidatura_como_pendente() {
+        o_sistema_deve_registrar_solicitacao_como_pendente();
+    }
+
+    @Entao("o sistema deve exibir o status das candidaturas do time")
+    public void o_sistema_deve_exibir_o_status_das_candidaturas_do_time() {
+        assertNull(excecaoCapturada);
+        assertNotNull(solicitacoesCapturadas);
+        assertFalse(solicitacoesCapturadas.isEmpty());
+        assertTrue(solicitacoesCapturadas.stream()
+                .anyMatch(s -> s.getStatus() == StatusSolicitacao.PENDENTE
+                        || s.getStatus() == StatusSolicitacao.APROVADA
+                        || s.getStatus() == StatusSolicitacao.REJEITADA
+                        || s.getStatus() == StatusSolicitacao.CANCELADA));
+    }
+
+    @Entao("o sistema deve marcar a candidatura como cancelada")
+    public void o_sistema_deve_marcar_a_candidatura_como_cancelada() {
+        assertNull(excecaoCapturada);
+        SolicitacaoParticipacao sol = solicitacaoRepositorio.buscarPorId(SOLICITACAO_ID).orElseThrow();
+        assertEquals(StatusSolicitacao.CANCELADA, sol.getStatus());
+    }
+
+    @Entao("o sistema deve impedir o cancelamento da candidatura")
+    public void o_sistema_deve_impedir_o_cancelamento_da_candidatura() {
+        assertNotNull(excecaoCapturada);
+    }
+
+    @Entao("deve informar que e necessario possuir um time cadastrado")
+    public void deve_informar_necessidade_de_time_cadastrado_sem_acento() {
+        deve_informar_necessidade_de_time_cadastrado();
+    }
+
+    @Entao("o sistema deve impedir a solicitacao")
+    public void o_sistema_deve_impedir_solicitacao_sem_acento() {
+        o_sistema_deve_impedir_solicitacao();
+    }
+
+    @Entao("o sistema deve impedir a candidatura duplicada")
+    public void o_sistema_deve_impedir_a_candidatura_duplicada() {
+        o_sistema_deve_impedir_solicitacao_duplicada();
+    }
+
+    @Entao("o sistema deve exigir autenticacao")
+    public void o_sistema_deve_exigir_autenticacao_sem_acento() {
+        o_sistema_deve_exigir_autenticacao();
     }
 
     // =====================================================================

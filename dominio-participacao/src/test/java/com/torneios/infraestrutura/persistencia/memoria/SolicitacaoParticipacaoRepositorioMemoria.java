@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.torneios.dominio.compartilhado.enumeracao.StatusSolicitacao;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
+import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacao;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoId;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoRepositorio;
@@ -32,6 +33,13 @@ public class SolicitacaoParticipacaoRepositorioMemoria implements SolicitacaoPar
     public List<SolicitacaoParticipacao> listarPendentesPorTorneio(TorneioId torneioId) {
         return dados.stream()
                 .filter(s -> s.getTorneioId().equals(torneioId) && s.getStatus() == StatusSolicitacao.PENDENTE)
+                .toList();
+    }
+
+    @Override
+    public List<SolicitacaoParticipacao> listarPorSolicitante(UsuarioId usuarioId) {
+        return dados.stream()
+                .filter(s -> s.getSolicitante().equals(usuarioId))
                 .toList();
     }
 

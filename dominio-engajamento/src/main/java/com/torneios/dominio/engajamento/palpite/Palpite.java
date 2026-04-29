@@ -10,6 +10,7 @@ public class Palpite {
 
     private final PalpiteId id;
     private final UsuarioId usuarioId;
+    private final String identificadorVotante;
     private final EventoAlvo eventoAlvo;
     private OpcaoPalpite opcao;
     private boolean apurado;
@@ -18,6 +19,20 @@ public class Palpite {
     public Palpite(PalpiteId id, UsuarioId usuarioId, EventoAlvo eventoAlvo, OpcaoPalpite opcao) {
         this.id = Objects.requireNonNull(id, "O id do palpite e obrigatorio.");
         this.usuarioId = Objects.requireNonNull(usuarioId, "O usuario do palpite e obrigatorio.");
+        this.identificadorVotante = "USUARIO:" + usuarioId.valor();
+        this.eventoAlvo = Objects.requireNonNull(eventoAlvo, "O evento alvo do palpite e obrigatorio.");
+        this.opcao = Objects.requireNonNull(opcao, "A opcao do palpite e obrigatoria.");
+        this.apurado = false;
+        this.acertou = null;
+    }
+
+    public Palpite(PalpiteId id, String visitanteId, EventoAlvo eventoAlvo, OpcaoPalpite opcao) {
+        this.id = Objects.requireNonNull(id, "O id do palpite e obrigatorio.");
+        if (visitanteId == null || visitanteId.isBlank()) {
+            throw new IllegalArgumentException("O identificador do visitante e obrigatorio.");
+        }
+        this.usuarioId = null;
+        this.identificadorVotante = "VISITANTE:" + visitanteId.trim();
         this.eventoAlvo = Objects.requireNonNull(eventoAlvo, "O evento alvo do palpite e obrigatorio.");
         this.opcao = Objects.requireNonNull(opcao, "A opcao do palpite e obrigatoria.");
         this.apurado = false;
@@ -30,6 +45,10 @@ public class Palpite {
 
     public UsuarioId getUsuarioId() {
         return usuarioId;
+    }
+
+    public String getIdentificadorVotante() {
+        return identificadorVotante;
     }
 
     public EventoAlvo getEventoAlvo() {

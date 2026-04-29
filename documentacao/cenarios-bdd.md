@@ -37,15 +37,19 @@ Cenarios principais:
 
 ---
 
-### F3. Solicitar participacao de um time em torneio aberto
+### F3. Gerenciar candidatura de time em torneio aberto
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F3-solicitar-participacao-em-torneio-aberto.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F3-gerenciar-candidatura-de-time-em-torneio-aberto.feature
 
 Cenarios principais:
-- solicitar participacao com sucesso quando o usuario possui time cadastrado
-- impedir solicitacao quando o usuario nao possui time cadastrado
-- impedir solicitacao quando o usuario nao esta autenticado
-- impedir solicitacao quando o torneio nao aceita novas participacoes
+- enviar candidatura com time cadastrado
+- acompanhar status das candidaturas do time
+- cancelar candidatura pendente
+- impedir cancelamento de candidatura ja avaliada
+- impedir candidatura sem time cadastrado
+- impedir candidatura de usuario nao autenticado
+- impedir candidatura em torneio fechado
+- impedir candidatura duplicada no mesmo torneio
 
 ---
 
@@ -228,8 +232,8 @@ Cenarios principais:
 ### Acesso e participacao
 - RN01. Apenas usuarios autenticados podem registrar palpites.
 - RN02. Apenas usuarios autenticados podem criar torneios.
-- RN03. Apenas usuarios autenticados podem solicitar participacao em torneios.
-- RN04. Usuario deve possuir time cadastrado para solicitar participacao.
+- RN03. Apenas usuarios autenticados podem gerenciar candidaturas de participacao em torneios.
+- RN04. Usuario deve possuir time cadastrado para enviar candidatura.
 - RN05. Torneio pode ser aberto ou fechado para participacao.
 - RN06. Apenas organizador pode aprovar, rejeitar e ajustar a lista final de participantes antes do inicio do torneio.
 - RN54. Usuario pode cadastrar conta informando nome, email e senha.
@@ -237,6 +241,9 @@ Cenarios principais:
 - RN56. Login exige email e senha validos.
 - RN57. Usuario pode editar os dados da propria conta.
 - RN58. Usuario pode excluir a propria conta.
+- RN65. Usuario pode acompanhar o status das candidaturas enviadas por ele.
+- RN66. Usuario pode cancelar uma candidatura enquanto ela estiver pendente.
+- RN67. Candidaturas ja avaliadas pelo organizador nao podem ser canceladas pelo solicitante.
 
 ### Palpites e engajamento
 - RN30. Tipos de palpite suportados: vencedor de partida, campeao, artilheiro e lider de assistencias.

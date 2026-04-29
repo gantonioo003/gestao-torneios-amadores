@@ -25,17 +25,46 @@ public class PalpiteServico {
                                          UsuarioId usuarioId,
                                          EventoAlvo eventoAlvo,
                                          OpcaoPalpite opcao) {
-        validarUsuario(usuarioId);
+        Objects.requireNonNull(usuarioId, "O usuario do palpite e obrigatorio.");
+        return registrarOuAtualizarPorIdentificador(
+                novoIdSeNecessario,
+                "USUARIO:" + usuarioId.valor(),
+                () -> new Palpite(novoIdSeNecessario, usuarioId, eventoAlvo, opcao),
+                eventoAlvo,
+                opcao);
+    }
+
+    public Palpite registrarOuAtualizarComoVisitante(PalpiteId novoIdSeNecessario,
+                                                     String visitanteId,
+                                                     EventoAlvo eventoAlvo,
+                                                     OpcaoPalpite opcao) {
+        if (visitanteId == null || visitanteId.isBlank()) {
+            throw new RegraDeNegocioException("O identificador do visitante e obrigatorio.");
+        }
+        String identificadorVotante = "VISITANTE:" + visitanteId.trim();
+        return registrarOuAtualizarPorIdentificador(
+                novoIdSeNecessario,
+                identificadorVotante,
+                () -> new Palpite(novoIdSeNecessario, visitanteId, eventoAlvo, opcao),
+                eventoAlvo,
+                opcao);
+    }
+
+    private Palpite registrarOuAtualizarPorIdentificador(PalpiteId novoIdSeNecessario,
+                                                         String identificadorVotante,
+                                                         java.util.function.Supplier<Palpite> novoPalpite,
+                                                         EventoAlvo eventoAlvo,
+                                                         OpcaoPalpite opcao) {
         validarJanelaAberta(eventoAlvo);
         validarOpcao(eventoAlvo, opcao);
 
-        Optional<Palpite> existente = palpiteRepositorio.buscarPorUsuarioEEvento(usuarioId, eventoAlvo);
+        Optional<Palpite> existente = palpiteRepositorio.buscarPorVotanteEEvento(identificadorVotante, eventoAlvo);
         Palpite palpite;
         if (existente.isPresent()) {
             palpite = existente.get();
             palpite.alterarOpcao(opcao);
         } else {
-            palpite = new Palpite(novoIdSeNecessario, usuarioId, eventoAlvo, opcao);
+            palpite = novoPalpite.get();
         }
         palpiteRepositorio.salvar(palpite);
         return palpite;
@@ -55,14 +84,6 @@ public class PalpiteServico {
             }
         }
         return palpites;
-    }
-
-    private void validarUsuario(UsuarioId usuarioId) {
-        Objects.requireNonNull(usuarioId, "O usuario do palpite e obrigatorio.");
-        if (!consultaSuporte.usuarioEstaAutenticado(usuarioId)) {
-            throw new OperacaoNaoPermitidaException(
-                    "Apenas usuarios autenticados podem registrar palpites.");
-        }
     }
 
     private void validarJanelaAberta(EventoAlvo eventoAlvo) {

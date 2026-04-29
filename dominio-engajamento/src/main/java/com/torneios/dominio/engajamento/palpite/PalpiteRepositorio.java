@@ -11,5 +11,7 @@ public interface PalpiteRepositorio {
 
     Optional<Palpite> buscarPorUsuarioEEvento(UsuarioId usuarioId, EventoAlvo eventoAlvo);
 
+    Optional<Palpite> buscarPorVotanteEEvento(String identificadorVotante, EventoAlvo eventoAlvo);
+
     List<Palpite> listarPorEvento(EventoAlvo eventoAlvo);
 }
