@@ -14,6 +14,16 @@ RN05. Um torneio pode ser criado ja com todos os times participantes definidos o
 
 RN06. Apenas o organizador do torneio pode aprovar ou rejeitar solicitacoes de participacao de times.
 
+RN54. O usuario pode cadastrar uma conta informando nome, email e senha validos.
+
+RN55. O email da conta de usuario deve ser unico na plataforma.
+
+RN56. O login deve autenticar o usuario apenas quando email e senha forem validos.
+
+RN57. O usuario pode editar os dados cadastrais da propria conta.
+
+RN58. O usuario pode excluir a propria conta, removendo seu acesso ao sistema.
+
 ---
 
 ## Palpites e engajamento

@@ -5,6 +5,12 @@
 ### Usuario
 Pessoa que utiliza o sistema. Para registrar palpites, criar torneios, gerenciar times e participar de qualquer fluxo do sistema, o usuario precisa estar autenticado.
 
+### Conta de usuario
+Cadastro que identifica o usuario na plataforma, contendo nome, email e senha. Pode ser criada, editada e excluida pelo proprio usuario.
+
+### Login
+Processo de autenticacao realizado com email e senha validos para liberar o acesso do usuario as funcionalidades protegidas.
+
 ### Usuario organizador
 Usuario responsavel por criar e gerenciar um torneio.
 

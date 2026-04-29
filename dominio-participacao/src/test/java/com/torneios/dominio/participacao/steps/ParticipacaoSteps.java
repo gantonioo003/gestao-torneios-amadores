@@ -15,10 +15,13 @@ import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.ParticipacaoFuncionalidade;
 import com.torneios.dominio.participacao.acesso.AcessoGerenciamentoTorneioServico;
 import com.torneios.dominio.participacao.acesso.AutenticacaoServico;
+import com.torneios.dominio.participacao.acesso.ContaUsuario;
+import com.torneios.dominio.participacao.acesso.ContaUsuarioServico;
 import com.torneios.dominio.participacao.acesso.VisualizacaoTorneioServico;
 import com.torneios.dominio.participacao.acesso.TorneioDisponivel;
 import com.torneios.dominio.participacao.responsavel.ConsultaUsuario;
 import com.torneios.infraestrutura.persistencia.memoria.CatalogoTorneiosDisponiveisMemoria;
+import com.torneios.infraestrutura.persistencia.memoria.ContaUsuarioRepositorioMemoria;
 import com.torneios.dominio.participacao.responsavel.ResponsavelTimeServico;
 import com.torneios.dominio.participacao.solicitacao.PoliticaParticipacaoTorneio;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacao;
@@ -38,12 +41,18 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     private static final JogadorId JOGADOR_ID    = new JogadorId(10L);
     private static final TecnicoId TECNICO_ID    = new TecnicoId(20L);
     private static final SolicitacaoParticipacaoId SOLICITACAO_ID = new SolicitacaoParticipacaoId(100L);
+    private static final UsuarioId OUTRO_USUARIO_CONTA_ID = new UsuarioId(101L);
+    private static final String EMAIL_USUARIO = "usuario@email.com";
+    private static final String EMAIL_EDITADO = "usuario.editado@email.com";
+    private static final String SENHA_USUARIO = "senha123";
 
     // Usuário corrente do cenário (autenticado ou não)
     private UsuarioId usuarioAtual;
 
     // Serviços
     private final AutenticacaoServico autenticacaoServico = new AutenticacaoServico();
+    private final ContaUsuarioRepositorioMemoria contaUsuarioRepositorio = new ContaUsuarioRepositorioMemoria();
+    private final ContaUsuarioServico contaUsuarioServico = new ContaUsuarioServico(contaUsuarioRepositorio);
     private final TimeServico timeServico;
     private final SolicitacaoParticipacaoServico solicitacaoServico;
     private final ResponsavelTimeServico responsavelTimeServico;
@@ -56,6 +65,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     private List<Time> timesCapturados;
     private List<TorneioDisponivel> torneiosDisponiveis;
     private SolicitacaoParticipacao solicitacaoCapturada;
+    private ContaUsuario contaCapturada;
 
     // Política e consulta de usuário inline (doubles de teste)
     private boolean torneioAceitaSolicitacoes = false;
@@ -89,12 +99,14 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     public void limparEstado() {
         timeRepositorio.limpar();
         solicitacaoRepositorio.limpar();
+        contaUsuarioRepositorio.limpar();
         catalogoTorneiosDisponiveis.limpar();
         excecaoCapturada = null;
         solicitacoesCapturadas = null;
         timesCapturados = null;
         torneiosDisponiveis = null;
         solicitacaoCapturada = null;
+        contaCapturada = null;
         torneioAceitaSolicitacoes = false;
         usuarioEhOrganizador = false;
         usuarioExiste = true;
@@ -113,6 +125,120 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Dado("que o usuário não está autenticado")
     public void que_o_usuario_nao_esta_autenticado() {
         usuarioAtual = USUARIO_NAO_AUTENTICADO_ID;
+    }
+
+    // =====================================================================
+    // F2: Conta de usuario e autenticacao
+    // =====================================================================
+
+    @Dado("que nao existe conta cadastrada para o email informado")
+    public void que_nao_existe_conta_para_email_informado() {
+        assertTrue(contaUsuarioRepositorio.buscarPorEmail(EMAIL_USUARIO).isEmpty());
+    }
+
+    @Dado("que existe uma conta cadastrada para o usuario")
+    public void que_existe_uma_conta_cadastrada_para_usuario() {
+        contaCapturada = contaUsuarioServico.cadastrarConta(
+                USUARIO_AUTENTICADO_ID, "Usuario Teste", EMAIL_USUARIO, SENHA_USUARIO);
+    }
+
+    @Quando("o usuario cadastrar uma nova conta com nome email e senha validos")
+    public void usuario_cadastrar_nova_conta() {
+        try {
+            contaCapturada = contaUsuarioServico.cadastrarConta(
+                    USUARIO_AUTENTICADO_ID, "Usuario Teste", EMAIL_USUARIO, SENHA_USUARIO);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele informar email e senha validos")
+    public void ele_informar_email_e_senha_validos() {
+        try {
+            contaCapturada = contaUsuarioServico.autenticar(EMAIL_USUARIO, SENHA_USUARIO);
+            usuarioAtual = contaCapturada.getId();
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele informar senha incorreta")
+    public void ele_informar_senha_incorreta() {
+        try {
+            contaCapturada = contaUsuarioServico.autenticar(EMAIL_USUARIO, "senha-errada");
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele editar nome e email da conta")
+    public void ele_editar_nome_e_email_da_conta() {
+        try {
+            contaCapturada = contaUsuarioServico.editarDados(
+                    USUARIO_AUTENTICADO_ID, "Usuario Editado", EMAIL_EDITADO);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele solicitar a exclusao da conta")
+    public void ele_solicitar_exclusao_da_conta() {
+        try {
+            contaUsuarioServico.excluirConta(USUARIO_AUTENTICADO_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("outro usuario tentar cadastrar conta com o mesmo email")
+    public void outro_usuario_tentar_cadastrar_mesmo_email() {
+        try {
+            contaCapturada = contaUsuarioServico.cadastrarConta(
+                    OUTRO_USUARIO_CONTA_ID, "Outro Usuario", EMAIL_USUARIO, SENHA_USUARIO);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve criar a conta do usuario")
+    public void sistema_deve_criar_conta_usuario() {
+        assertNull(excecaoCapturada);
+        assertNotNull(contaCapturada);
+        assertEquals(USUARIO_AUTENTICADO_ID, contaCapturada.getId());
+        assertTrue(contaUsuarioRepositorio.buscarPorEmail(EMAIL_USUARIO).isPresent());
+    }
+
+    @Entao("o sistema deve autenticar o usuario")
+    public void sistema_deve_autenticar_usuario() {
+        assertNull(excecaoCapturada);
+        assertEquals(USUARIO_AUTENTICADO_ID, usuarioAtual);
+    }
+
+    @Entao("o sistema deve impedir a autenticacao")
+    public void sistema_deve_impedir_autenticacao() {
+        assertNotNull(excecaoCapturada);
+    }
+
+    @Entao("o sistema deve atualizar os dados da conta")
+    public void sistema_deve_atualizar_dados_conta() {
+        assertNull(excecaoCapturada);
+        assertNotNull(contaCapturada);
+        assertEquals("Usuario Editado", contaCapturada.getNome());
+        assertEquals(EMAIL_EDITADO, contaCapturada.getEmail());
+        assertTrue(contaUsuarioRepositorio.buscarPorEmail(EMAIL_EDITADO).isPresent());
+    }
+
+    @Entao("o sistema deve remover a conta e impedir novo login")
+    public void sistema_deve_remover_conta_e_impedir_login() {
+        assertNull(excecaoCapturada);
+        assertTrue(contaUsuarioRepositorio.buscarPorId(USUARIO_AUTENTICADO_ID).isEmpty());
+        assertThrows(Exception.class, () -> contaUsuarioServico.autenticar(EMAIL_USUARIO, SENHA_USUARIO));
+    }
+
+    @Entao("o sistema deve impedir o cadastro da conta")
+    public void sistema_deve_impedir_cadastro_conta() {
+        assertNotNull(excecaoCapturada);
+        assertTrue(contaUsuarioRepositorio.buscarPorId(OUTRO_USUARIO_CONTA_ID).isEmpty());
     }
 
     // =====================================================================

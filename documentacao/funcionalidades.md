@@ -3,7 +3,7 @@
 ## Acesso e participacao
 F1. Registrar palpites de usuarios autenticados sobre vencedores de partidas, campeao do torneio, artilheiro e lider de assistencias, com apuracao automatica apos o evento
 
-F2. Permitir acesso autenticado as funcionalidades de criacao e gerenciamento de torneios
+F2. Gerenciar conta de usuario e autenticacao, permitindo cadastro, login, edicao de dados e exclusao da conta
 
 F3. Solicitar participacao de um time em torneio aberto
 

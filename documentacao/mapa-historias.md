@@ -1,6 +1,10 @@
 # Mapa de Historias do Usuario
 
-## 1. Engajamento por palpites
+## 1. Conta, autenticacao e engajamento
+- Como visitante, quero criar uma conta para acessar as funcionalidades protegidas da plataforma.
+- Como usuario cadastrado, quero fazer login com email e senha para entrar no sistema.
+- Como usuario autenticado, quero editar meus dados cadastrais para manter minha conta atualizada.
+- Como usuario autenticado, quero excluir minha conta caso nao queira mais utilizar a plataforma.
 - Como usuario autenticado, quero registrar um palpite sobre o vencedor de uma partida para participar ativamente da competicao.
 - Como usuario autenticado, quero registrar um palpite sobre o campeao do torneio para acompanhar minhas previsoes ao longo da competicao.
 - Como usuario autenticado, quero registrar um palpite sobre o artilheiro do torneio para apostar no jogador mais decisivo no ataque.

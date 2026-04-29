@@ -23,14 +23,17 @@ Cenarios principais:
 
 ---
 
-### F2. Permitir acesso autenticado as funcionalidades de criacao e gerenciamento de torneios
+### F2. Gerenciar conta de usuario e autenticacao
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F2-acesso-autenticado-gerenciamento-torneios.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F2-gerenciar-conta-de-usuario-e-autenticacao.feature
 
 Cenarios principais:
-- permitir acesso as funcionalidades de criacao de torneio para usuario autenticado
-- permitir acesso a area de gerenciamento de torneios para usuario autenticado
-- impedir acesso as funcionalidades de criacao e gerenciamento para usuario nao autenticado
+- cadastrar nova conta de usuario
+- realizar login com email e senha validos
+- impedir login com senha incorreta
+- editar dados da conta
+- excluir conta de usuario
+- impedir cadastro com email ja utilizado
 
 ---
 
@@ -223,6 +226,11 @@ Cenarios principais:
 - RN04. Usuario deve possuir time cadastrado para solicitar participacao.
 - RN05. Torneio pode ser aberto ou fechado para participacao.
 - RN06. Apenas organizador pode aprovar ou rejeitar solicitacoes.
+- RN54. Usuario pode cadastrar conta informando nome, email e senha.
+- RN55. Email de conta de usuario deve ser unico.
+- RN56. Login exige email e senha validos.
+- RN57. Usuario pode editar os dados da propria conta.
+- RN58. Usuario pode excluir a propria conta.
 
 ### Palpites e engajamento
 - RN30. Tipos de palpite suportados: vencedor de partida, campeao, artilheiro e lider de assistencias.

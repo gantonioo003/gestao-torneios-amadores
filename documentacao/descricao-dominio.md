@@ -6,7 +6,7 @@ O dominio do sistema e a gestao de torneios amadores de futebol com suporte ao r
 
 O sistema tem como objetivo permitir que usuarios criem, gerenciem e participem de torneios de futebol amador em diferentes formatos, como mata-mata, fase de grupos com mata-mata, pontos corridos e final unica.
 
-Alem da gestao da competicao, o sistema permite a participacao de diferentes usuarios, possibilitando a solicitacao de entrada de times, o gerenciamento completo por parte do organizador, a definicao da escalacao de cada time para cada partida, o registro de palpites sobre o andamento da competicao e a publicacao de comunicados e interacoes sociais no feed do torneio.
+Alem da gestao da competicao, o sistema permite a participacao de diferentes usuarios, possibilitando cadastro, login, edicao e exclusao da propria conta, solicitacao de entrada de times, gerenciamento completo por parte do organizador, definicao da escalacao de cada time para cada partida, registro de palpites sobre o andamento da competicao e publicacao de comunicados e interacoes sociais no feed do torneio.
 
 O sistema tambem permite o gerenciamento da sumula estatistica das partidas, com registro, correcao e remocao de gols, assistencias e cartoes, para que sejam consolidadas estatisticas e notas dos jogadores quando essas informacoes forem registradas.
 
@@ -17,6 +17,7 @@ O sistema tambem permite o gerenciamento da sumula estatistica das partidas, com
 Competicoes amadoras costumam ser organizadas manualmente, o que dificulta o controle de:
 
 - torneios e campeonatos criados
+- contas de usuario e autenticacao
 - participacao de times e controle de inscricoes
 - jogadores e tecnicos
 - escalacao dos times em cada partida
@@ -38,6 +39,8 @@ O sistema busca centralizar essas informacoes, permitir a interacao entre organi
 Os principais conceitos do dominio sao:
 
 - Usuario
+- Conta de usuario
+- Login
 - Usuario organizador
 - Torneio
 - Formato de torneio
@@ -74,7 +77,7 @@ Os principais conceitos do dominio sao:
 
 ## Funcionamento geral
 
-Usuarios autenticados podem criar torneios, cadastrar seus proprios times e registrar palpites sobre eventos da competicao, como vencedor de partida, campeao do torneio, artilheiro e lider de assistencias. Cada palpite respeita uma janela de votacao e e apurado automaticamente quando o evento alvo e concluido.
+Usuarios podem criar conta, realizar login, editar seus dados cadastrais e excluir a propria conta. Usuarios autenticados podem criar torneios, cadastrar seus proprios times e registrar palpites sobre eventos da competicao, como vencedor de partida, campeao do torneio, artilheiro e lider de assistencias. Cada palpite respeita uma janela de votacao e e apurado automaticamente quando o evento alvo e concluido.
 
 O engajamento tambem ocorre por meio do feed social do torneio. O organizador pode publicar comunicados oficiais, usuarios autenticados podem comentar em partidas do torneio e o sistema pode gerar atualizacoes automaticas sobre jogos, como resultados registrados.
 

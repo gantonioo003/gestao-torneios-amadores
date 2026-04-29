@@ -28,9 +28,27 @@ ContextMap {
 }
 
 BoundedContext Participacao implements Participacao {
-	Service AcessoGerenciamentoTorneioServico {
-		void exigirAcessoCriacaoTorneio(@UsuarioId usuario);
-		void exigirAcessoGerenciamentoTorneios(@UsuarioId usuario);
+	Aggregate ContaUsuario {
+		Service ContaUsuarioServico {
+			void cadastrarConta(@UsuarioId usuario, String nome, String email, String senha);
+			void autenticar(String email, String senha);
+			void editarDados(@UsuarioId usuario, String nome, String email);
+			void excluirConta(@UsuarioId usuario);
+		}
+
+		Entity ContaUsuario {
+			aggregateRoot
+
+			-UsuarioId id
+			String nome
+			String email
+			String senha
+
+			Repository ContaUsuarioRepository {
+				@ContaUsuario obter(@UsuarioId usuario);
+				@ContaUsuario buscarPorEmail(String email);
+			}
+		}
 	}
 
 	Aggregate Time {

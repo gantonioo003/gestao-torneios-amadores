@@ -13,6 +13,7 @@ O fluxo principal do sistema depende do registro de torneios, participantes, par
 O sistema proposto permite:
 
 - criar e configurar torneios
+- cadastrar conta, realizar login, editar dados e excluir conta
 - definir formato de competicao e formato de equipe
 - cadastrar times, jogadores e tecnico
 - solicitar e avaliar participacao de times
@@ -47,7 +48,7 @@ O projeto segue uma organizacao modular orientada a contexto de negocio. Cada mo
 ### Modulos atuais
 
 - `dominio-compartilhado`: ids, entidades compartilhadas, enumeracoes, excecoes e eventos de dominio reutilizaveis
-- `dominio-participacao`: autenticacao de acesso, solicitacoes de participacao, times, jogadores, tecnico e responsavel do time
+- `dominio-participacao`: conta de usuario, autenticacao, solicitacoes de participacao, times, jogadores, tecnico e responsavel do time
 - `dominio-torneio`: criacao e configuracao do torneio, participantes aprovados, organizador e estrutura da competicao
 - `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento e preparacao da competicao
 - `dominio-estatisticas`: eventos estatisticos opcionais, nota estatistica, desempenho e artilharia
@@ -143,6 +144,7 @@ Inclui elementos comuns reutilizados por outros modulos, como:
 Inclui classes voltadas a:
 
 - autenticacao de acesso
+- conta de usuario e login
 - solicitacao de participacao
 - gestao de times
 - gestao de jogadores
