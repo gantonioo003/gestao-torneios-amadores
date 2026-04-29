@@ -55,6 +55,9 @@ public class EstatisticaJogador {
             case ASSISTENCIA -> assistencias++;
             case CARTAO_AMARELO -> cartoesAmarelos++;
             case CARTAO_VERMELHO -> cartoesVermelhos++;
+            case SUBSTITUICAO -> {
+                // Substituicao nao impacta a estatistica agregada do jogador na versao inicial.
+            }
         }
     }
 }

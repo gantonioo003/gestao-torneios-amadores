@@ -47,6 +47,7 @@ public class CalculadoraNotaEstatistica {
             case ASSISTENCIA -> PESO_ASSISTENCIA;
             case CARTAO_AMARELO -> PESO_CARTAO_AMARELO;
             case CARTAO_VERMELHO -> PESO_CARTAO_VERMELHO;
+            case SUBSTITUICAO -> 0.0;
         };
     }
 

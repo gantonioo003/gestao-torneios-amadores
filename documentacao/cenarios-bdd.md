@@ -2,14 +2,22 @@
 
 ## Funcionalidades com cenarios definidos
 
-### F1. Visualizar torneios disponiveis na plataforma
-Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/visualizar-torneios-disponiveis.feature
+### F1. Registrar palpites de usuarios autenticados
+Dominio: dominio-engajamento
+Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F1-registrar-palpite.feature
 
 Cenarios principais:
-- visualizar torneios disponiveis como visitante
-- visualizar torneios disponiveis como usuario autenticado
-- exibir mensagem quando nao houver torneios disponiveis
+- registrar palpite sobre vencedor de partida com sucesso
+- registrar palpite sobre campeao do torneio com sucesso
+- registrar palpite sobre artilheiro do torneio com sucesso
+- registrar palpite sobre lider de assistencias do torneio com sucesso
+- impedir palpite de usuario nao autenticado
+- impedir mais de um palpite do mesmo usuario para o mesmo evento alvo
+- alterar palpite enquanto a janela de votacao estiver aberta
+- impedir alteracao de palpite apos o fechamento da janela de votacao
+- exibir percentual atualizado por opcao enquanto a janela estiver aberta
+- apurar palpite como acertado quando a opcao escolhida coincide com o resultado real
+- apurar palpite como nao acertado quando a opcao escolhida diverge do resultado real
 
 ---
 
@@ -84,15 +92,21 @@ Cenarios principais:
 
 ---
 
-### F8. Vincular um time a um usuario responsavel
-Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/vincular-time-a-usuario-responsavel.feature
+### F8. Definir escalacao do time para uma partida
+Dominio: dominio-competicao
+Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F8-escalar-time-para-partida.feature
 
 Cenarios principais:
-- vincular um time a um usuario responsavel com sucesso
-- alterar o responsavel de um time
-- impedir vinculo de time a usuario inexistente
-- impedir gerenciamento do time por usuario nao vinculado
+- definir escalacao com esquema tatico, titulares por posicao e reservas com sucesso
+- permitir escalacao tanto pelo responsavel do time quanto pelo tecnico associado
+- impedir escalacao por usuario que nao e responsavel nem tecnico do time
+- impedir escalacao com quantidade de titulares diferente do formato de equipe do torneio
+- impedir escalacao com esquema tatico incompativel com o formato de equipe
+- impedir escalacao com jogador que nao pertence ao elenco do time
+- impedir o mesmo jogador como titular e reserva da mesma escalacao
+- editar escalacao enquanto a partida nao foi iniciada
+- impedir edicao de escalacao apos o inicio da partida
+- aceitar quantidade qualquer de reservas, inclusive zero
 
 ---
 
@@ -134,7 +148,7 @@ Cenarios principais:
 
 ### F12. Gerar partidas do torneio
 Dominio: dominio-competicao
-Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/gerar-partidas-do-torneio.feature
+Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F12-gerar-partidas-do-torneio.feature
 
 Cenarios principais:
 - gerar partidas para pontos corridos
@@ -146,7 +160,7 @@ Cenarios principais:
 
 ### F13. Registrar resultado da partida
 Dominio: dominio-competicao
-Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/registrar-resultado-da-partida.feature
+Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F13-registrar-resultado-da-partida.feature
 
 Cenarios principais:
 - registrar resultado valido de uma partida
@@ -159,7 +173,7 @@ Cenarios principais:
 
 ### F14. Atualizar e visualizar classificacao ou chaveamento da competicao
 Dominio: dominio-competicao
-Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/visualizar-classificacao-ou-chaveamento.feature
+Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F14-visualizar-classificacao-ou-chaveamento.feature
 
 Cenarios principais:
 - visualizar classificacao em torneio de pontos corridos
@@ -176,6 +190,9 @@ Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatistic
 Cenarios principais:
 - registrar gols e assistencias de jogadores
 - registrar cartoes amarelos e vermelhos
+- registrar substituicao indicando titular que saiu e reserva que entrou
+- impedir registro de substituicao envolvendo jogador fora da escalacao
+- impedir registro de substituicao envolvendo jogadores de times diferentes
 - impedir registro por usuario nao autorizado
 - impedir registro para jogador que nao pertence aos times da partida
 - permitir que o resultado da partida exista mesmo sem registro de eventos estatisticos
@@ -198,12 +215,22 @@ Cenarios principais:
 ## Regras de negocio cobertas
 
 ### Acesso e participacao
-- RN01. Usuarios nao autenticados podem visualizar os torneios disponiveis.
+- RN01. Apenas usuarios autenticados podem registrar palpites.
 - RN02. Apenas usuarios autenticados podem criar torneios.
 - RN03. Apenas usuarios autenticados podem solicitar participacao em torneios.
 - RN04. Usuario deve possuir time cadastrado para solicitar participacao.
 - RN05. Torneio pode ser aberto ou fechado para participacao.
 - RN06. Apenas organizador pode aprovar ou rejeitar solicitacoes.
+
+### Palpites e engajamento
+- RN30. Tipos de palpite suportados: vencedor de partida, campeao, artilheiro e lider de assistencias.
+- RN31. Cada usuario autenticado faz no maximo um palpite por evento alvo.
+- RN32. Palpite pode ser alterado enquanto a janela estiver aberta.
+- RN33. Janela do palpite de vencedor de partida fecha no inicio da partida.
+- RN34. Janela dos demais palpites fecha no inicio do torneio.
+- RN35. Sistema exibe percentual de votos por opcao em tempo real.
+- RN36. Apuracao automatica de acerto apos a conclusao do evento alvo.
+- RN37. Palpites apurados sao imutaveis.
 
 ### Organizacao do torneio
 - RN07. Todo torneio deve possuir formato definido.
@@ -220,6 +247,17 @@ Cenarios principais:
 - RN16. Tecnico associado ao time participante.
 - RN17. Apenas jogadores validos podem ter eventos registrados.
 
+### Escalacao da partida
+- RN38. Cada time deve ter escalacao definida antes do inicio da partida.
+- RN39. Escalacao definida pelo responsavel do time ou pelo tecnico.
+- RN40. Esquema tatico compativel com o formato de equipe.
+- RN41. Quantidade de titulares igual ao formato de equipe.
+- RN42. Cada titular associado a uma posicao do esquema.
+- RN43. Titulares e reservas devem pertencer ao elenco do time.
+- RN44. Sem limite maximo de reservas.
+- RN45. Mesmo jogador nao pode ser titular e reserva simultaneamente.
+- RN46. Escalacao editavel ate o inicio da partida.
+
 ### Partidas e competicao
 - RN18. Partida pertence a um torneio e dois times validos.
 - RN19. Apenas partidas validas geram impacto no sistema.
@@ -228,10 +266,11 @@ Cenarios principais:
 - RN22. O resultado da partida pode ser registrado sem eventos estatisticos.
 
 ### Estatisticas
-- RN23. Registrar gols, assistencias e cartoes quando desejado.
+- RN23. Registrar gols, assistencias, cartoes e substituicoes quando desejado.
 - RN24. Nota estatistica calculada automaticamente quando houver eventos.
 - RN25. Nota baseada em formula com pesos.
 - RN26. Considera eventos basicos na versao inicial.
 - RN27. Eventos positivos e negativos afetam a nota.
 - RN28. Artilharia atualizada automaticamente quando houver gols registrados.
 - RN29. Na ausencia de eventos, apenas o placar oficial da partida deve ser exibido.
+- RN47. Substituicoes registradas pos-jogo envolvendo titular e reserva da escalacao do mesmo time.

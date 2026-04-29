@@ -12,4 +12,14 @@ public interface ConsultaEstatisticaCompeticao {
     boolean partidaPertenceAoTorneio(PartidaId partidaId, TorneioId torneioId);
 
     boolean jogadorPertenceAosTimesDaPartida(PartidaId partidaId, JogadorId jogadorId);
+
+    boolean partidaEncerrada(PartidaId partidaId);
+
+    boolean jogadorEhTitularNaEscalacao(PartidaId partidaId, JogadorId jogadorId);
+
+    boolean jogadorEhReservaNaEscalacao(PartidaId partidaId, JogadorId jogadorId);
+
+    boolean jogadoresPertencemAoMesmoTimeNaPartida(PartidaId partidaId,
+                                                   JogadorId primeiroJogadorId,
+                                                   JogadorId segundoJogadorId);
 }

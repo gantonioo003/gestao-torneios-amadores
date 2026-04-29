@@ -1,9 +1,13 @@
 # Mapa de Historias do Usuario
 
-## 1. Acesso e descoberta de torneios
-- Como visitante, quero visualizar os torneios disponiveis na plataforma para conhecer as competicoes existentes.
-- Como usuario autenticado, quero acessar minha conta para criar e gerenciar meus torneios.
-- Como usuario autenticado, quero visualizar os torneios ja criados por mim para acompanha-los e edita-los.
+## 1. Engajamento por palpites
+- Como usuario autenticado, quero registrar um palpite sobre o vencedor de uma partida para participar ativamente da competicao.
+- Como usuario autenticado, quero registrar um palpite sobre o campeao do torneio para acompanhar minhas previsoes ao longo da competicao.
+- Como usuario autenticado, quero registrar um palpite sobre o artilheiro do torneio para apostar no jogador mais decisivo no ataque.
+- Como usuario autenticado, quero registrar um palpite sobre o lider de assistencias do torneio para apostar no jogador mais participativo nas jogadas.
+- Como usuario autenticado, quero alterar meu palpite enquanto a janela de votacao estiver aberta para corrigir minha previsao se eu mudar de ideia.
+- Como usuario autenticado, quero visualizar o percentual de votos por opcao para entender a tendencia geral dos demais usuarios.
+- Como usuario autenticado, quero ver se meu palpite foi acertado apos o evento ser concluido para acompanhar minha taxa de acerto.
 
 ## 2. Criacao e configuracao do torneio
 - Como organizador, quero criar um torneio para iniciar uma competicao.
@@ -26,17 +30,25 @@
 - Como responsavel por um time, quero associar um tecnico ao time para identificar seu responsavel tecnico.
 - Como organizador, quero visualizar elenco e tecnico dos times participantes para validar a composicao das equipes.
 
-## 5. Gestao de partidas e andamento da competicao
+## 5. Escalacao da partida
+- Como responsavel por um time, quero escolher o esquema tatico da minha escalacao para uma partida para definir como meu time se posicionara em campo.
+- Como responsavel por um time, quero indicar os jogadores titulares por posicao para montar minha escalacao inicial.
+- Como responsavel por um time, quero indicar os jogadores reservas da partida para preparar possiveis substituicoes.
+- Como tecnico associado ao time, quero definir e ajustar a escalacao da partida ate seu inicio para garantir a melhor formacao possivel.
+- Como organizador, quero visualizar as escalacoes confirmadas dos times antes da partida para validar a competicao.
+
+## 6. Gestao de partidas e andamento da competicao
 - Como organizador, quero cadastrar ou gerar as partidas do torneio para controlar os jogos da competicao.
 - Como organizador, quero registrar o resultado de uma partida para atualizar o andamento do torneio.
 - Como organizador, quero registrar apenas o placar da partida quando nao quiser detalhar eventos individuais.
 - Como organizador, quero que a classificacao ou o chaveamento sejam atualizados automaticamente apos o registro do resultado.
 - Como organizador, quero visualizar a classificacao ou o chaveamento para acompanhar a evolucao da competicao.
 
-## 6. Estatisticas e desempenho dos jogadores
+## 7. Estatisticas e desempenho dos jogadores
 - Como organizador, quero registrar gols e assistencias de uma partida para acompanhar o desempenho ofensivo dos jogadores.
 - Como organizador, quero registrar cartoes amarelos e vermelhos para refletir eventos disciplinares da partida.
+- Como organizador, quero registrar substituicoes ocorridas na partida indicando o titular que saiu e o reserva que entrou para refletir o que aconteceu em campo.
 - Como organizador, quero registrar eventos estatisticos apenas quando desejar detalhar a partida.
 - Como organizador, quero que o sistema calcule automaticamente a nota estatistica dos jogadores quando houver eventos registrados para avaliar seu desempenho.
 - Como organizador, quero que o sistema atualize automaticamente a artilharia do torneio quando houver registro de gols para acompanhar os principais goleadores.
-- Como visitante ou usuario autenticado, quero visualizar estatisticas dos jogadores e do torneio quando elas existirem para acompanhar o desempenho da competicao.
+- Como usuario autenticado, quero visualizar estatisticas dos jogadores e do torneio quando elas existirem para acompanhar o desempenho da competicao.
