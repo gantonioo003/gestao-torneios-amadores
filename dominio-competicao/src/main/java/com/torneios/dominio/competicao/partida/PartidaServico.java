@@ -16,7 +16,9 @@ import com.torneios.dominio.competicao.chaveamento.ChaveamentoServico;
 import com.torneios.dominio.competicao.classificacao.Classificacao;
 import com.torneios.dominio.competicao.classificacao.ClassificacaoServico;
 import com.torneios.dominio.competicao.geracao.GeradorPartidasServico;
+import com.torneios.dominio.competicao.geracao.PreparacaoCompeticao;
 import com.torneios.dominio.competicao.resultado.ResultadoPartida;
+import com.torneios.dominio.competicao.rodada.Rodada;
 
 public class PartidaServico {
 
@@ -48,9 +50,13 @@ public class PartidaServico {
     }
 
     public List<Partida> gerarPartidas(TorneioId torneioId, UsuarioId usuarioId) {
+        return prepararCompeticao(torneioId, usuarioId).getPartidas();
+    }
+
+    public PreparacaoCompeticao prepararCompeticao(TorneioId torneioId, UsuarioId usuarioId) {
         validarOrganizador(torneioId, usuarioId);
         if (!consultaCompeticaoTorneio.estruturaGerada(torneioId)) {
-            throw new OperacaoNaoPermitidaException("Nao e permitido gerar partidas sem estrutura previa.");
+            throw new OperacaoNaoPermitidaException("Nao e permitido preparar a competicao sem estrutura previa.");
         }
 
         FormatoTorneio formatoTorneio = consultaCompeticaoTorneio.obterFormato(torneioId);
@@ -65,7 +71,8 @@ public class PartidaServico {
                 participantes,
                 grupos);
         partidas.forEach(partidaRepositorio::salvar);
-        return partidas;
+        List<Rodada> rodadas = geradorPartidasServico.distribuirEmRodadas(torneioId, partidas);
+        return new PreparacaoCompeticao(torneioId, partidas, rodadas);
     }
 
     public Partida obterPartida(PartidaId partidaId) {
@@ -117,6 +124,10 @@ public class PartidaServico {
             throw new OperacaoNaoPermitidaException("O formato do torneio nao utiliza chaveamento.");
         }
         return chaveamentoServico.gerar(torneioId, formatoTorneio, listarPorTorneio(torneioId));
+    }
+
+    public AtualizacaoCompeticao gerenciarAndamento(TorneioId torneioId) {
+        return atualizarCompeticaoAposResultado(torneioId);
     }
 
     private AtualizacaoCompeticao atualizarCompeticaoAposResultado(TorneioId torneioId) {

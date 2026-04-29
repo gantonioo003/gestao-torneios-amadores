@@ -61,10 +61,10 @@ Funcao tatica atribuida a cada jogador titular dentro do esquema tatico, como go
 Jogador escalado para iniciar a partida em uma posicao definida pelo esquema tatico.
 
 ### Reserva
-Jogador escalado que nao inicia a partida, mas pode ser registrado como participante por meio de uma substituicao apos o fim do jogo.
+Jogador relacionado para a partida que nao inicia como titular, mas fica disponivel para compor a equipe conforme a necessidade do time.
 
-### Substituicao
-Evento estatistico registrado apos o termino da partida, indicando que um jogador titular saiu e um jogador reserva da escalacao do mesmo time entrou em seu lugar.
+### Sumula estatistica
+Registro opcional dos eventos detalhados de uma partida, como gols, assistencias e cartoes. Pode ser corrigida ou ajustada pelo organizador.
 
 ### Gol
 Evento estatistico registrado quando um jogador marca para seu time em uma partida.
@@ -84,6 +84,12 @@ Ranking dos jogadores com maior numero de gols no torneio, calculado quando houv
 ### Nota estatistica
 Pontuacao calculada automaticamente pelo sistema com base em uma formula que considera os eventos registrados para um jogador em uma partida. So existe quando houver eventos registrados.
 
+### Consolidacao de estatisticas
+Processo que agrupa os eventos registrados na sumula para atualizar notas, artilharia, lideres de assistencias e historico dos jogadores.
+
+### Historico do jogador
+Conjunto de eventos e desempenho acumulado de um jogador dentro do torneio.
+
 ### Palpite
 Registro feito por um usuario autenticado expressando sua aposta sobre o desfecho de um evento do sistema. Pode ser de tipo: vencedor de partida, campeao do torneio, artilheiro do torneio ou lider de assistencias do torneio.
 
@@ -102,3 +108,15 @@ Processo automatico que ocorre apos a conclusao do evento alvo, quando o sistema
 
 ### Percentual de palpites
 Distribuicao agregada e anonima dos palpites registrados por opcao, exibida em tempo real enquanto a janela de votacao estiver aberta.
+
+### Feed social do torneio
+Espaco de comunicacao e interacao vinculado a um torneio. Reune comunicados oficiais, comentarios de usuarios autenticados e atualizacoes automaticas sobre jogos.
+
+### Comunicado oficial
+Publicacao feita pelo organizador do torneio para informar regras, horarios, mudancas ou avisos importantes.
+
+### Comentario
+Interacao textual feita por usuario autenticado em uma partida do torneio. Pode ser editada pelo proprio autor.
+
+### Atualizacao automatica
+Publicacao criada pelo sistema no feed social quando ocorre um evento relevante da partida, como resultado registrado.

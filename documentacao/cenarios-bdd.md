@@ -12,18 +12,20 @@ Cenarios principais:
 - registrar palpite sobre artilheiro do torneio com sucesso
 - registrar palpite sobre lider de assistencias do torneio com sucesso
 - impedir palpite de usuario nao autenticado
-- impedir mais de um palpite do mesmo usuario para o mesmo evento alvo
+- substituir palpite anterior do mesmo usuario para o mesmo evento alvo
 - alterar palpite enquanto a janela de votacao estiver aberta
 - impedir alteracao de palpite apos o fechamento da janela de votacao
+- impedir palpite com opcao invalida para o evento alvo
 - exibir percentual atualizado por opcao enquanto a janela estiver aberta
 - apurar palpite como acertado quando a opcao escolhida coincide com o resultado real
 - apurar palpite como nao acertado quando a opcao escolhida diverge do resultado real
+- impedir alteracao de um palpite apos a apuracao
 
 ---
 
 ### F2. Permitir acesso autenticado as funcionalidades de criacao e gerenciamento de torneios
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/acesso-autenticado-gerenciamento-torneios.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F2-acesso-autenticado-gerenciamento-torneios.feature
 
 Cenarios principais:
 - permitir acesso as funcionalidades de criacao de torneio para usuario autenticado
@@ -34,7 +36,7 @@ Cenarios principais:
 
 ### F3. Solicitar participacao de um time em torneio aberto
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/solicitar-participacao-em-torneio-aberto.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F3-solicitar-participacao-em-torneio-aberto.feature
 
 Cenarios principais:
 - solicitar participacao com sucesso quando o usuario possui time cadastrado
@@ -46,7 +48,7 @@ Cenarios principais:
 
 ### F4. Avaliar solicitacoes de participacao de times
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/avaliar-solicitacoes-de-participacao.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F4-avaliar-solicitacoes-de-participacao.feature
 
 Cenarios principais:
 - aprovar solicitacao de participacao de um time
@@ -58,7 +60,7 @@ Cenarios principais:
 
 ### F5. Gerenciar times do usuario
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/gerenciar-times-do-usuario.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F5-gerenciar-times-do-usuario.feature
 
 Cenarios principais:
 - criar um novo time com sucesso
@@ -70,7 +72,7 @@ Cenarios principais:
 
 ### F6. Gerenciar elenco de jogadores de um time
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/gerenciar-elenco-de-jogadores.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F6-gerenciar-elenco-de-jogadores.feature
 
 Cenarios principais:
 - adicionar jogador ao elenco do time
@@ -82,7 +84,7 @@ Cenarios principais:
 
 ### F7. Gerenciar comissao tecnica de um time
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/gerenciar-comissao-tecnica.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F7-gerenciar-comissao-tecnica.feature
 
 Cenarios principais:
 - associar tecnico a um time
@@ -112,7 +114,7 @@ Cenarios principais:
 
 ### F9. Criar e configurar torneio
 Dominio: dominio-torneio
-Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/criar-e-configurar-torneio.feature
+Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/F9-criar-e-configurar-torneio.feature
 
 Cenarios principais:
 - criar torneio com formato de competicao e formato de equipe validos
@@ -124,7 +126,7 @@ Cenarios principais:
 
 ### F10. Gerenciar participantes aprovados antes do inicio do torneio
 Dominio: dominio-torneio
-Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/gerenciar-participantes-aprovados-do-torneio.feature
+Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/F10-gerenciar-participantes-aprovados-do-torneio.feature
 
 Cenarios principais:
 - aprovar solicitacao de participacao de um time
@@ -134,27 +136,30 @@ Cenarios principais:
 
 ---
 
-### F11. Gerar estrutura da competicao
-Dominio: dominio-torneio
-Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/gerar-estrutura-da-competicao.feature
+### F11. Preparar competicao do torneio
+Dominio: dominio-competicao
+Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F11-preparar-competicao-do-torneio.feature
 
 Cenarios principais:
-- gerar estrutura para torneio mata-mata
-- gerar estrutura para pontos corridos
-- gerar estrutura para fase de grupos
-- impedir geracao sem participantes suficientes
+- preparar competicao por pontos corridos
+- preparar competicao mata-mata
+- preparar competicao com fase de grupos
+- impedir preparacao sem estrutura previa da competicao
 
 ---
 
-### F12. Gerar partidas do torneio
-Dominio: dominio-competicao
-Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F12-gerar-partidas-do-torneio.feature
+### F12. Gerenciar comunicados e feed social do torneio
+Dominio: dominio-engajamento
+Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F12-gerenciar-comunicados-e-feed-social-do-torneio.feature
 
 Cenarios principais:
-- gerar partidas para pontos corridos
-- gerar partidas para mata-mata
-- gerar partidas para fase de grupos
-- impedir geracao sem estrutura previa
+- publicar comunicado oficial no feed do torneio
+- impedir comunicado oficial por usuario que nao e organizador
+- comentar sobre uma partida do torneio
+- impedir comentario de usuario nao autenticado
+- publicar atualizacao automatica sobre jogo
+- editar comentario pelo proprio autor
+- listar publicacoes do feed do torneio
 
 ---
 
@@ -171,44 +176,41 @@ Cenarios principais:
 
 ---
 
-### F14. Atualizar e visualizar classificacao ou chaveamento da competicao
+### F14. Gerenciar andamento da competicao
 Dominio: dominio-competicao
-Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F14-visualizar-classificacao-ou-chaveamento.feature
+Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F14-gerenciar-andamento-da-competicao.feature
 
 Cenarios principais:
-- visualizar classificacao em torneio de pontos corridos
-- visualizar chaveamento em torneio mata-mata
-- exibir dados atualizados apos resultados
-- impedir visualizacao antes da geracao da estrutura
+- atualizar classificacao e status da partida apos resultado
+- gerenciar chaveamento em torneio mata-mata
+- consultar classificacao em torneio de pontos corridos
+- impedir gerenciamento de andamento sem estrutura gerada
 
 ---
 
-### F15. Registrar eventos estatisticos opcionais da partida
+### F15. Gerenciar sumula estatistica da partida
 Dominio: dominio-estatisticas
-Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/registrar-eventos-estatisticos-da-partida.feature
+Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/F15-gerenciar-sumula-estatistica-da-partida.feature
 
 Cenarios principais:
-- registrar gols e assistencias de jogadores
-- registrar cartoes amarelos e vermelhos
-- registrar substituicao indicando titular que saiu e reserva que entrou
-- impedir registro de substituicao envolvendo jogador fora da escalacao
-- impedir registro de substituicao envolvendo jogadores de times diferentes
-- impedir registro por usuario nao autorizado
-- impedir registro para jogador que nao pertence aos times da partida
-- permitir que o resultado da partida exista mesmo sem registro de eventos estatisticos
+- registrar gol e assistencia em uma partida
+- registrar cartoes em uma partida
+- corrigir evento estatistico da sumula
+- remover evento estatistico da sumula
+- impedir gerenciamento de sumula por usuario nao organizador
+- impedir registro de eventos para jogador nao pertencente ao time
 
 ---
 
-### F16. Calcular e visualizar estatisticas do torneio
+### F16. Consolidar estatisticas e rankings do torneio
 Dominio: dominio-estatisticas
-Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/calcular-e-visualizar-estatisticas.feature
+Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/F16-consolidar-estatisticas-e-rankings-do-torneio.feature
 
 Cenarios principais:
-- calcular nota estatistica com base nos eventos registrados
-- gerar ranking de artilharia do torneio
-- visualizar estatisticas dos jogadores
-- atualizar estatisticas apos novos eventos registrados
-- exibir estatisticas apenas quando houver eventos registrados
+- consolidar notas, artilharia, assistencias e historico dos jogadores
+- gerar ranking de artilharia
+- atualizar estatisticas apos novos eventos
+- nao consolidar estatisticas detalhadas quando nao houver eventos registrados
 
 ---
 
@@ -232,12 +234,19 @@ Cenarios principais:
 - RN36. Apuracao automatica de acerto apos a conclusao do evento alvo.
 - RN37. Palpites apurados sao imutaveis.
 
+### Feed social do torneio
+- RN48. Apenas o organizador do torneio pode publicar comunicados oficiais.
+- RN49. Usuarios autenticados podem comentar em partidas pertencentes ao torneio.
+- RN50. Usuarios nao autenticados nao podem comentar no feed social.
+- RN51. Atualizacoes automaticas sobre jogos podem ser publicadas pelo sistema apos eventos relevantes da partida.
+- RN52. Comentarios podem ser editados pelo proprio autor.
+
 ### Organizacao do torneio
 - RN07. Todo torneio deve possuir formato definido.
 - RN08. Formatos validos: mata-mata, grupos + mata-mata, pontos corridos, final unica.
 - RN09. Todo torneio possui organizador responsavel.
 - RN10. Torneio so pode iniciar com participantes suficientes.
-- RN11. Estrutura depende do formato.
+- RN11. A preparacao da competicao deve gerar estrutura, rodadas e partidas de acordo com o formato definido.
 - RN12. O torneio deve definir a quantidade de jogadores por equipe.
 - RN13. As partidas devem respeitar a quantidade de jogadores definida.
 
@@ -261,16 +270,17 @@ Cenarios principais:
 ### Partidas e competicao
 - RN18. Partida pertence a um torneio e dois times validos.
 - RN19. Apenas partidas validas geram impacto no sistema.
-- RN20. Resultado atualiza classificacao ou chaveamento automaticamente.
+- RN20. Resultado atualiza classificacao, chaveamento e status da partida automaticamente.
 - RN21. Nao permitir resultados invalidos.
 - RN22. O resultado da partida pode ser registrado sem eventos estatisticos.
 
 ### Estatisticas
-- RN23. Registrar gols, assistencias, cartoes e substituicoes quando desejado.
+- RN23. Registrar gols, assistencias e cartoes quando desejado.
 - RN24. Nota estatistica calculada automaticamente quando houver eventos.
 - RN25. Nota baseada em formula com pesos.
 - RN26. Considera eventos basicos na versao inicial.
 - RN27. Eventos positivos e negativos afetam a nota.
 - RN28. Artilharia atualizada automaticamente quando houver gols registrados.
 - RN29. Na ausencia de eventos, apenas o placar oficial da partida deve ser exibido.
-- RN47. Substituicoes registradas pos-jogo envolvendo titular e reserva da escalacao do mesmo time.
+- RN47. Eventos da sumula estatistica podem ser corrigidos ou removidos pelo organizador.
+- RN53. A consolidacao das estatisticas atualiza notas, artilharia, lideres de assistencias e historico dos jogadores.

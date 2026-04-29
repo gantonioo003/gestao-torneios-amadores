@@ -2,7 +2,7 @@
 
 Projeto academico desenvolvido para a disciplina de Requisitos e Projeto de Software, com foco em Domain-Driven Design (DDD), Behavior-Driven Development (BDD) e arquitetura modular com Maven.
 
-O sistema tem como objetivo apoiar a gestao de torneios amadores de futebol, incluindo cadastro e organizacao de torneios, participacao de times, gerenciamento da competicao e consolidacao opcional de estatisticas de desempenho.
+O sistema tem como objetivo apoiar a gestao de torneios amadores de futebol, incluindo cadastro e organizacao de torneios, participacao de times, gerenciamento da competicao, engajamento social e consolidacao opcional de estatisticas de desempenho.
 
 ## Visao Geral
 
@@ -17,11 +17,12 @@ O sistema proposto permite:
 - cadastrar times, jogadores e tecnico
 - solicitar e avaliar participacao de times
 - gerenciar participantes aprovados
-- gerar estrutura da competicao e partidas
+- preparar a competicao com estrutura, rodadas e partidas
+- publicar comunicados, comentarios e atualizacoes automaticas no feed social do torneio
 - registrar resultados oficiais de partidas
-- registrar gols, assistencias e cartoes de forma opcional
-- calcular nota estatistica de jogadores quando houver eventos registrados
-- acompanhar classificacao, chaveamento e artilharia quando houver dados suficientes
+- gerenciar sumula estatistica opcional com gols, assistencias e cartoes
+- consolidar notas, artilharia, lideres de assistencias e historico dos jogadores quando houver eventos registrados
+- acompanhar classificacao, chaveamento e andamento das partidas
 
 ## Estado Atual do Projeto
 
@@ -48,8 +49,9 @@ O projeto segue uma organizacao modular orientada a contexto de negocio. Cada mo
 - `dominio-compartilhado`: ids, entidades compartilhadas, enumeracoes, excecoes e eventos de dominio reutilizaveis
 - `dominio-participacao`: autenticacao de acesso, solicitacoes de participacao, times, jogadores, tecnico e responsavel do time
 - `dominio-torneio`: criacao e configuracao do torneio, participantes aprovados, organizador e estrutura da competicao
-- `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento e geracao de partidas
+- `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento e preparacao da competicao
 - `dominio-estatisticas`: eventos estatisticos opcionais, nota estatistica, desempenho e artilharia
+- `dominio-engajamento`: palpites, comunicados oficiais, comentarios e feed social do torneio
 - `pai`: modulo pai Maven com configuracao compartilhada
 
 ## Domain-Driven Design
@@ -62,6 +64,7 @@ O projeto adota DDD como base para organizacao do conhecimento de negocio e para
 - Torneio
 - Competicao
 - Estatisticas
+- Engajamento
 - Compartilhado
 
 A modelagem estrategica foi registrada em [torneio.cml](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/torneio.cml).
@@ -76,6 +79,7 @@ As features estao distribuidas por dominio em:
 - `dominio-torneio/src/test/resources`
 - `dominio-competicao/src/test/resources`
 - `dominio-estatisticas/src/test/resources`
+- `dominio-engajamento/src/test/resources`
 
 Cada modulo tambem possui automacao de teste com:
 
@@ -105,6 +109,7 @@ gestao-torneios-amadores
 |-- dominio-torneio/
 |-- dominio-competicao/
 |-- dominio-estatisticas/
+|-- dominio-engajamento/
 |
 |-- .mvn/
 |-- pai/
@@ -162,7 +167,17 @@ Inclui classes voltadas a:
 - classificacao
 - chaveamento
 - rodada
-- geracao de partidas
+- preparacao da competicao com partidas e rodadas
+
+### `dominio-engajamento`
+
+Inclui classes voltadas a:
+
+- palpites de usuarios autenticados
+- apuracao automatica de palpites
+- comunicados oficiais do torneio
+- comentarios em partidas
+- atualizacoes automaticas no feed social
 
 ### `dominio-estatisticas`
 
@@ -171,7 +186,7 @@ Inclui classes voltadas a:
 - eventos estatisticos
 - subclasses de eventos como gol e cartoes
 - nota estatistica quando houver eventos registrados
-- consolidacao de desempenho
+- consolidacao de desempenho, rankings e historico dos jogadores
 - artilharia baseada nos gols registrados
 
 ## Documentacao do Projeto
@@ -211,7 +226,7 @@ Os principais artefatos da Entrega 1 estao organizados em [documentacao](C:/User
 .\mvnw.cmd test
 ```
 
-No estado atual, a suite cobre os modulos de dominio com cenarios Cucumber e testes auxiliares, incluindo os fluxos de torneio, participacao, competicao e estatisticas.
+No estado atual, a suite cobre os modulos de dominio com cenarios Cucumber e testes auxiliares, incluindo os fluxos de torneio, participacao, competicao, estatisticas e engajamento.
 
 ### Executar um modulo especifico
 

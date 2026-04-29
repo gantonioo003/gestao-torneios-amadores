@@ -3,6 +3,7 @@ package com.torneios.dominio.estatisticas.evento;
 import java.util.Objects;
 
 import com.torneios.dominio.compartilhado.enumeracao.TipoEventoEstatistico;
+import com.torneios.dominio.compartilhado.excecao.EntidadeNaoEncontradaException;
 import com.torneios.dominio.compartilhado.excecao.OperacaoNaoPermitidaException;
 import com.torneios.dominio.compartilhado.excecao.RegraDeNegocioException;
 import com.torneios.dominio.compartilhado.jogador.JogadorId;
@@ -64,10 +65,7 @@ public class EventoEstatisticoServico {
                                              UsuarioId organizadorId,
                                              JogadorId jogadorId,
                                              TipoEventoEstatistico tipoEventoEstatistico) {
-        if (tipoEventoEstatistico == TipoEventoEstatistico.SUBSTITUICAO) {
-            throw new OperacaoNaoPermitidaException(
-                    "Substituicoes devem ser registradas pelo metodo registrarSubstituicao.");
-        }
+        Objects.requireNonNull(tipoEventoEstatistico, "O tipo do evento estatistico e obrigatorio.");
         validarRegistro(torneioId, partidaId, organizadorId, jogadorId);
 
         EventoEstatistico eventoEstatistico = switch (tipoEventoEstatistico) {
@@ -75,43 +73,30 @@ public class EventoEstatisticoServico {
             case ASSISTENCIA -> new Assistencia(eventoId, torneioId, partidaId, jogadorId);
             case CARTAO_AMARELO -> new CartaoAmarelo(eventoId, torneioId, partidaId, jogadorId);
             case CARTAO_VERMELHO -> new CartaoVermelho(eventoId, torneioId, partidaId, jogadorId);
-            case SUBSTITUICAO -> throw new OperacaoNaoPermitidaException(
-                    "Substituicoes devem ser registradas pelo metodo registrarSubstituicao.");
         };
 
         eventoEstatisticoRepositorio.salvar(eventoEstatistico);
         return eventoEstatistico;
     }
 
-    public Substituicao registrarSubstituicao(long eventoId,
-                                              TorneioId torneioId,
-                                              PartidaId partidaId,
-                                              UsuarioId organizadorId,
-                                              JogadorId jogadorQueSaiu,
-                                              JogadorId jogadorQueEntrou) {
-        validarRegistroBase(torneioId, partidaId, organizadorId);
-        if (!consultaEstatisticaCompeticao.partidaEncerrada(partidaId)) {
-            throw new OperacaoNaoPermitidaException(
-                    "Substituicoes so podem ser registradas apos o termino da partida.");
-        }
-        if (!consultaEstatisticaCompeticao.jogadorEhTitularNaEscalacao(partidaId, jogadorQueSaiu)) {
-            throw new RegraDeNegocioException(
-                    "O jogador que saiu deve ser titular escalado da partida.");
-        }
-        if (!consultaEstatisticaCompeticao.jogadorEhReservaNaEscalacao(partidaId, jogadorQueEntrou)) {
-            throw new RegraDeNegocioException(
-                    "O jogador que entrou deve ser reserva escalado da partida.");
-        }
-        if (!consultaEstatisticaCompeticao.jogadoresPertencemAoMesmoTimeNaPartida(
-                partidaId, jogadorQueSaiu, jogadorQueEntrou)) {
-            throw new RegraDeNegocioException(
-                    "A substituicao deve envolver dois jogadores do mesmo time.");
-        }
+    public EventoEstatistico corrigirEvento(long eventoId,
+                                             TorneioId torneioId,
+                                             PartidaId partidaId,
+                                             UsuarioId organizadorId,
+                                             JogadorId jogadorId,
+                                             TipoEventoEstatistico novoTipo) {
+        EventoEstatistico eventoExistente = obterEventoDaSumula(eventoId, torneioId, partidaId);
+        validarRegistro(torneioId, partidaId, organizadorId, jogadorId);
+        return registrarEvento(eventoExistente.getId(), torneioId, partidaId, organizadorId, jogadorId, novoTipo);
+    }
 
-        Substituicao substituicao = new Substituicao(eventoId, torneioId, partidaId,
-                jogadorQueSaiu, jogadorQueEntrou);
-        eventoEstatisticoRepositorio.salvar(substituicao);
-        return substituicao;
+    public void removerEvento(long eventoId,
+                              TorneioId torneioId,
+                              PartidaId partidaId,
+                              UsuarioId organizadorId) {
+        validarRegistroBase(torneioId, partidaId, organizadorId);
+        obterEventoDaSumula(eventoId, torneioId, partidaId);
+        eventoEstatisticoRepositorio.remover(eventoId);
     }
 
     private void validarRegistro(TorneioId torneioId,
@@ -135,5 +120,14 @@ public class EventoEstatisticoServico {
         if (!consultaEstatisticaCompeticao.partidaPertenceAoTorneio(partidaId, torneioId)) {
             throw new RegraDeNegocioException("A partida informada nao pertence ao torneio.");
         }
+    }
+
+    private EventoEstatistico obterEventoDaSumula(long eventoId, TorneioId torneioId, PartidaId partidaId) {
+        EventoEstatistico evento = eventoEstatisticoRepositorio.buscarPorId(eventoId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Evento estatistico nao encontrado."));
+        if (!evento.getTorneioId().equals(torneioId) || !evento.getPartidaId().equals(partidaId)) {
+            throw new RegraDeNegocioException("O evento informado nao pertence a sumula da partida.");
+        }
+        return evento;
     }
 }

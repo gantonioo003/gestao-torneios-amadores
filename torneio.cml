@@ -3,6 +3,7 @@ Domain GestaoTorneiosAmadores {
 	Subdomain Torneio
 	Subdomain Competicao
 	Subdomain Estatisticas
+	Subdomain Engajamento
 	Subdomain Compartilhado
 }
 
@@ -11,23 +12,22 @@ ContextMap {
 	contains Torneio
 	contains Competicao
 	contains Estatisticas
+	contains Engajamento
 	contains Compartilhado
 
 	Participacao Shared-Kernel Compartilhado
 	Torneio Shared-Kernel Compartilhado
 	Competicao Shared-Kernel Compartilhado
 	Estatisticas Shared-Kernel Compartilhado
+	Engajamento Shared-Kernel Compartilhado
 
 	Participacao Customer-Supplier Torneio
 	Torneio Customer-Supplier Competicao
 	Competicao Customer-Supplier Estatisticas
+	Competicao Customer-Supplier Engajamento
 }
 
 BoundedContext Participacao implements Participacao {
-	Service VisualizacaoTorneioServico {
-		void visualizarTorneiosDisponiveis();
-	}
-
 	Service AcessoGerenciamentoTorneioServico {
 		void exigirAcessoCriacaoTorneio(@UsuarioId usuario);
 		void exigirAcessoGerenciamentoTorneios(@UsuarioId usuario);
@@ -144,8 +144,9 @@ BoundedContext Torneio implements Torneio {
 BoundedContext Competicao implements Competicao {
 	Aggregate Partida {
 		Service PartidaServico {
-			void gerarPartidas(@TorneioId torneio, @UsuarioId organizador);
+			void prepararCompeticao(@TorneioId torneio, @UsuarioId organizador);
 			void registrarResultado(@TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @ResultadoPartida resultado);
+			void gerenciarAndamento(@TorneioId torneio);
 			void visualizarClassificacao(@TorneioId torneio);
 			void visualizarChaveamento(@TorneioId torneio);
 		}
@@ -209,6 +210,81 @@ BoundedContext Competicao implements Competicao {
 	}
 }
 
+BoundedContext Engajamento implements Engajamento {
+	Aggregate Palpite {
+		Service PalpiteServico {
+			void registrarOuAtualizar(@PalpiteId palpite, @UsuarioId usuario, @EventoAlvo eventoAlvo, @OpcaoPalpite opcao);
+			void obterPercentuais(@EventoAlvo eventoAlvo);
+			void apurar(@EventoAlvo eventoAlvo, long resultadoReal);
+		}
+
+		Entity Palpite {
+			aggregateRoot
+
+			-PalpiteId id
+			-UsuarioId usuario
+			-EventoAlvo eventoAlvo
+			-OpcaoPalpite opcao
+			boolean apurado
+			Boolean acertou
+
+			Repository PalpiteRepository {
+				@Palpite buscarPorUsuarioEEvento(@UsuarioId usuario, @EventoAlvo eventoAlvo);
+			}
+		}
+
+		ValueObject PalpiteId {
+			int id
+		}
+
+		ValueObject EventoAlvo {
+			String tipo
+			-TorneioId torneio
+			-PartidaId partida
+		}
+
+		ValueObject OpcaoPalpite {
+			int valor
+		}
+	}
+
+	Aggregate FeedTorneio {
+		Service FeedTorneioServico {
+			void publicarComunicado(@PublicacaoFeedId publicacao, @TorneioId torneio, @UsuarioId organizador, String conteudo);
+			void comentarPartida(@PublicacaoFeedId publicacao, @TorneioId torneio, @PartidaId partida, @UsuarioId usuario, String conteudo);
+			void registrarAtualizacaoAutomatica(@PublicacaoFeedId publicacao, @TorneioId torneio, @PartidaId partida, String conteudo);
+			void editarPublicacao(@PublicacaoFeedId publicacao, @UsuarioId usuario, String conteudo);
+			void removerPublicacao(@PublicacaoFeedId publicacao, @UsuarioId usuario);
+			void listarFeed(@TorneioId torneio);
+		}
+
+		Entity PublicacaoFeed {
+			aggregateRoot
+
+			-PublicacaoFeedId id
+			-TorneioId torneio
+			-TipoPublicacaoFeed tipo
+			-UsuarioId autor nullable
+			-PartidaId partida nullable
+			String conteudo
+			boolean removida
+
+			Repository FeedTorneioRepository {
+				@PublicacaoFeed obter(@PublicacaoFeedId id);
+				List<PublicacaoFeed> listarPorTorneio(@TorneioId torneio);
+			}
+		}
+
+		ValueObject PublicacaoFeedId {
+			int id
+		}
+
+		ValueObject TipoPublicacaoFeed {
+			String valor
+		}
+	}
+}
+
 BoundedContext Estatisticas implements Estatisticas {
 	Aggregate EventoEstatistico {
 		Service EventoEstatisticoServico {
@@ -216,6 +292,8 @@ BoundedContext Estatisticas implements Estatisticas {
 			void registrarAssistencia(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador);
 			void registrarCartaoAmarelo(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador);
 			void registrarCartaoVermelho(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador);
+			void corrigirEvento(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador, @TipoEventoEstatistico tipo);
+			void removerEvento(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador);
 		}
 
 		Entity EventoEstatistico {
@@ -241,6 +319,8 @@ BoundedContext Estatisticas implements Estatisticas {
 		Service EstatisticaServico {
 			void consolidarTorneio(@TorneioId torneio);
 			void calcularNotaJogador(@TorneioId torneio, @PartidaId partida, @JogadorId jogador);
+			void listarLideresAssistencias(@TorneioId torneio);
+			void obterHistoricoJogador(@TorneioId torneio, @JogadorId jogador);
 		}
 
 		Entity NotaEstatistica {

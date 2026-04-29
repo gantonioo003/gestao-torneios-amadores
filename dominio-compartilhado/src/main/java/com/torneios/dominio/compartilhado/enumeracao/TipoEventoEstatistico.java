@@ -4,6 +4,5 @@ public enum TipoEventoEstatistico {
     GOL,
     ASSISTENCIA,
     CARTAO_AMARELO,
-    CARTAO_VERMELHO,
-    SUBSTITUICAO
+    CARTAO_VERMELHO
 }

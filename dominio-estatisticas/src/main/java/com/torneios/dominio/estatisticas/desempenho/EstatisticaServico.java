@@ -3,6 +3,7 @@ package com.torneios.dominio.estatisticas.desempenho;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Comparator;
 
 import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
@@ -56,6 +57,19 @@ public class EstatisticaServico {
 
     public List<EstatisticaJogador> listarEstatisticasJogadores(TorneioId torneioId) {
         return estatisticaTorneioComoLista(consolidarTorneio(torneioId));
+    }
+
+    public List<EstatisticaJogador> listarLideresAssistencias(TorneioId torneioId) {
+        return estatisticaTorneioComoLista(consolidarTorneio(torneioId)).stream()
+                .sorted(Comparator.comparingInt(EstatisticaJogador::getAssistencias).reversed()
+                        .thenComparingLong(estatisticaJogador -> estatisticaJogador.getJogadorId().valor()))
+                .toList();
+    }
+
+    public List<EventoEstatistico> obterHistoricoJogador(TorneioId torneioId, JogadorId jogadorId) {
+        Objects.requireNonNull(torneioId, "O torneio do historico e obrigatorio.");
+        Objects.requireNonNull(jogadorId, "O jogador do historico e obrigatorio.");
+        return eventoEstatisticoRepositorio.listarPorJogadorNoTorneio(jogadorId, torneioId);
     }
 
     private List<EstatisticaJogador> estatisticaTorneioComoLista(EstatisticaTorneio estatisticaTorneio) {

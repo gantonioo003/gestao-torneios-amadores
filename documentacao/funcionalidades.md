@@ -23,16 +23,16 @@ F9. Criar e configurar torneio
 
 F10. Gerenciar participantes aprovados antes do inicio do torneio*4
 
-F11. Gerar estrutura da competicao*9
+F11. Preparar competicao do torneio, gerando estrutura, rodadas e partidas conforme o formato definido
 
-F12. Gerar partidas do torneio
+F12. Gerenciar comunicados e feed social do torneio, permitindo publicacoes oficiais, comentarios e atualizacoes automaticas sobre jogos
 
 ## Gestao da competicao
 F13. Registrar resultado da partida
 
-F14. Atualizar e visualizar classificacao ou chaveamento da competicao
+F14. Gerenciar andamento da competicao, atualizando classificacao, chaveamento e status das partidas apos cada resultado
 
 ## Estatisticas
-F15. Registrar eventos estatisticos opcionais da partida, incluindo gols, assistencias, cartoes e substituicoes
+F15. Gerenciar sumula estatistica da partida, registrando, corrigindo e removendo eventos opcionais como gols, assistencias e cartoes
 
-F16. Calcular e visualizar nota estatistica, artilharia e estatisticas do torneio somente quando houver eventos registrados*
+F16. Consolidar estatisticas e rankings do torneio, atualizando notas, artilharia, lideres de assistencias e historico dos jogadores

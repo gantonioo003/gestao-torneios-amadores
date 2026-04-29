@@ -42,7 +42,9 @@ public abstract class EstatisticasFuncionalidade {
     protected EventoEstatistico eventoRegistrado;
     protected NotaEstatistica notaEstatistica;
     protected List<EstatisticaJogador> rankingArtilharia;
+    protected List<EstatisticaJogador> rankingAssistencias;
     protected List<EstatisticaJogador> estatisticasJogadores;
+    protected List<EventoEstatistico> historicoJogador;
     protected Exception excecaoCapturada;
 
     protected void configurarCenarioPadrao() {

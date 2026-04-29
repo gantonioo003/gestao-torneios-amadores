@@ -36,6 +36,20 @@ RN37. Palpites apurados nao podem ser alterados nem removidos.
 
 ---
 
+## Feed social do torneio
+
+RN48. Apenas o organizador do torneio pode publicar comunicados oficiais no feed social do torneio.
+
+RN49. Usuarios autenticados podem comentar em partidas pertencentes ao torneio.
+
+RN50. Usuarios nao autenticados nao podem comentar no feed social do torneio.
+
+RN51. O sistema pode publicar atualizacoes automaticas no feed quando houver eventos relevantes da partida, como resultado registrado.
+
+RN52. Comentarios do feed podem ser editados pelo proprio autor.
+
+---
+
 ## Organizacao do torneio
 
 RN07. Todo torneio deve possuir um formato definido.
@@ -46,7 +60,7 @@ RN09. Todo torneio deve possuir um organizador responsavel.
 
 RN10. Um torneio so pode ser iniciado quando possuir a quantidade minima de times exigida pelo formato da competicao.
 
-RN11. A estrutura da competicao deve ser gerada de acordo com o formato definido para o torneio.
+RN11. A preparacao da competicao deve gerar estrutura, rodadas e partidas de acordo com o formato definido para o torneio.
 
 RN12. Todo torneio deve definir a quantidade de jogadores por equipe em campo.
 
@@ -94,7 +108,7 @@ RN18. Toda partida deve estar associada a um torneio e a dois times participante
 
 RN19. Apenas partidas registradas dentro de um torneio podem influenciar classificacao, chaveamento, artilharia e estatisticas.
 
-RN20. Ao registrar o resultado de uma partida, o sistema deve atualizar automaticamente a classificacao ou o avanco no chaveamento, conforme o formato do torneio.
+RN20. Ao registrar o resultado de uma partida, o sistema deve atualizar automaticamente a classificacao, o avanco no chaveamento e o status da partida, conforme o formato do torneio.
 
 RN21. O sistema nao deve permitir registrar resultado para uma partida inexistente ou para times que nao pertencem ao torneio.
 
@@ -104,7 +118,7 @@ RN22. O resultado da partida pode ser registrado independentemente do registro d
 
 ## Estatisticas e nota dos jogadores
 
-RN23. O sistema pode registrar gols, assistencias, cartoes amarelos, cartoes vermelhos e substituicoes dos jogadores em cada partida.
+RN23. O sistema pode registrar gols, assistencias, cartoes amarelos e cartoes vermelhos dos jogadores em cada partida.
 
 RN24. A nota estatistica de cada jogador deve ser calculada automaticamente a partir dos eventos registrados na partida, quando esses eventos existirem.
 
@@ -118,4 +132,6 @@ RN28. O sistema deve atualizar automaticamente a artilharia do torneio com base 
 
 RN29. Na ausencia de eventos registrados, o sistema deve manter disponivel apenas o placar oficial da partida, sem exibir nota estatistica, artilharia ou estatisticas detalhadas.
 
-RN47. Substituicoes so podem ser registradas apos o termino da partida e devem envolver um titular escalado saindo e um reserva escalado entrando, ambos do mesmo time.
+RN47. Eventos da sumula estatistica podem ser corrigidos ou removidos pelo organizador do torneio.
+
+RN53. A consolidacao das estatisticas deve atualizar notas, artilharia, lideres de assistencias e historico dos jogadores a partir dos eventos registrados.
