@@ -2,29 +2,33 @@
 
 Projeto academico desenvolvido para a disciplina de Requisitos e Projeto de Software, com foco em Domain-Driven Design (DDD), Behavior-Driven Development (BDD) e arquitetura modular com Maven.
 
-O sistema tem como objetivo apoiar a gestao de torneios amadores de futebol, incluindo cadastro e organizacao de torneios, participacao de times, gerenciamento da competicao, engajamento social e consolidacao opcional de estatisticas de desempenho.
+O sistema tem como objetivo apoiar a gestao de torneios amadores de futebol, incluindo cadastro e organizacao de torneios, participacao de times, gerenciamento da competicao, engajamento social, palpites publicos e consolidacao opcional de estatisticas de desempenho.
 
 ## Visao Geral
 
 O projeto foi modelado para atender um cenario em que competicoes amadoras sao organizadas manualmente, com pouca padronizacao e alto risco de inconsistencias em inscricoes, partidas, classificacao e estatisticas.
 
-O fluxo principal do sistema depende do registro de torneios, participantes, partidas e placares. O registro de eventos detalhados, como gols por jogador, assistencias e cartoes, e complementar: o torneio pode acontecer normalmente apenas com o resultado oficial de cada partida, e as estatisticas so aparecem quando esses eventos forem informados.
+O fluxo principal do sistema depende do registro de torneios, participantes, partidas e placares. O registro de eventos detalhados, como gols por jogador, assistencias, cartoes e substituicoes, e complementar: o torneio pode acontecer normalmente apenas com o resultado oficial de cada partida, e as estatisticas so aparecem quando esses eventos forem informados.
 
 O sistema proposto permite:
 
 - criar e configurar torneios
 - cadastrar conta, realizar login, editar dados e excluir conta
 - definir formato de competicao e formato de equipe
-- cadastrar times, jogadores e tecnico
+- cadastrar times e gerenciar elenco, jogadores e tecnico
 - gerenciar candidaturas de times, com solicitacao, acompanhamento de status e cancelamento quando pendente
 - avaliar inscricoes e lista final de participantes
 - gerenciar inscricoes e lista final de participantes
 - propor, aceitar, reagendar e registrar desafios amistosos entre times
+- usar amistosos apenas como recurso opcional, sem obrigar o fluxo dos torneios
 - preparar a competicao com estrutura, rodadas e partidas
+- definir escalacao opcionalmente, ou exigir escalacao quando a regra da partida/torneio pedir
 - publicar comunicados, comentarios e atualizacoes automaticas no feed social do torneio
+- registrar palpites publicos de usuarios e visitantes, salvando os votos para contagem e apuracao
 - registrar resultados oficiais de partidas
-- gerenciar sumula estatistica opcional com gols, assistencias e cartoes
+- gerenciar sumula estatistica opcional com gols, assistencias, cartoes e substituicoes condicionadas a escalacao
 - consolidar notas, artilharia, lideres de assistencias e historico dos jogadores quando houver eventos registrados
+- gerar comparativos de desempenho entre times e jogadores, salvando e consultando apenas os comparativos escolhidos
 - acompanhar classificacao, chaveamento e andamento das partidas
 
 ## Estado Atual do Projeto
@@ -52,9 +56,9 @@ O projeto segue uma organizacao modular orientada a contexto de negocio. Cada mo
 - `dominio-compartilhado`: ids, entidades compartilhadas, enumeracoes, excecoes e eventos de dominio reutilizaveis
 - `dominio-participacao`: conta de usuario, autenticacao, candidaturas de participacao, times, jogadores, tecnico e responsavel do time
 - `dominio-torneio`: criacao e configuracao do torneio, participantes aprovados, organizador e estrutura da competicao
-- `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento e preparacao da competicao
+- `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento, escalacao opcional e preparacao da competicao
 - `dominio-estatisticas`: eventos estatisticos opcionais, nota estatistica, desempenho e artilharia
-- `dominio-engajamento`: palpites, desafios amistosos entre times, comunicados oficiais, comentarios e feed social do torneio
+- `dominio-engajamento`: palpites publicos, desafios amistosos opcionais entre times, comunicados oficiais, comentarios e feed social do torneio
 - `pai`: modulo pai Maven com configuracao compartilhada
 
 ## Domain-Driven Design
@@ -149,8 +153,7 @@ Inclui classes voltadas a:
 - conta de usuario e login
 - candidatura de participacao em torneio aberto
 - gestao de times
-- gestao de jogadores
-- gestao de tecnico
+- gestao integrada de jogadores e tecnico do time
 - definicao de responsavel do time
 
 ### `dominio-torneio`
@@ -170,6 +173,7 @@ Inclui classes voltadas a:
 - resultado da partida
 - classificacao
 - chaveamento
+- escalacao opcional da partida
 - rodada
 - preparacao da competicao com partidas e rodadas
 
@@ -189,11 +193,13 @@ Inclui classes voltadas a:
 
 Inclui classes voltadas a:
 
-- eventos estatisticos
+- eventos estatisticos opcionais
 - subclasses de eventos como gol e cartoes
+- substituicoes quando houver escalacao
 - nota estatistica quando houver eventos registrados
 - consolidacao de desempenho, rankings e historico dos jogadores
 - artilharia baseada nos gols registrados
+- comparativos temporarios e salvos de desempenho entre times e jogadores
 
 ## Documentacao do Projeto
 

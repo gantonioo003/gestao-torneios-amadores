@@ -16,6 +16,18 @@ Feature: Gerenciar sumula estatistica da partida
     When ele registrar cartao amarelo ou vermelho para jogadores
     Then o sistema deve armazenar os eventos corretamente
 
+  Scenario: Registrar substituicao quando a partida possui escalacao
+    Given que existe uma partida cadastrada com escalacao informada
+    And que o usuario autenticado e o organizador
+    When ele registrar uma substituicao trocando um jogador por outro
+    Then o sistema deve armazenar a substituicao na sumula
+
+  Scenario: Impedir substituicao quando a partida nao possui escalacao
+    Given que existe uma partida cadastrada sem escalacao informada
+    And que o usuario autenticado e o organizador
+    When ele tentar registrar uma substituicao na partida
+    Then o sistema deve impedir a operacao
+
   Scenario: Corrigir evento estatistico da sumula
     Given que existe um evento estatistico registrado na sumula da partida
     And que o usuario autenticado e o organizador

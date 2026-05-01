@@ -3,7 +3,10 @@
 ## Termos principais do dominio
 
 ### Usuario
-Pessoa que utiliza o sistema. Para registrar palpites, criar torneios, gerenciar times e participar de qualquer fluxo do sistema, o usuario precisa estar autenticado.
+Pessoa que utiliza o sistema com conta cadastrada. Para criar torneios, gerenciar times e participar de fluxos protegidos, o usuario precisa estar autenticado.
+
+### Visitante
+Pessoa sem login que pode acessar areas publicas da plataforma e registrar palpites publicos identificados por sessao ou outro identificador tecnico.
 
 ### Conta de usuario
 Cadastro que identifica o usuario na plataforma, contendo nome, email e senha. Pode ser criada, editada e excluida pelo proprio usuario.
@@ -43,7 +46,7 @@ Conjunto de times aprovados pelo organizador para disputar o torneio antes do in
 Equipe participante de um torneio, vinculada a um usuario responsavel.
 
 ### Desafio amistoso
-Convite feito por um time a outro para realizar uma partida fora de torneios oficiais da plataforma.
+Convite opcional feito por um time a outro para realizar uma partida fora de torneios oficiais da plataforma.
 
 ### Amistoso
 Partida combinada entre dois times por meio de um desafio aceito. Pode ter data, local e resultado registrado no historico.
@@ -73,7 +76,7 @@ Tabela com a pontuacao e posicao dos times na competicao.
 Estrutura visual e logica das fases eliminatorias do torneio.
 
 ### Escalacao
-Configuracao definida pelo responsavel do time ou pelo tecnico para uma partida especifica, contendo o esquema tatico, os jogadores titulares por posicao e os jogadores reservas. A escalacao pode ser editada ate o inicio da partida e fica congelada apos esse momento.
+Configuracao opcional definida pelo responsavel do time ou pelo tecnico para uma partida especifica, contendo o esquema tatico, os jogadores titulares por posicao e os jogadores reservas. Quando a partida exigir escalacao ou quando um time informar, os dois times devem informar. A escalacao pode ser editada ate o inicio da partida e fica congelada apos esse momento.
 
 ### Esquema tatico
 Distribuicao das posicoes dos jogadores titulares em campo, compativel com o formato de equipe do torneio. Exemplos: 4-4-2 ou 4-3-3 no 11x11; 2-1-1 no 5x5; 1-1-1 no 3x3.
@@ -88,7 +91,7 @@ Jogador escalado para iniciar a partida em uma posicao definida pelo esquema tat
 Jogador relacionado para a partida que nao inicia como titular, mas fica disponivel para compor a equipe conforme a necessidade do time.
 
 ### Sumula estatistica
-Registro opcional dos eventos detalhados de uma partida, como gols, assistencias e cartoes. Pode ser corrigida ou ajustada pelo organizador.
+Registro opcional dos eventos detalhados de uma partida, como gols, assistencias, cartoes e substituicoes. Pode ser corrigida ou ajustada pelo organizador.
 
 ### Gol
 Evento estatistico registrado quando um jogador marca para seu time em uma partida.
@@ -102,6 +105,9 @@ Evento estatistico de advertencia recebido por um jogador durante a partida.
 ### Cartao vermelho
 Evento estatistico de expulsao recebido por um jogador durante a partida.
 
+### Substituicao
+Evento estatistico opcional que registra a troca de um jogador por outro durante a partida. So pode existir quando a partida possui escalacao.
+
 ### Artilharia
 Ranking dos jogadores com maior numero de gols no torneio, calculado quando houver registro de gols.
 
@@ -114,8 +120,17 @@ Processo que agrupa os eventos registrados na sumula para atualizar notas, artil
 ### Historico do jogador
 Conjunto de eventos e desempenho acumulado de um jogador dentro do torneio.
 
+### Comparativo de desempenho
+Analise gerada pelo sistema para comparar dois jogadores ou dois times usando estatisticas registradas, historico de partidas com eventos e posicao relativa em rankings. Pode ser apenas temporaria ou salva pelo usuario para consulta posterior.
+
+### Pontuacao comparativa
+Valor calculado para apoiar a comparacao de desempenho, considerando eventos positivos, como gols e assistencias, e eventos negativos, como cartoes.
+
 ### Palpite
-Registro feito por um usuario autenticado expressando sua aposta sobre o desfecho de um evento do sistema. Pode ser de tipo: vencedor de partida, campeao do torneio, artilheiro do torneio ou lider de assistencias do torneio.
+Registro feito por um usuario autenticado ou visitante identificado expressando sua aposta sobre o desfecho de um evento do sistema. Pode ser de tipo: vencedor de partida, campeao do torneio, artilheiro do torneio ou lider de assistencias do torneio.
+
+### Votante
+Identificacao de quem registrou um palpite. Pode representar uma conta de usuario ou um visitante identificado pela sessao.
 
 ### Tipo de palpite
 Classifica o evento alvo do palpite. Cada tipo possui sua propria janela de votacao e suas opcoes validas:

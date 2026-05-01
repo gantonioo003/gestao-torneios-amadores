@@ -5,12 +5,12 @@
 - Como usuario cadastrado, quero fazer login com email e senha para entrar no sistema.
 - Como usuario autenticado, quero editar meus dados cadastrais para manter minha conta atualizada.
 - Como usuario autenticado, quero excluir minha conta caso nao queira mais utilizar a plataforma.
-- Como usuario autenticado, quero registrar um palpite sobre o vencedor de uma partida para participar ativamente da competicao.
-- Como usuario autenticado, quero registrar um palpite sobre o campeao do torneio para acompanhar minhas previsoes ao longo da competicao.
-- Como usuario autenticado, quero registrar um palpite sobre o artilheiro do torneio para apostar no jogador mais decisivo no ataque.
-- Como usuario autenticado, quero registrar um palpite sobre o lider de assistencias do torneio para apostar no jogador mais participativo nas jogadas.
-- Como usuario autenticado, quero alterar meu palpite enquanto a janela de votacao estiver aberta para corrigir minha previsao se eu mudar de ideia.
-- Como usuario autenticado, quero visualizar o percentual de votos por opcao para entender a tendencia geral dos demais usuarios.
+- Como visitante ou usuario autenticado, quero registrar um palpite sobre o vencedor de uma partida para participar ativamente da competicao.
+- Como visitante ou usuario autenticado, quero registrar um palpite sobre o campeao do torneio para acompanhar minhas previsoes ao longo da competicao.
+- Como visitante ou usuario autenticado, quero registrar um palpite sobre o artilheiro do torneio para apostar no jogador mais decisivo no ataque.
+- Como visitante ou usuario autenticado, quero registrar um palpite sobre o lider de assistencias do torneio para apostar no jogador mais participativo nas jogadas.
+- Como visitante ou usuario autenticado, quero alterar meu palpite enquanto a janela de votacao estiver aberta para corrigir minha previsao se eu mudar de ideia.
+- Como visitante ou usuario autenticado, quero visualizar o percentual de votos por opcao para entender a tendencia geral dos demais usuarios.
 - Como usuario autenticado, quero ver se meu palpite foi acertado apos o evento ser concluido para acompanhar minha taxa de acerto.
 - Como organizador, quero publicar comunicados oficiais no feed do torneio para manter participantes e torcedores informados.
 - Como usuario autenticado, quero comentar em partidas do torneio para interagir com outros usuarios.
@@ -43,7 +43,9 @@
 ## 5. Gestao de times e elenco
 - Como usuario autenticado, quero cadastrar um time para poder utiliza-lo em torneios.
 - Como responsavel por um time, quero registrar o elenco de jogadores para formar a equipe.
+- Como responsavel por um time, quero editar e remover jogadores para manter o elenco atualizado.
 - Como responsavel por um time, quero associar um tecnico ao time para identificar seu responsavel tecnico.
+- Como responsavel por um time, quero editar e remover o tecnico associado para manter a comissao tecnica correta.
 - Como organizador, quero visualizar elenco e tecnico dos times participantes para validar a composicao das equipes.
 
 ## 6. Escalacao da partida
@@ -51,6 +53,8 @@
 - Como responsavel por um time, quero indicar os jogadores titulares por posicao para montar minha escalacao inicial.
 - Como responsavel por um time, quero indicar os jogadores reservas da partida para deixar a equipe completa e organizada antes do jogo.
 - Como tecnico associado ao time, quero definir e ajustar a escalacao da partida ate seu inicio para garantir a melhor formacao possivel.
+- Como responsavel por um time, quero poder deixar a partida sem escalacao quando ela nao for obrigatoria para simplificar torneios menores.
+- Como organizador, quero exigir escalacao em torneios que precisam de sumula mais completa para padronizar os dados.
 - Como organizador, quero visualizar as escalacoes confirmadas dos times antes da partida para validar a competicao.
 
 ## 7. Gestao de partidas e andamento da competicao
@@ -62,7 +66,13 @@
 ## 8. Estatisticas e desempenho dos jogadores
 - Como organizador, quero registrar gols e assistencias de uma partida para acompanhar o desempenho ofensivo dos jogadores.
 - Como organizador, quero registrar cartoes amarelos e vermelhos para refletir eventos disciplinares da partida.
+- Como organizador, quero registrar substituicoes quando houver escalacao para manter a sumula fiel ao jogo.
 - Como organizador, quero corrigir ou remover eventos da sumula estatistica para manter os dados da partida consistentes.
 - Como organizador, quero registrar eventos estatisticos apenas quando desejar detalhar a partida.
 - Como organizador, quero que o sistema consolide automaticamente notas, artilharia, lideres de assistencias e historico dos jogadores quando houver eventos registrados.
 - Como usuario autenticado, quero visualizar estatisticas dos jogadores e do torneio quando elas existirem para acompanhar o desempenho da competicao.
+- Como usuario, quero comparar dois jogadores por estatisticas, historico e ranking para entender quem teve melhor desempenho.
+- Como usuario, quero comparar dois times por estatisticas, historico e ranking para avaliar forca relativa antes ou depois de uma partida.
+- Como usuario, quero salvar apenas os comparativos que eu considerar importantes para montar um historico de analises.
+- Como usuario, quero consultar comparativos salvos para acompanhar analises de desempenho feitas anteriormente.
+- Como usuario, quero atualizar ou excluir comparativos salvos quando os dados mudarem ou a analise nao for mais util.

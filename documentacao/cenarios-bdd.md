@@ -2,16 +2,16 @@
 
 ## Funcionalidades com cenarios definidos
 
-### F1. Registrar palpites de usuarios autenticados
+### F1. Gerenciar palpites publicos de usuarios e visitantes
 Dominio: dominio-engajamento
 Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F1-registrar-palpite.feature
 
 Cenarios principais:
-- registrar palpite sobre vencedor de partida com sucesso
+- registrar palpite de usuario autenticado sobre vencedor de partida
+- registrar palpite de visitante nao autenticado sobre vencedor de partida
 - registrar palpite sobre campeao do torneio com sucesso
 - registrar palpite sobre artilheiro do torneio com sucesso
 - registrar palpite sobre lider de assistencias do torneio com sucesso
-- impedir palpite de usuario nao autenticado
 - substituir palpite anterior do mesmo usuario para o mesmo evento alvo
 - alterar palpite enquanto a janela de votacao estiver aberta
 - impedir alteracao de palpite apos o fechamento da janela de votacao
@@ -23,7 +23,7 @@ Cenarios principais:
 
 ---
 
-### F2. Gerenciar conta de usuario e autenticacao
+### F2. Gerenciar ciclo de vida da conta de usuario e autenticacao
 Dominio: dominio-participacao
 Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F2-gerenciar-conta-de-usuario-e-autenticacao.feature
 
@@ -53,7 +53,7 @@ Cenarios principais:
 
 ---
 
-### F4. Gerenciar inscricoes e participantes do torneio
+### F4. Gerenciar inscricoes e lista final de participantes do torneio
 Dominio: dominio-participacao
 Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F4-gerenciar-inscricoes-e-participantes-do-torneio.feature
 
@@ -68,7 +68,7 @@ Cenarios principais:
 
 ---
 
-### F5. Gerenciar times do usuario
+### F5. Gerenciar times do usuario, permitindo cadastrar, editar, excluir e consultar torneios vinculados
 Dominio: dominio-participacao
 Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F5-gerenciar-times-do-usuario.feature
 
@@ -77,38 +77,50 @@ Cenarios principais:
 - editar informacoes de um time do usuario
 - excluir um time sem vinculo em torneio
 - impedir exclusao de time vinculado a torneio
+- consultar torneios vinculados ao time
 
 ---
 
-### F6. Gerenciar elenco de jogadores de um time
+### F6. Gerenciar elenco e comissao tecnica do time
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F6-gerenciar-elenco-de-jogadores.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F6-gerenciar-elenco-e-comissao-tecnica-do-time.feature
 
 Cenarios principais:
 - adicionar jogador ao elenco do time
 - editar dados de um jogador do elenco
 - remover jogador do elenco do time
-- impedir gerenciamento do elenco por usuario nao responsavel
-
----
-
-### F7. Gerenciar comissao tecnica de um time
-Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F7-gerenciar-comissao-tecnica.feature
-
-Cenarios principais:
 - associar tecnico a um time
 - editar dados de um tecnico do time
 - remover tecnico da comissao tecnica do time
-- impedir gerenciamento da comissao tecnica por usuario nao responsavel
+- impedir gerenciamento por usuario nao responsavel
+- impedir remocao de jogador inexistente
+- impedir remocao de tecnico inexistente
 
 ---
 
-### F8. Definir escalacao do time para uma partida
+### F7. Gerenciar comparativos de desempenho entre times e jogadores
+Dominio: dominio-estatisticas
+Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/F7-gerenciar-comparativos-de-desempenho.feature
+
+Cenarios principais:
+- gerar comparativo temporario entre jogadores
+- gerar comparativo temporario entre times
+- salvar comparativo escolhido pelo usuario
+- consultar comparativos salvos do torneio
+- atualizar comparativo salvo apos mudanca nos dados
+- excluir comparativo salvo do historico
+- impedir comparativo quando nao houver dados estatisticos
+
+---
+
+### F8. Gerenciar escalacao opcional do time para uma partida
 Dominio: dominio-competicao
 Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F8-escalar-time-para-partida.feature
 
 Cenarios principais:
+- permitir partida sem escalacao quando ela nao for obrigatoria
+- impedir inicio com escalacao informada por apenas um time
+- impedir inicio de partida que exige escalacao sem todos os times escalados
 - definir escalacao com esquema tatico, titulares por posicao e reservas com sucesso
 - permitir escalacao tanto pelo responsavel do time quanto pelo tecnico associado
 - impedir escalacao por usuario que nao e responsavel nem tecnico do time
@@ -122,7 +134,7 @@ Cenarios principais:
 
 ---
 
-### F9. Criar e configurar torneio
+### F9. Gerenciar criacao e configuracao do torneio
 Dominio: dominio-torneio
 Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/F9-criar-e-configurar-torneio.feature
 
@@ -134,7 +146,7 @@ Cenarios principais:
 
 ---
 
-### F10. Gerenciar desafios e amistosos entre times
+### F10. Gerenciar desafios e amistosos opcionais entre times
 Dominio: dominio-engajamento
 Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F10-gerenciar-desafios-e-amistosos-entre-times.feature
 
@@ -176,7 +188,7 @@ Cenarios principais:
 
 ---
 
-### F13. Registrar resultado da partida
+### F13. Registrar placar oficial da partida
 Dominio: dominio-competicao
 Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F13-registrar-resultado-da-partida.feature
 
@@ -201,13 +213,15 @@ Cenarios principais:
 
 ---
 
-### F15. Gerenciar sumula estatistica da partida
+### F15. Gerenciar sumula estatistica opcional da partida
 Dominio: dominio-estatisticas
 Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/F15-gerenciar-sumula-estatistica-da-partida.feature
 
 Cenarios principais:
 - registrar gol e assistencia em uma partida
 - registrar cartoes em uma partida
+- registrar substituicao quando a partida possui escalacao
+- impedir substituicao quando a partida nao possui escalacao
 - corrigir evento estatistico da sumula
 - remover evento estatistico da sumula
 - impedir gerenciamento de sumula por usuario nao organizador
@@ -229,87 +243,93 @@ Cenarios principais:
 
 ## Regras de negocio cobertas
 
-### Acesso e participacao
-- RN01. Apenas usuarios autenticados podem registrar palpites.
-- RN02. Apenas usuarios autenticados podem criar torneios.
-- RN03. Apenas usuarios autenticados podem gerenciar candidaturas de participacao em torneios.
-- RN04. Usuario deve possuir time cadastrado para enviar candidatura.
-- RN05. Torneio pode ser aberto ou fechado para participacao.
-- RN06. Apenas organizador pode aprovar, rejeitar e ajustar a lista final de participantes antes do inicio do torneio.
-- RN54. Usuario pode cadastrar conta informando nome, email e senha.
-- RN55. Email de conta de usuario deve ser unico.
-- RN56. Login exige email e senha validos.
-- RN57. Usuario pode editar os dados da propria conta.
-- RN58. Usuario pode excluir a propria conta.
-- RN65. Usuario pode acompanhar o status das candidaturas enviadas por ele.
-- RN66. Usuario pode cancelar uma candidatura enquanto ela estiver pendente.
-- RN67. Candidaturas ja avaliadas pelo organizador nao podem ser canceladas pelo solicitante.
+### Conta e engajamento inicial
+- RN01. Usuarios autenticados e visitantes identificados podem registrar palpites publicos.
+- RN02. Tipos de palpite suportados: vencedor de partida, campeao, artilheiro e lider de assistencias.
+- RN03. Cada votante identificado faz no maximo um palpite por evento alvo.
+- RN04. Palpite pode ser alterado enquanto a janela estiver aberta.
+- RN05. Janela do palpite de vencedor de partida fecha no inicio da partida.
+- RN06. Janela dos demais palpites fecha no inicio do torneio.
+- RN07. Sistema exibe percentual de votos por opcao em tempo real.
+- RN08. Apuracao automatica de acerto apos a conclusao do evento alvo.
+- RN09. Palpites apurados sao imutaveis.
+- RN10. Palpites de visitantes tambem devem ser salvos para contagem e percentuais.
+- RN11. Usuario pode cadastrar conta informando nome, email e senha.
+- RN12. Email de conta de usuario deve ser unico.
+- RN13. Login exige email e senha validos.
+- RN14. Usuario pode editar os dados da propria conta.
+- RN15. Usuario pode excluir a propria conta.
 
-### Palpites e engajamento
-- RN30. Tipos de palpite suportados: vencedor de partida, campeao, artilheiro e lider de assistencias.
-- RN31. Cada usuario autenticado faz no maximo um palpite por evento alvo.
-- RN32. Palpite pode ser alterado enquanto a janela estiver aberta.
-- RN33. Janela do palpite de vencedor de partida fecha no inicio da partida.
-- RN34. Janela dos demais palpites fecha no inicio do torneio.
-- RN35. Sistema exibe percentual de votos por opcao em tempo real.
-- RN36. Apuracao automatica de acerto apos a conclusao do evento alvo.
-- RN37. Palpites apurados sao imutaveis.
+### Participacao no torneio
+- RN16. Apenas usuarios autenticados podem gerenciar candidaturas de participacao em torneios.
+- RN17. Usuario deve possuir time cadastrado para enviar candidatura.
+- RN18. Torneio pode ser aberto ou fechado para participacao.
+- RN19. Usuario pode acompanhar o status das candidaturas enviadas por ele.
+- RN20. Usuario pode cancelar uma candidatura enquanto ela estiver pendente.
+- RN21. Candidaturas ja avaliadas pelo organizador nao podem ser canceladas pelo solicitante.
+- RN22. Apenas organizador pode aprovar, rejeitar e ajustar a lista final de participantes antes do inicio do torneio.
+- RN23. Time so participa se estiver inscrito ou aprovado.
 
-### Feed social do torneio
-- RN48. Apenas o organizador do torneio pode publicar comunicados oficiais.
-- RN49. Usuarios autenticados podem comentar em partidas pertencentes ao torneio.
-- RN50. Usuarios nao autenticados nao podem comentar no feed social.
-- RN51. Atualizacoes automaticas sobre jogos podem ser publicadas pelo sistema apos eventos relevantes da partida.
-- RN52. Comentarios podem ser editados pelo proprio autor.
+### Times, elenco e desempenho
+- RN24. Apenas usuario autenticado responsavel pelo time pode cadastrar, editar, excluir ou consultar informacoes protegidas desse time.
+- RN25. Time vinculado a torneio nao pode ser excluido quando o vinculo impedir remocao segura.
+- RN26. Jogador pertence a um time.
+- RN27. Tecnico associado ao time participante.
+- RN28. Apenas jogadores validos podem ter eventos registrados.
+- RN29. Comparativos podem ser gerados temporariamente por estatisticas, historico de partidas e rankings.
+- RN30. Comparativos temporarios nao sao salvos automaticamente.
+- RN31. Usuario pode salvar um comparativo escolhido.
+- RN32. Usuario pode consultar comparativos salvos.
+- RN33. Usuario pode atualizar comparativo salvo quando os dados mudarem.
+- RN34. Usuario pode excluir comparativo salvo.
+- RN35. O sistema deve impedir comparativo sem dados estatisticos suficientes.
+- RN36. Escalacao e opcional quando o torneio ou a partida nao exigirem esse detalhamento.
+- RN37. Escalacao definida pelo responsavel do time ou pelo tecnico.
+- RN38. Esquema tatico compativel com o formato de equipe.
+- RN39. Quantidade de titulares igual ao formato de equipe.
+- RN40. Cada titular associado a uma posicao do esquema.
+- RN41. Titulares e reservas devem pertencer ao elenco do time.
+- RN42. Sem limite maximo de reservas.
+- RN43. Mesmo jogador nao pode ser titular e reserva simultaneamente.
+- RN44. Escalacao editavel ate o inicio da partida.
+- RN45. Se a partida ou o torneio exigir escalacao, os dois times devem informar escalacao antes do inicio.
+- RN46. Se um time informar escalacao em uma partida opcional, o outro time tambem deve informar para manter equilibrio de dados.
 
-### Desafios e amistosos
-- RN59. Apenas usuario autenticado responsavel por um time pode propor desafio amistoso.
-- RN60. Um time nao pode desafiar ele mesmo.
-- RN61. O responsavel pelo time desafiado pode aceitar ou recusar o convite.
-- RN62. Responsaveis pelos times envolvidos podem reagendar data e local do amistoso antes do encerramento.
-- RN63. Responsaveis pelos times envolvidos podem registrar o resultado do amistoso aceito.
-- RN64. Resultados de amistosos ficam no historico dos times envolvidos.
+### Organizacao e comunicacao
+- RN47. Apenas usuarios autenticados podem criar torneios.
+- RN48. Todo torneio deve possuir formato definido.
+- RN49. Formatos validos: mata-mata, grupos + mata-mata, pontos corridos, final unica.
+- RN50. Todo torneio possui organizador responsavel.
+- RN51. Torneio so pode iniciar com participantes suficientes.
+- RN52. A preparacao da competicao deve gerar estrutura, rodadas e partidas de acordo com o formato definido.
+- RN53. O torneio deve definir a quantidade de jogadores por equipe.
+- RN54. As partidas devem respeitar a quantidade de jogadores definida.
+- RN55. O uso de desafios e amistosos e opcional e nao impede o funcionamento dos torneios oficiais.
+- RN56. Apenas usuario autenticado responsavel por um time pode propor desafio amistoso.
+- RN57. Um time nao pode desafiar ele mesmo.
+- RN58. O responsavel pelo time desafiado pode aceitar ou recusar o convite.
+- RN59. Responsaveis pelos times envolvidos podem reagendar data e local do amistoso antes do encerramento.
+- RN60. Responsaveis pelos times envolvidos podem registrar o resultado do amistoso aceito.
+- RN61. Resultados de amistosos ficam no historico dos times envolvidos.
+- RN62. Apenas o organizador do torneio pode publicar comunicados oficiais.
+- RN63. Usuarios autenticados podem comentar em partidas pertencentes ao torneio.
+- RN64. Usuarios nao autenticados nao podem comentar no feed social.
+- RN65. Atualizacoes automaticas sobre jogos podem ser publicadas pelo sistema apos eventos relevantes da partida.
+- RN66. Comentarios podem ser editados pelo proprio autor.
 
-### Organizacao do torneio
-- RN07. Todo torneio deve possuir formato definido.
-- RN08. Formatos validos: mata-mata, grupos + mata-mata, pontos corridos, final unica.
-- RN09. Todo torneio possui organizador responsavel.
-- RN10. Torneio so pode iniciar com participantes suficientes.
-- RN11. A preparacao da competicao deve gerar estrutura, rodadas e partidas de acordo com o formato definido.
-- RN12. O torneio deve definir a quantidade de jogadores por equipe.
-- RN13. As partidas devem respeitar a quantidade de jogadores definida.
-
-### Times, jogadores e tecnicos
-- RN14. Time so participa se aprovado.
-- RN15. Jogador pertence a um time.
-- RN16. Tecnico associado ao time participante.
-- RN17. Apenas jogadores validos podem ter eventos registrados.
-
-### Escalacao da partida
-- RN38. Cada time deve ter escalacao definida antes do inicio da partida.
-- RN39. Escalacao definida pelo responsavel do time ou pelo tecnico.
-- RN40. Esquema tatico compativel com o formato de equipe.
-- RN41. Quantidade de titulares igual ao formato de equipe.
-- RN42. Cada titular associado a uma posicao do esquema.
-- RN43. Titulares e reservas devem pertencer ao elenco do time.
-- RN44. Sem limite maximo de reservas.
-- RN45. Mesmo jogador nao pode ser titular e reserva simultaneamente.
-- RN46. Escalacao editavel ate o inicio da partida.
-
-### Partidas e competicao
-- RN18. Partida pertence a um torneio e dois times validos.
-- RN19. Apenas partidas validas geram impacto no sistema.
-- RN20. Resultado atualiza classificacao, chaveamento e status da partida automaticamente.
-- RN21. Nao permitir resultados invalidos.
-- RN22. O resultado da partida pode ser registrado sem eventos estatisticos.
-
-### Estatisticas
-- RN23. Registrar gols, assistencias e cartoes quando desejado.
-- RN24. Nota estatistica calculada automaticamente quando houver eventos.
-- RN25. Nota baseada em formula com pesos.
-- RN26. Considera eventos basicos na versao inicial.
-- RN27. Eventos positivos e negativos afetam a nota.
-- RN28. Artilharia atualizada automaticamente quando houver gols registrados.
-- RN29. Na ausencia de eventos, apenas o placar oficial da partida deve ser exibido.
-- RN47. Eventos da sumula estatistica podem ser corrigidos ou removidos pelo organizador.
-- RN53. A consolidacao das estatisticas atualiza notas, artilharia, lideres de assistencias e historico dos jogadores.
+### Partidas, andamento e estatisticas
+- RN67. Partida pertence a um torneio e dois times validos.
+- RN68. Apenas partidas validas geram impacto no sistema.
+- RN69. Resultado atualiza classificacao, chaveamento e status da partida automaticamente.
+- RN70. Nao permitir resultados invalidos.
+- RN71. O resultado da partida pode ser registrado sem eventos estatisticos.
+- RN72. Registrar gols, assistencias, cartoes e substituicoes quando desejado.
+- RN73. Nota estatistica calculada automaticamente quando houver eventos.
+- RN74. Nota baseada em formula com pesos.
+- RN75. Considera eventos basicos na versao inicial.
+- RN76. Eventos positivos e negativos afetam a nota.
+- RN77. Artilharia atualizada automaticamente quando houver gols registrados.
+- RN78. Na ausencia de eventos, apenas o placar oficial da partida deve ser exibido.
+- RN79. Eventos da sumula estatistica podem ser corrigidos ou removidos pelo organizador.
+- RN80. A consolidacao das estatisticas atualiza notas, artilharia, lideres de assistencias e historico dos jogadores.
+- RN81. Substituicao so pode ser registrada quando a partida possui escalacao.

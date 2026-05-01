@@ -55,6 +55,9 @@ public class EstatisticaJogador {
             case ASSISTENCIA -> assistencias++;
             case CARTAO_AMARELO -> cartoesAmarelos++;
             case CARTAO_VERMELHO -> cartoesVermelhos++;
+            case SUBSTITUICAO -> {
+                // Substituicao entra no historico da sumula, mas nao altera rankings basicos.
+            }
         }
     }
 }

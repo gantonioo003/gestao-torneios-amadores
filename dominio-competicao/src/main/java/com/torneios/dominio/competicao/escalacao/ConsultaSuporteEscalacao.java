@@ -13,11 +13,15 @@ public interface ConsultaSuporteEscalacao {
 
     boolean partidaIniciada(PartidaId partidaId);
 
+    boolean escalacaoObrigatoriaNaPartida(PartidaId partidaId);
+
     boolean usuarioEhResponsavelDoTime(TimeId timeId, UsuarioId usuarioId);
 
     boolean tecnicoEstaAssociadoAoTime(TimeId timeId, TecnicoId tecnicoId);
 
     List<JogadorId> listarElencoDoTime(TimeId timeId);
+
+    List<TimeId> listarTimesDaPartida(PartidaId partidaId);
 
     FormatoEquipe obterFormatoEquipeDaPartida(PartidaId partidaId);
 }

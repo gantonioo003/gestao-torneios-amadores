@@ -59,6 +59,26 @@ public class EventoEstatisticoServico {
                 TipoEventoEstatistico.CARTAO_VERMELHO);
     }
 
+    public EventoEstatistico registrarSubstituicao(long eventoId,
+                                                   TorneioId torneioId,
+                                                   PartidaId partidaId,
+                                                   UsuarioId organizadorId,
+                                                   JogadorId jogadorSaiuId,
+                                                   JogadorId jogadorEntrouId) {
+        validarRegistroBase(torneioId, partidaId, organizadorId);
+        if (!consultaEstatisticaCompeticao.partidaPossuiEscalacao(partidaId)) {
+            throw new RegraDeNegocioException(
+                    "Substituicao so pode ser registrada quando a partida possui escalacao.");
+        }
+        validarJogadorDaPartida(partidaId, jogadorSaiuId);
+        validarJogadorDaPartida(partidaId, jogadorEntrouId);
+
+        EventoEstatistico eventoEstatistico = new Substituicao(
+                eventoId, torneioId, partidaId, jogadorSaiuId, jogadorEntrouId);
+        eventoEstatisticoRepositorio.salvar(eventoEstatistico);
+        return eventoEstatistico;
+    }
+
     public EventoEstatistico registrarEvento(long eventoId,
                                              TorneioId torneioId,
                                              PartidaId partidaId,
@@ -73,6 +93,8 @@ public class EventoEstatisticoServico {
             case ASSISTENCIA -> new Assistencia(eventoId, torneioId, partidaId, jogadorId);
             case CARTAO_AMARELO -> new CartaoAmarelo(eventoId, torneioId, partidaId, jogadorId);
             case CARTAO_VERMELHO -> new CartaoVermelho(eventoId, torneioId, partidaId, jogadorId);
+            case SUBSTITUICAO -> throw new RegraDeNegocioException(
+                    "Substituicao exige informar jogador que saiu e jogador que entrou.");
         };
 
         eventoEstatisticoRepositorio.salvar(eventoEstatistico);
@@ -104,6 +126,10 @@ public class EventoEstatisticoServico {
                                  UsuarioId organizadorId,
                                  JogadorId jogadorId) {
         validarRegistroBase(torneioId, partidaId, organizadorId);
+        validarJogadorDaPartida(partidaId, jogadorId);
+    }
+
+    private void validarJogadorDaPartida(PartidaId partidaId, JogadorId jogadorId) {
         if (!consultaEstatisticaCompeticao.jogadorPertenceAosTimesDaPartida(partidaId, jogadorId)) {
             throw new RegraDeNegocioException(
                     "Nao e permitido registrar evento para jogador que nao pertence aos times da partida.");

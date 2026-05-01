@@ -1,8 +1,25 @@
-Feature: Definir escalacao do time para uma partida
+Feature: Gerenciar escalacao opcional do time para uma partida
 
   As a responsavel pelo time ou tecnico associado
-  I want definir o esquema tatico, os jogadores titulares por posicao e os reservas
-  So that o time esteja escalado corretamente para a partida
+  I want decidir se vou informar escalacao e, quando necessario, definir esquema tatico, titulares e reservas
+  So that a partida possa funcionar com ou sem escalacao conforme a regra do torneio
+
+  Scenario: Permitir partida sem escalacao quando ela nao for obrigatoria
+    Given que existe uma partida cadastrada no torneio sem exigencia de escalacao
+    When o sistema congelar as escalacoes antes do inicio
+    Then a partida deve seguir sem escalacao cadastrada
+
+  Scenario: Impedir inicio com escalacao informada por apenas um time
+    Given que existe uma partida cadastrada no torneio sem exigencia de escalacao
+    And que apenas um time informou a escalacao
+    When o sistema tentar congelar as escalacoes antes do inicio
+    Then o sistema deve impedir a operacao
+
+  Scenario: Impedir inicio de partida que exige escalacao sem todos os times escalados
+    Given que existe uma partida cadastrada no torneio com escalacao obrigatoria
+    And que apenas um time informou a escalacao
+    When o sistema tentar congelar as escalacoes antes do inicio
+    Then o sistema deve impedir a operacao
 
   Scenario: Definir escalacao com esquema tatico, titulares por posicao e reservas com sucesso
     Given que existe uma partida cadastrada no torneio com formato de equipe definido

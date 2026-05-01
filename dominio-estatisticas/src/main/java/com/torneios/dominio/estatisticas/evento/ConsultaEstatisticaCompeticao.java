@@ -11,5 +11,7 @@ public interface ConsultaEstatisticaCompeticao {
 
     boolean partidaPertenceAoTorneio(PartidaId partidaId, TorneioId torneioId);
 
+    boolean partidaPossuiEscalacao(PartidaId partidaId);
+
     boolean jogadorPertenceAosTimesDaPartida(PartidaId partidaId, JogadorId jogadorId);
 }

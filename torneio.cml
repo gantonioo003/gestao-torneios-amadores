@@ -57,7 +57,11 @@ BoundedContext Participacao implements Participacao {
 			void editarTime(@TimeId time, @UsuarioId usuario, String nome);
 			void excluirTime(@TimeId time, @UsuarioId usuario);
 			void adicionarJogador(@TimeId time, @UsuarioId usuario, @JogadorId jogador, String nomeJogador);
+			void editarJogador(@TimeId time, @UsuarioId usuario, @JogadorId jogador, String nomeJogador);
+			void removerJogador(@TimeId time, @UsuarioId usuario, @JogadorId jogador);
 			void associarTecnico(@TimeId time, @UsuarioId usuario, @TecnicoId tecnico, String nomeTecnico);
+			void editarTecnico(@TimeId time, @UsuarioId usuario, @TecnicoId tecnico, String nomeTecnico);
+			void removerTecnico(@TimeId time, @UsuarioId usuario);
 		}
 
 		Entity Time {
@@ -230,12 +234,35 @@ BoundedContext Competicao implements Competicao {
 			String fase
 		}
 	}
+
+	Aggregate Escalacao {
+		Service EscalacaoServico {
+			void definirEscalacaoPorResponsavel(@EscalacaoId escalacao, @PartidaId partida, @TimeId time, @UsuarioId responsavel);
+			void definirEscalacaoPorTecnico(@EscalacaoId escalacao, @PartidaId partida, @TimeId time, @TecnicoId tecnico);
+			void congelarEscalacoesDaPartida(@PartidaId partida);
+		}
+
+		Entity Escalacao {
+			aggregateRoot
+
+			-EscalacaoId id
+			-PartidaId partida
+			-TimeId time
+			String esquemaTatico
+			boolean congelada
+		}
+
+		ValueObject EscalacaoId {
+			int id
+		}
+	}
 }
 
 BoundedContext Engajamento implements Engajamento {
 	Aggregate Palpite {
 		Service PalpiteServico {
 			void registrarOuAtualizar(@PalpiteId palpite, @UsuarioId usuario, @EventoAlvo eventoAlvo, @OpcaoPalpite opcao);
+			void registrarOuAtualizarComoVisitante(@PalpiteId palpite, String visitante, @EventoAlvo eventoAlvo, @OpcaoPalpite opcao);
 			void obterPercentuais(@EventoAlvo eventoAlvo);
 			void apurar(@EventoAlvo eventoAlvo, long resultadoReal);
 		}
@@ -244,7 +271,8 @@ BoundedContext Engajamento implements Engajamento {
 			aggregateRoot
 
 			-PalpiteId id
-			-UsuarioId usuario
+			-UsuarioId usuario nullable
+			String identificadorVotante
 			-EventoAlvo eventoAlvo
 			-OpcaoPalpite opcao
 			boolean apurado
@@ -252,6 +280,7 @@ BoundedContext Engajamento implements Engajamento {
 
 			Repository PalpiteRepository {
 				@Palpite buscarPorUsuarioEEvento(@UsuarioId usuario, @EventoAlvo eventoAlvo);
+				@Palpite buscarPorVotanteEEvento(String identificadorVotante, @EventoAlvo eventoAlvo);
 			}
 		}
 
@@ -356,6 +385,7 @@ BoundedContext Estatisticas implements Estatisticas {
 			void registrarAssistencia(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador);
 			void registrarCartaoAmarelo(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador);
 			void registrarCartaoVermelho(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador);
+			void registrarSubstituicao(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogadorSaiu, @JogadorId jogadorEntrou);
 			void corrigirEvento(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @JogadorId jogador, @TipoEventoEstatistico tipo);
 			void removerEvento(int evento, @TorneioId torneio, @PartidaId partida, @UsuarioId organizador);
 		}
@@ -421,6 +451,39 @@ BoundedContext Estatisticas implements Estatisticas {
 			int assistencias
 			int cartoesAmarelos
 			int cartoesVermelhos
+		}
+	}
+
+	Aggregate ComparativoDesempenho {
+		Service ComparacaoDesempenhoServico {
+			void gerarComparativoJogadores(@TorneioId torneio, @JogadorId primeiroJogador, @JogadorId segundoJogador);
+			void gerarComparativoTimes(@TorneioId torneio, @TimeId primeiroTime, @TimeId segundoTime);
+			void salvarComparativo(@ComparativoDesempenhoId comparativo);
+			void consultarComparativosSalvos(@TorneioId torneio);
+			void atualizarComparativoSalvo(@ComparativoDesempenhoId comparativo);
+			void excluirComparativoSalvo(@ComparativoDesempenhoId comparativo);
+		}
+
+		Entity ComparativoDesempenho {
+			aggregateRoot
+
+			-ComparativoDesempenhoId id
+			-TorneioId torneio
+			String tipo
+			String primeiroComparado
+			String segundoComparado
+			double pontuacaoPrimeiro
+			double pontuacaoSegundo
+
+			Repository ComparativoDesempenhoRepository {
+				@ComparativoDesempenho obter(@ComparativoDesempenhoId id);
+				List<ComparativoDesempenho> listarPorTorneio(@TorneioId torneio);
+				void remover(@ComparativoDesempenhoId id);
+			}
+		}
+
+		ValueObject ComparativoDesempenhoId {
+			int id
 		}
 	}
 }

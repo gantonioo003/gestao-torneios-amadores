@@ -46,6 +46,7 @@ public abstract class CompeticaoFuncionalidade {
     protected static final TimeId TIME_D_ID = new TimeId(4L);
     protected static final PartidaId PARTIDA_ID = new PartidaId(1L);
     protected static final EscalacaoId ESCALACAO_ID = new EscalacaoId(1L);
+    protected static final EscalacaoId ESCALACAO_TIME_B_ID = new EscalacaoId(2L);
     protected static final TecnicoId TECNICO_ID = new TecnicoId(1L);
     protected static final JogadorId JOGADOR_1_ID = new JogadorId(1L);
     protected static final JogadorId JOGADOR_2_ID = new JogadorId(2L);
@@ -98,10 +99,23 @@ public abstract class CompeticaoFuncionalidade {
     }
 
     protected void configurarSuporteEscalacao(boolean partidaIniciada) {
-        consultaEscalacao.registrarPartida(PARTIDA_ID, FormatoEquipe.CINCO_POR_CINCO, partidaIniciada);
+        configurarSuporteEscalacao(partidaIniciada, false);
+    }
+
+    protected void configurarSuporteEscalacao(boolean partidaIniciada, boolean escalacaoObrigatoria) {
+        consultaEscalacao.registrarPartida(
+                PARTIDA_ID,
+                FormatoEquipe.CINCO_POR_CINCO,
+                partidaIniciada,
+                List.of(TIME_A_ID, TIME_B_ID),
+                escalacaoObrigatoria);
         consultaEscalacao.registrarResponsavel(TIME_A_ID, ORGANIZADOR_ID);
+        consultaEscalacao.registrarResponsavel(TIME_B_ID, OUTRO_USUARIO_ID);
         consultaEscalacao.registrarTecnico(TIME_A_ID, TECNICO_ID);
         consultaEscalacao.registrarElenco(TIME_A_ID, List.of(
+                JOGADOR_1_ID, JOGADOR_2_ID, JOGADOR_3_ID, JOGADOR_4_ID,
+                JOGADOR_5_ID, JOGADOR_6_ID, JOGADOR_7_ID));
+        consultaEscalacao.registrarElenco(TIME_B_ID, List.of(
                 JOGADOR_1_ID, JOGADOR_2_ID, JOGADOR_3_ID, JOGADOR_4_ID,
                 JOGADOR_5_ID, JOGADOR_6_ID, JOGADOR_7_ID));
     }
@@ -145,5 +159,11 @@ public abstract class CompeticaoFuncionalidade {
         if (partidaIniciadaAposCriacao) {
             consultaEscalacao.iniciarPartida(PARTIDA_ID);
         }
+    }
+
+    protected void definirEscalacaoDoTimeB() {
+        escalacaoServico.definirEscalacaoPorResponsavel(
+                ESCALACAO_TIME_B_ID, PARTIDA_ID, TIME_B_ID, OUTRO_USUARIO_ID,
+                EsquemaTatico.UM_DOIS_UM, titularesCincoPorCinco(), reservasPadrao());
     }
 }

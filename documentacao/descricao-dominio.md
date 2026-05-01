@@ -2,13 +2,13 @@
 
 ## Visao geral
 
-O dominio do sistema e a gestao de torneios amadores de futebol com suporte ao registro opcional de dados estatisticos de partidas e jogadores e ao engajamento dos usuarios por meio de palpites, comunicados e feed social dos torneios.
+O dominio do sistema e a gestao de torneios amadores de futebol com suporte ao registro opcional de dados estatisticos de partidas e jogadores, comparativos de desempenho e engajamento por meio de palpites publicos, comunicados, desafios opcionais e feed social dos torneios.
 
 O sistema tem como objetivo permitir que usuarios criem, gerenciem e participem de torneios de futebol amador em diferentes formatos, como mata-mata, fase de grupos com mata-mata, pontos corridos e final unica.
 
-Alem da gestao da competicao, o sistema permite a participacao de diferentes usuarios, possibilitando cadastro, login, edicao e exclusao da propria conta, gerenciamento de candidaturas de times em torneios abertos, acompanhamento de status, cancelamento de candidatura pendente, gerenciamento completo por parte do organizador, desafios amistosos entre times, definicao da escalacao de cada time para cada partida, registro de palpites sobre o andamento da competicao e publicacao de comunicados e interacoes sociais no feed do torneio.
+Alem da gestao da competicao, o sistema permite a participacao de diferentes usuarios, possibilitando cadastro, login, edicao e exclusao da propria conta, gerenciamento de candidaturas de times em torneios abertos, acompanhamento de status, cancelamento de candidatura pendente, gerenciamento completo por parte do organizador, desafios amistosos opcionais entre times, definicao opcional da escalacao de cada time para cada partida, registro de palpites publicos por usuarios autenticados ou visitantes e publicacao de comunicados e interacoes sociais no feed do torneio.
 
-O sistema tambem permite o gerenciamento da sumula estatistica das partidas, com registro, correcao e remocao de gols, assistencias e cartoes, para que sejam consolidadas estatisticas e notas dos jogadores quando essas informacoes forem registradas.
+O sistema tambem permite o gerenciamento da sumula estatistica das partidas, com registro, correcao e remocao de gols, assistencias, cartoes e substituicoes. Substituicoes so fazem sentido quando a partida possui escalacao, enquanto os demais eventos continuam opcionais.
 
 ---
 
@@ -19,14 +19,15 @@ Competicoes amadoras costumam ser organizadas manualmente, o que dificulta o con
 - torneios e campeonatos criados
 - contas de usuario e autenticacao
 - candidaturas de times, status das solicitacoes e controle de inscricoes
-- desafios e amistosos entre times
+- desafios e amistosos opcionais entre times
 - jogadores e tecnicos
-- escalacao dos times em cada partida
+- escalacao opcional dos times em cada partida
 - partidas e resultados
 - classificacao e chaveamento
 - estatisticas dos jogadores
 - notas de desempenho por partida
-- engajamento dos usuarios em torno da competicao
+- comparativos de desempenho entre times e jogadores
+- engajamento de usuarios e visitantes em torno da competicao
 - comunicados oficiais, comentarios e atualizacoes automaticas sobre jogos
 
 Alem disso, nao ha padronizacao no acompanhamento das competicoes, dificultando a organizacao e a transparencia das informacoes, e tambem nao existe espaco para que usuarios participem ativamente dando palpites, comentando partidas e acompanhando comunicados oficiais em um local centralizado.
@@ -57,7 +58,7 @@ Os principais conceitos do dominio sao:
 - Grupo
 - Classificacao
 - Chaveamento
-- Escalacao
+- Escalacao opcional
 - Esquema tatico
 - Posicao
 - Titular
@@ -66,9 +67,13 @@ Os principais conceitos do dominio sao:
 - Assistencia
 - Cartao amarelo
 - Cartao vermelho
+- Substituicao
 - Artilharia
 - Nota estatistica do jogador
+- Comparativo de desempenho
+- Pontuacao comparativa
 - Palpite
+- Votante
 - Tipo de palpite
 - Janela de votacao
 - Apuracao do palpite
@@ -81,7 +86,7 @@ Os principais conceitos do dominio sao:
 
 ## Funcionamento geral
 
-Usuarios podem criar conta, realizar login, editar seus dados cadastrais e excluir a propria conta. Usuarios autenticados podem criar torneios, cadastrar seus proprios times e registrar palpites sobre eventos da competicao, como vencedor de partida, campeao do torneio, artilheiro e lider de assistencias. Cada palpite respeita uma janela de votacao e e apurado automaticamente quando o evento alvo e concluido.
+Usuarios podem criar conta, realizar login, editar seus dados cadastrais e excluir a propria conta. Usuarios autenticados podem criar torneios e cadastrar seus proprios times. Palpites sobre eventos da competicao, como vencedor de partida, campeao do torneio, artilheiro e lider de assistencias, podem ser registrados por usuarios autenticados ou visitantes identificados, sempre salvando o voto para contagem, percentuais e apuracao. Cada palpite respeita uma janela de votacao e e apurado automaticamente quando o evento alvo e concluido.
 
 O engajamento tambem ocorre por meio do feed social do torneio. O organizador pode publicar comunicados oficiais, usuarios autenticados podem comentar em partidas do torneio e o sistema pode gerar atualizacoes automaticas sobre jogos, como resultados registrados.
 
@@ -91,12 +96,12 @@ Durante a criacao do torneio, o organizador define tanto o formato da competicao
 
 Usuarios com times cadastrados podem gerenciar candidaturas em torneios abertos, solicitando participacao, acompanhando o status e cancelando candidaturas ainda pendentes. Depois disso, cabe ao organizador aprovar ou rejeitar essas solicitacoes e ajustar a lista final de participantes antes do inicio da competicao.
 
-Fora do fluxo formal dos torneios, responsaveis por times podem propor desafios amistosos para outros times, aceitar ou recusar convites, reagendar data e local e registrar o placar no historico dos times envolvidos. Isso reforca a ideia da plataforma como uma rede social de times amadores, nao apenas como um gerenciador de campeonato.
+Fora do fluxo formal dos torneios, responsaveis por times podem, opcionalmente, propor desafios amistosos para outros times, aceitar ou recusar convites, reagendar data e local e registrar o placar no historico dos times envolvidos. Isso reforca a ideia da plataforma como uma rede social de times amadores, mas nao e obrigatorio para que os torneios oficiais funcionem.
 
 O organizador define o formato do torneio, gerencia os participantes aprovados e prepara a competicao, gerando estrutura, rodadas e partidas conforme o formato escolhido.
 
-Antes de cada partida, o usuario responsavel pelo time ou o tecnico associado define a escalacao do time para aquela partida, escolhendo o esquema tatico, indicando os jogadores titulares por posicao e os jogadores reservas. A escalacao pode ser editada ate o inicio da partida e fica congelada apos esse momento.
+Antes de cada partida, o usuario responsavel pelo time ou o tecnico associado pode definir a escalacao do time, escolhendo o esquema tatico, indicando os jogadores titulares por posicao e os jogadores reservas. A escalacao e opcional quando a partida nao exige esse nivel de detalhe; porem, se o torneio exigir escalacao ou se um time informar sua escalacao, os dois times da partida devem informar para manter equilibrio nos dados. A escalacao pode ser editada ate o inicio da partida e fica congelada apos esse momento.
 
-Durante a competicao, o organizador registra obrigatoriamente os resultados das partidas para atualizar o andamento do torneio, incluindo classificacao, chaveamento e status das partidas. De forma complementar, o organizador pode gerenciar a sumula estatistica, registrando, corrigindo ou removendo eventos opcionais como gols, assistencias e cartoes.
+Durante a competicao, o organizador registra obrigatoriamente os resultados das partidas para atualizar o andamento do torneio, incluindo classificacao, chaveamento e status das partidas. De forma complementar, o organizador pode gerenciar a sumula estatistica, registrando, corrigindo ou removendo eventos opcionais como gols, assistencias, cartoes e substituicoes. Substituicoes so podem ser registradas se houver escalacao na partida.
 
-Quando houver eventos registrados, o sistema consolida automaticamente estatisticas e rankings do torneio, atualizando notas dos jogadores, artilharia, lideres de assistencias e historico de desempenho.
+Quando houver eventos registrados, o sistema consolida automaticamente estatisticas e rankings do torneio, atualizando notas dos jogadores, artilharia, lideres de assistencias e historico de desempenho. A partir desses dados, usuarios tambem podem gerar comparativos temporarios entre jogadores ou times, usando estatisticas, historico de partidas e posicao relativa nos rankings. O comparativo so e salvo quando o usuario escolher guardar aquela analise para consulta posterior, podendo tambem atualizar ou excluir comparativos salvos.

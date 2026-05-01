@@ -325,11 +325,13 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         timeRepositorio.salvar(time);
     }
 
+    @Dado("que o time nao possui jogadores cadastrados")
     @Dado("que o time não possui jogadores cadastrados")
     public void que_o_time_nao_possui_jogadores_cadastrados() {
         // Elenco vazio — garantido pela criação padrão
     }
 
+    @Dado("que o time possui tecnico associado")
     @Dado("que o time possui técnico associado")
     public void que_o_time_possui_tecnico_associado() {
         Time time = timeRepositorio.buscarPorId(TIME_A_ID)
@@ -338,6 +340,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         timeRepositorio.salvar(time);
     }
 
+    @Dado("que o time nao possui tecnico associado")
     @Dado("que o time não possui técnico associado")
     public void que_o_time_nao_possui_tecnico_associado() {
         // Sem técnico — garantido pela criação padrão
@@ -527,6 +530,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     // Whenns: Elenco
     // =====================================================================
 
+    @Quando("ele adicionar um jogador com dados validos ao elenco")
     @Quando("ele adicionar um jogador com dados válidos ao elenco")
     public void ele_adicionar_jogador_com_dados_validos() {
         try {
@@ -554,6 +558,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         }
     }
 
+    @Quando("ele solicitar a remocao de um jogador do elenco")
     @Quando("ele solicitar a remoção de um jogador do elenco")
     public void ele_solicitar_remocao_de_jogador_do_elenco() {
         try {
@@ -576,6 +581,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     // Whenns: Técnico
     // =====================================================================
 
+    @Quando("ele associar um tecnico com dados validos ao time")
     @Quando("ele associar um técnico com dados válidos ao time")
     public void ele_associar_tecnico_com_dados_validos() {
         try {
@@ -585,6 +591,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         }
     }
 
+    @Quando("ele tentar associar um tecnico ao time")
     @Quando("ele tentar associar um técnico ao time")
     public void ele_tentar_associar_tecnico_ao_time() {
         try {
@@ -594,6 +601,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         }
     }
 
+    @Quando("ele alterar o nome do tecnico")
     @Quando("ele alterar o nome do técnico")
     public void ele_alterar_nome_do_tecnico() {
         try {
@@ -603,6 +611,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         }
     }
 
+    @Quando("ele solicitar a remocao do tecnico")
     @Quando("ele solicitar a remoção do técnico")
     public void ele_solicitar_remocao_do_tecnico() {
         try {
@@ -612,6 +621,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         }
     }
 
+    @Quando("ele tentar remover o tecnico do time")
     @Quando("ele tentar remover o técnico do time")
     public void ele_tentar_remover_tecnico_do_time() {
         try {
@@ -951,6 +961,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         assertFalse(time.possuiJogador(JOGADOR_ID));
     }
 
+    @Entao("o sistema deve informar que o jogador nao foi encontrado no elenco")
     @Entao("o sistema deve informar que o jogador não foi encontrado no elenco")
     public void o_sistema_deve_informar_jogador_nao_encontrado() {
         assertNotNull(excecaoCapturada);
@@ -960,6 +971,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     // Thens: Técnico
     // =====================================================================
 
+    @Entao("o sistema deve registrar o tecnico na comissao tecnica do time")
     @Entao("o sistema deve registrar o técnico na comissão técnica do time")
     public void o_sistema_deve_registrar_o_tecnico() {
         assertNull(excecaoCapturada);
@@ -968,6 +980,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         assertEquals(TECNICO_ID, time.getTecnico().getId());
     }
 
+    @Entao("o sistema deve atualizar os dados do tecnico")
     @Entao("o sistema deve atualizar os dados do técnico")
     public void o_sistema_deve_atualizar_dados_do_tecnico() {
         assertNull(excecaoCapturada);
@@ -976,6 +989,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         assertEquals("Técnico Editado", time.getTecnico().getNome());
     }
 
+    @Entao("o sistema deve remover o tecnico da comissao tecnica do time")
     @Entao("o sistema deve remover o técnico da comissão técnica do time")
     public void o_sistema_deve_remover_o_tecnico() {
         assertNull(excecaoCapturada);
@@ -983,6 +997,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         assertNull(time.getTecnico());
     }
 
+    @Entao("o sistema deve informar que nao existe tecnico associado ao time")
     @Entao("o sistema deve informar que não existe técnico associado ao time")
     public void o_sistema_deve_informar_tecnico_nao_encontrado() {
         assertNotNull(excecaoCapturada);

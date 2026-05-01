@@ -17,8 +17,51 @@ import io.cucumber.java.pt.Quando;
 public class CompeticaoSteps extends CompeticaoFuncionalidade {
 
     // =====================================================================
-    // F8: Definir escalacao do time para uma partida
+    // F8: Gerenciar escalacao opcional do time para uma partida
     // =====================================================================
+
+    @Dado("que existe uma partida cadastrada no torneio sem exigencia de escalacao")
+    public void que_existe_partida_sem_exigencia_escalacao() {
+        configurarTorneioPontosCorridos(true);
+        Partida partida = new Partida(PARTIDA_ID, TORNEIO_ID, TIME_A_ID, TIME_B_ID, "Pontos corridos", 5);
+        partidaRepositorio.salvar(partida);
+        configurarSuporteEscalacao(false, false);
+    }
+
+    @Dado("que existe uma partida cadastrada no torneio com escalacao obrigatoria")
+    public void que_existe_partida_com_escalacao_obrigatoria() {
+        configurarTorneioPontosCorridos(true);
+        Partida partida = new Partida(PARTIDA_ID, TORNEIO_ID, TIME_A_ID, TIME_B_ID, "Pontos corridos", 5);
+        partidaRepositorio.salvar(partida);
+        configurarSuporteEscalacao(false, true);
+    }
+
+    @Dado("que apenas um time informou a escalacao")
+    public void que_apenas_um_time_informou_escalacao() {
+        escalacao = escalacaoServico.definirEscalacaoPorResponsavel(
+                ESCALACAO_ID, PARTIDA_ID, TIME_A_ID, ORGANIZADOR_ID,
+                EsquemaTatico.UM_DOIS_UM, titularesCincoPorCinco(), reservasPadrao());
+    }
+
+    @Quando("o sistema congelar as escalacoes antes do inicio")
+    public void o_sistema_congelar_escalacoes_antes_inicio() {
+        try {
+            escalacaoServico.congelarEscalacoesDaPartida(PARTIDA_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o sistema tentar congelar as escalacoes antes do inicio")
+    public void o_sistema_tentar_congelar_escalacoes_antes_inicio() {
+        o_sistema_congelar_escalacoes_antes_inicio();
+    }
+
+    @Entao("a partida deve seguir sem escalacao cadastrada")
+    public void a_partida_deve_seguir_sem_escalacao_cadastrada() {
+        assertNull(excecaoCapturada);
+        assertTrue(escalacaoRepositorio.listarPorPartida(PARTIDA_ID).isEmpty());
+    }
 
     @Dado("que existe uma partida cadastrada no torneio com formato de equipe definido")
     public void que_existe_partida_com_formato_equipe_definido() {

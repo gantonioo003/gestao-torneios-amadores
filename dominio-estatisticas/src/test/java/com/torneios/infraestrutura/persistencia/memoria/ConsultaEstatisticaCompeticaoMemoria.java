@@ -16,6 +16,7 @@ public class ConsultaEstatisticaCompeticaoMemoria implements ConsultaEstatistica
     private final Map<TorneioId, UsuarioId> organizadores = new HashMap<>();
     private final Map<PartidaId, TorneioId> partidaTorneio = new HashMap<>();
     private final Map<PartidaId, Set<JogadorId>> jogadoresPorPartida = new HashMap<>();
+    private final Set<PartidaId> partidasComEscalacao = new HashSet<>();
 
     public void registrarOrganizador(TorneioId torneioId, UsuarioId organizadorId) {
         organizadores.put(torneioId, organizadorId);
@@ -27,6 +28,10 @@ public class ConsultaEstatisticaCompeticaoMemoria implements ConsultaEstatistica
 
     public void registrarJogadorNaPartida(PartidaId partidaId, JogadorId jogadorId) {
         jogadoresPorPartida.computeIfAbsent(partidaId, k -> new HashSet<>()).add(jogadorId);
+    }
+
+    public void registrarEscalacaoDaPartida(PartidaId partidaId) {
+        partidasComEscalacao.add(partidaId);
     }
 
     @Override
@@ -42,6 +47,11 @@ public class ConsultaEstatisticaCompeticaoMemoria implements ConsultaEstatistica
     }
 
     @Override
+    public boolean partidaPossuiEscalacao(PartidaId partidaId) {
+        return partidasComEscalacao.contains(partidaId);
+    }
+
+    @Override
     public boolean jogadorPertenceAosTimesDaPartida(PartidaId partidaId, JogadorId jogadorId) {
         Set<JogadorId> jogadores = jogadoresPorPartida.get(partidaId);
         return jogadores != null && jogadores.contains(jogadorId);
@@ -51,5 +61,6 @@ public class ConsultaEstatisticaCompeticaoMemoria implements ConsultaEstatistica
         organizadores.clear();
         partidaTorneio.clear();
         jogadoresPorPartida.clear();
+        partidasComEscalacao.clear();
     }
 }

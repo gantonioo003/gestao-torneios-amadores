@@ -21,13 +21,29 @@ public class ConsultaSuporteEscalacaoMemoria implements ConsultaSuporteEscalacao
     private final Map<TimeId, TecnicoId> tecnicosPorTime = new HashMap<>();
     private final Map<TimeId, List<JogadorId>> elencoPorTime = new HashMap<>();
     private final Map<PartidaId, FormatoEquipe> formatoPorPartida = new HashMap<>();
+    private final Map<PartidaId, List<TimeId>> timesPorPartida = new HashMap<>();
+    private final Set<PartidaId> partidasComEscalacaoObrigatoria = new HashSet<>();
 
     public void registrarPartida(PartidaId partidaId, FormatoEquipe formatoEquipe, boolean iniciada) {
+        registrarPartida(partidaId, formatoEquipe, iniciada, List.of(), false);
+    }
+
+    public void registrarPartida(PartidaId partidaId,
+                                 FormatoEquipe formatoEquipe,
+                                 boolean iniciada,
+                                 List<TimeId> times,
+                                 boolean escalacaoObrigatoria) {
         formatoPorPartida.put(partidaId, formatoEquipe);
+        timesPorPartida.put(partidaId, List.copyOf(times));
         if (iniciada) {
             partidasIniciadas.add(partidaId);
         } else {
             partidasIniciadas.remove(partidaId);
+        }
+        if (escalacaoObrigatoria) {
+            partidasComEscalacaoObrigatoria.add(partidaId);
+        } else {
+            partidasComEscalacaoObrigatoria.remove(partidaId);
         }
     }
 
@@ -53,6 +69,11 @@ public class ConsultaSuporteEscalacaoMemoria implements ConsultaSuporteEscalacao
     }
 
     @Override
+    public boolean escalacaoObrigatoriaNaPartida(PartidaId partidaId) {
+        return partidasComEscalacaoObrigatoria.contains(partidaId);
+    }
+
+    @Override
     public boolean usuarioEhResponsavelDoTime(TimeId timeId, UsuarioId usuarioId) {
         return usuarioId.equals(responsaveisPorTime.get(timeId));
     }
@@ -65,6 +86,11 @@ public class ConsultaSuporteEscalacaoMemoria implements ConsultaSuporteEscalacao
     @Override
     public List<JogadorId> listarElencoDoTime(TimeId timeId) {
         return elencoPorTime.getOrDefault(timeId, List.of());
+    }
+
+    @Override
+    public List<TimeId> listarTimesDaPartida(PartidaId partidaId) {
+        return timesPorPartida.getOrDefault(partidaId, List.of());
     }
 
     @Override
