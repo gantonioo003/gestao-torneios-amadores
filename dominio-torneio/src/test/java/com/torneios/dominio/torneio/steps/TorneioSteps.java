@@ -8,6 +8,7 @@ import com.torneios.dominio.compartilhado.enumeracao.FormatoEquipe;
 import com.torneios.dominio.compartilhado.enumeracao.FormatoTorneio;
 import com.torneios.dominio.compartilhado.enumeracao.StatusTorneio;
 import com.torneios.dominio.torneio.TorneioFuncionalidade;
+import com.torneios.dominio.torneio.estrutura.ModoGeracaoEstrutura;
 import com.torneios.dominio.torneio.estrutura.TipoEstruturaCompeticao;
 
 import io.cucumber.java.pt.Dado;
@@ -104,6 +105,106 @@ public class TorneioSteps extends TorneioFuncionalidade {
     // =====================================================================
     // F11: Gerar estrutura da competição
     // =====================================================================
+
+    @Dado("que o usuario esta autenticado")
+    public void que_o_usuario_esta_autenticado_sem_acento() {
+        que_o_usuario_esta_autenticado();
+    }
+
+    @Quando("ele criar um torneio informando nome, formato valido e formato de equipe 5x5")
+    public void ele_criar_torneio_5x5_sem_acento() {
+        ele_criar_torneio_5x5();
+    }
+
+    @Quando("definir que o torneio aceita solicitacoes de participacao")
+    public void definir_torneio_aceita_solicitacoes_sem_acento() {
+        definir_torneio_aceita_solicitacoes();
+    }
+
+    @Entao("deve permitir entrada de times por solicitacao")
+    public void deve_permitir_entrada_de_times_por_solicitacao_sem_acento() {
+        deve_permitir_entrada_de_times_por_solicitacao();
+    }
+
+    @Quando("ele criar um torneio informando nome, formato valido e formato de equipe 11x11")
+    public void ele_criar_torneio_11x11_sem_acento() {
+        ele_criar_torneio_11x11();
+    }
+
+    @Quando("o organizador gerar a estrutura da competicao por sorteio")
+    public void o_organizador_gerar_estrutura_por_sorteio() {
+        try {
+            estruturaCompeticao = torneioServico.gerarEstruturaCompeticao(TORNEIO_ID, ORGANIZADOR_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve gerar a estrutura sorteando os times")
+    public void sistema_deve_gerar_estrutura_sorteando_times() {
+        assertNull(excecaoCapturada);
+        assertNotNull(estruturaCompeticao);
+        assertEquals(ModoGeracaoEstrutura.SORTEIO, estruturaCompeticao.getModoGeracao());
+        assertTrue(estruturaCompeticao.foiGerada());
+    }
+
+    @Quando("o organizador gerar a estrutura da competicao escolhendo manualmente a ordem dos times")
+    public void organizador_gerar_estrutura_manual() {
+        try {
+            estruturaCompeticao = torneioServico.gerarEstruturaManual(
+                    TORNEIO_ID, ORGANIZADOR_ID, List.of(TIME_A_ID, TIME_B_ID, TIME_C_ID, TIME_D_ID));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve gerar a estrutura respeitando a montagem manual")
+    public void sistema_deve_gerar_estrutura_respeitando_manual() {
+        assertNull(excecaoCapturada);
+        assertNotNull(estruturaCompeticao);
+        assertEquals(ModoGeracaoEstrutura.MANUAL, estruturaCompeticao.getModoGeracao());
+        assertTrue(estruturaCompeticao.getGrupos().get(0).getParticipantes().contains(TIME_A_ID));
+    }
+
+    @Dado("que existe um torneio finalizado")
+    public void que_existe_torneio_finalizado() {
+        configurarTimesElegiveis(5);
+        torneio = criarTorneioPadrao(FormatoTorneio.PONTOS_CORRIDOS, FormatoEquipe.CINCO_POR_CINCO, false);
+        torneioServico.definirParticipantesIniciais(TORNEIO_ID, ORGANIZADOR_ID, List.of(TIME_A_ID, TIME_B_ID));
+        torneioServico.gerarEstruturaCompeticao(TORNEIO_ID, ORGANIZADOR_ID);
+        torneioServico.iniciarTorneio(TORNEIO_ID, ORGANIZADOR_ID);
+        torneioServico.finalizarTorneio(TORNEIO_ID, ORGANIZADOR_ID);
+    }
+
+    @Quando("o organizador repetir o torneio para uma nova edicao")
+    public void organizador_repetir_torneio_nova_edicao() {
+        try {
+            historicoEdicaoTorneio = torneioServico.repetirTorneio(TORNEIO_ID, ORGANIZADOR_ID, true);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve arquivar a edicao anterior e reiniciar o torneio sem participantes")
+    public void sistema_deve_arquivar_edicao_e_reiniciar() {
+        assertNull(excecaoCapturada);
+        assertNotNull(historicoEdicaoTorneio);
+        assertEquals(1, historicoEdicaoTorneio.getNumeroEdicao());
+        assertEquals(2, historicoEdicaoTorneio.getParticipantes().size());
+        assertEquals(2, torneio.getEdicaoAtual());
+        assertTrue(torneio.getParticipantesAprovados().isEmpty());
+        assertEquals(StatusTorneio.CONFIGURADO, torneio.getStatus());
+    }
+
+    @Quando("ele tentar criar um torneio sem definir o formato da competicao")
+    public void ele_tentar_criar_torneio_sem_formato_sem_acento() {
+        ele_tentar_criar_torneio_sem_formato();
+    }
+
+    @Entao("o sistema deve impedir a criacao do torneio")
+    public void o_sistema_deve_impedir_criacao_do_torneio_sem_acento() {
+        o_sistema_deve_impedir_criacao_do_torneio();
+    }
 
     @Dado("que existe um torneio com formato mata-mata")
     public void que_existe_torneio_mata_mata() {

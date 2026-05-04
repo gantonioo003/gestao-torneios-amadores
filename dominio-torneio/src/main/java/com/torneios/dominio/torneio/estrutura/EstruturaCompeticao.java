@@ -10,12 +10,18 @@ public class EstruturaCompeticao {
 
     private final TorneioId torneioId;
     private final TipoEstruturaCompeticao tipo;
+    private final ModoGeracaoEstrutura modoGeracao;
     private final List<String> etapas;
     private final List<Grupo> grupos;
 
     public EstruturaCompeticao(TorneioId torneioId, TipoEstruturaCompeticao tipo) {
+        this(torneioId, tipo, ModoGeracaoEstrutura.SORTEIO);
+    }
+
+    public EstruturaCompeticao(TorneioId torneioId, TipoEstruturaCompeticao tipo, ModoGeracaoEstrutura modoGeracao) {
         this.torneioId = Objects.requireNonNull(torneioId, "O torneio da estrutura e obrigatorio.");
         this.tipo = Objects.requireNonNull(tipo, "O tipo da estrutura e obrigatorio.");
+        this.modoGeracao = Objects.requireNonNull(modoGeracao, "O modo de geracao da estrutura e obrigatorio.");
         this.etapas = new ArrayList<>();
         this.grupos = new ArrayList<>();
     }
@@ -26,6 +32,10 @@ public class EstruturaCompeticao {
 
     public TipoEstruturaCompeticao getTipo() {
         return tipo;
+    }
+
+    public ModoGeracaoEstrutura getModoGeracao() {
+        return modoGeracao;
     }
 
     public List<String> getEtapas() {

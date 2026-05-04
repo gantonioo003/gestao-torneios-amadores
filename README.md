@@ -2,7 +2,7 @@
 
 Projeto academico desenvolvido para a disciplina de Requisitos e Projeto de Software, com foco em Domain-Driven Design (DDD), Behavior-Driven Development (BDD) e arquitetura modular com Maven.
 
-O sistema tem como objetivo apoiar a gestao de torneios amadores de futebol, incluindo cadastro e organizacao de torneios, participacao de times, gerenciamento da competicao, engajamento social, palpites publicos e consolidacao opcional de estatisticas de desempenho.
+O sistema tem como objetivo apoiar a gestao de torneios amadores de futebol, incluindo cadastro e organizacao de torneios, participacao de times, gerenciamento da competicao, engajamento social em formato de feed e chat, palpites publicos e consolidacao opcional de estatisticas de desempenho.
 
 ## Visao Geral
 
@@ -13,21 +13,23 @@ O fluxo principal do sistema depende do registro de torneios, participantes, par
 O sistema proposto permite:
 
 - criar e configurar torneios
-- cadastrar conta, realizar login, editar dados e excluir conta
+- cadastrar conta como jogador ou organizador, realizar login, editar dados e excluir conta
 - definir formato de competicao e formato de equipe
 - cadastrar times e gerenciar elenco, jogadores e tecnico
-- gerenciar candidaturas de times, com solicitacao, acompanhamento de status e cancelamento quando pendente
-- avaliar inscricoes e lista final de participantes
-- gerenciar inscricoes e lista final de participantes
+- permitir que jogadores usem a plataforma para buscar times e acompanhar oportunidades
+- gerenciar inscricoes de times, com candidatura, acompanhamento de status, cancelamento quando pendente, avaliacao e lista final de participantes
+- usar chat privado com aba de solicitados antes de liberar mensagens entre usuarios
 - propor, aceitar, reagendar e registrar desafios amistosos entre times
 - usar amistosos apenas como recurso opcional, sem obrigar o fluxo dos torneios
-- preparar a competicao com estrutura, rodadas e partidas
+- preparar a competicao com estrutura, rodadas e partidas por sorteio automatico ou montagem manual
+- repetir torneios finalizados como novas edicoes mantendo o historico anterior
 - definir escalacao opcionalmente, ou exigir escalacao quando a regra da partida/torneio pedir
-- publicar comunicados, comentarios e atualizacoes automaticas no feed social do torneio
+- publicar postagens no feed social geral com midia e hashtags
+- publicar comunicados, comentarios, curtidas, reacoes e atualizacoes automaticas no feed social
 - registrar palpites publicos de usuarios e visitantes, salvando os votos para contagem e apuracao
 - registrar resultados oficiais de partidas
 - gerenciar sumula estatistica opcional com gols, assistencias, cartoes e substituicoes condicionadas a escalacao
-- consolidar notas, artilharia, lideres de assistencias e historico dos jogadores quando houver eventos registrados
+- consolidar notas, artilharia, lideres de assistencias, historico dos jogadores e historico estatistico por edicao quando houver eventos registrados
 - gerar comparativos de desempenho entre times e jogadores, salvando e consultando apenas os comparativos escolhidos
 - acompanhar classificacao, chaveamento e andamento das partidas
 
@@ -54,11 +56,11 @@ O projeto segue uma organizacao modular orientada a contexto de negocio. Cada mo
 ### Modulos atuais
 
 - `dominio-compartilhado`: ids, entidades compartilhadas, enumeracoes, excecoes e eventos de dominio reutilizaveis
-- `dominio-participacao`: conta de usuario, autenticacao, candidaturas de participacao, times, jogadores, tecnico e responsavel do time
-- `dominio-torneio`: criacao e configuracao do torneio, participantes aprovados, organizador e estrutura da competicao
-- `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento, escalacao opcional e preparacao da competicao
+- `dominio-participacao`: conta de usuario com tipo jogador ou organizador, autenticacao, inscricoes e participantes do torneio, times, jogadores, tecnico e responsavel do time
+- `dominio-torneio`: criacao, configuracao e repeticao do torneio, participantes aprovados, organizador, edicoes e estrutura da competicao
+- `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento, escalacao opcional e preparacao da competicao por sorteio ou montagem manual
 - `dominio-estatisticas`: eventos estatisticos opcionais, nota estatistica, desempenho e artilharia
-- `dominio-engajamento`: palpites publicos, desafios amistosos opcionais entre times, comunicados oficiais, comentarios e feed social do torneio
+- `dominio-engajamento`: palpites publicos, chat privado com solicitacoes de conversa, desafios amistosos opcionais entre times, postagens sociais, comunicados oficiais, comentarios, curtidas, reacoes e feed social
 - `pai`: modulo pai Maven com configuracao compartilhada
 
 ## Domain-Driven Design
@@ -151,7 +153,8 @@ Inclui classes voltadas a:
 
 - autenticacao de acesso
 - conta de usuario e login
-- candidatura de participacao em torneio aberto
+- tipo de conta jogador ou organizador
+- inscricoes e participantes do torneio
 - gestao de times
 - gestao integrada de jogadores e tecnico do time
 - definicao de responsavel do time
@@ -161,8 +164,9 @@ Inclui classes voltadas a:
 Inclui classes voltadas a:
 
 - torneio
+- edicoes e historico de edicoes do torneio
 - participante do torneio
-- estrutura da competicao
+- estrutura da competicao por sorteio ou montagem manual
 - regras do organizador
 
 ### `dominio-competicao`
@@ -183,10 +187,13 @@ Inclui classes voltadas a:
 
 - palpites de usuarios autenticados
 - apuracao automatica de palpites
+- chat privado com aba de solicitados, aprovacao de conversa e mensagens
 - desafios e amistosos entre times
 - historico de amistosos dos times
 - comunicados oficiais do torneio
+- postagens sociais com hashtags e midias
 - comentarios em partidas
+- curtidas e reacoes no feed
 - atualizacoes automaticas no feed social
 
 ### `dominio-estatisticas`
@@ -198,6 +205,7 @@ Inclui classes voltadas a:
 - substituicoes quando houver escalacao
 - nota estatistica quando houver eventos registrados
 - consolidacao de desempenho, rankings e historico dos jogadores
+- arquivamento de estatisticas por edicao do torneio
 - artilharia baseada nos gols registrados
 - comparativos temporarios e salvos de desempenho entre times e jogadores
 

@@ -30,7 +30,7 @@ ContextMap {
 BoundedContext Participacao implements Participacao {
 	Aggregate ContaUsuario {
 		Service ContaUsuarioServico {
-			void cadastrarConta(@UsuarioId usuario, String nome, String email, String senha);
+			void cadastrarConta(@UsuarioId usuario, String nome, String email, String senha, TipoContaUsuario tipo);
 			void autenticar(String email, String senha);
 			void editarDados(@UsuarioId usuario, String nome, String email);
 			void excluirConta(@UsuarioId usuario);
@@ -43,11 +43,16 @@ BoundedContext Participacao implements Participacao {
 			String nome
 			String email
 			String senha
+			TipoContaUsuario tipo
 
 			Repository ContaUsuarioRepository {
 				@ContaUsuario obter(@UsuarioId usuario);
 				@ContaUsuario buscarPorEmail(String email);
 			}
+		}
+
+		ValueObject TipoContaUsuario {
+			String valor
 		}
 	}
 
@@ -56,6 +61,7 @@ BoundedContext Participacao implements Participacao {
 			void criarTime(@TimeId time, String nome, @UsuarioId responsavel);
 			void editarTime(@TimeId time, @UsuarioId usuario, String nome);
 			void excluirTime(@TimeId time, @UsuarioId usuario);
+			void buscarTimesDisponiveisParaJogador(@UsuarioId jogador);
 			void adicionarJogador(@TimeId time, @UsuarioId usuario, @JogadorId jogador, String nomeJogador);
 			void editarJogador(@TimeId time, @UsuarioId usuario, @JogadorId jogador, String nomeJogador);
 			void removerJogador(@TimeId time, @UsuarioId usuario, @JogadorId jogador);
@@ -117,8 +123,11 @@ BoundedContext Torneio implements Torneio {
 			void removerParticipante(@TorneioId torneio, @UsuarioId organizador, @TimeId time);
 			void abrirSolicitacoes(@TorneioId torneio, @UsuarioId organizador);
 			void fecharSolicitacoes(@TorneioId torneio, @UsuarioId organizador);
+			void gerarEstruturaCompeticao(@TorneioId torneio, @UsuarioId organizador);
+			void gerarEstruturaManual(@TorneioId torneio, @UsuarioId organizador);
 			void iniciarTorneio(@TorneioId torneio, @UsuarioId organizador);
 			void finalizarTorneio(@TorneioId torneio, @UsuarioId organizador);
+			void repetirTorneio(@TorneioId torneio, @UsuarioId organizador);
 		}
 
 		Entity Torneio {
@@ -131,10 +140,19 @@ BoundedContext Torneio implements Torneio {
 			-UsuarioId organizador
 			boolean aceitaSolicitacoes
 			-StatusTorneio status
+			int edicaoAtual
 
 			Repository TorneioRepository {
 				@Torneio obter(@TorneioId id);
 			}
+		}
+
+		Entity HistoricoEdicaoTorneio {
+			aggregateRoot
+
+			-TorneioId torneio
+			int numeroEdicao
+			String nomeTorneio
 		}
 	}
 
@@ -150,7 +168,8 @@ BoundedContext Torneio implements Torneio {
 
 	Aggregate EstruturaCompeticao {
 		Service GeradorEstruturaCompeticaoServico {
-			void gerar(@TorneioId torneio);
+			void gerarPorSorteio(@TorneioId torneio);
+			void gerarManual(@TorneioId torneio);
 		}
 
 		Entity EstruturaCompeticao {
@@ -158,6 +177,7 @@ BoundedContext Torneio implements Torneio {
 
 			-TorneioId torneio
 			String tipo
+			String modoGeracao
 			boolean gerada
 		}
 
@@ -171,6 +191,8 @@ BoundedContext Competicao implements Competicao {
 	Aggregate Partida {
 		Service PartidaServico {
 			void prepararCompeticao(@TorneioId torneio, @UsuarioId organizador);
+			void prepararCompeticaoPorSorteio(@TorneioId torneio, @UsuarioId organizador);
+			void prepararCompeticaoManual(@TorneioId torneio, @UsuarioId organizador);
 			void registrarResultado(@TorneioId torneio, @PartidaId partida, @UsuarioId organizador, @ResultadoPartida resultado);
 			void gerenciarAndamento(@TorneioId torneio);
 			void visualizarClassificacao(@TorneioId torneio);
@@ -301,11 +323,16 @@ BoundedContext Engajamento implements Engajamento {
 
 	Aggregate FeedTorneio {
 		Service FeedTorneioServico {
+			void publicarPostagemSocial(@PublicacaoFeedId publicacao, @UsuarioId autor, String conteudo);
 			void publicarComunicado(@PublicacaoFeedId publicacao, @TorneioId torneio, @UsuarioId organizador, String conteudo);
 			void comentarPartida(@PublicacaoFeedId publicacao, @TorneioId torneio, @PartidaId partida, @UsuarioId usuario, String conteudo);
 			void registrarAtualizacaoAutomatica(@PublicacaoFeedId publicacao, @TorneioId torneio, @PartidaId partida, String conteudo);
 			void editarPublicacao(@PublicacaoFeedId publicacao, @UsuarioId usuario, String conteudo);
 			void removerPublicacao(@PublicacaoFeedId publicacao, @UsuarioId usuario);
+			void curtirPublicacao(@PublicacaoFeedId publicacao, @UsuarioId usuario);
+			void reagirPublicacao(@PublicacaoFeedId publicacao, @UsuarioId usuario, TipoReacaoFeed reacao);
+			void listarFeedGeral();
+			void buscarPorHashtag(String hashtag);
 			void listarFeed(@TorneioId torneio);
 		}
 
@@ -318,11 +345,15 @@ BoundedContext Engajamento implements Engajamento {
 			-UsuarioId autor nullable
 			-PartidaId partida nullable
 			String conteudo
+			String hashtags
+			String midias
 			boolean removida
 
 			Repository FeedTorneioRepository {
 				@PublicacaoFeed obter(@PublicacaoFeedId id);
 				List<PublicacaoFeed> listarPorTorneio(@TorneioId torneio);
+				List<PublicacaoFeed> listarTodos();
+				List<PublicacaoFeed> listarPorHashtag(String hashtag);
 			}
 		}
 
@@ -331,6 +362,54 @@ BoundedContext Engajamento implements Engajamento {
 		}
 
 		ValueObject TipoPublicacaoFeed {
+			String valor
+		}
+
+		ValueObject TipoReacaoFeed {
+			String valor
+		}
+	}
+
+	Aggregate ChatPrivado {
+		Service ChatPrivadoServico {
+			void solicitarConversa(@ConversaPrivadaId conversa, @UsuarioId solicitante, @UsuarioId destinatario);
+			void aprovarSolicitacao(@ConversaPrivadaId conversa, @UsuarioId destinatario);
+			void recusarSolicitacao(@ConversaPrivadaId conversa, @UsuarioId destinatario);
+			void enviarMensagem(@ConversaPrivadaId conversa, @MensagemChatId mensagem, @UsuarioId autor, String conteudo);
+			void listarSolicitadas(@UsuarioId usuario);
+			void listarConversasAprovadas(@UsuarioId usuario);
+		}
+
+		Entity ConversaPrivada {
+			aggregateRoot
+
+			-ConversaPrivadaId id
+			-UsuarioId solicitante
+			-UsuarioId destinatario
+			-StatusConversa status
+
+			Repository ConversaPrivadaRepository {
+				@ConversaPrivada obter(@ConversaPrivadaId id);
+				List<ConversaPrivada> listarPorUsuario(@UsuarioId usuario);
+			}
+		}
+
+		Entity MensagemChat {
+			-MensagemChatId id
+			-UsuarioId autor
+			String conteudo
+			String enviadaEm
+		}
+
+		ValueObject ConversaPrivadaId {
+			int id
+		}
+
+		ValueObject MensagemChatId {
+			int id
+		}
+
+		ValueObject StatusConversa {
 			String valor
 		}
 	}
@@ -415,6 +494,7 @@ BoundedContext Estatisticas implements Estatisticas {
 			void calcularNotaJogador(@TorneioId torneio, @PartidaId partida, @JogadorId jogador);
 			void listarLideresAssistencias(@TorneioId torneio);
 			void obterHistoricoJogador(@TorneioId torneio, @JogadorId jogador);
+			void arquivarEstatisticasDaEdicao(@TorneioId torneio, int numeroEdicao);
 		}
 
 		Entity NotaEstatistica {
@@ -451,6 +531,15 @@ BoundedContext Estatisticas implements Estatisticas {
 			int assistencias
 			int cartoesAmarelos
 			int cartoesVermelhos
+		}
+	}
+
+	Aggregate HistoricoEstatisticoTorneio {
+		Entity HistoricoEstatisticoTorneio {
+			aggregateRoot
+
+			-TorneioId torneio
+			int numeroEdicao
 		}
 	}
 

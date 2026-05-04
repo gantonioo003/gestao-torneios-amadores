@@ -3,12 +3,15 @@ package com.torneios.dominio.engajamento.steps;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
+import com.torneios.dominio.engajamento.chat.StatusConversa;
 import com.torneios.dominio.engajamento.desafio.ResultadoAmistoso;
 import com.torneios.dominio.engajamento.desafio.StatusDesafioAmistoso;
 import com.torneios.dominio.engajamento.EngajamentoFuncionalidade;
 import com.torneios.dominio.engajamento.feed.TipoPublicacaoFeed;
+import com.torneios.dominio.engajamento.feed.TipoReacaoFeed;
 import com.torneios.dominio.engajamento.palpite.OpcaoPalpite;
 
 import io.cucumber.java.pt.Dado;
@@ -25,6 +28,7 @@ public class EngajamentoSteps extends EngajamentoFuncionalidade {
     public void que_o_usuario_esta_autenticado() {
         consultaPalpite.autenticar(USUARIO_ID);
         consultaFeed.autenticar(USUARIO_ID);
+        consultaChat.autenticar(USUARIO_ID);
     }
 
     @Dado("que existe uma partida cadastrada com janela de votacao aberta")
@@ -264,6 +268,133 @@ public class EngajamentoSteps extends EngajamentoFuncionalidade {
     }
 
     // =====================================================================
+    // F4: Gerenciar chat privado com solicitacoes de conversa
+    // =====================================================================
+
+    @Dado("que existe outro usuario cadastrado na plataforma")
+    public void que_existe_outro_usuario_cadastrado_na_plataforma() {
+        consultaChat.cadastrarUsuario(OUTRO_USUARIO_ID);
+    }
+
+    @Dado("que existe uma solicitacao de conversa pendente para o usuario")
+    public void que_existe_solicitacao_de_conversa_pendente_para_usuario() {
+        consultaChat.autenticar(OUTRO_USUARIO_ID);
+        consultaChat.autenticar(USUARIO_ID);
+        conversaPrivada = chatPrivadoServico.solicitarConversa(
+                conversaId(1L), OUTRO_USUARIO_ID, USUARIO_ID);
+    }
+
+    @Dado("que existe uma conversa aprovada entre dois usuarios")
+    public void que_existe_conversa_aprovada_entre_dois_usuarios() {
+        que_existe_solicitacao_de_conversa_pendente_para_usuario();
+        conversaPrivada = chatPrivadoServico.aprovarSolicitacao(conversaPrivada.getId(), USUARIO_ID);
+    }
+
+    @Quando("ele solicitar uma conversa privada com esse usuario")
+    public void ele_solicitar_conversa_privada_com_esse_usuario() {
+        try {
+            conversaPrivada = chatPrivadoServico.solicitarConversa(
+                    conversaId(2L), USUARIO_ID, OUTRO_USUARIO_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele tentar solicitar uma conversa privada com esse usuario")
+    public void ele_tentar_solicitar_conversa_privada_com_esse_usuario() {
+        ele_solicitar_conversa_privada_com_esse_usuario();
+    }
+
+    @Quando("o destinatario aprovar a solicitacao de conversa")
+    public void destinatario_aprovar_solicitacao_conversa() {
+        try {
+            conversaPrivada = chatPrivadoServico.aprovarSolicitacao(conversaPrivada.getId(), USUARIO_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o destinatario recusar a solicitacao de conversa")
+    public void destinatario_recusar_solicitacao_conversa() {
+        try {
+            conversaPrivada = chatPrivadoServico.recusarSolicitacao(conversaPrivada.getId(), USUARIO_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele enviar uma mensagem na conversa aprovada")
+    public void ele_enviar_mensagem_conversa_aprovada() {
+        try {
+            mensagemChat = chatPrivadoServico.enviarMensagem(
+                    conversaPrivada.getId(), mensagemId(1L), USUARIO_ID, "Bora marcar um amistoso?");
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele tentar enviar uma mensagem antes da aprovacao")
+    public void ele_tentar_enviar_mensagem_antes_aprovacao() {
+        try {
+            mensagemChat = chatPrivadoServico.enviarMensagem(
+                    conversaPrivada.getId(), mensagemId(2L), OUTRO_USUARIO_ID, "Mensagem antes do aceite");
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o usuario consultar suas conversas aprovadas")
+    public void usuario_consultar_conversas_aprovadas() {
+        try {
+            conversasPrivadas = chatPrivadoServico.listarConversasAprovadas(USUARIO_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve registrar a conversa como solicitada")
+    public void sistema_deve_registrar_conversa_solicitada() {
+        assertNull(excecaoCapturada);
+        assertNotNull(conversaPrivada);
+        assertEquals(StatusConversa.SOLICITADA, conversaPrivada.getStatus());
+        assertTrue(conversaPrivadaRepositorio.buscarPorId(conversaPrivada.getId()).isPresent());
+    }
+
+    @Entao("deve exibir a conversa na aba de solicitados do destinatario")
+    public void deve_exibir_conversa_solicitados_destinatario() {
+        consultaChat.autenticar(OUTRO_USUARIO_ID);
+        List<?> solicitadas = chatPrivadoServico.listarSolicitadas(OUTRO_USUARIO_ID);
+        assertEquals(1, solicitadas.size());
+    }
+
+    @Entao("o sistema deve liberar a troca de mensagens")
+    public void sistema_deve_liberar_troca_mensagens() {
+        assertNull(excecaoCapturada);
+        assertEquals(StatusConversa.APROVADA, conversaPrivada.getStatus());
+    }
+
+    @Entao("o sistema deve manter a conversa bloqueada para mensagens")
+    public void sistema_deve_manter_conversa_bloqueada_mensagens() {
+        assertNull(excecaoCapturada);
+        assertEquals(StatusConversa.RECUSADA, conversaPrivada.getStatus());
+    }
+
+    @Entao("o sistema deve armazenar a mensagem na conversa")
+    public void sistema_deve_armazenar_mensagem_na_conversa() {
+        assertNull(excecaoCapturada);
+        assertNotNull(mensagemChat);
+        assertEquals(1, conversaPrivada.getMensagens().size());
+    }
+
+    @Entao("o sistema deve listar a conversa no historico do usuario")
+    public void sistema_deve_listar_conversa_historico_usuario() {
+        assertNull(excecaoCapturada);
+        assertNotNull(conversasPrivadas);
+        assertEquals(1, conversasPrivadas.size());
+        assertEquals(StatusConversa.APROVADA, conversasPrivadas.get(0).getStatus());
+    }
+
+    // =====================================================================
     // F10: Gerenciar desafios e amistosos entre times
     // =====================================================================
 
@@ -418,6 +549,26 @@ public class EngajamentoSteps extends EngajamentoFuncionalidade {
     // F12: Gerenciar comunicados e feed social do torneio
     // =====================================================================
 
+    @Quando("ele publicar uma postagem no feed social com hashtag e midia")
+    public void ele_publicar_postagem_feed_social_com_hashtag_midia() {
+        try {
+            publicacaoFeed = feedTorneioServico.publicarPostagemSocial(
+                    publicacaoId(20L), USUARIO_ID, "Hoje tem pelada pesada #CopaBairro",
+                    List.of("CopaBairro"), List.of("foto-jogo.jpg"));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve armazenar a postagem no feed geral")
+    public void sistema_deve_armazenar_postagem_feed_geral() {
+        assertNull(excecaoCapturada);
+        assertEquals(TipoPublicacaoFeed.POSTAGEM_SOCIAL, publicacaoFeed.getTipo());
+        assertTrue(publicacaoFeed.getHashtags().contains("copabairro"));
+        assertEquals(1, publicacaoFeed.getMidias().size());
+        assertTrue(feedTorneioServico.listarFeedGeral().contains(publicacaoFeed));
+    }
+
     @Dado("que existe um torneio com organizador autenticado")
     public void que_existe_torneio_com_organizador_autenticado() {
         configurarTorneioComPartidaNoFeed();
@@ -548,6 +699,74 @@ public class EngajamentoSteps extends EngajamentoFuncionalidade {
         assertTrue(publicacoesFeed.stream().anyMatch(publicacao -> publicacao.getTipo() == TipoPublicacaoFeed.COMUNICADO_OFICIAL));
         assertTrue(publicacoesFeed.stream().anyMatch(publicacao -> publicacao.getTipo() == TipoPublicacaoFeed.COMENTARIO));
         assertTrue(publicacoesFeed.stream().anyMatch(publicacao -> publicacao.getTipo() == TipoPublicacaoFeed.ATUALIZACAO_AUTOMATICA));
+    }
+
+    @Dado("que existe uma postagem publicada no feed social geral")
+    public void que_existe_postagem_publicada_feed_social_geral() {
+        consultaFeed.autenticar(USUARIO_ID);
+        publicacaoFeed = feedTorneioServico.publicarPostagemSocial(
+                publicacaoId(30L), USUARIO_ID, "Unidos do Bairro venceu bonito #CopaBairro",
+                List.of("CopaBairro"), List.of("foto-vitoria.jpg"));
+    }
+
+    @Quando("o visitante acessar o feed social geral")
+    public void visitante_acessar_feed_social_geral() {
+        publicacoesFeed = feedTorneioServico.listarFeedGeral();
+    }
+
+    @Entao("o sistema deve listar as publicacoes publicas")
+    public void sistema_deve_listar_publicacoes_publicas() {
+        assertNull(excecaoCapturada);
+        assertFalse(publicacoesFeed.isEmpty());
+    }
+
+    @Quando("ele curtir e reagir a publicacao")
+    public void ele_curtir_e_reagir_publicacao() {
+        try {
+            publicacaoFeed = feedTorneioServico.curtirPublicacao(publicacaoFeed.getId(), USUARIO_ID);
+            publicacaoFeed = feedTorneioServico.reagirPublicacao(
+                    publicacaoFeed.getId(), USUARIO_ID, TipoReacaoFeed.COMEMORACAO);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve registrar a curtida e a reacao")
+    public void sistema_deve_registrar_curtida_e_reacao() {
+        assertNull(excecaoCapturada);
+        assertEquals(1, publicacaoFeed.getQuantidadeCurtidas());
+        assertEquals(TipoReacaoFeed.COMEMORACAO, publicacaoFeed.getReacoes().get(USUARIO_ID));
+    }
+
+    @Quando("ele tentar curtir a publicacao")
+    public void ele_tentar_curtir_publicacao() {
+        try {
+            publicacaoFeed = feedTorneioServico.curtirPublicacao(publicacaoFeed.getId(), null);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Dado("que existem postagens com hashtags diferentes no feed social geral")
+    public void que_existem_postagens_hashtags_diferentes_feed() {
+        consultaFeed.autenticar(USUARIO_ID);
+        feedTorneioServico.publicarPostagemSocial(
+                publicacaoId(40L), USUARIO_ID, "Jogo pegado #CopaBairro",
+                List.of("CopaBairro"), List.of());
+        feedTorneioServico.publicarPostagemSocial(
+                publicacaoId(41L), USUARIO_ID, "Treino aberto #Amistoso",
+                List.of("Amistoso"), List.of());
+    }
+
+    @Quando("o usuario filtrar o feed por uma hashtag")
+    public void usuario_filtrar_feed_por_hashtag() {
+        publicacoesFeed = feedTorneioServico.buscarPorHashtag("CopaBairro");
+    }
+
+    @Entao("o sistema deve listar apenas publicacoes daquela hashtag")
+    public void sistema_deve_listar_apenas_publicacoes_da_hashtag() {
+        assertEquals(1, publicacoesFeed.size());
+        assertTrue(publicacoesFeed.get(0).getHashtags().contains("copabairro"));
     }
 
     @Entao("o sistema deve impedir a operacao")

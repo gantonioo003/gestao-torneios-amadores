@@ -10,12 +10,18 @@ public class ContaUsuario {
     private String nome;
     private String email;
     private String senha;
+    private final TipoContaUsuario tipo;
 
     public ContaUsuario(UsuarioId id, String nome, String email, String senha) {
+        this(id, nome, email, senha, TipoContaUsuario.ORGANIZADOR);
+    }
+
+    public ContaUsuario(UsuarioId id, String nome, String email, String senha, TipoContaUsuario tipo) {
         this.id = Objects.requireNonNull(id, "O id da conta e obrigatorio.");
         this.nome = validarNome(nome);
         this.email = validarEmail(email);
         this.senha = validarSenha(senha);
+        this.tipo = Objects.requireNonNull(tipo, "O tipo da conta e obrigatorio.");
     }
 
     public UsuarioId getId() {
@@ -28,6 +34,18 @@ public class ContaUsuario {
 
     public String getEmail() {
         return email;
+    }
+
+    public TipoContaUsuario getTipo() {
+        return tipo;
+    }
+
+    public boolean ehJogador() {
+        return tipo == TipoContaUsuario.JOGADOR;
+    }
+
+    public boolean ehOrganizador() {
+        return tipo == TipoContaUsuario.ORGANIZADOR;
     }
 
     public boolean senhaConfere(String senhaInformada) {

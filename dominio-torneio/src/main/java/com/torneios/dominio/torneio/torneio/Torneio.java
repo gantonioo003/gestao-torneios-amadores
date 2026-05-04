@@ -1,6 +1,8 @@
 package com.torneios.dominio.torneio.torneio;
 
 import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,6 +25,8 @@ public class Torneio {
     private final FormatoEquipe formatoEquipe;
     private final UsuarioId organizadorId;
     private final Set<ParticipanteTorneio> participantesAprovados;
+    private final List<HistoricoEdicaoTorneio> historicoEdicoes;
+    private int edicaoAtual;
     private boolean aceitaSolicitacoes;
     private StatusTorneio status;
 
@@ -40,6 +44,8 @@ public class Torneio {
         this.aceitaSolicitacoes = aceitaSolicitacoes;
         this.status = StatusTorneio.CONFIGURADO;
         this.participantesAprovados = new LinkedHashSet<>();
+        this.historicoEdicoes = new ArrayList<>();
+        this.edicaoAtual = 1;
     }
 
     public TorneioId getId() {
@@ -72,6 +78,14 @@ public class Torneio {
 
     public Set<ParticipanteTorneio> getParticipantesAprovados() {
         return Set.copyOf(participantesAprovados);
+    }
+
+    public int getEdicaoAtual() {
+        return edicaoAtual;
+    }
+
+    public List<HistoricoEdicaoTorneio> getHistoricoEdicoes() {
+        return List.copyOf(historicoEdicoes);
     }
 
     public void renomear(String nome) {
@@ -140,6 +154,27 @@ public class Torneio {
             throw new OperacaoNaoPermitidaException("O torneio so pode ser finalizado apos ser iniciado.");
         }
         this.status = StatusTorneio.FINALIZADO;
+    }
+
+    public HistoricoEdicaoTorneio repetirComoNovaEdicao(boolean abrirSolicitacoes) {
+        if (status != StatusTorneio.FINALIZADO) {
+            throw new OperacaoNaoPermitidaException(
+                    "O torneio so pode ser repetido depois de finalizar a edicao atual.");
+        }
+
+        HistoricoEdicaoTorneio historico = new HistoricoEdicaoTorneio(
+                id,
+                edicaoAtual,
+                nome,
+                participantesAprovados.stream()
+                        .map(ParticipanteTorneio::getTimeId)
+                        .toList());
+        historicoEdicoes.add(historico);
+        participantesAprovados.clear();
+        edicaoAtual++;
+        aceitaSolicitacoes = abrirSolicitacoes;
+        status = StatusTorneio.CONFIGURADO;
+        return historico;
     }
 
     public boolean estaDisponivelParaVisualizacao() {

@@ -72,6 +72,10 @@ public class EstatisticaServico {
         return eventoEstatisticoRepositorio.listarPorJogadorNoTorneio(jogadorId, torneioId);
     }
 
+    public HistoricoEstatisticoTorneio arquivarEstatisticasDaEdicao(TorneioId torneioId, int numeroEdicao) {
+        return consolidarTorneio(torneioId).arquivarEdicao(numeroEdicao);
+    }
+
     private List<EstatisticaJogador> estatisticaTorneioComoLista(EstatisticaTorneio estatisticaTorneio) {
         return estatisticaTorneio.getEstatisticasJogadores().stream().toList();
     }

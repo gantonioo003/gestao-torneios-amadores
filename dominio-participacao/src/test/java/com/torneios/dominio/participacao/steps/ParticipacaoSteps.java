@@ -17,6 +17,7 @@ import com.torneios.dominio.participacao.acesso.AcessoGerenciamentoTorneioServic
 import com.torneios.dominio.participacao.acesso.AutenticacaoServico;
 import com.torneios.dominio.participacao.acesso.ContaUsuario;
 import com.torneios.dominio.participacao.acesso.ContaUsuarioServico;
+import com.torneios.dominio.participacao.acesso.TipoContaUsuario;
 import com.torneios.dominio.participacao.acesso.VisualizacaoTorneioServico;
 import com.torneios.dominio.participacao.acesso.TorneioDisponivel;
 import com.torneios.dominio.participacao.responsavel.ConsultaUsuario;
@@ -169,6 +170,28 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         }
     }
 
+    @Quando("o usuario cadastrar uma nova conta do tipo jogador")
+    public void usuario_cadastrar_nova_conta_tipo_jogador() {
+        try {
+            contaCapturada = contaUsuarioServico.cadastrarConta(
+                    USUARIO_AUTENTICADO_ID, "Jogador Livre", EMAIL_USUARIO, SENHA_USUARIO,
+                    TipoContaUsuario.JOGADOR);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o usuario cadastrar uma nova conta do tipo organizador")
+    public void usuario_cadastrar_nova_conta_tipo_organizador() {
+        try {
+            contaCapturada = contaUsuarioServico.cadastrarConta(
+                    USUARIO_AUTENTICADO_ID, "Organizador", EMAIL_USUARIO, SENHA_USUARIO,
+                    TipoContaUsuario.ORGANIZADOR);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
     @Quando("ele informar email e senha validos")
     public void ele_informar_email_e_senha_validos() {
         try {
@@ -223,6 +246,20 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         assertNotNull(contaCapturada);
         assertEquals(USUARIO_AUTENTICADO_ID, contaCapturada.getId());
         assertTrue(contaUsuarioRepositorio.buscarPorEmail(EMAIL_USUARIO).isPresent());
+    }
+
+    @Entao("o sistema deve criar a conta como jogador")
+    public void sistema_deve_criar_conta_como_jogador() {
+        sistema_deve_criar_conta_usuario();
+        assertEquals(TipoContaUsuario.JOGADOR, contaCapturada.getTipo());
+        assertTrue(contaCapturada.ehJogador());
+    }
+
+    @Entao("o sistema deve criar a conta como organizador")
+    public void sistema_deve_criar_conta_como_organizador() {
+        sistema_deve_criar_conta_usuario();
+        assertEquals(TipoContaUsuario.ORGANIZADOR, contaCapturada.getTipo());
+        assertTrue(contaCapturada.ehOrganizador());
     }
 
     @Entao("o sistema deve autenticar o usuario")

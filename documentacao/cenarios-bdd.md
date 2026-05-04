@@ -29,6 +29,8 @@ Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participac
 
 Cenarios principais:
 - cadastrar nova conta de usuario
+- cadastrar conta do tipo jogador
+- cadastrar conta do tipo organizador
 - realizar login com email e senha validos
 - impedir login com senha incorreta
 - editar dados da conta
@@ -37,34 +39,41 @@ Cenarios principais:
 
 ---
 
-### F3. Gerenciar candidatura de time em torneio aberto
+### F3. Gerenciar inscricoes e participantes do torneio
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F3-gerenciar-candidatura-de-time-em-torneio-aberto.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F3-gerenciar-inscricoes-e-participantes-do-torneio.feature
 
 Cenarios principais:
 - enviar candidatura com time cadastrado
 - acompanhar status das candidaturas do time
 - cancelar candidatura pendente
 - impedir cancelamento de candidatura ja avaliada
+- aprovar solicitacao e incluir time na lista final
+- rejeitar solicitacao de participacao
+- remover time aprovado antes do inicio do torneio
 - impedir candidatura sem time cadastrado
 - impedir candidatura de usuario nao autenticado
 - impedir candidatura em torneio fechado
 - impedir candidatura duplicada no mesmo torneio
-
----
-
-### F4. Gerenciar inscricoes e lista final de participantes do torneio
-Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F4-gerenciar-inscricoes-e-participantes-do-torneio.feature
-
-Cenarios principais:
-- aprovar solicitacao e incluir time na lista final
-- rejeitar solicitacao de participacao
-- remover time aprovado antes do inicio do torneio
 - impedir gerenciamento por usuario que nao e organizador
 - impedir alteracao da lista final apos inicio do torneio
 - visualizar lista de times candidatos pendentes
 - informar ausencia de solicitacoes pendentes para avaliacao
+
+---
+
+### F4. Gerenciar chat privado com solicitacoes de conversa
+Dominio: dominio-engajamento
+Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F4-gerenciar-chat-privado-com-solicitacoes-de-conversa.feature
+
+Cenarios principais:
+- solicitar conversa privada com outro usuario
+- aprovar solicitacao de conversa
+- recusar solicitacao de conversa
+- enviar mensagem em conversa aprovada
+- impedir mensagem antes da aprovacao da conversa
+- consultar historico de conversas aprovadas
+- impedir solicitacao de conversa por usuario nao autenticado
 
 ---
 
@@ -140,6 +149,9 @@ Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/F9-cria
 
 Cenarios principais:
 - criar torneio com formato de competicao e formato de equipe validos
+- gerar estrutura do torneio por sorteio
+- gerar estrutura do torneio por montagem manual
+- repetir torneio mantendo historico da edicao anterior
 - impedir criacao de torneio sem formato de competicao
 - impedir criacao de torneio sem definicao da quantidade de jogadores por equipe
 - definir se o torneio sera aberto para solicitacao ou com participantes definidos
@@ -167,6 +179,8 @@ Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F
 
 Cenarios principais:
 - preparar competicao por pontos corridos
+- preparar competicao por sorteio automatico
+- preparar competicao com montagem manual dos confrontos
 - preparar competicao mata-mata
 - preparar competicao com fase de grupos
 - impedir preparacao sem estrutura previa da competicao
@@ -178,6 +192,7 @@ Dominio: dominio-engajamento
 Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F12-gerenciar-comunicados-e-feed-social-do-torneio.feature
 
 Cenarios principais:
+- publicar postagem no feed social geral com hashtag e midia
 - publicar comunicado oficial no feed do torneio
 - impedir comunicado oficial por usuario que nao e organizador
 - comentar sobre uma partida do torneio
@@ -185,6 +200,10 @@ Cenarios principais:
 - publicar atualizacao automatica sobre jogo
 - editar comentario pelo proprio autor
 - listar publicacoes do feed do torneio
+- visitante visualizar feed geral sem interagir
+- usuario autenticado curtir e reagir em publicacao do feed
+- impedir interacao de visitante no feed
+- filtrar publicacoes por hashtag
 
 ---
 
@@ -243,7 +262,7 @@ Cenarios principais:
 
 ## Regras de negocio cobertas
 
-### Conta e engajamento inicial
+### Conta, comunicacao e engajamento inicial
 - RN01. Usuarios autenticados e visitantes identificados podem registrar palpites publicos.
 - RN02. Tipos de palpite suportados: vencedor de partida, campeao, artilheiro e lider de assistencias.
 - RN03. Cada votante identificado faz no maximo um palpite por evento alvo.
@@ -254,82 +273,100 @@ Cenarios principais:
 - RN08. Apuracao automatica de acerto apos a conclusao do evento alvo.
 - RN09. Palpites apurados sao imutaveis.
 - RN10. Palpites de visitantes tambem devem ser salvos para contagem e percentuais.
-- RN11. Usuario pode cadastrar conta informando nome, email e senha.
+- RN11. Usuario pode cadastrar conta informando nome, email, senha e tipo de conta.
 - RN12. Email de conta de usuario deve ser unico.
 - RN13. Login exige email e senha validos.
 - RN14. Usuario pode editar os dados da propria conta.
 - RN15. Usuario pode excluir a propria conta.
+- RN16. A conta de usuario pode ser do tipo jogador ou organizador.
+- RN17. Contas do tipo jogador podem usar a plataforma para buscar times e acompanhar oportunidades de participacao.
+- RN18. Contas do tipo organizador podem representar responsaveis por times ou organizadores de torneios.
+- RN19. Apenas usuarios autenticados podem solicitar conversas privadas.
+- RN20. Solicitacao de conversa fica salva na aba de solicitados do destinatario.
+- RN21. Destinatario pode aprovar ou recusar uma solicitacao de conversa.
+- RN22. Mensagens privadas so podem ser enviadas apos aprovacao da conversa.
+- RN23. Apenas participantes podem enviar mensagens e consultar conversas aprovadas.
+- RN24. Usuarios nao autenticados nao podem usar o chat.
+- RN25. Sistema impede conversa duplicada quando ja existir solicitacao ou conversa aprovada.
 
 ### Participacao no torneio
-- RN16. Apenas usuarios autenticados podem gerenciar candidaturas de participacao em torneios.
-- RN17. Usuario deve possuir time cadastrado para enviar candidatura.
-- RN18. Torneio pode ser aberto ou fechado para participacao.
-- RN19. Usuario pode acompanhar o status das candidaturas enviadas por ele.
-- RN20. Usuario pode cancelar uma candidatura enquanto ela estiver pendente.
-- RN21. Candidaturas ja avaliadas pelo organizador nao podem ser canceladas pelo solicitante.
-- RN22. Apenas organizador pode aprovar, rejeitar e ajustar a lista final de participantes antes do inicio do torneio.
-- RN23. Time so participa se estiver inscrito ou aprovado.
+- RN26. Apenas usuarios autenticados podem gerenciar inscricoes de participacao em torneios.
+- RN27. Usuario deve possuir time cadastrado para enviar candidatura.
+- RN28. Torneio pode ser aberto ou fechado para participacao.
+- RN29. Usuario pode acompanhar o status das candidaturas enviadas por ele.
+- RN30. Usuario pode cancelar uma candidatura enquanto ela estiver pendente.
+- RN31. Candidaturas ja avaliadas pelo organizador nao podem ser canceladas pelo solicitante.
+- RN32. Apenas organizador pode aprovar, rejeitar e ajustar a lista final de participantes antes do inicio do torneio.
+- RN33. Time so participa se estiver inscrito ou aprovado.
 
 ### Times, elenco e desempenho
-- RN24. Apenas usuario autenticado responsavel pelo time pode cadastrar, editar, excluir ou consultar informacoes protegidas desse time.
-- RN25. Time vinculado a torneio nao pode ser excluido quando o vinculo impedir remocao segura.
-- RN26. Jogador pertence a um time.
-- RN27. Tecnico associado ao time participante.
-- RN28. Apenas jogadores validos podem ter eventos registrados.
-- RN29. Comparativos podem ser gerados temporariamente por estatisticas, historico de partidas e rankings.
-- RN30. Comparativos temporarios nao sao salvos automaticamente.
-- RN31. Usuario pode salvar um comparativo escolhido.
-- RN32. Usuario pode consultar comparativos salvos.
-- RN33. Usuario pode atualizar comparativo salvo quando os dados mudarem.
-- RN34. Usuario pode excluir comparativo salvo.
-- RN35. O sistema deve impedir comparativo sem dados estatisticos suficientes.
-- RN36. Escalacao e opcional quando o torneio ou a partida nao exigirem esse detalhamento.
-- RN37. Escalacao definida pelo responsavel do time ou pelo tecnico.
-- RN38. Esquema tatico compativel com o formato de equipe.
-- RN39. Quantidade de titulares igual ao formato de equipe.
-- RN40. Cada titular associado a uma posicao do esquema.
-- RN41. Titulares e reservas devem pertencer ao elenco do time.
-- RN42. Sem limite maximo de reservas.
-- RN43. Mesmo jogador nao pode ser titular e reserva simultaneamente.
-- RN44. Escalacao editavel ate o inicio da partida.
-- RN45. Se a partida ou o torneio exigir escalacao, os dois times devem informar escalacao antes do inicio.
-- RN46. Se um time informar escalacao em uma partida opcional, o outro time tambem deve informar para manter equilibrio de dados.
+- RN34. Apenas usuario autenticado responsavel pelo time pode cadastrar, editar, excluir ou consultar informacoes protegidas desse time.
+- RN35. Time vinculado a torneio nao pode ser excluido quando o vinculo impedir remocao segura.
+- RN36. Jogador pertence a um time.
+- RN37. Tecnico associado ao time participante.
+- RN38. Apenas jogadores validos podem ter eventos registrados.
+- RN39. Comparativos podem ser gerados temporariamente por estatisticas, historico de partidas e rankings.
+- RN40. Comparativos temporarios nao sao salvos automaticamente.
+- RN41. Usuario pode salvar um comparativo escolhido.
+- RN42. Usuario pode consultar comparativos salvos.
+- RN43. Usuario pode atualizar comparativo salvo quando os dados mudarem.
+- RN44. Usuario pode excluir comparativo salvo.
+- RN45. O sistema deve impedir comparativo sem dados estatisticos suficientes.
+- RN46. Escalacao e opcional quando o torneio ou a partida nao exigirem esse detalhamento.
+- RN47. Escalacao definida pelo responsavel do time ou pelo tecnico.
+- RN48. Esquema tatico compativel com o formato de equipe.
+- RN49. Quantidade de titulares igual ao formato de equipe.
+- RN50. Cada titular associado a uma posicao do esquema.
+- RN51. Titulares e reservas devem pertencer ao elenco do time.
+- RN52. Sem limite maximo de reservas.
+- RN53. Mesmo jogador nao pode ser titular e reserva simultaneamente.
+- RN54. Escalacao editavel ate o inicio da partida.
+- RN55. Se a partida ou o torneio exigir escalacao, os dois times devem informar escalacao antes do inicio.
+- RN56. Se um time informar escalacao em uma partida opcional, o outro time tambem deve informar para manter equilibrio de dados.
 
 ### Organizacao e comunicacao
-- RN47. Apenas usuarios autenticados podem criar torneios.
-- RN48. Todo torneio deve possuir formato definido.
-- RN49. Formatos validos: mata-mata, grupos + mata-mata, pontos corridos, final unica.
-- RN50. Todo torneio possui organizador responsavel.
-- RN51. Torneio so pode iniciar com participantes suficientes.
-- RN52. A preparacao da competicao deve gerar estrutura, rodadas e partidas de acordo com o formato definido.
-- RN53. O torneio deve definir a quantidade de jogadores por equipe.
-- RN54. As partidas devem respeitar a quantidade de jogadores definida.
-- RN55. O uso de desafios e amistosos e opcional e nao impede o funcionamento dos torneios oficiais.
-- RN56. Apenas usuario autenticado responsavel por um time pode propor desafio amistoso.
-- RN57. Um time nao pode desafiar ele mesmo.
-- RN58. O responsavel pelo time desafiado pode aceitar ou recusar o convite.
-- RN59. Responsaveis pelos times envolvidos podem reagendar data e local do amistoso antes do encerramento.
-- RN60. Responsaveis pelos times envolvidos podem registrar o resultado do amistoso aceito.
-- RN61. Resultados de amistosos ficam no historico dos times envolvidos.
-- RN62. Apenas o organizador do torneio pode publicar comunicados oficiais.
-- RN63. Usuarios autenticados podem comentar em partidas pertencentes ao torneio.
-- RN64. Usuarios nao autenticados nao podem comentar no feed social.
-- RN65. Atualizacoes automaticas sobre jogos podem ser publicadas pelo sistema apos eventos relevantes da partida.
-- RN66. Comentarios podem ser editados pelo proprio autor.
+- RN57. Apenas usuarios autenticados podem criar torneios.
+- RN58. Todo torneio deve possuir formato definido.
+- RN59. Formatos validos: mata-mata, grupos + mata-mata, pontos corridos, final unica.
+- RN60. Todo torneio possui organizador responsavel.
+- RN61. Torneio so pode iniciar com participantes suficientes.
+- RN62. A preparacao da competicao deve gerar estrutura, rodadas e partidas de acordo com o formato definido.
+- RN63. O torneio deve definir a quantidade de jogadores por equipe.
+- RN64. As partidas devem respeitar a quantidade de jogadores definida.
+- RN65. O uso de desafios e amistosos e opcional e nao impede o funcionamento dos torneios oficiais.
+- RN66. Apenas usuario autenticado responsavel por um time pode propor desafio amistoso.
+- RN67. Um time nao pode desafiar ele mesmo.
+- RN68. O responsavel pelo time desafiado pode aceitar ou recusar o convite.
+- RN69. Responsaveis pelos times envolvidos podem reagendar data e local do amistoso antes do encerramento.
+- RN70. Responsaveis pelos times envolvidos podem registrar o resultado do amistoso aceito.
+- RN71. Resultados de amistosos ficam no historico dos times envolvidos.
+- RN72. Apenas o organizador do torneio pode publicar comunicados oficiais.
+- RN73. Usuarios autenticados podem comentar em partidas pertencentes ao torneio.
+- RN74. Usuarios nao autenticados nao podem comentar no feed social.
+- RN75. Atualizacoes automaticas sobre jogos podem ser publicadas pelo sistema apos eventos relevantes da partida.
+- RN76. Comentarios podem ser editados pelo proprio autor.
+- RN77. O feed social geral pode ser visualizado por visitantes, mas apenas usuarios autenticados podem publicar, comentar, curtir ou reagir.
+- RN78. Publicacoes do feed social podem conter texto, midias e hashtags.
+- RN79. O feed social pode ser filtrado por hashtag para acompanhar assuntos, torneios, times ou peladas especificas.
+- RN80. A estrutura e a preparacao da competicao podem ser feitas por sorteio automatico ou por montagem manual do organizador.
+- RN81. A montagem manual deve utilizar apenas times aprovados no torneio.
+- RN82. Um torneio finalizado pode ser repetido como nova edicao, mantendo o historico da edicao anterior.
+- RN83. Ao repetir um torneio, os participantes da nova edicao devem ser definidos novamente.
+- RN84. As estatisticas da edicao anterior devem permanecer arquivadas antes de reiniciar o ciclo estatistico da nova edicao.
 
 ### Partidas, andamento e estatisticas
-- RN67. Partida pertence a um torneio e dois times validos.
-- RN68. Apenas partidas validas geram impacto no sistema.
-- RN69. Resultado atualiza classificacao, chaveamento e status da partida automaticamente.
-- RN70. Nao permitir resultados invalidos.
-- RN71. O resultado da partida pode ser registrado sem eventos estatisticos.
-- RN72. Registrar gols, assistencias, cartoes e substituicoes quando desejado.
-- RN73. Nota estatistica calculada automaticamente quando houver eventos.
-- RN74. Nota baseada em formula com pesos.
-- RN75. Considera eventos basicos na versao inicial.
-- RN76. Eventos positivos e negativos afetam a nota.
-- RN77. Artilharia atualizada automaticamente quando houver gols registrados.
-- RN78. Na ausencia de eventos, apenas o placar oficial da partida deve ser exibido.
-- RN79. Eventos da sumula estatistica podem ser corrigidos ou removidos pelo organizador.
-- RN80. A consolidacao das estatisticas atualiza notas, artilharia, lideres de assistencias e historico dos jogadores.
-- RN81. Substituicao so pode ser registrada quando a partida possui escalacao.
+- RN85. Partida pertence a um torneio e dois times validos.
+- RN86. Apenas partidas validas geram impacto no sistema.
+- RN87. Resultado atualiza classificacao, chaveamento e status da partida automaticamente.
+- RN88. Nao permitir resultados invalidos.
+- RN89. O resultado da partida pode ser registrado sem eventos estatisticos.
+- RN90. Registrar gols, assistencias, cartoes e substituicoes quando desejado.
+- RN91. Nota estatistica calculada automaticamente quando houver eventos.
+- RN92. Nota baseada em formula com pesos.
+- RN93. Considera eventos basicos na versao inicial.
+- RN94. Eventos positivos e negativos afetam a nota.
+- RN95. Artilharia atualizada automaticamente quando houver gols registrados.
+- RN96. Na ausencia de eventos, apenas o placar oficial da partida deve ser exibido.
+- RN97. Eventos da sumula estatistica podem ser corrigidos ou removidos pelo organizador.
+- RN98. A consolidacao das estatisticas atualiza notas, artilharia, lideres de assistencias e historico dos jogadores.
+- RN99. Substituicao so pode ser registrada quando a partida possui escalacao.

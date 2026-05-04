@@ -34,6 +34,18 @@ public class FeedTorneioServico {
         return publicacao;
     }
 
+    public PublicacaoFeed publicarPostagemSocial(PublicacaoFeedId publicacaoId,
+                                                 UsuarioId autorId,
+                                                 String conteudo,
+                                                 List<String> hashtags,
+                                                 List<String> midias) {
+        validarUsuarioAutenticado(autorId);
+        PublicacaoFeed publicacao = PublicacaoFeed.postagemSocial(
+                publicacaoId, autorId, conteudo, hashtags, midias);
+        feedTorneioRepositorio.salvar(publicacao);
+        return publicacao;
+    }
+
     public PublicacaoFeed comentarPartida(PublicacaoFeedId publicacaoId,
                                           TorneioId torneioId,
                                           PartidaId partidaId,
@@ -75,9 +87,39 @@ public class FeedTorneioServico {
         feedTorneioRepositorio.salvar(publicacao);
     }
 
+    public PublicacaoFeed curtirPublicacao(PublicacaoFeedId publicacaoId, UsuarioId usuarioId) {
+        validarUsuarioAutenticado(usuarioId);
+        PublicacaoFeed publicacao = obterPublicacao(publicacaoId);
+        publicacao.curtir(usuarioId);
+        feedTorneioRepositorio.salvar(publicacao);
+        return publicacao;
+    }
+
+    public PublicacaoFeed reagirPublicacao(PublicacaoFeedId publicacaoId,
+                                           UsuarioId usuarioId,
+                                           TipoReacaoFeed tipoReacaoFeed) {
+        validarUsuarioAutenticado(usuarioId);
+        PublicacaoFeed publicacao = obterPublicacao(publicacaoId);
+        publicacao.reagir(usuarioId, tipoReacaoFeed);
+        feedTorneioRepositorio.salvar(publicacao);
+        return publicacao;
+    }
+
     public List<PublicacaoFeed> listarFeed(TorneioId torneioId) {
         Objects.requireNonNull(torneioId, "O torneio do feed e obrigatorio.");
         return feedTorneioRepositorio.listarPorTorneio(torneioId).stream()
+                .filter(publicacao -> !publicacao.estaRemovida())
+                .toList();
+    }
+
+    public List<PublicacaoFeed> listarFeedGeral() {
+        return feedTorneioRepositorio.listarTodos().stream()
+                .filter(publicacao -> !publicacao.estaRemovida())
+                .toList();
+    }
+
+    public List<PublicacaoFeed> buscarPorHashtag(String hashtag) {
+        return feedTorneioRepositorio.listarPorHashtag(hashtag).stream()
                 .filter(publicacao -> !publicacao.estaRemovida())
                 .toList();
     }

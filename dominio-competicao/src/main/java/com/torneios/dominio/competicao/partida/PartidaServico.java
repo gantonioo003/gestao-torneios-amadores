@@ -16,6 +16,7 @@ import com.torneios.dominio.competicao.chaveamento.ChaveamentoServico;
 import com.torneios.dominio.competicao.classificacao.Classificacao;
 import com.torneios.dominio.competicao.classificacao.ClassificacaoServico;
 import com.torneios.dominio.competicao.geracao.GeradorPartidasServico;
+import com.torneios.dominio.competicao.geracao.ModoPreparacaoCompeticao;
 import com.torneios.dominio.competicao.geracao.PreparacaoCompeticao;
 import com.torneios.dominio.competicao.resultado.ResultadoPartida;
 import com.torneios.dominio.competicao.rodada.Rodada;
@@ -54,6 +55,23 @@ public class PartidaServico {
     }
 
     public PreparacaoCompeticao prepararCompeticao(TorneioId torneioId, UsuarioId usuarioId) {
+        return prepararCompeticao(torneioId, usuarioId, ModoPreparacaoCompeticao.SORTEIO, List.of());
+    }
+
+    public PreparacaoCompeticao prepararCompeticaoPorSorteio(TorneioId torneioId, UsuarioId usuarioId) {
+        return prepararCompeticao(torneioId, usuarioId, ModoPreparacaoCompeticao.SORTEIO, List.of());
+    }
+
+    public PreparacaoCompeticao prepararCompeticaoManual(TorneioId torneioId,
+                                                         UsuarioId usuarioId,
+                                                         List<TimeId> ordemManualParticipantes) {
+        return prepararCompeticao(torneioId, usuarioId, ModoPreparacaoCompeticao.MANUAL, ordemManualParticipantes);
+    }
+
+    private PreparacaoCompeticao prepararCompeticao(TorneioId torneioId,
+                                                    UsuarioId usuarioId,
+                                                    ModoPreparacaoCompeticao modoPreparacao,
+                                                    List<TimeId> ordemManualParticipantes) {
         validarOrganizador(torneioId, usuarioId);
         if (!consultaCompeticaoTorneio.estruturaGerada(torneioId)) {
             throw new OperacaoNaoPermitidaException("Nao e permitido preparar a competicao sem estrutura previa.");
@@ -63,16 +81,20 @@ public class PartidaServico {
         int quantidadeJogadoresPorEquipe = consultaCompeticaoTorneio.obterQuantidadeJogadoresPorEquipe(torneioId);
         List<TimeId> participantes = consultaCompeticaoTorneio.listarParticipantesAprovados(torneioId);
         List<List<TimeId>> grupos = consultaCompeticaoTorneio.listarGrupos(torneioId);
+        List<TimeId> participantesDaPreparacao = modoPreparacao == ModoPreparacaoCompeticao.MANUAL
+                ? validarOrdemManual(participantes, ordemManualParticipantes)
+                : participantes;
 
         List<Partida> partidas = geradorPartidasServico.gerar(
                 torneioId,
                 formatoTorneio,
                 quantidadeJogadoresPorEquipe,
-                participantes,
-                grupos);
+                participantesDaPreparacao,
+                grupos,
+                modoPreparacao);
         partidas.forEach(partidaRepositorio::salvar);
         List<Rodada> rodadas = geradorPartidasServico.distribuirEmRodadas(torneioId, partidas);
-        return new PreparacaoCompeticao(torneioId, partidas, rodadas);
+        return new PreparacaoCompeticao(torneioId, modoPreparacao, partidas, rodadas);
     }
 
     public Partida obterPartida(PartidaId partidaId) {
@@ -152,5 +174,18 @@ public class PartidaServico {
             throw new RegraDeNegocioException(
                     "Nao e permitido registrar resultado para times que nao pertencem ao torneio.");
         }
+    }
+
+    private List<TimeId> validarOrdemManual(List<TimeId> participantes, List<TimeId> ordemManualParticipantes) {
+        if (ordemManualParticipantes == null || ordemManualParticipantes.size() != participantes.size()) {
+            throw new RegraDeNegocioException(
+                    "A preparacao manual deve informar todos os participantes aprovados.");
+        }
+        if (!participantes.containsAll(ordemManualParticipantes)
+                || !ordemManualParticipantes.containsAll(participantes)) {
+            throw new RegraDeNegocioException(
+                    "A preparacao manual so pode usar participantes aprovados.");
+        }
+        return ordemManualParticipantes;
     }
 }

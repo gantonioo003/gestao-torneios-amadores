@@ -14,5 +14,7 @@ public interface TimeRepositorio {
 
     List<Time> listarPorResponsavel(UsuarioId usuarioId);
 
+    List<Time> listarTodos();
+
     void remover(TimeId timeId);
 }

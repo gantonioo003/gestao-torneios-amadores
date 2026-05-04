@@ -28,11 +28,20 @@ public class FeedTorneioRepositorioMemoria implements FeedTorneioRepositorio {
     @Override
     public List<PublicacaoFeed> listarPorTorneio(TorneioId torneioId) {
         return publicacoes.values().stream()
-                .filter(publicacao -> publicacao.getTorneioId().equals(torneioId))
+                .filter(publicacao -> torneioId.equals(publicacao.getTorneioId()))
                 .toList();
     }
 
+    @Override
     public List<PublicacaoFeed> listarTodos() {
         return new ArrayList<>(publicacoes.values());
+    }
+
+    @Override
+    public List<PublicacaoFeed> listarPorHashtag(String hashtag) {
+        String hashtagNormalizada = hashtag == null ? "" : hashtag.replace("#", "").trim().toLowerCase();
+        return publicacoes.values().stream()
+                .filter(publicacao -> publicacao.getHashtags().contains(hashtagNormalizada))
+                .toList();
     }
 }

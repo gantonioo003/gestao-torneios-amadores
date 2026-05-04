@@ -45,4 +45,11 @@ public class EstatisticaTorneio {
     public Collection<EstatisticaJogador> getEstatisticasJogadores() {
         return java.util.List.copyOf(estatisticasPorJogador.values());
     }
+
+    public HistoricoEstatisticoTorneio arquivarEdicao(int numeroEdicao) {
+        return new HistoricoEstatisticoTorneio(
+                torneioId,
+                numeroEdicao,
+                java.util.List.copyOf(estatisticasPorJogador.values()));
+    }
 }

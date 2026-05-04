@@ -34,6 +34,11 @@ public class TimeRepositorioMemoria implements TimeRepositorio {
     }
 
     @Override
+    public List<Time> listarTodos() {
+        return List.copyOf(dados);
+    }
+
+    @Override
     public void remover(TimeId timeId) {
         dados.removeIf(t -> t.getId().equals(timeId));
     }

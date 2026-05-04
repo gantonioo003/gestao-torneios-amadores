@@ -7,8 +7,14 @@ Feature: Preparar competicao do torneio
   Scenario: Preparar competicao por pontos corridos
     Given que existe um torneio com formato pontos corridos
     And que a estrutura da competicao ja foi gerada
-    When o organizador preparar a competicao do torneio
+    When o organizador preparar a competicao do torneio por sorteio
     Then o sistema deve registrar as partidas e rodadas da competicao
+
+  Scenario: Preparar competicao com montagem manual dos confrontos
+    Given que existe um torneio com formato mata-mata
+    And que a estrutura da competicao ja foi gerada
+    When o organizador preparar a competicao escolhendo manualmente a ordem dos times
+    Then o sistema deve registrar os confrontos conforme a ordem escolhida
 
   Scenario: Preparar competicao mata-mata
     Given que existe um torneio com formato mata-mata

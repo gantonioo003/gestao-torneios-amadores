@@ -1,7 +1,9 @@
 package com.torneios.dominio.competicao.geracao;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import com.torneios.dominio.compartilhado.enumeracao.FormatoTorneio;
 import com.torneios.dominio.compartilhado.excecao.RegraDeNegocioException;
@@ -18,9 +20,20 @@ public class GeradorPartidasServico {
                                int quantidadeJogadoresPorEquipe,
                                List<TimeId> participantes,
                                List<List<TimeId>> grupos) {
+        return gerar(torneioId, formatoTorneio, quantidadeJogadoresPorEquipe, participantes, grupos,
+                ModoPreparacaoCompeticao.SORTEIO);
+    }
+
+    public List<Partida> gerar(TorneioId torneioId,
+                               FormatoTorneio formatoTorneio,
+                               int quantidadeJogadoresPorEquipe,
+                               List<TimeId> participantes,
+                               List<List<TimeId>> grupos,
+                               ModoPreparacaoCompeticao modoPreparacao) {
+        List<TimeId> participantesOrdenados = ordenarParticipantes(participantes, modoPreparacao);
         return switch (formatoTorneio) {
-            case PONTOS_CORRIDOS -> gerarPontosCorridos(torneioId, quantidadeJogadoresPorEquipe, participantes);
-            case MATA_MATA, FINAL_UNICA -> gerarMataMata(torneioId, quantidadeJogadoresPorEquipe, participantes);
+            case PONTOS_CORRIDOS -> gerarPontosCorridos(torneioId, quantidadeJogadoresPorEquipe, participantesOrdenados);
+            case MATA_MATA, FINAL_UNICA -> gerarMataMata(torneioId, quantidadeJogadoresPorEquipe, participantesOrdenados);
             case FASE_DE_GRUPOS_COM_MATA_MATA -> gerarFaseDeGrupos(torneioId, quantidadeJogadoresPorEquipe, grupos);
         };
     }
@@ -120,5 +133,14 @@ public class GeradorPartidasServico {
         if (participantes == null || participantes.size() < 2) {
             throw new IllegalArgumentException("E necessario ter ao menos dois participantes para gerar partidas.");
         }
+    }
+
+    private List<TimeId> ordenarParticipantes(List<TimeId> participantes, ModoPreparacaoCompeticao modoPreparacao) {
+        validarParticipantes(participantes);
+        List<TimeId> ordenados = new ArrayList<>(participantes);
+        if (modoPreparacao == ModoPreparacaoCompeticao.SORTEIO) {
+            Collections.shuffle(ordenados, new Random(1L));
+        }
+        return ordenados;
     }
 }

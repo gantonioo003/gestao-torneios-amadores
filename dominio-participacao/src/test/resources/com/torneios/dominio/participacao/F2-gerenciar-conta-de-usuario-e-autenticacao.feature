@@ -9,6 +9,16 @@ Feature: Gerenciar conta de usuario e autenticacao
     When o usuario cadastrar uma nova conta com nome email e senha validos
     Then o sistema deve criar a conta do usuario
 
+  Scenario: Cadastrar conta do tipo jogador
+    Given que nao existe conta cadastrada para o email informado
+    When o usuario cadastrar uma nova conta do tipo jogador
+    Then o sistema deve criar a conta como jogador
+
+  Scenario: Cadastrar conta do tipo organizador
+    Given que nao existe conta cadastrada para o email informado
+    When o usuario cadastrar uma nova conta do tipo organizador
+    Then o sistema deve criar a conta como organizador
+
   Scenario: Realizar login com email e senha validos
     Given que existe uma conta cadastrada para o usuario
     When ele informar email e senha validos

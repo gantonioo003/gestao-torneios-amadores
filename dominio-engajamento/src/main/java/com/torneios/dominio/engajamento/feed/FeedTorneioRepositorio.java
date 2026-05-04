@@ -12,4 +12,8 @@ public interface FeedTorneioRepositorio {
     Optional<PublicacaoFeed> buscarPorId(PublicacaoFeedId publicacaoId);
 
     List<PublicacaoFeed> listarPorTorneio(TorneioId torneioId);
+
+    List<PublicacaoFeed> listarTodos();
+
+    List<PublicacaoFeed> listarPorHashtag(String hashtag);
 }

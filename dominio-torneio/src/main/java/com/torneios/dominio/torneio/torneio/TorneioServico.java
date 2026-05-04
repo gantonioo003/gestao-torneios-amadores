@@ -91,7 +91,18 @@ public class TorneioServico {
     public EstruturaCompeticao gerarEstruturaCompeticao(TorneioId torneioId, UsuarioId organizadorId) {
         Torneio torneio = obterTorneio(torneioId);
         organizadorTorneioServico.validarPermissao(torneio, organizadorId);
-        EstruturaCompeticao estruturaCompeticao = geradorEstruturaCompeticaoServico.gerar(torneio);
+        EstruturaCompeticao estruturaCompeticao = geradorEstruturaCompeticaoServico.gerarPorSorteio(torneio);
+        torneioRepositorio.salvar(torneio);
+        return estruturaCompeticao;
+    }
+
+    public EstruturaCompeticao gerarEstruturaManual(TorneioId torneioId,
+                                                    UsuarioId organizadorId,
+                                                    List<TimeId> ordemManualParticipantes) {
+        Torneio torneio = obterTorneio(torneioId);
+        organizadorTorneioServico.validarPermissao(torneio, organizadorId);
+        EstruturaCompeticao estruturaCompeticao = geradorEstruturaCompeticaoServico.gerarManual(
+                torneio, ordemManualParticipantes);
         torneioRepositorio.salvar(torneio);
         return estruturaCompeticao;
     }
@@ -108,6 +119,16 @@ public class TorneioServico {
         organizadorTorneioServico.validarPermissao(torneio, organizadorId);
         torneio.finalizar();
         torneioRepositorio.salvar(torneio);
+    }
+
+    public HistoricoEdicaoTorneio repetirTorneio(TorneioId torneioId,
+                                                 UsuarioId organizadorId,
+                                                 boolean abrirSolicitacoes) {
+        Torneio torneio = obterTorneio(torneioId);
+        organizadorTorneioServico.validarPermissao(torneio, organizadorId);
+        HistoricoEdicaoTorneio historico = torneio.repetirComoNovaEdicao(abrirSolicitacoes);
+        torneioRepositorio.salvar(torneio);
+        return historico;
     }
 
     public List<Torneio> listarTorneiosDisponiveis() {

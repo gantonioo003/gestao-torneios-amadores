@@ -7,6 +7,7 @@ import java.util.List;
 import com.torneios.dominio.compartilhado.enumeracao.EsquemaTatico;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.competicao.CompeticaoFuncionalidade;
+import com.torneios.dominio.competicao.geracao.ModoPreparacaoCompeticao;
 import com.torneios.dominio.competicao.partida.Partida;
 import com.torneios.dominio.competicao.resultado.ResultadoPartida;
 
@@ -258,6 +259,15 @@ public class CompeticaoSteps extends CompeticaoFuncionalidade {
         assertEquals(3, partidasGeradas.size());
     }
 
+    @Entao("o sistema deve registrar os confrontos conforme a ordem escolhida")
+    public void sistema_deve_registrar_confrontos_conforme_ordem() {
+        assertNull(excecaoCapturada);
+        assertNotNull(preparacaoCompeticao);
+        assertEquals(ModoPreparacaoCompeticao.MANUAL, preparacaoCompeticao.getModoPreparacao());
+        assertEquals(TIME_A_ID, partidasGeradas.get(0).getMandante());
+        assertEquals(TIME_B_ID, partidasGeradas.get(0).getVisitante());
+    }
+
     @Dado("que existe um torneio com formato mata-mata")
     public void que_existe_torneio_mata_mata() {
         configurarTorneioMataMata(true);
@@ -391,6 +401,27 @@ public class CompeticaoSteps extends CompeticaoFuncionalidade {
         try {
             atualizacaoCompeticao = partidaServico.gerenciarAndamento(TORNEIO_ID);
             classificacao = atualizacaoCompeticao.classificacaoAtualizada();
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o organizador preparar a competicao do torneio por sorteio")
+    public void o_organizador_preparar_competicao_por_sorteio() {
+        try {
+            preparacaoCompeticao = partidaServico.prepararCompeticaoPorSorteio(TORNEIO_ID, ORGANIZADOR_ID);
+            partidasGeradas = preparacaoCompeticao.getPartidas();
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o organizador preparar a competicao escolhendo manualmente a ordem dos times")
+    public void o_organizador_preparar_competicao_manual() {
+        try {
+            preparacaoCompeticao = partidaServico.prepararCompeticaoManual(
+                    TORNEIO_ID, ORGANIZADOR_ID, List.of(TIME_A_ID, TIME_B_ID));
+            partidasGeradas = preparacaoCompeticao.getPartidas();
         } catch (Exception e) {
             excecaoCapturada = e;
         }

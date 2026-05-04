@@ -17,7 +17,16 @@ public class ContaUsuarioServico {
     }
 
     public ContaUsuario cadastrarConta(UsuarioId usuarioId, String nome, String email, String senha) {
+        return cadastrarConta(usuarioId, nome, email, senha, TipoContaUsuario.ORGANIZADOR);
+    }
+
+    public ContaUsuario cadastrarConta(UsuarioId usuarioId,
+                                       String nome,
+                                       String email,
+                                       String senha,
+                                       TipoContaUsuario tipo) {
         Objects.requireNonNull(usuarioId, "O id do usuario e obrigatorio.");
+        Objects.requireNonNull(tipo, "O tipo da conta e obrigatorio.");
         if (contaUsuarioRepositorio.buscarPorId(usuarioId).isPresent()) {
             throw new RegraDeNegocioException("Ja existe uma conta para o usuario informado.");
         }
@@ -25,7 +34,7 @@ public class ContaUsuarioServico {
             throw new RegraDeNegocioException("Ja existe uma conta cadastrada com este email.");
         }
 
-        ContaUsuario contaUsuario = new ContaUsuario(usuarioId, nome, email, senha);
+        ContaUsuario contaUsuario = new ContaUsuario(usuarioId, nome, email, senha, tipo);
         contaUsuarioRepositorio.salvar(contaUsuario);
         return contaUsuario;
     }

@@ -2,9 +2,15 @@
 
 ## 1. Conta, autenticacao e engajamento
 - Como visitante, quero criar uma conta para acessar as funcionalidades protegidas da plataforma.
+- Como jogador, quero criar uma conta de jogador para buscar times, acompanhar competicoes e interagir na plataforma.
+- Como organizador, quero criar uma conta de organizador para gerenciar times ou torneios.
 - Como usuario cadastrado, quero fazer login com email e senha para entrar no sistema.
 - Como usuario autenticado, quero editar meus dados cadastrais para manter minha conta atualizada.
 - Como usuario autenticado, quero excluir minha conta caso nao queira mais utilizar a plataforma.
+- Como usuario autenticado, quero solicitar conversa privada com outro usuario para iniciar contato dentro da plataforma.
+- Como usuario autenticado, quero aprovar ou recusar solicitacoes de conversa para controlar quem pode falar comigo.
+- Como usuario autenticado, quero enviar mensagens apenas em conversas aprovadas para manter a comunicacao privada organizada.
+- Como usuario autenticado, quero consultar minhas conversas aprovadas para retomar contatos ja liberados.
 - Como visitante ou usuario autenticado, quero registrar um palpite sobre o vencedor de uma partida para participar ativamente da competicao.
 - Como visitante ou usuario autenticado, quero registrar um palpite sobre o campeao do torneio para acompanhar minhas previsoes ao longo da competicao.
 - Como visitante ou usuario autenticado, quero registrar um palpite sobre o artilheiro do torneio para apostar no jogador mais decisivo no ataque.
@@ -15,6 +21,10 @@
 - Como organizador, quero publicar comunicados oficiais no feed do torneio para manter participantes e torcedores informados.
 - Como usuario autenticado, quero comentar em partidas do torneio para interagir com outros usuarios.
 - Como usuario autenticado, quero acompanhar atualizacoes automaticas sobre jogos no feed para ver rapidamente o que aconteceu na competicao.
+- Como usuario autenticado, quero publicar no feed social geral com texto, midia e hashtags para compartilhar jogos, resultados e momentos das peladas.
+- Como usuario autenticado, quero curtir e reagir a publicacoes do feed para interagir com outros usuarios.
+- Como visitante, quero visualizar o feed social geral sem login para acompanhar o movimento da plataforma antes de criar uma conta.
+- Como usuario, quero filtrar o feed por hashtag para acompanhar um torneio, time ou assunto especifico.
 
 ## 2. Criacao e configuracao do torneio
 - Como organizador, quero criar um torneio para iniciar uma competicao.
@@ -22,9 +32,12 @@
 - Como organizador, quero definir a quantidade de jogadores por equipe, como 3x3, 5x5 ou 11x11, para adequar o torneio ao formato desejado.
 - Como organizador, quero escolher se o torneio sera criado ja com todos os participantes ou com vagas abertas para candidaturas de entrada.
 - Como organizador, quero preparar a competicao gerando estrutura, rodadas e partidas para visualizar grupos, tabela, chaveamento e jogos.
+- Como organizador, quero preparar a competicao por sorteio para distribuir os times automaticamente.
+- Como organizador, quero preparar a competicao manualmente para escolher a ordem dos confrontos ou a distribuicao dos times.
 - Como organizador, quero iniciar o torneio apenas quando houver times suficientes para o formato escolhido.
+- Como organizador, quero repetir um torneio finalizado como nova edicao para reaproveitar sua identidade sem perder o historico anterior.
 
-## 3. Participacao de times no torneio
+## 3. Inscricoes e participantes do torneio
 - Como usuario autenticado, quero enviar a candidatura do meu time em um torneio aberto para disputar a competicao.
 - Como usuario autenticado, quero acompanhar o status das candidaturas do meu time para saber se estao pendentes, aprovadas, rejeitadas ou canceladas.
 - Como usuario autenticado, quero cancelar uma candidatura pendente caso eu desista de participar do torneio.
@@ -70,6 +83,7 @@
 - Como organizador, quero corrigir ou remover eventos da sumula estatistica para manter os dados da partida consistentes.
 - Como organizador, quero registrar eventos estatisticos apenas quando desejar detalhar a partida.
 - Como organizador, quero que o sistema consolide automaticamente notas, artilharia, lideres de assistencias e historico dos jogadores quando houver eventos registrados.
+- Como organizador, quero arquivar as estatisticas de uma edicao finalizada antes de iniciar nova edicao para manter a memoria historica do torneio.
 - Como usuario autenticado, quero visualizar estatisticas dos jogadores e do torneio quando elas existirem para acompanhar o desempenho da competicao.
 - Como usuario, quero comparar dois jogadores por estatisticas, historico e ranking para entender quem teve melhor desempenho.
 - Como usuario, quero comparar dois times por estatisticas, historico e ranking para avaliar forca relativa antes ou depois de uma partida.

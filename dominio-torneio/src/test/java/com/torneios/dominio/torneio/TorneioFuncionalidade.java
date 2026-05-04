@@ -8,6 +8,7 @@ import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.torneio.estrutura.EstruturaCompeticao;
 import com.torneios.dominio.torneio.estrutura.GeradorEstruturaCompeticaoServico;
 import com.torneios.dominio.torneio.organizador.OrganizadorTorneioServico;
+import com.torneios.dominio.torneio.torneio.HistoricoEdicaoTorneio;
 import com.torneios.dominio.torneio.torneio.Torneio;
 import com.torneios.dominio.torneio.torneio.TorneioServico;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaElegibilidadeParticipanteTorneioMemoria;
@@ -36,6 +37,7 @@ public abstract class TorneioFuncionalidade {
 
     protected Torneio torneio;
     protected EstruturaCompeticao estruturaCompeticao;
+    protected HistoricoEdicaoTorneio historicoEdicaoTorneio;
     protected Exception excecaoCapturada;
 
     protected void configurarTimesElegiveis(int quantidadeJogadores) {

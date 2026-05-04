@@ -6,6 +6,11 @@ import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
+import com.torneios.dominio.engajamento.chat.ChatPrivadoServico;
+import com.torneios.dominio.engajamento.chat.ConversaPrivada;
+import com.torneios.dominio.engajamento.chat.ConversaPrivadaId;
+import com.torneios.dominio.engajamento.chat.MensagemChat;
+import com.torneios.dominio.engajamento.chat.MensagemChatId;
 import com.torneios.dominio.engajamento.desafio.DesafioAmistoso;
 import com.torneios.dominio.engajamento.desafio.DesafioAmistosoId;
 import com.torneios.dominio.engajamento.desafio.DesafioAmistosoServico;
@@ -17,9 +22,11 @@ import com.torneios.dominio.engajamento.palpite.Palpite;
 import com.torneios.dominio.engajamento.palpite.PalpiteId;
 import com.torneios.dominio.engajamento.palpite.PalpiteServico;
 import com.torneios.dominio.engajamento.palpite.PercentuaisPalpite;
+import com.torneios.infraestrutura.persistencia.memoria.ConsultaSuporteChatMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaSuporteFeedTorneioMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaSuportePalpiteMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaSuporteDesafioAmistosoMemoria;
+import com.torneios.infraestrutura.persistencia.memoria.ConversaPrivadaRepositorioMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.DesafioAmistosoRepositorioMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.FeedTorneioRepositorioMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.PalpiteRepositorioMemoria;
@@ -52,6 +59,11 @@ public abstract class EngajamentoFuncionalidade {
     protected final DesafioAmistosoServico desafioAmistosoServico = new DesafioAmistosoServico(
             desafioAmistosoRepositorio, consultaDesafio);
 
+    protected final ConversaPrivadaRepositorioMemoria conversaPrivadaRepositorio = new ConversaPrivadaRepositorioMemoria();
+    protected final ConsultaSuporteChatMemoria consultaChat = new ConsultaSuporteChatMemoria();
+    protected final ChatPrivadoServico chatPrivadoServico = new ChatPrivadoServico(
+            conversaPrivadaRepositorio, consultaChat);
+
     protected EventoAlvo eventoAlvo;
     protected Palpite palpite;
     protected List<Palpite> palpitesApurados;
@@ -62,6 +74,9 @@ public abstract class EngajamentoFuncionalidade {
     protected List<PublicacaoFeed> publicacoesFeed;
     protected DesafioAmistoso desafioAmistoso;
     protected List<DesafioAmistoso> historicoAmistosos;
+    protected ConversaPrivada conversaPrivada;
+    protected MensagemChat mensagemChat;
+    protected List<ConversaPrivada> conversasPrivadas;
     protected Exception excecaoCapturada;
 
     protected void configurarEventoDePartidaAberto() {
@@ -99,5 +114,13 @@ public abstract class EngajamentoFuncionalidade {
 
     protected DesafioAmistosoId desafioId(long valor) {
         return new DesafioAmistosoId(valor);
+    }
+
+    protected ConversaPrivadaId conversaId(long valor) {
+        return new ConversaPrivadaId(valor);
+    }
+
+    protected MensagemChatId mensagemId(long valor) {
+        return new MensagemChatId(valor);
     }
 }

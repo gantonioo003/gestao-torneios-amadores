@@ -1,14 +1,13 @@
 # Funcionalidades do Sistema
 
-## Conta e engajamento inicial
+## Conta, comunicacao e participacao inicial
 F1. Gerenciar palpites publicos de usuarios e visitantes sobre partidas e rankings do torneio, salvando votos e apurando resultados automaticamente
 
-F2. Gerenciar ciclo de vida da conta de usuario e autenticacao, permitindo cadastro, login, edicao de dados e exclusao da conta
+F2. Gerenciar ciclo de vida da conta de usuario e autenticacao, permitindo cadastro como jogador ou organizador, login, edicao de dados e exclusao da conta
 
-## Participacao no torneio
-F3. Gerenciar candidatura de time em torneio aberto, permitindo solicitar participacao, acompanhar status e cancelar solicitacao pendente
+F3. Gerenciar inscricoes e participantes do torneio, permitindo candidatura, acompanhamento, cancelamento, avaliacao, aprovacao, rejeicao e ajuste da lista final antes do inicio
 
-F4. Gerenciar inscricoes e lista final de participantes do torneio, avaliando solicitacoes, aprovando ou rejeitando times e ajustando participantes antes do inicio
+F4. Gerenciar chat privado com solicitacoes de conversa, permitindo solicitar contato, aprovar ou recusar pedidos, enviar mensagens apos aprovacao e consultar conversas
 
 ## Times, elenco e desempenho
 F5. Gerenciar times do usuario, permitindo cadastrar, editar, excluir e consultar torneios vinculados
@@ -20,13 +19,13 @@ F7. Gerenciar comparativos de desempenho entre times e jogadores, permitindo ger
 F8. Gerenciar escalacao opcional do time para uma partida, incluindo esquema tatico, titulares por posicao e reservas quando exigido ou informado
 
 ## Organizacao e comunicacao
-F9. Gerenciar criacao e configuracao do torneio, definindo formato, equipe, regras de entrada e participantes iniciais
+F9. Gerenciar criacao, configuracao e repeticao do torneio, definindo formato, equipe, regras de entrada, participantes iniciais e novas edicoes com historico preservado
 
 F10. Gerenciar desafios e amistosos opcionais entre times, permitindo propor confrontos, aceitar ou recusar convites, agendar partidas e registrar resultado no historico
 
-F11. Preparar competicao do torneio, gerando estrutura, rodadas e partidas conforme o formato definido
+F11. Preparar competicao do torneio, gerando estrutura, rodadas e partidas conforme o formato definido, por sorteio automatico ou montagem manual dos confrontos
 
-F12. Gerenciar comunicados e feed social do torneio, permitindo publicacoes oficiais, comentarios e atualizacoes automaticas sobre jogos
+F12. Gerenciar feed social da plataforma e do torneio, permitindo postagens com midia e hashtags, comunicados oficiais, comentarios, curtidas, reacoes e atualizacoes automaticas sobre jogos
 
 ## Partidas, andamento e estatisticas
 F13. Registrar placar oficial da partida, permitindo salvar resultado mesmo sem eventos estatisticos
@@ -35,4 +34,4 @@ F14. Gerenciar andamento da competicao, atualizando classificacao, chaveamento e
 
 F15. Gerenciar sumula estatistica opcional da partida, registrando, corrigindo e removendo gols, assistencias, cartoes e substituicoes quando houver escalacao
 
-F16. Consolidar estatisticas e rankings do torneio, atualizando notas, artilharia, lideres de assistencias e historico dos jogadores
+F16. Consolidar estatisticas e rankings do torneio, atualizando notas, artilharia, lideres de assistencias, historico dos jogadores e historico estatistico das edicoes

@@ -101,6 +101,11 @@ public class TimeServico {
         return timeRepositorio.listarPorResponsavel(usuarioId);
     }
 
+    public List<Time> buscarTimesDisponiveisParaJogador(UsuarioId jogadorUsuarioId) {
+        autenticacaoServico.exigirAutenticacao(jogadorUsuarioId);
+        return timeRepositorio.listarTodos();
+    }
+
     public void vincularTimeAoTorneio(TimeId timeId, TorneioId torneioId) {
         Time time = obterTime(timeId);
         time.vincularAoTorneio(torneioId);

@@ -9,7 +9,16 @@ Pessoa que utiliza o sistema com conta cadastrada. Para criar torneios, gerencia
 Pessoa sem login que pode acessar areas publicas da plataforma e registrar palpites publicos identificados por sessao ou outro identificador tecnico.
 
 ### Conta de usuario
-Cadastro que identifica o usuario na plataforma, contendo nome, email e senha. Pode ser criada, editada e excluida pelo proprio usuario.
+Cadastro que identifica o usuario na plataforma, contendo nome, email, senha e tipo de conta. Pode ser criada, editada e excluida pelo proprio usuario.
+
+### Tipo de conta
+Classificacao principal da conta dentro da plataforma. Pode ser jogador ou organizador.
+
+### Conta de jogador
+Conta usada por atleta que deseja acompanhar torneios, interagir no feed, registrar palpites, consultar estatisticas e buscar times para jogar.
+
+### Conta de organizador
+Conta usada por responsavel por time ou torneio para criar competicoes, gerenciar times, organizar participantes, registrar resultados e publicar comunicados.
 
 ### Login
 Processo de autenticacao realizado com email e senha validos para liberar o acesso do usuario as funcionalidades protegidas.
@@ -19,6 +28,15 @@ Usuario responsavel por criar e gerenciar um torneio.
 
 ### Torneio
 Competicao de futebol amador criada por um organizador.
+
+### Edicao do torneio
+Ciclo especifico de realizacao de um torneio. Um mesmo torneio pode ter varias edicoes ao longo do tempo.
+
+### Historico de edicao
+Registro arquivado de uma edicao ja finalizada, preservando participantes, resultados e estatisticas antes de iniciar uma nova edicao.
+
+### Repeticao de torneio
+Acao de transformar um torneio finalizado em uma nova edicao, mantendo o historico anterior e reiniciando o ciclo competitivo.
 
 ### Formato de torneio
 Estrutura do torneio. Pode ser:
@@ -33,6 +51,9 @@ Define a quantidade de jogadores em campo por time em uma partida, como 3x3, 5x5
 ### Candidatura de participacao
 Fluxo realizado por um usuario responsavel por um time para tentar entrar em um torneio aberto. Inclui o envio da solicitacao, o acompanhamento do status e a possibilidade de cancelar a candidatura enquanto ela estiver pendente.
 
+### Inscricao de participante
+Fluxo completo que transforma uma candidatura de time em participante do torneio. Envolve solicitacao pelo responsavel, acompanhamento, cancelamento enquanto pendente, avaliacao pelo organizador e ajuste da lista final antes do inicio.
+
 ### Solicitacao de participacao
 Registro criado dentro da candidatura para pedir a entrada de um time em um torneio aberto.
 
@@ -41,6 +62,21 @@ Situacao atual da candidatura de participacao. Pode ser pendente, aprovada, reje
 
 ### Lista final de participantes
 Conjunto de times aprovados pelo organizador para disputar o torneio antes do inicio da competicao.
+
+### Chat privado
+Canal de conversa direta entre dois usuarios autenticados da plataforma, liberado apenas apos uma solicitacao de conversa ser aprovada.
+
+### Solicitacao de conversa
+Pedido enviado por um usuario para iniciar uma conversa privada com outro usuario. Enquanto nao for aprovado, fica na aba de solicitados e nao permite troca de mensagens.
+
+### Aba de solicitados
+Area do chat em que o usuario recebe pedidos de conversa pendentes, podendo aprovar ou recusar cada um.
+
+### Conversa aprovada
+Conversa privada que teve a solicitacao aceita pelo destinatario e passou a permitir envio de mensagens.
+
+### Mensagem privada
+Texto enviado dentro de uma conversa aprovada. So pode ser enviado por participantes da conversa.
 
 ### Time
 Equipe participante de um torneio, vinculada a um usuario responsavel.
@@ -74,6 +110,12 @@ Tabela com a pontuacao e posicao dos times na competicao.
 
 ### Chaveamento
 Estrutura visual e logica das fases eliminatorias do torneio.
+
+### Sorteio da competicao
+Modo de preparacao em que o sistema distribui automaticamente os times aprovados na estrutura, rodadas e partidas.
+
+### Montagem manual da competicao
+Modo de preparacao em que o organizador escolhe manualmente a ordem ou distribuicao dos times aprovados antes da geracao das partidas.
 
 ### Escalacao
 Configuracao opcional definida pelo responsavel do time ou pelo tecnico para uma partida especifica, contendo o esquema tatico, os jogadores titulares por posicao e os jogadores reservas. Quando a partida exigir escalacao ou quando um time informar, os dois times devem informar. A escalacao pode ser editada ate o inicio da partida e fica congelada apos esse momento.
@@ -148,8 +190,23 @@ Processo automatico que ocorre apos a conclusao do evento alvo, quando o sistema
 ### Percentual de palpites
 Distribuicao agregada e anonima dos palpites registrados por opcao, exibida em tempo real enquanto a janela de votacao estiver aberta.
 
+### Feed social geral
+Linha do tempo publica da plataforma, semelhante a uma rede social, com postagens sobre jogos, times, torneios e peladas. Visitantes podem visualizar, mas apenas usuarios autenticados podem publicar ou interagir.
+
 ### Feed social do torneio
-Espaco de comunicacao e interacao vinculado a um torneio. Reune comunicados oficiais, comentarios de usuarios autenticados e atualizacoes automaticas sobre jogos.
+Recorte do feed vinculado a um torneio especifico. Reune comunicados oficiais, comentarios de usuarios autenticados e atualizacoes automaticas sobre jogos.
+
+### Postagem social
+Publicacao criada por usuario autenticado no feed geral, podendo conter texto, midia e hashtags.
+
+### Hashtag
+Marcador textual usado para agrupar publicacoes por assunto, torneio, time ou evento.
+
+### Curtida
+Interacao simples de usuario autenticado em uma publicacao do feed.
+
+### Reacao
+Interacao de usuario autenticado que expressa uma resposta mais especifica a uma publicacao, como comemoracao ou surpresa.
 
 ### Comunicado oficial
 Publicacao feita pelo organizador do torneio para informar regras, horarios, mudancas ou avisos importantes.
