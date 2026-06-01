@@ -11,15 +11,16 @@
 	<properties>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<modules>
-		<module>dominio-compartilhado</module>
-		<module>dominio-torneio</module>
-		<module>dominio-participacao</module>
-		<module>dominio-competicao</module>
-		<module>dominio-estatisticas</module>
-		<module>dominio-engajamento</module>
-		<module>aplicacao</module>
-		<module>pai</module>
-	</modules>
+<modules>
+    <module>dominio-compartilhado</module>
+    <module>dominio-torneio</module>
+    <module>dominio-participacao</module>
+    <module>dominio-competicao</module>
+    <module>dominio-estatisticas</module>
+    <module>dominio-engajamento</module>
+    <module>aplicacao</module>
+    <module>apresentacao-frontend</module>
+    <module>pai</module>
+</modules>
 </project>
  
