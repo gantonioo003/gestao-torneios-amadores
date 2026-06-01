@@ -642,6 +642,11 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(71L), "Outro Clube", LocalDate.of(2020, 6, 1), LocalDate.of(2021, 6, 1), null); } catch (Exception e) { excecaoCapturada = e; }
     }
 
+    @Quando("ele tentar adicionar um registro de carreira com motivo de saida invalido")
+    public void adicionar_registro_motivo_invalido() {
+        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(72L), "Clube Z", LocalDate.of(2019, 1, 1), LocalDate.of(2019, 12, 31), null); } catch (Exception e) { excecaoCapturada = e; }
+    }
+
     @Quando("ele remover o registro de carreira")
     public void remover_registro() {
         try { profissionalServico.removerRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, REGISTRO_ID); } catch (Exception e) { excecaoCapturada = e; }
@@ -824,5 +829,17 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("deve informar que e necessario possuir um time cadastrado")
     public void informar_necessidade_time_cadastrado() {
         assertNotNull(excecaoCapturada);
+    }
+
+    @Dado("que o usuario autenticado nao e o organizador do torneio")
+    public void que_o_usuario_nao_e_organizador() {
+        usuarioAtual = USUARIO_AUTENTICADO_ID;
+        usuarioEhOrganizador = false;
+    }
+
+    @Entao("o sistema deve registrar o time para esse usuário")
+    public void time_registrado_para_usuario() {
+        assertNull(excecaoCapturada);
+        assertTrue(timeRepositorio.buscarPorId(TIME_A_ID).isPresent());
     }
 }
