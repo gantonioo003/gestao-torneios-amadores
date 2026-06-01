@@ -1,5 +1,6 @@
 package com.torneios.dominio.participacao.time;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.acesso.AutenticacaoServico;
+import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoId;
 import com.torneios.dominio.participacao.responsavel.ResponsavelTimeServico;
 
 public class TimeServico {
@@ -21,14 +23,11 @@ public class TimeServico {
     private final AutenticacaoServico autenticacaoServico;
     private final ResponsavelTimeServico responsavelTimeServico;
 
-    public TimeServico(TimeRepositorio timeRepositorio,
-                       AutenticacaoServico autenticacaoServico,
-                       ResponsavelTimeServico responsavelTimeServico) {
-        this.timeRepositorio = Objects.requireNonNull(timeRepositorio, "O repositorio de times e obrigatorio.");
-        this.autenticacaoServico = Objects.requireNonNull(autenticacaoServico,
-                "O servico de autenticacao e obrigatorio.");
-        this.responsavelTimeServico = Objects.requireNonNull(responsavelTimeServico,
-                "O servico de responsavel do time e obrigatorio.");
+    public TimeServico(TimeRepositorio timeRepositorio, AutenticacaoServico autenticacaoServico,
+            ResponsavelTimeServico responsavelTimeServico) {
+        this.timeRepositorio = Objects.requireNonNull(timeRepositorio);
+        this.autenticacaoServico = Objects.requireNonNull(autenticacaoServico);
+        this.responsavelTimeServico = Objects.requireNonNull(responsavelTimeServico);
     }
 
     public Time criarTime(TimeId timeId, String nome, UsuarioId responsavel) {
@@ -48,9 +47,8 @@ public class TimeServico {
     public void excluirTime(TimeId timeId, UsuarioId usuarioId) {
         autenticacaoServico.exigirAutenticacao(usuarioId);
         Time time = responsavelTimeServico.obterTimeSobResponsabilidade(timeId, usuarioId);
-        if (time.estaVinculadoATorneio()) {
+        if (time.estaVinculadoATorneio())
             throw new OperacaoNaoPermitidaException("Nao e permitido excluir um time vinculado a torneio.");
-        }
         timeRepositorio.remover(timeId);
     }
 
@@ -118,8 +116,35 @@ public class TimeServico {
         timeRepositorio.salvar(time);
     }
 
+    // ── F5: VinculoProfissional ────────────────────────────────────
+    public void vincularProfissional(TimeId timeId, UsuarioId usuarioId,
+            ProfissionalEsportivoId profissionalId, String funcao,
+            LocalDate dataInicio, LocalDate dataLimiteContrato) {
+        autenticacaoServico.exigirAutenticacao(usuarioId);
+        Time time = responsavelTimeServico.obterTimeSobResponsabilidade(timeId, usuarioId);
+        time.vincularProfissional(profissionalId, funcao, dataInicio, dataLimiteContrato);
+        timeRepositorio.salvar(time);
+    }
+
+    public void editarVinculoProfissional(TimeId timeId, UsuarioId usuarioId,
+            ProfissionalEsportivoId profissionalId, String funcao,
+            LocalDate dataInicio, LocalDate dataLimiteContrato) {
+        autenticacaoServico.exigirAutenticacao(usuarioId);
+        Time time = responsavelTimeServico.obterTimeSobResponsabilidade(timeId, usuarioId);
+        time.editarVinculoProfissional(profissionalId, funcao, dataInicio, dataLimiteContrato);
+        timeRepositorio.salvar(time);
+    }
+
+    public void removerVinculoProfissional(TimeId timeId, UsuarioId usuarioId,
+            ProfissionalEsportivoId profissionalId) {
+        autenticacaoServico.exigirAutenticacao(usuarioId);
+        Time time = responsavelTimeServico.obterTimeSobResponsabilidade(timeId, usuarioId);
+        time.removerVinculoProfissional(profissionalId);
+        timeRepositorio.salvar(time);
+    }
+
     public Time obterTime(TimeId timeId) {
         return timeRepositorio.buscarPorId(timeId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Time nao encontrado."));
+            .orElseThrow(() -> new EntidadeNaoEncontradaException("Time nao encontrado."));
     }
 }

@@ -1,0 +1,101 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand">Liga Amadora+</a>
+    <div class="navbar-nav ms-auto">
+      <a class="nav-link" routerLink="/time/pesquisa">Times</a>
+      <a class="nav-link active" routerLink="/profissional/pesquisa">Profissionais</a>
+    </div>
+  </div>
+</nav>
+<div class="container py-5">
+  <button class="btn btn-link text-muted p-0 mb-3" onclick="history.back()">← Voltar</button>
+  <h2 class="fw-bold mb-4">{{ recurso?.id ? recurso.nome : 'Novo profissional esportivo' }}</h2>
+
+  <div class="row g-4">
+    <div class="col-md-5">
+      <div class="card p-4">
+        <h5 class="fw-semibold mb-3">Dados</h5>
+        <div class="mb-3">
+          <label class="form-label">Nome completo *</label>
+          <input class="form-control" [(ngModel)]="recurso.nome" placeholder="Ex.: João Silva">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Tipo *</label>
+          <select class="form-select" [(ngModel)]="recurso.tipo">
+            <option value="">Selecionar...</option>
+            <option value="JOGADOR">Jogador</option>
+            <option value="TREINADOR">Treinador</option>
+            <option value="AUXILIAR_TECNICO">Auxiliar técnico</option>
+            <option value="PREPARADOR_FISICO">Preparador físico</option>
+            <option value="MEDICO">Médico</option>
+          </select>
+          <small class="text-muted">A função no time é definida pelo responsável ao vincular.</small>
+        </div>
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn btn-secondary" onclick="history.back()">Cancelar</button>
+          <button class="btn btn-primary ms-auto" (click)="salvar()">Salvar</button>
+        </div>
+        @if (recurso?.id) {
+          <hr>
+          <button class="btn btn-outline-danger btn-sm w-100" (click)="excluir()">Remover perfil</button>
+        }
+      </div>
+    </div>
+
+    @if (recurso?.id) {
+      <div class="col-md-7">
+        <div class="card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">Histórico de Carreira</h5>
+            <button class="btn btn-sm btn-primary" (click)="mostrarFormCarreira = !mostrarFormCarreira">+ Adicionar</button>
+          </div>
+          @if (mostrarFormCarreira) {
+            <div class="p-3 bg-light rounded mb-3">
+              <div class="mb-2">
+                <label class="form-label">Nome do time/clube *</label>
+                <input class="form-control" [(ngModel)]="carreiraForm.nomeDoClube" placeholder="Ex.: Real Esperança FC">
+              </div>
+              <div class="row g-2 mb-2">
+                <div class="col">
+                  <label class="form-label">Data de início *</label>
+                  <input class="form-control" type="date" [(ngModel)]="carreiraForm.dataInicio">
+                </div>
+                <div class="col">
+                  <label class="form-label">Data de fim</label>
+                  <input class="form-control" type="date" [(ngModel)]="carreiraForm.dataFim">
+                </div>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Motivo da saída</label>
+                <select class="form-select" [(ngModel)]="carreiraForm.motivoDeSaida">
+                  <option value="">Selecionar...</option>
+                  <option value="FIM_DE_CONTRATO">Fim de contrato</option>
+                  <option value="TRANSFERENCIA">Transferência</option>
+                  <option value="LESAO">Lesão</option>
+                  <option value="APOSENTADORIA">Aposentadoria</option>
+                </select>
+              </div>
+              <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-primary btn-sm" (click)="adicionarCarreira()">Salvar registro</button>
+                <button class="btn btn-secondary btn-sm" (click)="mostrarFormCarreira = false">Cancelar</button>
+              </div>
+            </div>
+          }
+          @for (r of historico; track r.id) {
+            <div class="d-flex justify-content-between align-items-start border-bottom py-2">
+              <div>
+                <span class="fw-semibold">{{ r.nomeDoClube }}</span>
+                <small class="text-muted d-block">{{ r.dataInicio }}@if(r.dataFim){ – {{ r.dataFim }}}</small>
+                @if(r.motivoDeSaida){ <small class="text-muted">Saída: {{ r.motivoDeSaida }}</small> }
+              </div>
+              <button class="btn btn-sm btn-outline-danger" (click)="removerCarreira(r.id)">Remover</button>
+            </div>
+          }
+          @if (historico.length === 0 && !mostrarFormCarreira) {
+            <p class="text-muted mb-0">Nenhum registro de carreira ainda.</p>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

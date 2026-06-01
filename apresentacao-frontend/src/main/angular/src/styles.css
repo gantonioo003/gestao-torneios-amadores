@@ -1,0 +1,23 @@
+:root {
+  --verde: #22C55E;
+  --verde-dark: #16A34A;
+  --fundo: #f8fafc;
+  --card: #ffffff;
+  --texto: #1e293b;
+  --texto-muted: #64748b;
+  --borda: #e2e8f0;
+}
+
+body { background: var(--fundo); color: var(--texto); font-family: 'Inter', 'Segoe UI', sans-serif; }
+.navbar { background: #0f172a !important; }
+.navbar-brand { color: var(--verde) !important; font-weight: 700; font-size: 1.3rem; }
+.nav-link { color: #cbd5e1 !important; }
+.nav-link:hover, .nav-link.active { color: var(--verde) !important; }
+.btn-primary { background: var(--verde); border-color: var(--verde); color: #fff; }
+.btn-primary:hover { background: var(--verde-dark); border-color: var(--verde-dark); }
+.btn-outline-primary { border-color: var(--verde); color: var(--verde); }
+.btn-outline-primary:hover { background: var(--verde); color: #fff; }
+.card { border: 1px solid var(--borda); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.badge-verde { background: var(--verde); color: #fff; padding: 3px 10px; border-radius: 999px; font-size: .75rem; }
+.table th { background: #f1f5f9; color: var(--texto-muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
+.table td { vertical-align: middle; }
