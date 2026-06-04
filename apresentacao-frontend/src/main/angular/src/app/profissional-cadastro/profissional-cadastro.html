@@ -1,0 +1,55 @@
+<div class="tela">
+  <div class="sec-bar">F6 — Cadastrar profissional</div>
+
+  <div class="panel">
+    <div class="panel-title">F6.3 — CADASTRAR</div>
+
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <a class="voltar" routerLink="/profissional/pesquisa">← Voltar</a>
+      <span style="font-size:13px;font-weight:600">Novo profissional esportivo</span>
+    </div>
+
+    <div class="campo">
+      <label>Nome completo *</label>
+      <input type="text" [(ngModel)]="nome" placeholder="Ex.: João Silva">
+    </div>
+
+    <div class="campo">
+      <label>Tipo *</label>
+      <input type="text" [(ngModel)]="tipo" placeholder="Jogador / Comissão técnica">
+      <div class="campo-hint">
+        Jogador: Atacante, Meia, Zagueiro, Goleiro...<br>
+        Comissão técnica: Auxiliar, Preparador físico...<br>
+        * Função definida pelo responsável do time
+      </div>
+    </div>
+
+    <!-- Tipo como select -->
+    <div class="campo">
+      <label>Selecione o tipo</label>
+      <select [(ngModel)]="tipoSelecionado">
+        <option value="">▼ Jogador / Comissão técnica</option>
+        <option value="JOGADOR">Jogador</option>
+        <option value="TREINADOR">Treinador</option>
+        <option value="AUXILIAR_TECNICO">Auxiliar Técnico</option>
+        <option value="PREPARADOR_FISICO">Preparador Físico</option>
+        <option value="MEDICO">Médico</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label>Foto (opcional)</label>
+      <div class="foto-box">+ foto</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-dark" (click)="cadastrar()">Cadastrar</button>
+      <a class="btn" routerLink="/profissional/pesquisa">Cancelar</a>
+    </div>
+
+    <div class="notas" style="margin-top:10px">
+      <p>Nome e tipo obrigatórios (RN1, RN10)</p>
+      <p>Usuário autenticado (RN2)</p>
+    </div>
+  </div>
+</div>

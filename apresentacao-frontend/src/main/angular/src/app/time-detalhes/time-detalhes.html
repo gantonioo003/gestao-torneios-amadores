@@ -1,0 +1,66 @@
+<div class="tela">
+  <div class="panel">
+    <div class="panel-title">F5.2 — DETALHES DO TIME</div>
+
+    <a class="voltar" [routerLink]="['/time/pesquisa']">← Voltar</a>
+
+    <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px">
+      <div>
+        <div class="escudo-box">escudo</div>
+      </div>
+      <div>
+        <div style="font-size:16px;font-weight:bold">{{ time.nome }}</div>
+        <div style="font-size:11px;color:#555;margin-top:2px">Fundado em: {{ time.dataCriacao ?? '—' }}</div>
+        @if (time.tecnico) {
+          <div style="font-size:11px;color:#555">Técnico: {{ time.tecnico }}</div>
+        }
+      </div>
+    </div>
+
+    <div class="titulo-secao">Elenco e Comissão</div>
+
+    @if (!elenco.length) {
+      <div style="font-size:11px;color:#888;margin-bottom:6px">Nenhum profissional vinculado.</div>
+    } @else {
+      @for (v of elenco; track v.profissionalId) {
+        <div class="item-linha">
+          <div>
+            <div class="item-nome">{{ v.nomeProfissional ?? 'Prof. #' + v.profissionalId }}</div>
+            <div class="item-sub">{{ v.funcao }} — Desde {{ v.dataInicio }}</div>
+          </div>
+          <div style="display:flex;gap:4px">
+            <button class="btn btn-sm" (click)="editarVinculo(v)">Editar</button>
+            <button class="btn btn-sm btn-danger" (click)="removerVinculo(v.profissionalId)">Remover</button>
+          </div>
+        </div>
+      }
+    }
+
+    <div style="margin-top:8px">
+      <a class="btn btn-sm" [routerLink]="['/time', time.id, 'vincular']">+ Vincular profissional</a>
+    </div>
+
+    <div class="titulo-secao" style="margin-top:14px">Torneios Vinculados</div>
+    @if (!torneios.length) {
+      <div style="font-size:11px;color:#888">Nenhum torneio vinculado.</div>
+    } @else {
+      @for (t of torneios; track t.id) {
+        <div style="font-size:12px;padding:3px 0;border-bottom:1px solid #eee">
+          {{ t.nome }} — <span style="color:#555">{{ t.status }}</span>
+        </div>
+      }
+    }
+
+    <div class="btn-row">
+      <a class="btn" [routerLink]="['/time', time.id, 'edicao']">Editar time</a>
+      <button class="btn btn-danger" (click)="excluir()">Excluir time</button>
+    </div>
+
+    <div class="notas" style="margin-top:10px">
+      <p>Editar/Excluir: só responsável (RN3/RN4)</p>
+      <p>Excluir bloqueado se em torneio (RN5)</p>
+      <p>Vincular/Editar/Remover: só resp. (RN8/RN10)</p>
+      <p>Profissional único por time (RN9)</p>
+    </div>
+  </div>
+</div>

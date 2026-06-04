@@ -1,0 +1,30 @@
+<div class="tela">
+  <div class="panel">
+    <div class="panel-title">F5.4 — CRIAR TIME</div>
+
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <a class="voltar" routerLink="/time/pesquisa">← Voltar</a>
+      <span style="font-size:13px;font-weight:600">Novo time</span>
+    </div>
+
+    <div class="campo">
+      <label>Nome do time *</label>
+      <input type="text" [(ngModel)]="nome" placeholder="Ex.: Unidos do Bairro">
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label style="font-size:11px;color:#333;display:block;margin-bottom:4px">Escudo (opcional)</label>
+      <div class="foto-box">+ imagem</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-dark" (click)="criar()">Criar time</button>
+      <a class="btn" routerLink="/time/pesquisa">Cancelar</a>
+    </div>
+
+    <div class="notas" style="margin-top:10px">
+      <p>Nome obrigatório (RN1)</p>
+      <p>Usuário autenticado (RN2)</p>
+    </div>
+  </div>
+</div>
