@@ -1,0 +1,60 @@
+<div class="page">
+  <div class="ph"><h1>Estatísticas e Rankings</h1></div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:14px">Estatísticas disponíveis apenas quando houver eventos.</div>
+  <div class="tabs">
+    <button class="tab" [class.a]="aba==='geral'" (click)="aba='geral'">Geral</button>
+    <button class="tab" [class.a]="aba==='jogadores'" (click)="aba='jogadores'">Jogadores</button>
+    <button class="tab" [class.a]="aba==='historico'" (click)="aba='historico'">Histórico</button>
+  </div>
+
+  <div class="g3" style="align-items:start;gap:14px">
+    <div class="card">
+      <div class="ct">Nota do Jogador</div>
+      @for (j of notas; track j.pos) {
+        <div class="rr"><span class="rnum">{{j.pos}}</span><span class="rnome">{{j.nome}}</span><span class="bdg bdg-v">{{j.nota}}</span></div>
+      }
+    </div>
+    <div class="card">
+      <div class="ct">Artilharia</div>
+      @for (j of artilharia; track j.pos) {
+        <div class="rr"><span class="rnum">{{j.pos}}</span><span class="rnome">{{j.nome}}</span><span class="rval">{{j.gols}} ⚽</span></div>
+      }
+    </div>
+    <div class="card">
+      <div class="ct">Líderes de Assistências</div>
+      @for (j of assists; track j.pos) {
+        <div class="rr"><span class="rnum">{{j.pos}}</span><span class="rnome">{{j.nome}}</span><span class="rval">{{j.assist}}</span></div>
+      }
+    </div>
+  </div>
+
+  <div class="g2" style="gap:14px;margin-top:14px;align-items:start">
+    <div class="card">
+      <div class="ct">Ranking de Times</div>
+      @for (t of rankTimes; track t.pos) {
+        <div class="rr"><span class="rnum">{{t.pos}}</span><span class="rnome">{{t.nome}}</span><span class="rval">{{t.pts}} pts</span></div>
+      }
+    </div>
+    <div class="card">
+      <div class="ct">Histórico de Jogadores</div>
+      <div class="bw" style="margin-bottom:10px">
+        <span class="bico">🔍</span>
+        <input type="text" [(ngModel)]="busca" placeholder="Buscar jogador..." (input)="filtrar()">
+      </div>
+      @if (jogadorFoco) {
+        <div style="font-weight:700;font-size:13px;margin-bottom:8px">{{jogadorFoco.nome}}</div>
+        @for (h of jogadorFoco.hist; track h.ano) {
+          <div class="rr" style="font-size:11px">
+            <span style="width:36px">{{h.ano}}</span>
+            <span style="flex:1">{{h.jogos}} jogos</span>
+            <span>{{h.gols}} gols</span>
+            <span style="margin-left:8px">{{h.assist}} assist.</span>
+          </div>
+        }
+        <a class="btn btn-g btn-sm btn-full" style="margin-top:8px">Abrir perfil do jogador</a>
+      } @else {
+        <div style="font-size:11px;color:var(--muted)">Selecione um jogador para ver o histórico.</div>
+      }
+    </div>
+  </div>
+</div>

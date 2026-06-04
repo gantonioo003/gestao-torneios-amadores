@@ -1,0 +1,84 @@
+<div style="display:grid;grid-template-columns:200px 1fr 220px;gap:14px;max-width:1100px;margin:20px auto;padding:0 16px">
+
+  <!-- Esquerda: meus times + candidaturas -->
+  <div>
+    <div class="card" style="margin-bottom:12px">
+      <div class="ct">Meus Times</div>
+      @for (t of meusTimes; track t.id) {
+        <div class="ir">
+          <div>
+            <div class="in">{{t.nome}}</div>
+            <div class="is">Responsável</div>
+          </div>
+          <a class="btn btn-o btn-xs" [routerLink]="['/time', t.id, 'detalhes']">Ver perfil</a>
+        </div>
+      }
+      <a class="btn btn-p btn-sm btn-full" style="margin-top:8px" routerLink="/time/criacao">+ Adicionar time</a>
+    </div>
+    <div class="card">
+      <div class="ct">Minhas Candidaturas</div>
+      @for (c of candidaturas; track c.id) {
+        <div class="ir">
+          <div class="in">{{c.torneio}}</div>
+          @if (c.status==='Pendente'){<span class="bdg bdg-w">Pendente</span>}
+          @else if(c.status==='Aprovada'){<span class="bdg bdg-v">Aprovada</span>}
+          @else{<span class="bdg bdg-r">{{c.status}}</span>}
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Centro: torneios + feed -->
+  <div>
+    <div class="card" style="margin-bottom:12px">
+      <div class="ct">Torneios que Participa</div>
+      @for (t of torneios; track t.id) {
+        <div class="ir">
+          <div><div class="in">{{t.nome}}</div><div class="is">{{t.status}}</div></div>
+          <a class="btn btn-g btn-xs" [routerLink]="['/torneio', t.id]">Ver</a>
+        </div>
+      }
+      <a class="btn btn-g btn-sm btn-full" style="margin-top:8px">Ver todos</a>
+    </div>
+    <div class="card">
+      <div class="ct">Feed de Atividade</div>
+      @for (a of atividades; track a.id) {
+        <div class="fpost">
+          <div class="fhdr">
+            <div class="av" style="width:26px;height:26px;font-size:12px">{{a.ico}}</div>
+            <div style="flex:1"><div class="ftexto" style="margin:0">{{a.texto}}</div></div>
+            <div class="ftempo">{{a.tempo}}</div>
+          </div>
+        </div>
+      }
+      <a class="btn btn-g btn-sm btn-full" style="margin-top:8px">Ver mais</a>
+    </div>
+  </div>
+
+  <!-- Direita: perfil da conta -->
+  <div class="card">
+    <div style="text-align:center;margin-bottom:12px">
+      <div class="av" style="width:52px;height:52px;font-size:22px;margin:0 auto 8px">👤</div>
+      <div style="font-weight:700;font-size:14px">Lucas Lima</div>
+      <div style="font-size:11px;color:var(--muted)">lucas&#64;email.com</div>
+    </div>
+    @if (editando) {
+      <div class="fg"><label>Nome</label><input type="text" [(ngModel)]="nomeEdit"></div>
+      <div class="fg"><label>E-mail</label><input type="email" [(ngModel)]="emailEdit"></div>
+      <div class="g2" style="gap:6px;margin-top:4px">
+        <button class="btn btn-p btn-sm" (click)="editando=false">Salvar</button>
+        <button class="btn btn-g btn-sm" (click)="editando=false">Cancelar</button>
+      </div>
+    } @else {
+      <button class="btn btn-o btn-sm btn-full" (click)="editando=true;nomeEdit='Lucas Lima';emailEdit='lucas@email.com'">Editar dados</button>
+      <button class="btn btn-d btn-sm btn-full" style="margin-top:6px">Excluir conta</button>
+    }
+    <div style="margin-top:14px;border-top:1px solid var(--borda);padding-top:12px">
+      <div class="ct">Ações Rápidas</div>
+      <a class="btn btn-g btn-sm btn-full" style="margin-bottom:4px" routerLink="/torneio/criacao">🏆 Criar torneio</a>
+      <a class="btn btn-g btn-sm btn-full" style="margin-bottom:4px" routerLink="/time/pesquisa">🛡 Meu time</a>
+      <a class="btn btn-g btn-sm btn-full" style="margin-bottom:4px" routerLink="/feed">📢 Feed social</a>
+      <a class="btn btn-g btn-sm btn-full" routerLink="/profissional/pesquisa">🔍 Buscar jogadores</a>
+    </div>
+  </div>
+</div>

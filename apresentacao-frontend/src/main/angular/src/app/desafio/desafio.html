@@ -1,0 +1,52 @@
+<div class="page">
+  <div class="ph"><h1>Desafios e Amistosos</h1></div>
+  <div class="g2" style="align-items:start;gap:16px">
+
+    <!-- Propor desafio -->
+    <div class="card">
+      <div class="ct">Propor Desafio / Amistoso</div>
+      <div class="fg"><label>Desafiante</label><input type="text" value="Unidos do Bairro" readonly></div>
+      <div class="fg">
+        <label>Desafiado</label>
+        <select [(ngModel)]="timeDesafiado">
+          <option value="">Selecionar time...</option>
+          @for (t of times; track t.id) { <option [value]="t.id">{{t.nome}}</option> }
+        </select>
+      </div>
+      <div class="f2">
+        <div class="fg"><label>Data</label><input type="date" [(ngModel)]="data"></div>
+        <div class="fg"><label>Hora</label><input type="time" [(ngModel)]="hora"></div>
+      </div>
+      <div class="fg"><label>Local</label><input type="text" [(ngModel)]="local" placeholder="Campo de Vila"></div>
+      <div class="fg"><label>Mensagem (opcional)</label><textarea [(ngModel)]="mensagem" rows="2" placeholder="Bora um jogo!"></textarea></div>
+      <button class="btn btn-p btn-full" (click)="propor()">Propor desafio</button>
+    </div>
+
+    <!-- Histórico de amistosos -->
+    <div class="card">
+      <div class="ct">Histórico de Amistosos</div>
+      <table class="tbl">
+        <thead><tr><th>Data</th><th>Jogo</th><th>Placar</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody>
+          @for (a of historico; track a.id) {
+            <tr>
+              <td style="font-size:11px;white-space:nowrap">{{a.data}}</td>
+              <td style="font-size:11px">{{a.jogo}}</td>
+              <td style="font-weight:700;color:var(--verde)">{{a.placar}}</td>
+              <td>
+                @if(a.status==='Vitória'){<span class="bdg bdg-v">{{a.status}}</span>}
+                @else if(a.status==='Derrota'){<span class="bdg bdg-r">{{a.status}}</span>}
+                @else{<span class="bdg bdg-w">{{a.status}}</span>}
+              </td>
+              <td>
+                <button class="btn btn-g btn-xs">Aceitar</button>
+                <button class="btn btn-d btn-xs">Recusar</button>
+                <a class="btn btn-o btn-xs">Registrar resultado</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

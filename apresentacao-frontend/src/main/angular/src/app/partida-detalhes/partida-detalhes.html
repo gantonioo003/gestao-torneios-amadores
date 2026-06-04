@@ -1,0 +1,100 @@
+<div class="page">
+  <button class="voltar" onclick="history.back()">← Voltar</button>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Copa da Amizade · Rodada 4</div>
+
+  <div class="g2" style="align-items:start;gap:16px">
+    <!-- Coluna esquerda: placar + eventos -->
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="placar">
+          <div style="text-align:center;flex:1">
+            <div class="esc" style="width:52px;height:52px;font-size:26px;margin:0 auto 6px">🛡</div>
+            <div style="font-size:12px;font-weight:700">Unidos do Bairro</div>
+          </div>
+          <div style="text-align:center;padding:0 8px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="pgols">2</span>
+              <span class="px">×</span>
+              <span class="pgols">1</span>
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">78:35</div>
+          </div>
+          <div style="text-align:center;flex:1">
+            <div class="esc" style="width:52px;height:52px;font-size:26px;margin:0 auto 6px">🛡</div>
+            <div style="font-size:12px;font-weight:700">Real Esperança</div>
+          </div>
+        </div>
+        <button class="btn btn-p btn-full btn-sm">Salvar placar</button>
+        <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:5px">Placar funciona sem eventos estatísticos.</div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="ct">Escalação Opcional</div>
+        <div class="fg" style="margin-bottom:8px"><select><option>4-4-2</option><option>4-3-3</option><option>3-5-2</option></select></div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+          @for (n of titulares; track n) {
+            <button class="btn btn-g btn-xs">{{n}}</button>
+          }
+        </div>
+        <div style="font-size:10px;color:var(--muted)">Se um time escalar, os dois escalem.</div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span class="ct" style="margin:0">Eventos</span>
+          <div class="tabs" style="margin:0;border:none">
+            @for (t of abasEventos; track t) {
+              <button class="tab" [class.a]="abaEv===t" (click)="abaEv=t" style="padding:4px 8px">{{t}}</button>
+            }
+          </div>
+        </div>
+        @for (e of eventos; track e.id) {
+          <div class="ev">
+            <span class="emin">{{e.min}}'</span>
+            <span style="font-size:14px">{{e.ico}}</span>
+            <span style="flex:1">{{e.desc}}</span>
+            <span style="font-size:11px;color:var(--muted)">{{e.time}}</span>
+            <button class="btn btn-g btn-xs">✏</button>
+            <button class="btn btn-d btn-xs">🗑</button>
+          </div>
+        }
+        <button class="btn btn-o btn-sm" style="margin-top:8px">+ Registrar evento</button>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">① Organizador escolhe detalhar ou não.<br>② Substituição somente com escalação.</div>
+      </div>
+    </div>
+
+    <!-- Coluna direita: classificação + próximos jogos -->
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="ct">Classificação — Grupo A</div>
+        <table class="tbl">
+          <thead><tr><th>#</th><th>Time</th><th>J</th><th>V</th><th>D</th><th>GP</th><th>GC</th><th>Pts</th></tr></thead>
+          <tbody>
+            @for (t of classificacao; track t.pos) {
+              <tr>
+                <td style="font-weight:700;width:22px">{{t.pos}}</td>
+                <td style="font-weight:600;font-size:11px">{{t.nome}}</td>
+                <td>{{t.j}}</td><td>{{t.v}}</td><td>{{t.d}}</td>
+                <td>{{t.gp}}</td><td>{{t.gc}}</td>
+                <td style="font-weight:700;color:var(--verde)">{{t.pts}}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        <a class="btn btn-g btn-sm btn-full" style="margin-top:8px">Ver tabela completa</a>
+      </div>
+
+      <div class="card">
+        <div class="ct">Próximos Jogos</div>
+        @for (j of proximosJogos; track j.id) {
+          <div class="ir">
+            <span style="font-weight:600;font-size:11px">{{j.timeCasa}}</span>
+            <span style="font-size:11px;color:var(--muted)">×</span>
+            <span style="font-weight:600;font-size:11px">{{j.timeVisit}}</span>
+          </div>
+        }
+        <a class="btn btn-g btn-sm btn-full" style="margin-top:8px">Ver todos</a>
+      </div>
+    </div>
+  </div>
+</div>

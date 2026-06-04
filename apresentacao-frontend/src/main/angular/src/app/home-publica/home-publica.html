@@ -1,0 +1,96 @@
+<div class="page">
+  <div class="g3" style="align-items:start">
+
+    <!-- Coluna 1: Torneios ao vivo + Palpites -->
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span class="ct" style="margin:0">Torneios ao Vivo</span>
+          <span class="bdg bdg-live">AO VIVO</span>
+        </div>
+        @for (t of torneiosVivos; track t.id) {
+          <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--borda)">
+            <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px">{{ t.nome }}</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+              <div class="esc" style="width:22px;height:22px;font-size:11px">🛡</div>
+              <span>{{ t.timeCasa }}</span>
+              <strong style="font-size:14px;color:var(--verde)">{{ t.golsCasa }}</strong>
+              <span style="color:var(--muted)">×</span>
+              <strong style="font-size:14px;color:var(--verde)">{{ t.golsVisit }}</strong>
+              <span>{{ t.timeVisit }}</span>
+              <div class="esc" style="width:22px;height:22px;font-size:11px">🛡</div>
+              @if (t.min) { <span class="bdg bdg-live" style="font-size:10px">{{ t.min }}'</span> }
+            </div>
+          </div>
+        }
+        <a class="btn btn-g btn-sm btn-full">Ver todos os jogos ao vivo</a>
+      </div>
+
+      <div class="card">
+        <div class="ct">Palpites Públicos</div>
+        @for (p of palpites; track p.id) {
+          <div style="margin-bottom:10px">
+            <div style="font-size:11px;font-weight:600;margin-bottom:4px">{{ p.label }}</div>
+            @for (opt of p.opcoes; track opt.nome) {
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:11px">
+                <span style="width:70px;color:var(--muted)">{{ opt.nome }}</span>
+                <div class="vbar" style="flex:1"><div class="vfill" [style.width]="opt.pct+'%'"></div></div>
+                <span style="width:28px;font-weight:700">{{ opt.pct }}%</span>
+                <button class="btn btn-o btn-xs">Votar</button>
+              </div>
+            }
+          </div>
+        }
+        <div style="font-size:10px;color:var(--muted)">Participe dos palpites e ajude a comunidade!</div>
+      </div>
+    </div>
+
+    <!-- Coluna 2: Rankings -->
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span class="ct" style="margin:0">Ranking de Times</span>
+          <span style="font-size:10px;font-weight:700;color:var(--muted)">PTS</span>
+        </div>
+        @for (t of rankTimes; track t.pos) {
+          <div class="rr"><span class="rnum">{{t.pos}}</span><span class="rnome">{{t.nome}}</span><span class="rval">{{t.pts}}</span></div>
+        }
+        <a class="btn btn-g btn-sm btn-full" style="margin-top:8px">Ver ranking completo</a>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span class="ct" style="margin:0">Ranking de Jogadores</span>
+          <span style="font-size:10px;font-weight:700;color:var(--muted)">GOLS</span>
+        </div>
+        @for (j of rankJogadores; track j.pos) {
+          <div class="rr"><span class="rnum">{{j.pos}}</span><span class="rnome">{{j.nome}}</span><span class="rval">{{j.gols}}</span></div>
+        }
+        <a class="btn btn-g btn-sm btn-full" style="margin-top:8px">Ver ranking completo</a>
+      </div>
+    </div>
+
+    <!-- Coluna 3: Feed Social -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span class="ct" style="margin:0">Feed Social</span>
+        <span class="bdg bdg-c">preview</span>
+      </div>
+      @for (p of feedPosts; track p.id) {
+        <div class="fpost">
+          <div class="fhdr">
+            <div class="av" style="width:28px;height:28px;font-size:12px">{{p.av}}</div>
+            <div>
+              <div class="fautor">{{p.autor}}</div>
+              <div class="ftempo">{{p.tempo}}</div>
+            </div>
+          </div>
+          <div class="ftexto">{{p.texto}}</div>
+          <div style="font-size:11px;color:var(--verde)">{{p.tags}}</div>
+        </div>
+      }
+      <a class="btn btn-g btn-sm btn-full" style="margin-top:8px" routerLink="/feed">Ver feed completo</a>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center">Visitante: vê, busca e filtra.<br>Entre para postar, comentar, curtir ou reagir.</div>
+    </div>
+  </div>
+</div>

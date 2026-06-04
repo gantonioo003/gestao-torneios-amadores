@@ -1,0 +1,88 @@
+<div class="page">
+  <button class="voltar" onclick="history.back()">← Voltar</button>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+    <div style="font-size:19px;font-weight:700">Copa da Amizade</div>
+    <span class="bdg bdg-live">Ao vivo</span>
+  </div>
+  <div class="tabs">
+    <button class="tab" [class.a]="aba==='geral'" (click)="aba='geral'">Visão geral</button>
+    <button class="tab" [class.a]="aba==='participantes'" (click)="aba='participantes'">Participantes</button>
+    <button class="tab" [class.a]="aba==='tabela'" (click)="aba='tabela'">Tabela/Chaveamento</button>
+    <button class="tab" [class.a]="aba==='partidas'" (click)="aba='partidas'">Partidas</button>
+    <button class="tab" [class.a]="aba==='regras'" (click)="aba='regras'">Regras</button>
+  </div>
+
+  @if (aba==='geral') {
+    <div class="card"><div class="ct">Sobre o Torneio</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6">Formato: Grupos + Mata-mata · 8 times · Inscrições abertas<br>Participantes: 8 times · Formato de equipe: 11×7</div>
+    </div>
+  }
+
+  @if (aba==='participantes') {
+    <div class="g2" style="align-items:start;gap:16px">
+      <div class="card">
+        <div class="ct">Participantes Confirmados ({{ confirmados.length }})</div>
+        @for (t of confirmados; track t.id) {
+          <div class="ir">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="esc">🛡</div>
+              <div class="in">{{ t.nome }}</div>
+            </div>
+            <span style="color:var(--verde);font-size:16px">✓</span>
+          </div>
+        }
+        <div style="margin-top:12px;display:flex;gap:6px">
+          <button class="btn btn-p btn-sm">Solicitar participação</button>
+          <button class="btn btn-g btn-sm">Cancelar candidatura pendente</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">Solicitações Pendentes ({{ pendentes.length }})</div>
+        @for (s of pendentes; track s.id) {
+          <div class="ir">
+            <div class="in">{{ s.nome }}</div>
+            <div style="display:flex;gap:4px">
+              <button class="btn btn-p btn-xs" (click)="aprovar(s)">Aprovar</button>
+              <button class="btn btn-d btn-xs" (click)="rejeitar(s)">Rejeitar</button>
+            </div>
+          </div>
+        }
+        <button class="btn btn-d btn-sm" style="margin-top:8px">Remover antes do início</button>
+      </div>
+    </div>
+  }
+
+  @if (aba==='tabela') {
+    <div class="card">
+      <div class="ct">Classificação — Grupo A</div>
+      <table class="tbl">
+        <thead><tr><th>#</th><th>Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GP</th><th>GC</th><th>Pts</th></tr></thead>
+        <tbody>
+          @for (t of classificacao; track t.pos) {
+            <tr>
+              <td style="font-weight:700;width:24px">{{t.pos}}</td>
+              <td style="font-weight:600">{{t.nome}}</td>
+              <td>{{t.j}}</td><td>{{t.v}}</td><td>{{t.e}}</td><td>{{t.d}}</td>
+              <td>{{t.gp}}</td><td>{{t.gc}}</td>
+              <td style="font-weight:700;color:var(--verde)">{{t.pts}}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (aba==='partidas') {
+    <div class="card">
+      <div class="ct">Partidas</div>
+      @for (p of partidas; track p.id) {
+        <div class="ir">
+          <div style="flex:1;text-align:right;font-weight:600">{{p.timeCasa}}</div>
+          <div style="padding:0 12px;font-size:13px;font-weight:700;color:var(--muted)">{{p.placar}}</div>
+          <div style="flex:1;font-weight:600">{{p.timeVisit}}</div>
+          <a class="btn btn-g btn-xs" [routerLink]="['/partida', p.id]">Ver</a>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,29 @@
+<div style="min-height:calc(100vh - 48px);display:flex;align-items:center;justify-content:center;background:var(--fundo)">
+  <div class="card" style="width:380px;padding:28px">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:20px;font-weight:700">Liga Amadora<span style="color:var(--verde)">+</span></div>
+    </div>
+    <div class="tabs">
+      <button class="tab" [class.a]="aba==='entrar'" (click)="aba='entrar'">Entrar</button>
+      <button class="tab" [class.a]="aba==='criar'" (click)="aba='criar'">Criar conta</button>
+    </div>
+    @if (aba==='entrar') {
+      <div class="fg"><label>E-mail</label><input type="email" [(ngModel)]="email" placeholder="seu@email.com"></div>
+      <div class="fg"><label>Senha</label><input type="password" [(ngModel)]="senha" placeholder="••••••••"></div>
+      <a href="#" style="font-size:11px;color:var(--muted);display:block;margin-bottom:12px">Esqueci minha senha</a>
+      <button class="btn btn-p btn-full" (click)="entrar()">Entrar</button>
+      <div style="text-align:center;font-size:11px;color:var(--muted);margin:12px 0">ou entre com</div>
+      <div class="g2" style="gap:8px">
+        <button class="btn btn-g btn-full">🌐 Google</button>
+        <button class="btn btn-g btn-full">📘 Facebook</button>
+      </div>
+      <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--muted)">Não tem uma conta? <a style="color:var(--verde);cursor:pointer" (click)="aba='criar'">Criar conta</a></div>
+    } @else {
+      <div class="fg"><label>Nome completo</label><input type="text" [(ngModel)]="nome" placeholder="Seu nome"></div>
+      <div class="fg"><label>E-mail</label><input type="email" [(ngModel)]="email" placeholder="seu@email.com"></div>
+      <div class="fg"><label>Senha</label><input type="password" [(ngModel)]="senha" placeholder="••••••••"></div>
+      <button class="btn btn-p btn-full" (click)="criar()">Criar conta</button>
+      <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--muted)">Já tem conta? <a style="color:var(--verde);cursor:pointer" (click)="aba='entrar'">Entrar</a></div>
+    }
+  </div>
+</div>
