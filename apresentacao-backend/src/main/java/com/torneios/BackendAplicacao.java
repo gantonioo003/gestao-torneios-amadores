@@ -2,9 +2,13 @@ package com.torneios;
 
 import static org.springframework.boot.SpringApplication.run;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
+import com.torneios.aplicacao.competicao.andamento.PartidaRepositorioAplicacao;
+import com.torneios.aplicacao.competicao.andamento.PartidaServicoAplicacao;
 import com.torneios.aplicacao.participacao.candidatura.SolicitacaoRepositorioAplicacao;
 import com.torneios.aplicacao.participacao.candidatura.SolicitacaoServicoAplicacao;
 import com.torneios.aplicacao.participacao.conta.ContaRepositorioAplicacao;
@@ -13,6 +17,15 @@ import com.torneios.aplicacao.participacao.profissional.ProfissionalRepositorioA
 import com.torneios.aplicacao.participacao.profissional.ProfissionalServicoAplicacao;
 import com.torneios.aplicacao.participacao.time.TimeRepositorioAplicacao;
 import com.torneios.aplicacao.participacao.time.TimeServicoAplicacao;
+import com.torneios.aplicacao.torneio.criacao.TorneioRepositorioAplicacao;
+import com.torneios.aplicacao.torneio.criacao.TorneioServicoAplicacao;
+import com.torneios.dominio.compartilhado.evento.EventoBarramento;
+import com.torneios.dominio.competicao.chaveamento.ChaveamentoServico;
+import com.torneios.dominio.competicao.classificacao.ClassificacaoServico;
+import com.torneios.dominio.competicao.geracao.GeradorPartidasServico;
+import com.torneios.dominio.competicao.partida.ConsultaCompeticaoTorneio;
+import com.torneios.dominio.competicao.partida.PartidaRepositorio;
+import com.torneios.dominio.competicao.partida.PartidaServico;
 import com.torneios.dominio.participacao.acesso.AutenticacaoServico;
 import com.torneios.dominio.participacao.acesso.ContaUsuarioRepositorio;
 import com.torneios.dominio.participacao.acesso.ContaUsuarioServico;
@@ -24,6 +37,12 @@ import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoRepo
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoServico;
 import com.torneios.dominio.participacao.time.TimeRepositorio;
 import com.torneios.dominio.participacao.time.TimeServico;
+import com.torneios.dominio.torneio.estrutura.GeradorEstruturaCompeticaoServico;
+import com.torneios.dominio.torneio.organizador.OrganizadorTorneioServico;
+import com.torneios.dominio.torneio.torneio.ConsultaElegibilidadeComCache;
+import com.torneios.dominio.torneio.torneio.ConsultaElegibilidadeParticipanteTorneio;
+import com.torneios.dominio.torneio.torneio.TorneioRepositorio;
+import com.torneios.dominio.torneio.torneio.TorneioServico;
 
 @SpringBootApplication
 public class BackendAplicacao {
@@ -96,6 +115,48 @@ public class BackendAplicacao {
     public SolicitacaoServicoAplicacao solicitacaoServicoAplicacao(
             SolicitacaoRepositorioAplicacao repositorio) {
         return new SolicitacaoServicoAplicacao(repositorio);
+    }
+
+    // ── Torneio ────────────────────────────────────────────────────
+    @Bean
+    @Primary
+    public ConsultaElegibilidadeParticipanteTorneio consultaElegibilidadeComCache(
+            @Qualifier("consultaElegibilidadeJpa") ConsultaElegibilidadeParticipanteTorneio delegado) {
+        return new ConsultaElegibilidadeComCache(delegado);
+    }
+
+    @Bean
+    public TorneioServico torneioServico(TorneioRepositorio torneioRepositorio,
+            ConsultaElegibilidadeParticipanteTorneio consultaElegibilidade,
+            EventoBarramento barramento) {
+        return new TorneioServico(torneioRepositorio,
+            new OrganizadorTorneioServico(),
+            new GeradorEstruturaCompeticaoServico(),
+            consultaElegibilidade,
+            barramento);
+    }
+
+    @Bean
+    public TorneioServicoAplicacao torneioServicoAplicacao(TorneioRepositorioAplicacao repositorio) {
+        return new TorneioServicoAplicacao(repositorio);
+    }
+
+    // ── Partida ────────────────────────────────────────────────────
+    @Bean
+    public PartidaServico partidaServico(PartidaRepositorio partidaRepositorio,
+            ConsultaCompeticaoTorneio consultaCompeticaoTorneio,
+            EventoBarramento barramento) {
+        return new PartidaServico(partidaRepositorio,
+            consultaCompeticaoTorneio,
+            new GeradorPartidasServico(),
+            new ClassificacaoServico(),
+            new ChaveamentoServico(),
+            barramento);
+    }
+
+    @Bean
+    public PartidaServicoAplicacao partidaServicoAplicacao(PartidaRepositorioAplicacao repositorio) {
+        return new PartidaServicoAplicacao(repositorio);
     }
 
     public static void main(String[] args) {

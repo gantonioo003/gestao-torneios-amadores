@@ -2,6 +2,7 @@ package com.torneios.dominio.competicao.classificacao;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,5 +43,15 @@ public class ClassificacaoServico {
                         .thenComparingInt(Classificacao::getGolsPro).reversed()
                         .thenComparingLong(classificacao -> classificacao.getTimeId().valor()))
                 .toList();
+    }
+
+    /**
+     * Padrão Iterator — retorna um iterador sobre a classificação em ordem de
+     * pontuação, sem expor a estrutura de dados interna.
+     */
+    public Iterator<Classificacao> iterador(TorneioId torneioId,
+                                            Collection<TimeId> participantes,
+                                            List<Partida> partidas) {
+        return new ClassificacaoIterador(gerar(torneioId, participantes, partidas));
     }
 }

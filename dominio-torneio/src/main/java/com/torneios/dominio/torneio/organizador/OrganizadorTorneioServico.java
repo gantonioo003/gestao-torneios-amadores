@@ -1,5 +1,7 @@
 package com.torneios.dominio.torneio.organizador;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import com.torneios.dominio.compartilhado.excecao.OperacaoNaoPermitidaException;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.torneio.torneio.Torneio;
@@ -7,9 +9,7 @@ import com.torneios.dominio.torneio.torneio.Torneio;
 public class OrganizadorTorneioServico {
 
     public boolean ehOrganizador(Torneio torneio, UsuarioId usuarioId) {
-        if (torneio == null) {
-            throw new IllegalArgumentException("O torneio e obrigatorio.");
-        }
+        notNull(torneio, "O torneio e obrigatorio.");
         return usuarioId != null && torneio.getOrganizadorId().equals(usuarioId);
     }
 

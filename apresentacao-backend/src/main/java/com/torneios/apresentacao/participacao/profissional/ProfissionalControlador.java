@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.torneios.aplicacao.participacao.profissional.ProfissionalResumo;
 import com.torneios.aplicacao.participacao.profissional.ProfissionalServicoAplicacao;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
-import com.torneios.dominio.participacao.profissional.ProfissionalEsportivo;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoId;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoServico;
 import com.torneios.dominio.participacao.profissional.RegistroDeCarreira;
@@ -41,10 +40,8 @@ class ProfissionalControlador {
 
     @RequestMapping(method = POST, path = "salvar")
     void salvar(@RequestBody ProfissionalFormulario.ProfissionalDto dto) {
-        var id = new ProfissionalEsportivoId(gerarId());
-        var p = new ProfissionalEsportivo(id, dto.nome, dto.tipo,
-            new UsuarioId(dto.cadastranteId));
-        profissionalServico.salvar(p);
+        profissionalServico.cadastrar(new ProfissionalEsportivoId(gerarId()),
+            dto.nome, dto.tipo, new UsuarioId(dto.cadastranteId));
     }
 
     @RequestMapping(method = GET, path = "{id}/edicao")

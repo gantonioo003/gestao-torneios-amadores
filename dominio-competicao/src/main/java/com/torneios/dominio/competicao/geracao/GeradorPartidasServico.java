@@ -38,51 +38,17 @@ public class GeradorPartidasServico {
         };
     }
 
+    // Padrão Template Method — delega para GeradorPontosCorridos e GeradorMataMata
     public List<Partida> gerarPontosCorridos(TorneioId torneioId,
                                              int quantidadeJogadoresPorEquipe,
                                              List<TimeId> participantes) {
-        validarParticipantes(participantes);
-
-        List<Partida> partidas = new ArrayList<>();
-        long sequencia = 1L;
-
-        for (int i = 0; i < participantes.size(); i++) {
-            for (int j = i + 1; j < participantes.size(); j++) {
-                partidas.add(new Partida(
-                        new PartidaId(sequencia++),
-                        torneioId,
-                        participantes.get(i),
-                        participantes.get(j),
-                        "Pontos corridos",
-                        quantidadeJogadoresPorEquipe));
-            }
-        }
-
-        return partidas;
+        return new GeradorPontosCorridos().gerar(torneioId, quantidadeJogadoresPorEquipe, participantes);
     }
 
     public List<Partida> gerarMataMata(TorneioId torneioId,
                                        int quantidadeJogadoresPorEquipe,
                                        List<TimeId> participantes) {
-        validarParticipantes(participantes);
-
-        List<Partida> partidas = new ArrayList<>();
-        long sequencia = 1L;
-
-        for (int i = 0; i < participantes.size(); i += 2) {
-            if (i + 1 >= participantes.size()) {
-                break;
-            }
-            partidas.add(new Partida(
-                    new PartidaId(sequencia++),
-                    torneioId,
-                    participantes.get(i),
-                    participantes.get(i + 1),
-                    "Chaveamento",
-                    quantidadeJogadoresPorEquipe));
-        }
-
-        return partidas;
+        return new GeradorMataMata().gerar(torneioId, quantidadeJogadoresPorEquipe, participantes);
     }
 
     public List<Partida> gerarFaseDeGrupos(TorneioId torneioId,

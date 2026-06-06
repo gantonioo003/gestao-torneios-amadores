@@ -1,9 +1,12 @@
 package com.torneios.dominio.competicao.partida;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.util.List;
-import java.util.Objects;
 
 import com.torneios.dominio.compartilhado.enumeracao.FormatoTorneio;
+import com.torneios.dominio.compartilhado.evento.EventoBarramento;
+import com.torneios.dominio.compartilhado.evento.ResultadoRegistradoEvento;
 import com.torneios.dominio.compartilhado.excecao.EntidadeNaoEncontradaException;
 import com.torneios.dominio.compartilhado.excecao.OperacaoNaoPermitidaException;
 import com.torneios.dominio.compartilhado.excecao.RegraDeNegocioException;
@@ -28,22 +31,27 @@ public class PartidaServico {
     private final GeradorPartidasServico geradorPartidasServico;
     private final ClassificacaoServico classificacaoServico;
     private final ChaveamentoServico chaveamentoServico;
+    private final EventoBarramento barramento;
 
     public PartidaServico(PartidaRepositorio partidaRepositorio,
                           ConsultaCompeticaoTorneio consultaCompeticaoTorneio,
                           GeradorPartidasServico geradorPartidasServico,
                           ClassificacaoServico classificacaoServico,
-                          ChaveamentoServico chaveamentoServico) {
-        this.partidaRepositorio = Objects.requireNonNull(partidaRepositorio,
-                "O repositorio de partidas e obrigatorio.");
-        this.consultaCompeticaoTorneio = Objects.requireNonNull(consultaCompeticaoTorneio,
-                "A consulta de competicao do torneio e obrigatoria.");
-        this.geradorPartidasServico = Objects.requireNonNull(geradorPartidasServico,
-                "O gerador de partidas e obrigatorio.");
-        this.classificacaoServico = Objects.requireNonNull(classificacaoServico,
-                "O servico de classificacao e obrigatorio.");
-        this.chaveamentoServico = Objects.requireNonNull(chaveamentoServico,
-                "O servico de chaveamento e obrigatorio.");
+                          ChaveamentoServico chaveamentoServico,
+                          EventoBarramento barramento) {
+        notNull(partidaRepositorio, "O repositorio de partidas e obrigatorio.");
+        notNull(consultaCompeticaoTorneio, "A consulta de competicao do torneio e obrigatoria.");
+        notNull(geradorPartidasServico, "O gerador de partidas e obrigatorio.");
+        notNull(classificacaoServico, "O servico de classificacao e obrigatorio.");
+        notNull(chaveamentoServico, "O servico de chaveamento e obrigatorio.");
+        notNull(barramento, "O barramento de eventos e obrigatorio.");
+
+        this.partidaRepositorio = partidaRepositorio;
+        this.consultaCompeticaoTorneio = consultaCompeticaoTorneio;
+        this.geradorPartidasServico = geradorPartidasServico;
+        this.classificacaoServico = classificacaoServico;
+        this.chaveamentoServico = chaveamentoServico;
+        this.barramento = barramento;
     }
 
     public void salvar(Partida partida) {
@@ -114,6 +122,7 @@ public class PartidaServico {
         validarParticipantesDaPartida(torneioId, partida);
         partida.registrarResultado(resultadoPartida);
         partidaRepositorio.salvar(partida);
+        barramento.postar(new ResultadoRegistradoEvento(partidaId));
         return atualizarCompeticaoAposResultado(torneioId);
     }
 

@@ -1,11 +1,14 @@
 package com.torneios.dominio.competicao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.torneios.dominio.compartilhado.enumeracao.EsquemaTatico;
 import com.torneios.dominio.compartilhado.enumeracao.FormatoEquipe;
 import com.torneios.dominio.compartilhado.enumeracao.FormatoTorneio;
 import com.torneios.dominio.compartilhado.enumeracao.Posicao;
+import com.torneios.dominio.compartilhado.evento.EventoBarramento;
+import com.torneios.dominio.compartilhado.evento.EventoObservador;
 import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.tecnico.TecnicoId;
@@ -28,14 +31,9 @@ import com.torneios.dominio.competicao.partida.PartidaServico;
 import com.torneios.dominio.competicao.resultado.ResultadoPartida;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaSuporteEscalacaoMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaCompeticaoTorneioMemoria;
-import com.torneios.infraestrutura.persistencia.memoria.EscalacaoRepositorioMemoria;
-import com.torneios.infraestrutura.persistencia.memoria.PartidaRepositorioMemoria;
+import com.torneios.infraestrutura.persistencia.memoria.Repositorio;
 
-/**
- * Classe base para compartilhar preparacao e estado comum entre os steps
- * dos cenarios de competicao.
- */
-public abstract class CompeticaoFuncionalidade {
+public class CompeticaoFuncionalidade implements EventoBarramento {
 
     protected static final UsuarioId ORGANIZADOR_ID = new UsuarioId(1L);
     protected static final UsuarioId OUTRO_USUARIO_ID = new UsuarioId(99L);
@@ -57,16 +55,18 @@ public abstract class CompeticaoFuncionalidade {
     protected static final JogadorId JOGADOR_7_ID = new JogadorId(7L);
     protected static final JogadorId JOGADOR_FORA_ELENCO_ID = new JogadorId(999L);
 
-    protected final PartidaRepositorioMemoria partidaRepositorio = new PartidaRepositorioMemoria();
+    protected final Repositorio repositorio = new Repositorio();
     protected final ConsultaCompeticaoTorneioMemoria consultaCompeticaoTorneio = new ConsultaCompeticaoTorneioMemoria();
-    protected final EscalacaoRepositorioMemoria escalacaoRepositorio = new EscalacaoRepositorioMemoria();
     protected final ConsultaSuporteEscalacaoMemoria consultaEscalacao = new ConsultaSuporteEscalacaoMemoria();
     protected final GeradorPartidasServico geradorPartidasServico = new GeradorPartidasServico();
     protected final ClassificacaoServico classificacaoServico = new ClassificacaoServico();
     protected final ChaveamentoServico chaveamentoServico = new ChaveamentoServico();
     protected final PartidaServico partidaServico = new PartidaServico(
-            partidaRepositorio, consultaCompeticaoTorneio, geradorPartidasServico, classificacaoServico, chaveamentoServico);
-    protected final EscalacaoServico escalacaoServico = new EscalacaoServico(escalacaoRepositorio, consultaEscalacao);
+            repositorio, consultaCompeticaoTorneio, geradorPartidasServico,
+            classificacaoServico, chaveamentoServico, this);
+    protected final EscalacaoServico escalacaoServico = new EscalacaoServico(repositorio, consultaEscalacao);
+
+    protected List<Object> eventos = new ArrayList<>();
 
     protected List<Partida> partidasGeradas;
     protected PreparacaoCompeticao preparacaoCompeticao;
@@ -75,6 +75,16 @@ public abstract class CompeticaoFuncionalidade {
     protected Chaveamento chaveamento;
     protected Escalacao escalacao;
     protected Exception excecaoCapturada;
+
+    @Override
+    public <E> void adicionar(EventoObservador<E> observador) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <E> void postar(E evento) {
+        eventos.add(evento);
+    }
 
     protected void configurarTorneioPontosCorridos(boolean estruturaGerada) {
         List<TimeId> participantes = List.of(TIME_A_ID, TIME_B_ID, TIME_C_ID);

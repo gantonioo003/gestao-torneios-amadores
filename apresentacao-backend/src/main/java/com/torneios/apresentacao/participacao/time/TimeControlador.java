@@ -17,7 +17,6 @@ import com.torneios.aplicacao.participacao.time.TimeServicoAplicacao;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoId;
-import com.torneios.dominio.participacao.time.Time;
 import com.torneios.dominio.participacao.time.TimeServico;
 
 @RestController
@@ -39,8 +38,7 @@ class TimeControlador {
 
     @RequestMapping(method = POST, path = "salvar")
     void salvar(@RequestBody TimeFormulario.TimeDto dto) {
-        var time = new Time(new TimeId(gerarId()), dto.nome, new UsuarioId(dto.responsavelId));
-        timeServico.salvar(time);
+        timeServico.criarTime(new TimeId(gerarId()), dto.nome, new UsuarioId(dto.responsavelId));
     }
 
     @RequestMapping(method = GET, path = "{id}/edicao")

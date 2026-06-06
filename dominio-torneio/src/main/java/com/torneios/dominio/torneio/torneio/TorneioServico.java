@@ -1,11 +1,14 @@
 package com.torneios.dominio.torneio.torneio;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 import com.torneios.dominio.compartilhado.enumeracao.FormatoEquipe;
 import com.torneios.dominio.compartilhado.enumeracao.FormatoTorneio;
+import com.torneios.dominio.compartilhado.evento.EventoBarramento;
+import com.torneios.dominio.compartilhado.evento.TorneioCriadoEvento;
 import com.torneios.dominio.compartilhado.excecao.EntidadeNaoEncontradaException;
 import com.torneios.dominio.compartilhado.excecao.RegraDeNegocioException;
 import com.torneios.dominio.compartilhado.time.TimeId;
@@ -21,19 +24,24 @@ public class TorneioServico {
     private final OrganizadorTorneioServico organizadorTorneioServico;
     private final GeradorEstruturaCompeticaoServico geradorEstruturaCompeticaoServico;
     private final ConsultaElegibilidadeParticipanteTorneio consultaElegibilidadeParticipanteTorneio;
+    private final EventoBarramento barramento;
 
     public TorneioServico(TorneioRepositorio torneioRepositorio,
                           OrganizadorTorneioServico organizadorTorneioServico,
                           GeradorEstruturaCompeticaoServico geradorEstruturaCompeticaoServico,
-                          ConsultaElegibilidadeParticipanteTorneio consultaElegibilidadeParticipanteTorneio) {
-        this.torneioRepositorio = Objects.requireNonNull(torneioRepositorio,
-                "O repositorio de torneios e obrigatorio.");
-        this.organizadorTorneioServico = Objects.requireNonNull(organizadorTorneioServico,
-                "O servico de organizador do torneio e obrigatorio.");
-        this.geradorEstruturaCompeticaoServico = Objects.requireNonNull(geradorEstruturaCompeticaoServico,
-                "O gerador de estrutura da competicao e obrigatorio.");
-        this.consultaElegibilidadeParticipanteTorneio = Objects.requireNonNull(consultaElegibilidadeParticipanteTorneio,
-                "A consulta de elegibilidade do participante e obrigatoria.");
+                          ConsultaElegibilidadeParticipanteTorneio consultaElegibilidadeParticipanteTorneio,
+                          EventoBarramento barramento) {
+        notNull(torneioRepositorio, "O repositorio de torneios e obrigatorio.");
+        notNull(organizadorTorneioServico, "O servico de organizador do torneio e obrigatorio.");
+        notNull(geradorEstruturaCompeticaoServico, "O gerador de estrutura da competicao e obrigatorio.");
+        notNull(consultaElegibilidadeParticipanteTorneio, "A consulta de elegibilidade do participante e obrigatoria.");
+        notNull(barramento, "O barramento de eventos e obrigatorio.");
+
+        this.torneioRepositorio = torneioRepositorio;
+        this.organizadorTorneioServico = organizadorTorneioServico;
+        this.geradorEstruturaCompeticaoServico = geradorEstruturaCompeticaoServico;
+        this.consultaElegibilidadeParticipanteTorneio = consultaElegibilidadeParticipanteTorneio;
+        this.barramento = barramento;
     }
 
     public Torneio criarTorneio(TorneioId id,
@@ -44,6 +52,7 @@ public class TorneioServico {
                                 boolean aceitaSolicitacoes) {
         Torneio torneio = new Torneio(id, nome, formato, formatoEquipe, organizadorId, aceitaSolicitacoes);
         torneioRepositorio.salvar(torneio);
+        barramento.postar(new TorneioCriadoEvento(id));
         return torneio;
     }
 

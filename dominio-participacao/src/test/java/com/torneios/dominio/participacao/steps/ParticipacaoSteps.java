@@ -6,38 +6,23 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.torneios.dominio.compartilhado.enumeracao.StatusSolicitacao;
-import com.torneios.dominio.compartilhado.jogador.Jogador;
 import com.torneios.dominio.compartilhado.jogador.JogadorId;
-import com.torneios.dominio.compartilhado.tecnico.Tecnico;
 import com.torneios.dominio.compartilhado.tecnico.TecnicoId;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.ParticipacaoFuncionalidade;
-import com.torneios.dominio.participacao.acesso.AcessoGerenciamentoTorneioServico;
-import com.torneios.dominio.participacao.acesso.AutenticacaoServico;
 import com.torneios.dominio.participacao.acesso.ContaUsuario;
-import com.torneios.dominio.participacao.acesso.ContaUsuarioServico;
 import com.torneios.dominio.participacao.acesso.TipoContaUsuario;
 import com.torneios.dominio.participacao.acesso.TorneioDisponivel;
-import com.torneios.dominio.participacao.acesso.VisualizacaoTorneioServico;
 import com.torneios.dominio.participacao.profissional.MotivoDeSaida;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivo;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoId;
-import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoServico;
 import com.torneios.dominio.participacao.profissional.RegistroDeCarreiraId;
 import com.torneios.dominio.participacao.profissional.TipoProfissional;
-import com.torneios.dominio.participacao.responsavel.ConsultaUsuario;
-import com.torneios.dominio.participacao.responsavel.ResponsavelTimeServico;
-import com.torneios.dominio.participacao.solicitacao.PoliticaParticipacaoTorneio;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacao;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoId;
-import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoServico;
 import com.torneios.dominio.participacao.time.Time;
-import com.torneios.dominio.participacao.time.TimeServico;
-import com.torneios.infraestrutura.persistencia.memoria.CatalogoTorneiosDisponiveisMemoria;
-import com.torneios.infraestrutura.persistencia.memoria.ContaUsuarioRepositorioMemoria;
-import com.torneios.infraestrutura.persistencia.memoria.ProfissionalEsportivoRepositorioMemoria;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.pt.Dado;
@@ -59,20 +44,6 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
 
     private UsuarioId usuarioAtual;
 
-    // Serviços
-    private final AutenticacaoServico autenticacaoServico = new AutenticacaoServico();
-    private final ContaUsuarioRepositorioMemoria contaUsuarioRepositorio = new ContaUsuarioRepositorioMemoria();
-    private final ContaUsuarioServico contaUsuarioServico = new ContaUsuarioServico(contaUsuarioRepositorio);
-    private final ProfissionalEsportivoRepositorioMemoria profissionalRepositorio = new ProfissionalEsportivoRepositorioMemoria();
-    private final ConsultaUsuario consultaUsuario = usuarioId -> usuarioId != null;
-    private final ResponsavelTimeServico responsavelTimeServico;
-    private final TimeServico timeServico;
-    private final ProfissionalEsportivoServico profissionalServico;
-    private final SolicitacaoParticipacaoServico solicitacaoServico;
-    private final AcessoGerenciamentoTorneioServico acessoGerenciamentoServico;
-    private final CatalogoTorneiosDisponiveisMemoria catalogoTorneiosDisponiveis = new CatalogoTorneiosDisponiveisMemoria();
-    private final VisualizacaoTorneioServico visualizacaoTorneioServico;
-
     // Estado capturado durante execução
     private List<SolicitacaoParticipacao> solicitacoesCapturadas;
     private List<Time> timesCapturados;
@@ -80,34 +51,10 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     private SolicitacaoParticipacao solicitacaoCapturada;
     private ContaUsuario contaCapturada;
 
-    // Flags de política inline
-    private boolean torneioAceitaSolicitacoes = false;
-    private boolean usuarioEhOrganizador = false;
-    private boolean usuarioExiste = true;
-    private boolean torneioIniciado = false;
-
-    private final PoliticaParticipacaoTorneio politicaParticipacao = new PoliticaParticipacaoTorneio() {
-        @Override public boolean aceitaSolicitacoes(TorneioId torneioId) { return torneioAceitaSolicitacoes; }
-        @Override public boolean usuarioEhOrganizador(TorneioId torneioId, UsuarioId usuarioId) { return usuarioEhOrganizador && usuarioId != null && usuarioId.equals(ORGANIZADOR_ID); }
-        @Override public boolean torneioIniciado(TorneioId torneioId) { return torneioIniciado; }
-    };
-
-    public ParticipacaoSteps() {
-        responsavelTimeServico = new ResponsavelTimeServico(timeRepositorio, consultaUsuario);
-        timeServico = new TimeServico(timeRepositorio, autenticacaoServico, responsavelTimeServico);
-        profissionalServico = new ProfissionalEsportivoServico(profissionalRepositorio, autenticacaoServico);
-        solicitacaoServico = new SolicitacaoParticipacaoServico(solicitacaoRepositorio, timeRepositorio, autenticacaoServico, politicaParticipacao);
-        acessoGerenciamentoServico = new AcessoGerenciamentoTorneioServico(autenticacaoServico);
-        visualizacaoTorneioServico = new VisualizacaoTorneioServico(catalogoTorneiosDisponiveis);
-    }
-
     @Before
     public void limparEstado() {
-        timeRepositorio.limpar();
-        solicitacaoRepositorio.limpar();
-        contaUsuarioRepositorio.limpar();
+        repositorio.limpar();
         catalogoTorneiosDisponiveis.limpar();
-        profissionalRepositorio.limpar();
         excecaoCapturada = null;
         solicitacoesCapturadas = null;
         timesCapturados = null;
@@ -151,7 +98,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
 
     @Dado("que nao existe conta cadastrada para o email informado")
     public void que_nao_existe_conta_para_email_informado() {
-        assertTrue(contaUsuarioRepositorio.buscarPorEmail(EMAIL_USUARIO).isEmpty());
+        assertTrue(repositorio.buscarPorEmail(EMAIL_USUARIO).isEmpty());
     }
 
     @Dado("que existe uma conta cadastrada para o usuario")
@@ -203,7 +150,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     public void sistema_deve_criar_conta_usuario() {
         assertNull(excecaoCapturada);
         assertNotNull(contaCapturada);
-        assertTrue(contaUsuarioRepositorio.buscarPorEmail(EMAIL_USUARIO).isPresent());
+        assertTrue(repositorio.buscarPorEmail(EMAIL_USUARIO).isPresent());
     }
 
     @Entao("o sistema deve criar a conta como jogador")
@@ -239,7 +186,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve remover a conta e impedir novo login")
     public void sistema_deve_remover_conta() {
         assertNull(excecaoCapturada);
-        assertTrue(contaUsuarioRepositorio.buscarPorId(USUARIO_AUTENTICADO_ID).isEmpty());
+        assertTrue(repositorio.buscarPorId(USUARIO_AUTENTICADO_ID).isEmpty());
     }
 
     @Entao("o sistema deve impedir o cadastro da conta")
@@ -254,13 +201,13 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Dado("que ele é responsável por um time")
     @Dado("que ele e responsavel por um time")
     public void ele_e_responsavel_por_um_time() {
-        timeRepositorio.salvar(new Time(TIME_A_ID, "Time Alpha", usuarioAtual));
+        repositorio.salvar(new Time(TIME_A_ID, "Time Alpha", usuarioAtual));
     }
 
     @Dado("que ele não é responsável pelo time")
     @Dado("que ele nao e responsavel pelo time")
     public void ele_nao_e_responsavel_pelo_time() {
-        timeRepositorio.salvar(new Time(TIME_A_ID, "Time Alpha", ORGANIZADOR_ID));
+        repositorio.salvar(new Time(TIME_A_ID, "Time Alpha", ORGANIZADOR_ID));
     }
 
     @Dado("que ele possui um time cadastrado")
@@ -291,10 +238,10 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Dado("que existem solicitações pendentes de times para o torneio")
     @Dado("que existem solicitacoes pendentes de times para o torneio")
     public void solicitacao_pendente_existe() {
-        if (timeRepositorio.buscarPorId(TIME_A_ID).isEmpty())
-            timeRepositorio.salvar(new Time(TIME_A_ID, "Time Alpha", USUARIO_AUTENTICADO_ID));
+        if (repositorio.buscarPorId(TIME_A_ID).isEmpty())
+            repositorio.salvar(new Time(TIME_A_ID, "Time Alpha", USUARIO_AUTENTICADO_ID));
         SolicitacaoParticipacao sol = new SolicitacaoParticipacao(SOLICITACAO_ID, USUARIO_AUTENTICADO_ID, TIME_A_ID, TORNEIO_ID);
-        solicitacaoRepositorio.salvar(sol);
+        repositorio.salvar(sol);
     }
 
     @Dado("que já existe uma solicitação pendente do time para esse torneio")
@@ -305,11 +252,11 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
 
     @Dado("que existe uma solicitação de participação aprovada pelo organizador para o time")
     public void solicitacao_aprovada_existe() {
-        if (timeRepositorio.buscarPorId(TIME_A_ID).isEmpty())
-            timeRepositorio.salvar(new Time(TIME_A_ID, "Time Alpha", usuarioAtual));
+        if (repositorio.buscarPorId(TIME_A_ID).isEmpty())
+            repositorio.salvar(new Time(TIME_A_ID, "Time Alpha", usuarioAtual));
         SolicitacaoParticipacao sol = new SolicitacaoParticipacao(SOLICITACAO_ID, usuarioAtual, TIME_A_ID, TORNEIO_ID);
         sol.aprovar();
-        solicitacaoRepositorio.salvar(sol);
+        repositorio.salvar(sol);
     }
 
     @Dado("que o time está vinculado a pelo menos um torneio")
@@ -317,13 +264,13 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Dado("que o time está vinculado a um torneio")
     @Dado("que o time esta vinculado a um torneio")
     public void time_vinculado_a_torneio() {
-        Time time = timeRepositorio.buscarPorId(TIME_A_ID).orElseGet(() -> {
+        Time time = repositorio.buscarPorId(TIME_A_ID).orElseGet(() -> {
             Time t = new Time(TIME_A_ID, "Time Alpha", usuarioAtual != null ? usuarioAtual : USUARIO_AUTENTICADO_ID);
-            timeRepositorio.salvar(t);
+            repositorio.salvar(t);
             return t;
         });
         time.vincularAoTorneio(TORNEIO_ID);
-        timeRepositorio.salvar(time);
+        repositorio.salvar(time);
     }
 
     @Dado("que o time não está vinculado a nenhum torneio")
@@ -382,14 +329,14 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve registrar a solicitação como aprovada")
     public void solicitacao_aprovada() {
         assertNull(excecaoCapturada);
-        assertEquals(StatusSolicitacao.APROVADA, solicitacaoRepositorio.buscarPorId(SOLICITACAO_ID).orElseThrow().getStatus());
+        assertEquals(StatusSolicitacao.APROVADA, repositorio.buscarPorId(SOLICITACAO_ID).orElseThrow().getStatus());
     }
 
     @Entao("o sistema deve registrar a solicitação como rejeitada")
     @Entao("o sistema deve registrar a solicitacao como rejeitada")
     public void solicitacao_rejeitada() {
         assertNull(excecaoCapturada);
-        assertEquals(StatusSolicitacao.REJEITADA, solicitacaoRepositorio.buscarPorId(SOLICITACAO_ID).orElseThrow().getStatus());
+        assertEquals(StatusSolicitacao.REJEITADA, repositorio.buscarPorId(SOLICITACAO_ID).orElseThrow().getStatus());
     }
 
     @Entao("o sistema deve exibir os times com solicitações pendentes")
@@ -410,7 +357,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve marcar a candidatura como cancelada")
     public void candidatura_cancelada() {
         assertNull(excecaoCapturada);
-        assertEquals(StatusSolicitacao.CANCELADA, solicitacaoRepositorio.buscarPorId(SOLICITACAO_ID).orElseThrow().getStatus());
+        assertEquals(StatusSolicitacao.CANCELADA, repositorio.buscarPorId(SOLICITACAO_ID).orElseThrow().getStatus());
     }
 
     // =====================================================================
@@ -450,7 +397,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     public void acessar_area_torneios() {
         try {
             autenticacaoServico.exigirAutenticacao(usuarioAtual);
-            Time time = timeRepositorio.buscarPorId(TIME_A_ID).orElseThrow();
+            Time time = repositorio.buscarPorId(TIME_A_ID).orElseThrow();
             if (!time.getResponsavel().equals(usuarioAtual))
                 throw new com.torneios.dominio.compartilhado.excecao.OperacaoNaoPermitidaException("Apenas o responsavel pode consultar os torneios do time.");
             timesCapturados = timeServico.listarTimesDoUsuario(usuarioAtual);
@@ -466,14 +413,14 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
 
     @Dado("que existe um profissional esportivo cadastrado")
     public void profissional_cadastrado() {
-        profissionalRepositorio.salvar(new ProfissionalEsportivo(PROFISSIONAL_ID, "Joao Silva", TipoProfissional.JOGADOR, USUARIO_AUTENTICADO_ID));
+        repositorio.salvar(new ProfissionalEsportivo(PROFISSIONAL_ID, "Joao Silva", TipoProfissional.JOGADOR, USUARIO_AUTENTICADO_ID));
     }
 
     @Dado("que o profissional ja esta vinculado ao time")
     public void profissional_ja_vinculado() {
-        Time time = timeRepositorio.buscarPorId(TIME_A_ID).orElseThrow();
+        Time time = repositorio.buscarPorId(TIME_A_ID).orElseThrow();
         time.vincularProfissional(PROFISSIONAL_ID, "Atacante", LocalDate.of(2024, 1, 1), null);
-        timeRepositorio.salvar(time);
+        repositorio.salvar(time);
     }
 
     @Quando("ele vincular o profissional ao time com funcao e data de inicio")
@@ -500,7 +447,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve registrar o time para esse usuario")
     public void time_registrado() {
         assertNull(excecaoCapturada);
-        assertTrue(timeRepositorio.buscarPorId(TIME_A_ID).isPresent());
+        assertTrue(repositorio.buscarPorId(TIME_A_ID).isPresent());
     }
 
     @Entao("o sistema deve rejeitar o cadastro por nome invalido")
@@ -511,13 +458,13 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve atualizar os dados do time")
     public void time_atualizado() {
         assertNull(excecaoCapturada);
-        assertEquals("Time Alpha Editado", timeRepositorio.buscarPorId(TIME_A_ID).orElseThrow().getNome());
+        assertEquals("Time Alpha Editado", repositorio.buscarPorId(TIME_A_ID).orElseThrow().getNome());
     }
 
     @Entao("o sistema deve remover o time")
     public void time_removido() {
         assertNull(excecaoCapturada);
-        assertTrue(timeRepositorio.buscarPorId(TIME_A_ID).isEmpty());
+        assertTrue(repositorio.buscarPorId(TIME_A_ID).isEmpty());
     }
 
     @Entao("o sistema deve impedir a exclusão")
@@ -536,26 +483,26 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve informar que o time nao esta vinculado a nenhum torneio")
     public void informar_sem_torneios() {
         assertNull(excecaoCapturada);
-        Time time = timeRepositorio.buscarPorId(TIME_A_ID).orElseThrow();
+        Time time = repositorio.buscarPorId(TIME_A_ID).orElseThrow();
         assertFalse(time.estaVinculadoATorneio());
     }
 
     @Entao("o sistema deve registrar o profissional no elenco do time")
     public void profissional_no_elenco() {
         assertNull(excecaoCapturada);
-        assertTrue(timeRepositorio.buscarPorId(TIME_A_ID).orElseThrow().getElenco().stream().anyMatch(v -> v.getProfissionalId().equals(PROFISSIONAL_ID)));
+        assertTrue(repositorio.buscarPorId(TIME_A_ID).orElseThrow().getElenco().stream().anyMatch(v -> v.getProfissionalId().equals(PROFISSIONAL_ID)));
     }
 
     @Entao("o sistema deve atualizar o vinculo do profissional")
     public void vinculo_atualizado() {
         assertNull(excecaoCapturada);
-        assertTrue(timeRepositorio.buscarPorId(TIME_A_ID).orElseThrow().getElenco().stream().anyMatch(v -> v.getProfissionalId().equals(PROFISSIONAL_ID) && "Meia".equals(v.getFuncao())));
+        assertTrue(repositorio.buscarPorId(TIME_A_ID).orElseThrow().getElenco().stream().anyMatch(v -> v.getProfissionalId().equals(PROFISSIONAL_ID) && "Meia".equals(v.getFuncao())));
     }
 
     @Entao("o sistema deve retirar o profissional do elenco do time")
     public void profissional_removido_do_elenco() {
         assertNull(excecaoCapturada);
-        assertTrue(timeRepositorio.buscarPorId(TIME_A_ID).orElseThrow().getElenco().stream().noneMatch(v -> v.getProfissionalId().equals(PROFISSIONAL_ID)));
+        assertTrue(repositorio.buscarPorId(TIME_A_ID).orElseThrow().getElenco().stream().noneMatch(v -> v.getProfissionalId().equals(PROFISSIONAL_ID)));
     }
 
     // =====================================================================
@@ -564,12 +511,12 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
 
     @Dado("que existe um profissional esportivo cadastrado pelo usuario")
     public void profissional_cadastrado_pelo_usuario() {
-        profissionalRepositorio.salvar(new ProfissionalEsportivo(PROFISSIONAL_ID, "Joao Silva", TipoProfissional.JOGADOR, usuarioAtual));
+        repositorio.salvar(new ProfissionalEsportivo(PROFISSIONAL_ID, "Joao Silva", TipoProfissional.JOGADOR, usuarioAtual));
     }
 
     @Dado("que existe um profissional esportivo cadastrado por outro usuario")
     public void profissional_cadastrado_por_outro_usuario() {
-        profissionalRepositorio.salvar(new ProfissionalEsportivo(PROFISSIONAL_ID, "Joao Silva", TipoProfissional.JOGADOR, OUTRO_USUARIO_ID));
+        repositorio.salvar(new ProfissionalEsportivo(PROFISSIONAL_ID, "Joao Silva", TipoProfissional.JOGADOR, OUTRO_USUARIO_ID));
     }
 
     @Dado("que o profissional ja possui um registro de carreira no periodo")
@@ -660,7 +607,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve registrar o profissional esportivo")
     public void profissional_registrado() {
         assertNull(excecaoCapturada);
-        assertTrue(profissionalRepositorio.buscarPorId(PROFISSIONAL_ID).isPresent());
+        assertTrue(repositorio.buscarPorId(PROFISSIONAL_ID).isPresent());
     }
 
     @Entao("o sistema deve rejeitar o cadastro do profissional por nome invalido")
@@ -675,25 +622,25 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve atualizar os dados do profissional")
     public void profissional_atualizado() {
         assertNull(excecaoCapturada);
-        assertEquals("Joao Editado", profissionalRepositorio.buscarPorId(PROFISSIONAL_ID).orElseThrow().getNome());
+        assertEquals("Joao Editado", repositorio.buscarPorId(PROFISSIONAL_ID).orElseThrow().getNome());
     }
 
     @Entao("o sistema deve excluir o profissional")
     public void profissional_excluido() {
         assertNull(excecaoCapturada);
-        assertTrue(profissionalRepositorio.buscarPorId(PROFISSIONAL_ID).isEmpty());
+        assertTrue(repositorio.buscarPorId(PROFISSIONAL_ID).isEmpty());
     }
 
     @Entao("o sistema deve registrar o historico de carreira do profissional")
     public void historico_registrado() {
         assertNull(excecaoCapturada);
-        assertFalse(profissionalRepositorio.buscarPorId(PROFISSIONAL_ID).orElseThrow().getHistorico().isEmpty());
+        assertFalse(repositorio.buscarPorId(PROFISSIONAL_ID).orElseThrow().getHistorico().isEmpty());
     }
 
     @Entao("o sistema deve excluir o registro de carreira do historico")
     public void registro_excluido() {
         assertNull(excecaoCapturada);
-        assertTrue(profissionalRepositorio.buscarPorId(PROFISSIONAL_ID).orElseThrow().getHistorico().stream().noneMatch(r -> r.getId().equals(REGISTRO_ID)));
+        assertTrue(repositorio.buscarPorId(PROFISSIONAL_ID).orElseThrow().getHistorico().stream().noneMatch(r -> r.getId().equals(REGISTRO_ID)));
     }
 
     @Entao("o sistema deve informar que o registro nao foi encontrado")
@@ -731,11 +678,11 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
 
     @Dado("que existe uma candidatura ja avaliada do time")
     public void candidatura_ja_avaliada_do_time() {
-        if (timeRepositorio.buscarPorId(TIME_A_ID).isEmpty())
-            timeRepositorio.salvar(new Time(TIME_A_ID, "Time Alpha", usuarioAtual));
+        if (repositorio.buscarPorId(TIME_A_ID).isEmpty())
+            repositorio.salvar(new Time(TIME_A_ID, "Time Alpha", usuarioAtual));
         SolicitacaoParticipacao sol = new SolicitacaoParticipacao(SOLICITACAO_ID, usuarioAtual, TIME_A_ID, TORNEIO_ID);
         sol.aprovar();
-        solicitacaoRepositorio.salvar(sol);
+        repositorio.salvar(sol);
     }
 
     @Dado("que o torneio ainda nao foi iniciado")
@@ -746,10 +693,10 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
 
     @Dado("que existe um time aprovado na lista final de participantes")
     public void time_aprovado_lista_final() {
-        Time time = timeRepositorio.buscarPorId(TIME_A_ID)
+        Time time = repositorio.buscarPorId(TIME_A_ID)
             .orElseGet(() -> new Time(TIME_A_ID, "Time Alpha", USUARIO_AUTENTICADO_ID));
         time.vincularAoTorneio(TORNEIO_ID);
-        timeRepositorio.salvar(time);
+        repositorio.salvar(time);
     }
 
     @Dado("que existe uma solicitacao pendente de participacao para um torneio")
@@ -810,14 +757,14 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve registrar o time como participante aprovado do torneio")
     public void time_aprovado_no_torneio() {
         assertNull(excecaoCapturada);
-        SolicitacaoParticipacao sol = solicitacaoRepositorio.buscarPorId(SOLICITACAO_ID).orElseThrow();
+        SolicitacaoParticipacao sol = repositorio.buscarPorId(SOLICITACAO_ID).orElseThrow();
         assertEquals(StatusSolicitacao.APROVADA, sol.getStatus());
     }
 
     @Entao("o sistema deve retirar o time da lista final do torneio")
     public void time_retirado_lista_final() {
         assertNull(excecaoCapturada);
-        Time time = timeRepositorio.buscarPorId(TIME_A_ID).orElseThrow();
+        Time time = repositorio.buscarPorId(TIME_A_ID).orElseThrow();
         assertFalse(time.estaVinculadoAoTorneio(TORNEIO_ID));
     }
 
@@ -840,6 +787,6 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve registrar o time para esse usuário")
     public void time_registrado_para_usuario() {
         assertNull(excecaoCapturada);
-        assertTrue(timeRepositorio.buscarPorId(TIME_A_ID).isPresent());
+        assertTrue(repositorio.buscarPorId(TIME_A_ID).isPresent());
     }
 }

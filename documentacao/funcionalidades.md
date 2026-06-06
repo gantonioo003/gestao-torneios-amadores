@@ -1,22 +1,22 @@
 # Funcionalidades do Sistema
 
 ## Conta, comunicacao e participacao inicial
-F1. Gerenciar palpites publicos de usuarios e visitantes sobre partidas e rankings do torneio, salvando votos e apurando resultados automaticamente
+F1. Gerenciar palpites públicos sobre partidas e rankings do torneio, salvando votos e apurando resultados automaticamente
 
 F2. Gerenciar ciclo de vida da conta de usuario e autenticacao, permitindo cadastro como jogador ou organizador, login, edicao de dados e exclusao da conta
 
-F3. Gerenciar inscricoes e participantes do torneio, permitindo candidatura, acompanhamento, cancelamento, avaliacao, aprovacao, rejeicao e ajuste da lista final antes do inicio
+F3. Gerenciar inscrições e participantes do torneio, permitindo candidatura, acompanhamento, cancelamento, avaliacao, aprovacao, rejeicao e ajuste da lista final antes do inicio
 
 F4. Gerenciar chat privado com solicitacoes de conversa, permitindo solicitar contato, aprovar ou recusar pedidos, enviar mensagens apos aprovacao e consultar conversas
 
 ## Times, elenco e desempenho
-F5. Gerenciar times do usuario, permitindo cadastrar, editar, excluir e consultar torneios vinculados
+F5. Gerenciar times do usuário, permitindo cadastrar, editar, excluir e consultar torneios vinculados, além de gerenciar o elenco de profissionais esportivos.
 
-F6. Gerenciar elenco e comissao tecnica do time, permitindo adicionar, editar e remover jogadores e tecnicos
+F6. Cadastrar profissional esportivo com histórico de carreira, permitindo gerenciar perfis de jogadores e treinadores com suas passagens por times.
 
 F7. Gerenciar comparativos de desempenho entre times e jogadores, permitindo gerar comparacoes por estatisticas, historico e rankings, salvar comparativos escolhidos e consultar comparacoes salvas
 
-F8. Gerenciar escalacao opcional do time para uma partida, incluindo esquema tatico, titulares por posicao e reservas quando exigido ou informado
+F8. Gerenciar escalações de times para partidas, incluindo esquema tatico, titulares por posicao e reservas quando exigido ou informado
 
 ## Organizacao e comunicacao
 F9. Gerenciar criacao, configuracao e repeticao do torneio, definindo formato, equipe, regras de entrada, participantes iniciais e novas edicoes com historico preservado
