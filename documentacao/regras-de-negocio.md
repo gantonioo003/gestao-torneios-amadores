@@ -100,27 +100,27 @@ RN44. O usuario pode excluir um comparativo salvo do historico.
 
 RN45. O sistema deve impedir a geracao de comparativo quando nao houver dados estatisticos suficientes para comparar os envolvidos.
 
-RN46. A escalacao da partida e opcional quando o torneio ou a partida nao exigirem esse detalhamento.
+RN46. A mesa tatica da partida e opcional quando o torneio ou a partida nao exigirem esse detalhamento.
 
-RN47. A escalacao do time pode ser definida pelo usuario responsavel pelo time ou pelo tecnico associado ao time.
+RN47. A mesa tatica do time pode ser gerada pelo usuario responsavel pelo time ou pelo tecnico associado ao time.
 
-RN48. A escalacao deve indicar um esquema tatico compativel com o formato de equipe do torneio.
+RN48. A mesa tatica deve indicar um esquema tatico compativel com o formato de equipe do torneio.
 
-RN49. A quantidade de jogadores titulares na escalacao deve ser exatamente igual ao formato de equipe do torneio.
+RN49. A quantidade de jogadores titulares na mesa tatica deve ser exatamente igual ao formato de equipe do torneio.
 
-RN50. Cada titular da escalacao deve estar associado a uma posicao definida pelo esquema tatico escolhido.
+RN50. Cada titular da mesa tatica deve estar associado a uma posicao definida pelo esquema tatico escolhido e a um posicionamento em campo.
 
-RN51. Os jogadores titulares e reservas da escalacao devem pertencer ao elenco do time.
+RN51. Os jogadores titulares e reservas da mesa tatica devem pertencer ao elenco do time.
 
-RN52. Nao ha limite maximo de jogadores reservas na escalacao.
+RN52. Nao ha limite maximo de jogadores reservas na mesa tatica.
 
-RN53. O mesmo jogador nao pode aparecer simultaneamente como titular e reserva da mesma escalacao.
+RN53. O mesmo jogador nao pode aparecer simultaneamente como titular e reserva da mesma mesa tatica.
 
-RN54. A escalacao pode ser criada e editada ate o inicio da partida e fica congelada apos esse momento.
+RN54. A mesa tatica pode ser criada e editada ate o inicio da partida e fica congelada apos esse momento.
 
-RN55. Se a partida ou o torneio exigir escalacao, os dois times devem informar escalacao antes do inicio.
+RN55. Se a partida ou o torneio exigir mesa tatica, os dois times devem informar mesa tatica antes do inicio.
 
-RN56. Se um time informar escalacao em uma partida opcional, o outro time tambem deve informar escalacao para manter equilibrio nos dados da partida.
+RN56. Se um time informar mesa tatica em uma partida opcional, o outro time tambem deve informar mesa tatica para manter equilibrio nos dados da partida.
 
 ---
 
@@ -196,7 +196,7 @@ RN88. O sistema nao deve permitir registrar resultado para uma partida inexisten
 
 RN89. O resultado da partida pode ser registrado independentemente do registro de eventos estatisticos.
 
-RN90. O sistema pode registrar gols, assistencias, cartoes amarelos, cartoes vermelhos e substituicoes dos jogadores em cada partida.
+RN90. O sistema pode registrar gols, assistencias, cartoes amarelos, cartoes vermelhos e substituicoes no scout opcional de cada partida.
 
 RN91. A nota estatistica de cada jogador deve ser calculada automaticamente a partir dos eventos registrados na partida, quando esses eventos existirem.
 
@@ -208,10 +208,10 @@ RN94. Eventos positivos devem aumentar a nota estatistica do jogador, enquanto e
 
 RN95. O sistema deve atualizar automaticamente a artilharia do torneio com base nos gols registrados, quando houver registro de eventos.
 
-RN96. Na ausencia de eventos registrados, o sistema deve manter disponivel apenas o placar oficial da partida, sem exibir nota estatistica, artilharia ou estatisticas detalhadas.
+RN96. Na ausencia de scout detalhado registrado, o sistema deve manter disponivel apenas o placar oficial da partida, sem exibir nota estatistica, artilharia ou estatisticas detalhadas.
 
-RN97. Eventos da sumula estatistica podem ser corrigidos ou removidos pelo organizador do torneio.
+RN97. Eventos do scout estatistico podem ser corrigidos ou removidos pelo organizador do torneio.
 
 RN98. A consolidacao das estatisticas deve atualizar notas, artilharia, lideres de assistencias e historico dos jogadores a partir dos eventos registrados.
 
-RN99. Substituicoes so podem ser registradas quando a partida possui escalacao, pois dependem de saber quem saiu e quem entrou.
+RN99. Substituicoes so podem ser registradas quando a partida possui mesa tatica, pois dependem de saber quem saiu e quem entrou.

@@ -2,7 +2,7 @@ Feature: Consolidar estatisticas e rankings do torneio
 
   As a usuario da plataforma
   I want que o sistema consolide notas, rankings e historico dos jogadores
-  So that o desempenho do torneio seja atualizado automaticamente a partir da sumula
+  So that o desempenho do torneio seja atualizado automaticamente a partir do scout detalhado quando ele existir
 
   Scenario: Consolidar notas, artilharia, assistencias e historico dos jogadores
     Given que existem eventos registrados para um jogador
@@ -22,4 +22,4 @@ Feature: Consolidar estatisticas e rankings do torneio
   Scenario: Nao consolidar estatisticas detalhadas quando nao houver eventos registrados
     Given que existe uma partida sem eventos estatisticos registrados
     When o sistema tentar consolidar estatisticas sem eventos
-    Then o sistema deve manter apenas o placar oficial sem dados estatisticos
+    Then o sistema deve manter apenas o placar oficial sem scout detalhado

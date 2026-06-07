@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import com.torneios.dominio.compartilhado.enumeracao.EsquemaTatico;
@@ -85,6 +86,15 @@ public class Escalacao {
 
     public boolean ehReserva(JogadorId jogadorId) {
         return reservas.contains(jogadorId);
+    }
+
+    public MesaTatica gerarMesaTatica() {
+        return new MesaTatica(
+                partidaId,
+                timeId,
+                esquemaTatico,
+                gerarTitularesPosicionados(),
+                reservas);
     }
 
     public void atualizar(EsquemaTatico novoEsquema,
@@ -174,6 +184,38 @@ public class Escalacao {
                 throw new RegraDeNegocioException(
                         "Um mesmo jogador nao pode ser titular e reserva da mesma escalacao.");
             }
+        }
+    }
+
+    private List<JogadorPosicionadoMesaTatica> gerarTitularesPosicionados() {
+        List<JogadorPosicionadoMesaTatica> posicionados = new ArrayList<>();
+        posicionarLinha(Posicao.GOLEIRO, 8.0, posicionados);
+        posicionarLinha(Posicao.DEFENSOR, 28.0, posicionados);
+        posicionarLinha(Posicao.MEIO_CAMPISTA, 55.0, posicionados);
+        posicionarLinha(Posicao.ATACANTE, 82.0, posicionados);
+        return posicionados;
+    }
+
+    private void posicionarLinha(Posicao posicao,
+                                 double eixoX,
+                                 List<JogadorPosicionadoMesaTatica> posicionados) {
+        List<JogadorEscalado> jogadoresDaLinha = titulares.stream()
+                .filter(titular -> titular.posicao() == posicao)
+                .sorted(Comparator.comparing(titular -> titular.jogadorId().valor()))
+                .toList();
+        if (jogadoresDaLinha.isEmpty()) {
+            return;
+        }
+
+        double espacamento = 100.0 / (jogadoresDaLinha.size() + 1);
+        for (int indice = 0; indice < jogadoresDaLinha.size(); indice++) {
+            JogadorEscalado titular = jogadoresDaLinha.get(indice);
+            double eixoY = espacamento * (indice + 1);
+            posicionados.add(new JogadorPosicionadoMesaTatica(
+                    titular.jogadorId(),
+                    posicao,
+                    new CoordenadaMesaTatica(eixoX, eixoY),
+                    indice + 1));
         }
     }
 }

@@ -190,7 +190,7 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
     }
 
     // =====================================================================
-    // F15: Gerenciar sumula estatistica da partida
+    // F13: Gerenciar scout estatistico opcional da partida
     // =====================================================================
 
     @Dado("que existe uma partida cadastrada")
@@ -201,6 +201,17 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
     @Dado("que o usuario autenticado e o organizador")
     public void que_usuario_e_organizador() {
         assertTrue(consultaEstatisticaCompeticao.usuarioEhOrganizador(TORNEIO_ID, ORGANIZADOR_ID));
+    }
+
+    @Quando("ele optar por nao registrar eventos individuais da partida")
+    public void ele_optar_por_nao_registrar_eventos_individuais_da_partida() {
+        // O scout e opcional; nenhum evento precisa ser criado.
+    }
+
+    @Entao("o sistema deve manter o scout opcional vazio")
+    public void o_sistema_deve_manter_o_scout_opcional_vazio() {
+        assertNull(excecaoCapturada);
+        assertTrue(eventoRepositorio.listarPorPartida(PARTIDA_ID).isEmpty());
     }
 
     @Quando("ele registrar um gol e uma assistencia para jogadores")
@@ -230,13 +241,13 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
         }
     }
 
-    @Dado("que existe uma partida cadastrada com escalacao informada")
+    @Dado("que existe uma partida cadastrada com mesa tatica informada")
     public void que_existe_partida_cadastrada_com_escalacao_informada() {
         configurarCenarioPadrao();
         consultaEstatisticaCompeticao.registrarEscalacaoDaPartida(PARTIDA_ID);
     }
 
-    @Dado("que existe uma partida cadastrada sem escalacao informada")
+    @Dado("que existe uma partida cadastrada sem mesa tatica informada")
     public void que_existe_partida_cadastrada_sem_escalacao_informada() {
         configurarCenarioPadrao();
     }
@@ -256,22 +267,22 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
         ele_registrar_substituicao_trocando_jogador_por_outro();
     }
 
-    @Entao("o sistema deve armazenar a substituicao na sumula")
-    public void sistema_deve_armazenar_substituicao_na_sumula() {
+    @Entao("o sistema deve armazenar a substituicao no scout da partida")
+    public void sistema_deve_armazenar_substituicao_no_scout() {
         assertNull(excecaoCapturada);
         var evento = eventoRepositorio.buscarPorId(50L).orElseThrow();
         assertEquals(TipoEventoEstatistico.SUBSTITUICAO, evento.getTipo());
     }
 
-    @Dado("que existe um evento estatistico registrado na sumula da partida")
-    public void que_existe_evento_estatistico_registrado_na_sumula() {
+    @Dado("que existe um evento individual registrado no scout da partida")
+    public void que_existe_evento_individual_registrado_no_scout() {
         configurarCenarioPadrao();
         eventoRegistrado = eventoEstatisticoServico.registrarGol(
                 100L, TORNEIO_ID, PARTIDA_ID, ORGANIZADOR_ID, JOGADOR_A_ID);
     }
 
-    @Quando("ele corrigir o evento estatistico da sumula")
-    public void ele_corrigir_evento_estatistico_da_sumula() {
+    @Quando("ele corrigir o evento individual do scout")
+    public void ele_corrigir_evento_individual_do_scout() {
         try {
             eventoRegistrado = eventoEstatisticoServico.corrigirEvento(
                     100L, TORNEIO_ID, PARTIDA_ID, ORGANIZADOR_ID, JOGADOR_B_ID,
@@ -291,8 +302,8 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
         assertEquals(1, eventoRepositorio.listarPorPartida(PARTIDA_ID).size());
     }
 
-    @Quando("ele remover o evento estatistico da sumula")
-    public void ele_remover_evento_estatistico_da_sumula() {
+    @Quando("ele remover o evento individual do scout")
+    public void ele_remover_evento_individual_do_scout() {
         try {
             eventoEstatisticoServico.removerEvento(100L, TORNEIO_ID, PARTIDA_ID, ORGANIZADOR_ID);
         } catch (Exception e) {
@@ -300,8 +311,8 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
         }
     }
 
-    @Entao("o sistema deve retirar o evento da sumula da partida")
-    public void sistema_deve_retirar_evento_da_sumula() {
+    @Entao("o sistema deve retirar o evento do scout da partida")
+    public void sistema_deve_retirar_evento_do_scout() {
         assertNull(excecaoCapturada);
         assertTrue(eventoRepositorio.buscarPorId(100L).isEmpty());
         assertTrue(eventoRepositorio.listarPorPartida(PARTIDA_ID).isEmpty());
@@ -346,7 +357,7 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
     }
 
     // =====================================================================
-    // F16: Consolidar estatisticas e rankings do torneio
+    // F14: Consolidar estatisticas e rankings do torneio
     // =====================================================================
 
     @Dado("que existem eventos registrados para um jogador")
@@ -464,7 +475,7 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
         }
     }
 
-    @Entao("o sistema deve manter apenas o placar oficial sem dados estatisticos")
+    @Entao("o sistema deve manter apenas o placar oficial sem scout detalhado")
     public void sistema_deve_manter_apenas_placar_oficial() {
         assertNull(excecaoCapturada);
         assertNotNull(estatisticasJogadores);

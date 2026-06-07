@@ -17,20 +17,20 @@ O sistema proposto permite:
 - definir formato de competicao e formato de equipe
 - cadastrar times e gerenciar elenco, jogadores e tecnico
 - permitir que jogadores usem a plataforma para buscar times e acompanhar oportunidades
-- gerenciar inscricoes de times, com candidatura, acompanhamento de status, cancelamento quando pendente, avaliacao e lista final de participantes
-- usar chat privado com aba de solicitados antes de liberar mensagens entre usuarios
-- propor, aceitar, reagendar e registrar desafios amistosos entre times
+- gerenciar o ciclo de inscricoes de times, com candidatura, acompanhamento de status, cancelamento quando pendente, avaliacao e lista final de participantes
+- usar comunicacao privada com solicitacao previa antes de liberar mensagens entre usuarios
+- propor, aceitar, reagendar e registrar desafios amistosos entre times com historico proprio
 - usar amistosos apenas como recurso opcional, sem obrigar o fluxo dos torneios
 - preparar a competicao com estrutura, rodadas e partidas por sorteio automatico ou montagem manual
 - repetir torneios finalizados como novas edicoes mantendo o historico anterior
-- definir escalacao opcionalmente, ou exigir escalacao quando a regra da partida/torneio pedir
+- gerar escalacao em mesa tatica opcionalmente, ou exigir essa mesa quando a regra da partida/torneio pedir
 - publicar postagens no feed social geral com midia e hashtags
 - publicar comunicados, comentarios, curtidas, reacoes e atualizacoes automaticas no feed social
-- registrar palpites publicos de usuarios e visitantes, salvando os votos para contagem e apuracao
-- registrar resultados oficiais de partidas
-- gerenciar sumula estatistica opcional com gols, assistencias, cartoes e substituicoes condicionadas a escalacao
+- registrar palpites publicos de usuarios e visitantes, com janela de participacao, contagem e apuracao
+- registrar resultados oficiais de partidas e atualizar automaticamente o andamento da competicao
+- gerenciar scout estatistico opcional com eventos individuais, gols, assistencias, cartoes e substituicoes condicionadas a mesa tatica
 - consolidar notas, artilharia, lideres de assistencias, historico dos jogadores e historico estatistico por edicao quando houver eventos registrados
-- gerar comparativos de desempenho entre times e jogadores, salvando e consultando apenas os comparativos escolhidos
+- gerar comparativos de desempenho entre times e jogadores, salvando, consultando e atualizando apenas os comparativos escolhidos
 - acompanhar classificacao, chaveamento e andamento das partidas
 
 ## Estado Atual do Projeto
@@ -58,7 +58,7 @@ O projeto segue uma organizacao modular orientada a contexto de negocio. Cada mo
 - `dominio-compartilhado`: ids, entidades compartilhadas, enumeracoes, excecoes e eventos de dominio reutilizaveis
 - `dominio-participacao`: conta de usuario com tipo jogador ou organizador, autenticacao, inscricoes e participantes do torneio, times, jogadores, tecnico e responsavel do time
 - `dominio-torneio`: criacao, configuracao e repeticao do torneio, participantes aprovados, organizador, edicoes e estrutura da competicao
-- `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento, escalacao opcional e preparacao da competicao por sorteio ou montagem manual
+- `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento, geracao de escalacao em mesa tatica e preparacao da competicao por sorteio ou montagem manual
 - `dominio-estatisticas`: eventos estatisticos opcionais, nota estatistica, desempenho e artilharia
 - `dominio-engajamento`: palpites publicos, chat privado com solicitacoes de conversa, desafios amistosos opcionais entre times, postagens sociais, comunicados oficiais, comentarios, curtidas, reacoes e feed social
 - `pai`: modulo pai Maven com configuracao compartilhada
@@ -177,7 +177,7 @@ Inclui classes voltadas a:
 - resultado da partida
 - classificacao
 - chaveamento
-- escalacao opcional da partida
+- geracao opcional de escalacao em mesa tatica para a partida
 - rodada
 - preparacao da competicao com partidas e rodadas
 
@@ -202,7 +202,7 @@ Inclui classes voltadas a:
 
 - eventos estatisticos opcionais
 - subclasses de eventos como gol e cartoes
-- substituicoes quando houver escalacao
+- substituicoes quando houver mesa tatica
 - nota estatistica quando houver eventos registrados
 - consolidacao de desempenho, rankings e historico dos jogadores
 - arquivamento de estatisticas por edicao do torneio

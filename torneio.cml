@@ -261,6 +261,7 @@ BoundedContext Competicao implements Competicao {
 		Service EscalacaoServico {
 			void definirEscalacaoPorResponsavel(@EscalacaoId escalacao, @PartidaId partida, @TimeId time, @UsuarioId responsavel);
 			void definirEscalacaoPorTecnico(@EscalacaoId escalacao, @PartidaId partida, @TimeId time, @TecnicoId tecnico);
+			void gerarMesaTatica(@PartidaId partida, @TimeId time);
 			void congelarEscalacoesDaPartida(@PartidaId partida);
 		}
 
@@ -272,6 +273,10 @@ BoundedContext Competicao implements Competicao {
 			-TimeId time
 			String esquemaTatico
 			boolean congelada
+		}
+
+		ValueObject MesaTatica {
+			String distribuicaoVisual
 		}
 
 		ValueObject EscalacaoId {

@@ -21,6 +21,7 @@ import com.torneios.dominio.competicao.classificacao.Classificacao;
 import com.torneios.dominio.competicao.classificacao.ClassificacaoServico;
 import com.torneios.dominio.competicao.escalacao.Escalacao;
 import com.torneios.dominio.competicao.escalacao.EscalacaoId;
+import com.torneios.dominio.competicao.escalacao.MesaTatica;
 import com.torneios.dominio.competicao.escalacao.EscalacaoServico;
 import com.torneios.dominio.competicao.escalacao.JogadorEscalado;
 import com.torneios.dominio.competicao.geracao.GeradorPartidasServico;
@@ -74,6 +75,7 @@ public class CompeticaoFuncionalidade implements EventoBarramento {
     protected List<Classificacao> classificacao;
     protected Chaveamento chaveamento;
     protected Escalacao escalacao;
+    protected MesaTatica mesaTatica;
     protected Exception excecaoCapturada;
 
     @Override

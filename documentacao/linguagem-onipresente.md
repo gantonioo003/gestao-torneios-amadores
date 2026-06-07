@@ -118,7 +118,10 @@ Modo de preparacao em que o sistema distribui automaticamente os times aprovados
 Modo de preparacao em que o organizador escolhe manualmente a ordem ou distribuicao dos times aprovados antes da geracao das partidas.
 
 ### Escalacao
-Configuracao opcional definida pelo responsavel do time ou pelo tecnico para uma partida especifica, contendo o esquema tatico, os jogadores titulares por posicao e os jogadores reservas. Quando a partida exigir escalacao ou quando um time informar, os dois times devem informar. A escalacao pode ser editada ate o inicio da partida e fica congelada apos esse momento.
+Configuracao opcional definida pelo responsavel do time ou pelo tecnico para uma partida especifica, contendo o esquema tatico, os jogadores titulares por posicao, os jogadores reservas e a distribuicao visual dos titulares em uma mesa tatica. Quando a partida exigir mesa tatica ou quando um time informar, os dois times devem informar. A escalacao pode ser editada ate o inicio da partida e fica congelada apos esse momento.
+
+### Mesa tatica
+Representacao visual da escalacao em campo, gerada a partir do esquema tatico e dos titulares posicionados, para mostrar onde cada jogador inicia a partida.
 
 ### Esquema tatico
 Distribuicao das posicoes dos jogadores titulares em campo, compativel com o formato de equipe do torneio. Exemplos: 4-4-2 ou 4-3-3 no 11x11; 2-1-1 no 5x5; 1-1-1 no 3x3.
@@ -132,8 +135,8 @@ Jogador escalado para iniciar a partida em uma posicao definida pelo esquema tat
 ### Reserva
 Jogador relacionado para a partida que nao inicia como titular, mas fica disponivel para compor a equipe conforme a necessidade do time.
 
-### Sumula estatistica
-Registro opcional dos eventos detalhados de uma partida, como gols, assistencias, cartoes e substituicoes. Pode ser corrigida ou ajustada pelo organizador.
+### Scout estatistico da partida
+Registro opcional dos eventos individuais e detalhados de uma partida, como gols, assistencias, cartoes e substituicoes. Pode ser criado, corrigido ou ajustado pelo organizador sem substituir o placar oficial da partida.
 
 ### Gol
 Evento estatistico registrado quando um jogador marca para seu time em uma partida.
@@ -148,7 +151,7 @@ Evento estatistico de advertencia recebido por um jogador durante a partida.
 Evento estatistico de expulsao recebido por um jogador durante a partida.
 
 ### Substituicao
-Evento estatistico opcional que registra a troca de um jogador por outro durante a partida. So pode existir quando a partida possui escalacao.
+Evento estatistico opcional que registra a troca de um jogador por outro durante a partida. So pode existir quando a partida possui mesa tatica.
 
 ### Artilharia
 Ranking dos jogadores com maior numero de gols no torneio, calculado quando houver registro de gols.
@@ -157,7 +160,7 @@ Ranking dos jogadores com maior numero de gols no torneio, calculado quando houv
 Pontuacao calculada automaticamente pelo sistema com base em uma formula que considera os eventos registrados para um jogador em uma partida. So existe quando houver eventos registrados.
 
 ### Consolidacao de estatisticas
-Processo que agrupa os eventos registrados na sumula para atualizar notas, artilharia, lideres de assistencias e historico dos jogadores.
+Processo que agrupa os eventos registrados no scout da partida para atualizar notas, artilharia, lideres de assistencias e historico dos jogadores.
 
 ### Historico do jogador
 Conjunto de eventos e desempenho acumulado de um jogador dentro do torneio.

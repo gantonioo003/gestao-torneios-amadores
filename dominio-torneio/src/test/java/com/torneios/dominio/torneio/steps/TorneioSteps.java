@@ -18,7 +18,7 @@ import io.cucumber.java.pt.Quando;
 public class TorneioSteps extends TorneioFuncionalidade {
 
     // =====================================================================
-    // F9: Criar e configurar torneio
+    // F9: Gerenciar criacao, configuracao, repeticao e preparacao da competicao do torneio
     // =====================================================================
 
     @Dado("que o usuário está autenticado")
@@ -103,7 +103,7 @@ public class TorneioSteps extends TorneioFuncionalidade {
     }
 
     // =====================================================================
-    // F11: Gerar estrutura da competição
+    // F9: Gerenciar criacao, configuracao, repeticao e preparacao da competicao do torneio
     // =====================================================================
 
     @Dado("que o usuario esta autenticado")

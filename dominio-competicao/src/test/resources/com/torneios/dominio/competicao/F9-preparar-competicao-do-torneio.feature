@@ -1,4 +1,4 @@
-Feature: Preparar competicao do torneio
+Feature: Gerenciar criacao, configuracao, repeticao e preparacao da competicao do torneio
 
   As a organizador do torneio
   I want preparar a estrutura, as rodadas e as partidas do torneio

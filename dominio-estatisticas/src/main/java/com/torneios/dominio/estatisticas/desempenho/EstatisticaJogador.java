@@ -56,7 +56,7 @@ public class EstatisticaJogador {
             case CARTAO_AMARELO -> cartoesAmarelos++;
             case CARTAO_VERMELHO -> cartoesVermelhos++;
             case SUBSTITUICAO -> {
-                // Substituicao entra no historico da sumula, mas nao altera rankings basicos.
+                // Substituicao entra no scout detalhado da partida, mas nao altera rankings basicos.
             }
         }
     }

@@ -60,6 +60,10 @@ public class EscalacaoServico {
         return escalacaoRepositorio.listarPorPartida(partidaId);
     }
 
+    public MesaTatica gerarMesaTatica(PartidaId partidaId, TimeId timeId) {
+        return obterEscalacao(partidaId, timeId).gerarMesaTatica();
+    }
+
     public void congelarEscalacoesDaPartida(PartidaId partidaId) {
         List<Escalacao> escalacoes = escalacaoRepositorio.listarPorPartida(partidaId);
         validarObrigatoriedadeOuSimetria(partidaId, escalacoes);
@@ -109,7 +113,7 @@ public class EscalacaoServico {
         boolean existeEscalacaoInformada = !escalacoes.isEmpty();
         if ((escalacaoObrigatoria || existeEscalacaoInformada) && escalacoes.size() < timesDaPartida.size()) {
             throw new RegraDeNegocioException(
-                    "Quando a escalacao for obrigatoria ou um time informar escalacao, todos os times da partida devem informar escalacao.");
+                    "Quando a mesa tatica for obrigatoria ou um time informar mesa tatica, todos os times da partida devem informar mesa tatica.");
         }
     }
 
@@ -117,7 +121,7 @@ public class EscalacaoServico {
         Objects.requireNonNull(usuarioId, "O usuario responsavel pela escalacao e obrigatorio.");
         if (!consultaSuporte.usuarioEhResponsavelDoTime(timeId, usuarioId)) {
             throw new OperacaoNaoPermitidaException(
-                    "Apenas o usuario responsavel pelo time pode definir a escalacao.");
+                    "Apenas o usuario responsavel pelo time pode gerar a mesa tatica.");
         }
     }
 
@@ -125,7 +129,7 @@ public class EscalacaoServico {
         Objects.requireNonNull(tecnicoId, "O tecnico responsavel pela escalacao e obrigatorio.");
         if (!consultaSuporte.tecnicoEstaAssociadoAoTime(timeId, tecnicoId)) {
             throw new OperacaoNaoPermitidaException(
-                    "Apenas o tecnico associado ao time pode definir a escalacao.");
+                    "Apenas o tecnico associado ao time pode gerar a mesa tatica.");
         }
     }
 

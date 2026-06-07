@@ -1,8 +1,8 @@
-Feature: Gerenciar criacao, configuracao e repeticao do torneio
+Feature: Gerenciar criacao, configuracao, repeticao e preparacao da competicao do torneio
 
   As a usuario autenticado organizador
-  I want criar, configurar e repetir um torneio
-  So that eu possa organizar novas edicoes sem perder o historico anterior
+  I want criar, configurar, repetir e preparar a competicao de um torneio
+  So that eu possa organizar novas edicoes e preparar disputas sem perder o historico anterior
 
   Scenario: Criar torneio completo com configuracao valida
     Given que o usuario esta autenticado

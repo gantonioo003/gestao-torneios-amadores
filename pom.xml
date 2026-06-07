@@ -19,6 +19,8 @@
     <module>dominio-estatisticas</module>
     <module>dominio-engajamento</module>
     <module>aplicacao</module>
+    <module>infraestrutura</module>
+    <module>apresentacao-backend</module>
     <module>apresentacao-frontend</module>
     <module>pai</module>
 </modules>

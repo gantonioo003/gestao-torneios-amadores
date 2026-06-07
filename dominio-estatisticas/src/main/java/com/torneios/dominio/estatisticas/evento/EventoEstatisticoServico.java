@@ -68,7 +68,7 @@ public class EventoEstatisticoServico {
         validarRegistroBase(torneioId, partidaId, organizadorId);
         if (!consultaEstatisticaCompeticao.partidaPossuiEscalacao(partidaId)) {
             throw new RegraDeNegocioException(
-                    "Substituicao so pode ser registrada quando a partida possui escalacao.");
+                    "Substituicao so pode ser registrada quando a partida possui mesa tatica.");
         }
         validarJogadorDaPartida(partidaId, jogadorSaiuId);
         validarJogadorDaPartida(partidaId, jogadorEntrouId);
@@ -107,7 +107,7 @@ public class EventoEstatisticoServico {
                                              UsuarioId organizadorId,
                                              JogadorId jogadorId,
                                              TipoEventoEstatistico novoTipo) {
-        EventoEstatistico eventoExistente = obterEventoDaSumula(eventoId, torneioId, partidaId);
+        EventoEstatistico eventoExistente = obterEventoDoScout(eventoId, torneioId, partidaId);
         validarRegistro(torneioId, partidaId, organizadorId, jogadorId);
         return registrarEvento(eventoExistente.getId(), torneioId, partidaId, organizadorId, jogadorId, novoTipo);
     }
@@ -117,7 +117,7 @@ public class EventoEstatisticoServico {
                               PartidaId partidaId,
                               UsuarioId organizadorId) {
         validarRegistroBase(torneioId, partidaId, organizadorId);
-        obterEventoDaSumula(eventoId, torneioId, partidaId);
+        obterEventoDoScout(eventoId, torneioId, partidaId);
         eventoEstatisticoRepositorio.remover(eventoId);
     }
 
@@ -148,11 +148,11 @@ public class EventoEstatisticoServico {
         }
     }
 
-    private EventoEstatistico obterEventoDaSumula(long eventoId, TorneioId torneioId, PartidaId partidaId) {
+    private EventoEstatistico obterEventoDoScout(long eventoId, TorneioId torneioId, PartidaId partidaId) {
         EventoEstatistico evento = eventoEstatisticoRepositorio.buscarPorId(eventoId)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Evento estatistico nao encontrado."));
         if (!evento.getTorneioId().equals(torneioId) || !evento.getPartidaId().equals(partidaId)) {
-            throw new RegraDeNegocioException("O evento informado nao pertence a sumula da partida.");
+            throw new RegraDeNegocioException("O evento informado nao pertence ao scout estatistico da partida.");
         }
         return evento;
     }

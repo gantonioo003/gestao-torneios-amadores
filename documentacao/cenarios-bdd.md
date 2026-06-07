@@ -2,7 +2,7 @@
 
 ## Funcionalidades com cenarios definidos
 
-### F1. Gerenciar palpites publicos de usuarios e visitantes
+### F1. Gerenciar ciclo completo de palpites publicos de usuarios e visitantes
 Dominio: dominio-engajamento
 Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F1-registrar-palpite.feature
 
@@ -23,7 +23,7 @@ Cenarios principais:
 
 ---
 
-### F2. Gerenciar ciclo de vida da conta de usuario e autenticacao
+### F2. Gerenciar ciclo completo da conta de usuario e autenticacao
 Dominio: dominio-participacao
 Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F2-gerenciar-conta-de-usuario-e-autenticacao.feature
 
@@ -39,7 +39,7 @@ Cenarios principais:
 
 ---
 
-### F3. Gerenciar inscricoes e participantes do torneio
+### F3. Gerenciar inscricoes, curadoria e participantes finais do torneio
 Dominio: dominio-participacao
 Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F3-gerenciar-inscricoes-e-participantes-do-torneio.feature
 
@@ -62,7 +62,7 @@ Cenarios principais:
 
 ---
 
-### F4. Gerenciar chat privado com solicitacoes de conversa
+### F4. Gerenciar comunicacao privada com solicitacoes de conversa
 Dominio: dominio-engajamento
 Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F4-gerenciar-chat-privado-com-solicitacoes-de-conversa.feature
 
@@ -90,24 +90,27 @@ Cenarios principais:
 
 ---
 
-### F6. Gerenciar elenco e comissao tecnica do time
+### F6. Cadastrar profissional esportivo com historico de carreira
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F6-gerenciar-elenco-e-comissao-tecnica-do-time.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F6-cadastrar-profissional-esportivo.feature
 
 Cenarios principais:
-- adicionar jogador ao elenco do time
-- editar dados de um jogador do elenco
-- remover jogador do elenco do time
-- associar tecnico a um time
-- editar dados de um tecnico do time
-- remover tecnico da comissao tecnica do time
-- impedir gerenciamento por usuario nao responsavel
-- impedir remocao de jogador inexistente
-- impedir remocao de tecnico inexistente
+- cadastrar profissional com nome e tipo validos
+- impedir cadastro de profissional sem nome
+- impedir cadastro de profissional sem tipo
+- exigir autenticacao para cadastrar profissional
+- editar profissional cadastrado pelo proprio usuario
+- impedir edicao por outro usuario
+- remover profissional sem vinculo ativo
+- impedir remocao por outro usuario
+- adicionar registro de carreira com dados validos
+- impedir registro de carreira com dados invalidos
+- impedir sobreposicao de periodos no historico
+- remover registro de carreira existente
 
 ---
 
-### F7. Gerenciar comparativos de desempenho entre times e jogadores
+### F7. Gerenciar analises comparativas de desempenho entre times e jogadores
 Dominio: dominio-estatisticas
 Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/F7-gerenciar-comparativos-de-desempenho.feature
 
@@ -122,43 +125,51 @@ Cenarios principais:
 
 ---
 
-### F8. Gerenciar escalacao opcional do time para uma partida
+### F8. Gerenciar a geracao opcional da mesa tatica do time para uma partida
 Dominio: dominio-competicao
-Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F8-escalar-time-para-partida.feature
+Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F8-gerar-escalacao-em-mesa-tatica.feature
 
 Cenarios principais:
-- permitir partida sem escalacao quando ela nao for obrigatoria
-- impedir inicio com escalacao informada por apenas um time
-- impedir inicio de partida que exige escalacao sem todos os times escalados
-- definir escalacao com esquema tatico, titulares por posicao e reservas com sucesso
-- permitir escalacao tanto pelo responsavel do time quanto pelo tecnico associado
-- impedir escalacao por usuario que nao e responsavel nem tecnico do time
-- impedir escalacao com quantidade de titulares diferente do formato de equipe do torneio
-- impedir escalacao com esquema tatico incompativel com o formato de equipe
-- impedir escalacao com jogador que nao pertence ao elenco do time
-- impedir o mesmo jogador como titular e reserva da mesma escalacao
-- editar escalacao enquanto a partida nao foi iniciada
-- impedir edicao de escalacao apos o inicio da partida
+- permitir partida sem mesa tatica quando ela nao for obrigatoria
+- impedir inicio com mesa tatica informada por apenas um time
+- impedir inicio de partida que exige mesa tatica sem todos os times escalados
+- gerar mesa tatica com esquema tatico, titulares por posicao e reservas com sucesso
+- permitir geracao da mesa tatica tanto pelo responsavel do time quanto pelo tecnico associado
+- impedir geracao de mesa tatica por usuario que nao e responsavel nem tecnico do time
+- impedir geracao de mesa tatica com quantidade de titulares diferente do formato de equipe do torneio
+- impedir geracao de mesa tatica com esquema tatico incompativel com o formato de equipe
+- impedir geracao de mesa tatica com jogador que nao pertence ao elenco do time
+- impedir o mesmo jogador como titular e reserva da mesma mesa tatica
+- editar mesa tatica enquanto a partida nao foi iniciada
+- impedir edicao de mesa tatica apos o inicio da partida
 - aceitar quantidade qualquer de reservas, inclusive zero
 
 ---
 
-### F9. Gerenciar criacao e configuracao do torneio
+### F9. Gerenciar o ciclo estrutural do torneio e a preparacao da competicao
 Dominio: dominio-torneio
-Arquivo: dominio-torneio/src/test/resources/com/torneios/dominio/torneio/F9-criar-e-configurar-torneio.feature
+Arquivos:
+- dominio-torneio/src/test/resources/com/torneios/dominio/torneio/F9-criar-e-configurar-torneio.feature
+- dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F9-preparar-competicao-do-torneio.feature
 
 Cenarios principais:
 - criar torneio com formato de competicao e formato de equipe validos
 - gerar estrutura do torneio por sorteio
 - gerar estrutura do torneio por montagem manual
 - repetir torneio mantendo historico da edicao anterior
+- preparar competicao por pontos corridos
+- preparar competicao por sorteio automatico
+- preparar competicao com montagem manual dos confrontos
+- preparar competicao mata-mata
+- preparar competicao com fase de grupos
 - impedir criacao de torneio sem formato de competicao
 - impedir criacao de torneio sem definicao da quantidade de jogadores por equipe
 - definir se o torneio sera aberto para solicitacao ou com participantes definidos
+- impedir preparacao sem estrutura previa da competicao
 
 ---
 
-### F10. Gerenciar desafios e amistosos opcionais entre times
+### F10. Gerenciar o ciclo social de desafios e amistosos opcionais entre times
 Dominio: dominio-engajamento
 Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F10-gerenciar-desafios-e-amistosos-entre-times.feature
 
@@ -173,23 +184,9 @@ Cenarios principais:
 
 ---
 
-### F11. Preparar competicao do torneio
-Dominio: dominio-competicao
-Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F11-preparar-competicao-do-torneio.feature
-
-Cenarios principais:
-- preparar competicao por pontos corridos
-- preparar competicao por sorteio automatico
-- preparar competicao com montagem manual dos confrontos
-- preparar competicao mata-mata
-- preparar competicao com fase de grupos
-- impedir preparacao sem estrutura previa da competicao
-
----
-
-### F12. Gerenciar comunicados e feed social do torneio
+### F11. Gerenciar o ecossistema de feed social da plataforma e do torneio
 Dominio: dominio-engajamento
-Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F12-gerenciar-comunicados-e-feed-social-do-torneio.feature
+Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F11-gerenciar-comunicados-e-feed-social-do-torneio.feature
 
 Cenarios principais:
 - publicar postagem no feed social geral com hashtag e midia
@@ -207,9 +204,9 @@ Cenarios principais:
 
 ---
 
-### F13. Registrar placar oficial da partida
+### F12. Gerenciar placar oficial da partida e atualizacao do andamento da competicao
 Dominio: dominio-competicao
-Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F13-registrar-resultado-da-partida.feature
+Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F12-registrar-placar-e-atualizar-andamento-da-competicao.feature
 
 Cenarios principais:
 - registrar resultado valido de uma partida
@@ -217,14 +214,6 @@ Cenarios principais:
 - atualizar automaticamente classificacao ou chaveamento apos resultado
 - impedir registro por usuario nao organizador
 - impedir registro para partida inexistente ou invalida
-
----
-
-### F14. Gerenciar andamento da competicao
-Dominio: dominio-competicao
-Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F14-gerenciar-andamento-da-competicao.feature
-
-Cenarios principais:
 - atualizar classificacao e status da partida apos resultado
 - gerenciar chaveamento em torneio mata-mata
 - consultar classificacao em torneio de pontos corridos
@@ -232,25 +221,26 @@ Cenarios principais:
 
 ---
 
-### F15. Gerenciar sumula estatistica opcional da partida
+### F13. Gerenciar o scout estatistico opcional e detalhado da partida
 Dominio: dominio-estatisticas
-Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/F15-gerenciar-sumula-estatistica-da-partida.feature
+Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/F13-gerenciar-scout-estatistico-opcional-da-partida.feature
 
 Cenarios principais:
+- manter a partida sem scout detalhado quando o organizador nao quiser registrar eventos individuais
 - registrar gol e assistencia em uma partida
 - registrar cartoes em uma partida
-- registrar substituicao quando a partida possui escalacao
-- impedir substituicao quando a partida nao possui escalacao
-- corrigir evento estatistico da sumula
-- remover evento estatistico da sumula
-- impedir gerenciamento de sumula por usuario nao organizador
+- registrar substituicao quando a partida possui mesa tatica
+- impedir substituicao quando a partida nao possui mesa tatica
+- corrigir evento individual do scout
+- remover evento individual do scout
+- impedir gerenciamento do scout por usuario nao organizador
 - impedir registro de eventos para jogador nao pertencente ao time
 
 ---
 
-### F16. Consolidar estatisticas e rankings do torneio
+### F14. Gerenciar a consolidacao historica das estatisticas e rankings do torneio
 Dominio: dominio-estatisticas
-Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/F16-consolidar-estatisticas-e-rankings-do-torneio.feature
+Arquivo: dominio-estatisticas/src/test/resources/com/torneios/dominio/estatisticas/F14-consolidar-estatisticas-e-rankings-do-torneio.feature
 
 Cenarios principais:
 - consolidar notas, artilharia, assistencias e historico dos jogadores
@@ -312,17 +302,17 @@ Cenarios principais:
 - RN43. Usuario pode atualizar comparativo salvo quando os dados mudarem.
 - RN44. Usuario pode excluir comparativo salvo.
 - RN45. O sistema deve impedir comparativo sem dados estatisticos suficientes.
-- RN46. Escalacao e opcional quando o torneio ou a partida nao exigirem esse detalhamento.
-- RN47. Escalacao definida pelo responsavel do time ou pelo tecnico.
-- RN48. Esquema tatico compativel com o formato de equipe.
-- RN49. Quantidade de titulares igual ao formato de equipe.
-- RN50. Cada titular associado a uma posicao do esquema.
-- RN51. Titulares e reservas devem pertencer ao elenco do time.
-- RN52. Sem limite maximo de reservas.
-- RN53. Mesmo jogador nao pode ser titular e reserva simultaneamente.
-- RN54. Escalacao editavel ate o inicio da partida.
-- RN55. Se a partida ou o torneio exigir escalacao, os dois times devem informar escalacao antes do inicio.
-- RN56. Se um time informar escalacao em uma partida opcional, o outro time tambem deve informar para manter equilibrio de dados.
+- RN46. A mesa tatica e opcional quando o torneio ou a partida nao exigirem esse detalhamento.
+- RN47. A mesa tatica pode ser gerada pelo responsavel do time ou pelo tecnico.
+- RN48. O esquema tatico da mesa tatica deve ser compativel com o formato de equipe.
+- RN49. A quantidade de titulares da mesa tatica deve ser igual ao formato de equipe.
+- RN50. Cada titular da mesa tatica deve estar associado a uma posicao do esquema e a um posicionamento em campo.
+- RN51. Titulares e reservas da mesa tatica devem pertencer ao elenco do time.
+- RN52. Sem limite maximo de reservas na mesa tatica.
+- RN53. Mesmo jogador nao pode ser titular e reserva simultaneamente na mesma mesa tatica.
+- RN54. A mesa tatica pode ser editada ate o inicio da partida.
+- RN55. Se a partida ou o torneio exigir mesa tatica, os dois times devem informar mesa tatica antes do inicio.
+- RN56. Se um time informar mesa tatica em uma partida opcional, o outro time tambem deve informar para manter equilibrio de dados.
 
 ### Organizacao e comunicacao
 - RN57. Apenas usuarios autenticados podem criar torneios.
@@ -360,13 +350,13 @@ Cenarios principais:
 - RN87. Resultado atualiza classificacao, chaveamento e status da partida automaticamente.
 - RN88. Nao permitir resultados invalidos.
 - RN89. O resultado da partida pode ser registrado sem eventos estatisticos.
-- RN90. Registrar gols, assistencias, cartoes e substituicoes quando desejado.
+- RN90. Registrar eventos individuais no scout opcional quando desejado.
 - RN91. Nota estatistica calculada automaticamente quando houver eventos.
 - RN92. Nota baseada em formula com pesos.
 - RN93. Considera eventos basicos na versao inicial.
 - RN94. Eventos positivos e negativos afetam a nota.
 - RN95. Artilharia atualizada automaticamente quando houver gols registrados.
-- RN96. Na ausencia de eventos, apenas o placar oficial da partida deve ser exibido.
-- RN97. Eventos da sumula estatistica podem ser corrigidos ou removidos pelo organizador.
+- RN96. Na ausencia de scout detalhado, apenas o placar oficial da partida deve ser exibido.
+- RN97. Eventos do scout estatistico podem ser corrigidos ou removidos pelo organizador.
 - RN98. A consolidacao das estatisticas atualiza notas, artilharia, lideres de assistencias e historico dos jogadores.
-- RN99. Substituicao so pode ser registrada quando a partida possui escalacao.
+- RN99. Substituicao so pode ser registrada quando a partida possui mesa tatica.

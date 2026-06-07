@@ -61,14 +61,14 @@
 - Como responsavel por um time, quero editar e remover o tecnico associado para manter a comissao tecnica correta.
 - Como organizador, quero visualizar elenco e tecnico dos times participantes para validar a composicao das equipes.
 
-## 6. Escalacao da partida
-- Como responsavel por um time, quero escolher o esquema tatico da minha escalacao para uma partida para definir como meu time se posicionara em campo.
-- Como responsavel por um time, quero indicar os jogadores titulares por posicao para montar minha escalacao inicial.
+## 6. Mesa tatica da partida
+- Como responsavel por um time, quero escolher o esquema tatico da minha mesa tatica para uma partida para definir como meu time se posicionara em campo.
+- Como responsavel por um time, quero indicar os jogadores titulares por posicao para montar minha mesa tatica inicial.
 - Como responsavel por um time, quero indicar os jogadores reservas da partida para deixar a equipe completa e organizada antes do jogo.
-- Como tecnico associado ao time, quero definir e ajustar a escalacao da partida ate seu inicio para garantir a melhor formacao possivel.
-- Como responsavel por um time, quero poder deixar a partida sem escalacao quando ela nao for obrigatoria para simplificar torneios menores.
-- Como organizador, quero exigir escalacao em torneios que precisam de sumula mais completa para padronizar os dados.
-- Como organizador, quero visualizar as escalacoes confirmadas dos times antes da partida para validar a competicao.
+- Como tecnico associado ao time, quero definir e ajustar a mesa tatica da partida ate seu inicio para garantir a melhor formacao possivel.
+- Como responsavel por um time, quero poder deixar a partida sem mesa tatica quando ela nao for obrigatoria para simplificar torneios menores.
+- Como organizador, quero exigir mesa tatica em torneios que precisam de scout estatistico mais completo para padronizar os dados.
+- Como organizador, quero visualizar as mesas taticas confirmadas dos times antes da partida para validar a competicao.
 
 ## 7. Gestao de partidas e andamento da competicao
 - Como organizador, quero registrar o resultado de uma partida para atualizar o andamento do torneio.
@@ -79,8 +79,8 @@
 ## 8. Estatisticas e desempenho dos jogadores
 - Como organizador, quero registrar gols e assistencias de uma partida para acompanhar o desempenho ofensivo dos jogadores.
 - Como organizador, quero registrar cartoes amarelos e vermelhos para refletir eventos disciplinares da partida.
-- Como organizador, quero registrar substituicoes quando houver escalacao para manter a sumula fiel ao jogo.
-- Como organizador, quero corrigir ou remover eventos da sumula estatistica para manter os dados da partida consistentes.
+- Como organizador, quero registrar substituicoes quando houver mesa tatica para manter o scout detalhado fiel ao jogo.
+- Como organizador, quero corrigir ou remover eventos do scout estatistico para manter os dados da partida consistentes.
 - Como organizador, quero registrar eventos estatisticos apenas quando desejar detalhar a partida.
 - Como organizador, quero que o sistema consolide automaticamente notas, artilharia, lideres de assistencias e historico dos jogadores quando houver eventos registrados.
 - Como organizador, quero arquivar as estatisticas de uma edicao finalizada antes de iniciar nova edicao para manter a memoria historica do torneio.

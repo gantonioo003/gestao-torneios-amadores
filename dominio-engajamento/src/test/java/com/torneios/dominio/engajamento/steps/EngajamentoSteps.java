@@ -546,7 +546,7 @@ public class EngajamentoSteps extends EngajamentoFuncionalidade {
     }
 
     // =====================================================================
-    // F12: Gerenciar comunicados e feed social do torneio
+    // F11: Gerenciar comunicados e feed social do torneio
     // =====================================================================
 
     @Quando("ele publicar uma postagem no feed social com hashtag e midia")
