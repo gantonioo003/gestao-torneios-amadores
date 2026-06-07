@@ -17,6 +17,7 @@ import com.torneios.aplicacao.participacao.time.TimeServicoAplicacao;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoId;
+import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoRepositorio;
 import com.torneios.dominio.participacao.time.TimeServico;
 
 @RestController
@@ -25,6 +26,7 @@ class TimeControlador {
 
     @Autowired TimeServico timeServico;
     @Autowired TimeServicoAplicacao timeServicoConsulta;
+    @Autowired ProfissionalEsportivoRepositorio profissionalRepositorio;
 
     @RequestMapping(method = GET, path = "pesquisa")
     List<? extends TimeResumo> pesquisar(@RequestParam long responsavelId) {
@@ -48,7 +50,14 @@ class TimeControlador {
         dto.id = time.getId().valor();
         dto.nome = time.getNome();
         dto.responsavelId = time.getResponsavel().valor();
-        dto.elenco = timeServicoConsulta.pesquisarResumoExpandido(id).getElenco();
+        dto.elenco = timeServicoConsulta.pesquisarResumoExpandido(id).getElenco().stream()
+            .map(v -> {
+                String nome = profissionalRepositorio
+                    .buscarPorId(new ProfissionalEsportivoId(v.getProfissionalId()))
+                    .map(p -> p.getNome())
+                    .orElse("Profissional #" + v.getProfissionalId());
+                return new TimeFormulario.VinculoEnriquecidoDto(v, nome);
+            }).toList();
         return new TimeFormulario(dto);
     }
 

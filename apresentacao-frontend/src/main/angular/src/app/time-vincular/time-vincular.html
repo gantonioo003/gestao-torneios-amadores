@@ -1,80 +1,69 @@
-<div class="tela">
-  <div class="panel">
-    <div class="panel-title">F5.5 — VINCULAR PROFISSIONAL</div>
-
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-      <a class="voltar" [routerLink]="['/time', timeId, 'detalhes']">← Voltar</a>
-      <span style="font-size:13px;font-weight:600">Vincular profissional</span>
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand">Liga Amadora+</a>
+    <div class="navbar-nav ms-auto">
+      <a class="nav-link" routerLink="/time/pesquisa">Times</a>
+      <a class="nav-link" routerLink="/profissional/pesquisa">Profissionais</a>
     </div>
+  </div>
+</nav>
 
-    <!-- Busca -->
-    <div class="campo">
-      <label>Buscar profissional *</label>
-      <div class="busca-wrap">
-        <input type="text" [(ngModel)]="termoBusca" (input)="buscar()"
-               placeholder="Nome ou tipo...">
+<div class="container py-5" style="max-width: 600px">
+  <a class="text-muted text-decoration-none mb-3 d-inline-block" [routerLink]="['/time', timeId, 'detalhes']">← Voltar</a>
+  <h2 class="fw-bold mb-4">Vincular profissional</h2>
+
+  <div class="card p-4">
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Buscar profissional *</label>
+      @if (!selecionado) {
+        <input class="form-control" [(ngModel)]="termoBusca" (input)="buscar()" placeholder="Nome ou tipo...">
         @if (resultados.length > 0) {
-          <div class="busca-resultado">
+          <div class="list-group mt-1">
             @for (p of resultados; track p.id) {
-              <button (click)="selecionar(p)">
-                <div class="dr-nome">{{ p.nome }} — {{ tipoLabel(p.tipo) }}</div>
-                <div class="dr-sub">{{ p.passagens ?? 0 }} passagens no time atual</div>
+              <button class="list-group-item list-group-item-action py-2" (click)="selecionar(p)">
+                <span class="fw-semibold">{{ p.nome }}</span>
+                <span class="text-muted ms-2">· {{ tipoLabel(p.tipo) }}</span>
               </button>
             }
           </div>
         }
-      </div>
-    </div>
-
-    <!-- Resultados fixos como no protótipo quando não há busca -->
-    @if (!termoBusca && !selecionado) {
-      <div style="margin-bottom:10px">
-        @for (p of exemplos; track p.id) {
-          <div class="item-linha">
-            <div>
-              <div class="item-nome">{{ p.nome }} — {{ p.tipo }}</div>
-              <div class="item-sub">{{ p.passagens }} passagens no time atual</div>
-            </div>
-            <button class="btn btn-dark btn-sm" (click)="selecionar(p)">Selec.</button>
+        @if (!termoBusca && exemplos.length > 0) {
+          <div class="list-group mt-1">
+            @for (p of exemplos; track p.id) {
+              <button class="list-group-item list-group-item-action py-2" (click)="selecionar(p)">
+                <span class="fw-semibold">{{ p.nome }}</span>
+                <span class="text-muted ms-2">· {{ tipoLabel(p.tipo) }}</span>
+              </button>
+            }
           </div>
         }
-      </div>
-    }
-
-    @if (selecionado) {
-      <div class="selecionado-box">
-        <span>{{ selecionado.nome }}</span>
-        <button (click)="limpar()">✕</button>
-      </div>
-    }
-
-    <!-- Campos de vínculo -->
-    <div class="campo">
-      <label>Função no time *</label>
-      <input type="text" [(ngModel)]="funcao" placeholder="Ex.: Atacante / Treinador / Auxiliar...">
+      } @else {
+        <div class="d-flex align-items-center justify-content-between p-2 bg-light rounded border">
+          <span class="fw-semibold">{{ selecionado.nome }}</span>
+          <button class="btn btn-sm btn-outline-secondary" (click)="limpar()">✕ Trocar</button>
+        </div>
+      }
     </div>
 
-    <div class="campos-2">
-      <div class="campo">
-        <label>Data do início *</label>
-        <input type="date" [(ngModel)]="dataInicio">
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Função no time *</label>
+      <input class="form-control" [(ngModel)]="funcao" placeholder="Ex.: Atacante / Treinador / Auxiliar...">
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col">
+        <label class="form-label fw-semibold">Data de início *</label>
+        <input class="form-control" type="date" [(ngModel)]="dataInicio">
       </div>
-      <div class="campo">
-        <label>Data limite do contrato</label>
-        <input type="date" [(ngModel)]="dataLimite">
+      <div class="col">
+        <label class="form-label fw-semibold">Data limite do contrato</label>
+        <input class="form-control" type="date" [(ngModel)]="dataLimite">
       </div>
     </div>
 
-    <div class="btn-row">
-      <button class="btn btn-dark" (click)="vincular()">Vincular</button>
-      <a class="btn" [routerLink]="['/time', timeId, 'detalhes']">Cancelar</a>
-    </div>
-
-    <div class="notas" style="margin-top:10px">
-      <p>Apenas responsável acessa (RN8)</p>
-      <p>Um profissional por time (RN9)</p>
-      <p>Função e início obrigatórios</p>
-      <p>Função editável após vínculo (RN10)</p>
+    <div class="d-flex gap-2">
+      <a class="btn btn-secondary" [routerLink]="['/time', timeId, 'detalhes']">Cancelar</a>
+      <button class="btn btn-primary ms-auto" (click)="vincular()">Vincular</button>
     </div>
   </div>
 </div>

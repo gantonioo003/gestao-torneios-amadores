@@ -19,7 +19,23 @@ public class TimeFormulario {
         public Long id;
         public String nome;
         public Long responsavelId;
-        public List<VinculoProfissionalResumo> elenco;
+        public List<VinculoEnriquecidoDto> elenco;
+    }
+
+    public static class VinculoEnriquecidoDto {
+        public Long profissionalId;
+        public String nomeProfissional;
+        public String funcao;
+        public java.time.LocalDate dataInicio;
+        public java.time.LocalDate dataLimiteContrato;
+
+        public VinculoEnriquecidoDto(VinculoProfissionalResumo v, String nomeProfissional) {
+            this.profissionalId = v.getProfissionalId();
+            this.nomeProfissional = nomeProfissional;
+            this.funcao = v.getFuncao();
+            this.dataInicio = v.getDataInicio();
+            this.dataLimiteContrato = v.getDataLimiteContrato();
+        }
     }
 
     public static class VinculoDto {

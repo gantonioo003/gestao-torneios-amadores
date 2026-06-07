@@ -18,12 +18,11 @@ export class ProfissionalCadastro {
   constructor(private readonly http: HttpClient, private readonly router: Router) {}
 
   cadastrar() {
-    const tipoFinal = this.tipoSelecionado || this.tipo;
     if (!this.nome.trim()) { alert('Nome é obrigatório.'); return; }
-    if (!tipoFinal) { alert('Tipo é obrigatório.'); return; }
+    if (!this.tipoSelecionado) { alert('Tipo é obrigatório.'); return; }
     this.http.post('/backend/profissional/salvar', {
       nome: this.nome,
-      tipo: tipoFinal,
+      tipo: this.tipoSelecionado,
       cadastranteId: this.cadastranteId
     }).subscribe({
       next: () => this.router.navigate(['/profissional/pesquisa']),

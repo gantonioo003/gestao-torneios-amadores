@@ -1,55 +1,39 @@
-<div class="tela">
-  <div class="sec-bar">F6 — Cadastrar profissional</div>
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand">Liga Amadora+</a>
+    <div class="navbar-nav ms-auto">
+      <a class="nav-link" routerLink="/time/pesquisa">Times</a>
+      <a class="nav-link active" routerLink="/profissional/pesquisa">Profissionais</a>
+    </div>
+  </div>
+</nav>
 
-  <div class="panel">
-    <div class="panel-title">F6.3 — CADASTRAR</div>
+<div class="container py-5" style="max-width: 600px">
+  <a class="text-muted text-decoration-none mb-3 d-inline-block" routerLink="/profissional/pesquisa">← Voltar</a>
+  <h2 class="fw-bold mb-4">Novo profissional esportivo</h2>
 
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-      <a class="voltar" routerLink="/profissional/pesquisa">← Voltar</a>
-      <span style="font-size:13px;font-weight:600">Novo profissional esportivo</span>
+  <div class="card p-4">
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Nome completo *</label>
+      <input class="form-control" [(ngModel)]="nome" placeholder="Ex.: João Silva">
     </div>
 
-    <div class="campo">
-      <label>Nome completo *</label>
-      <input type="text" [(ngModel)]="nome" placeholder="Ex.: João Silva">
-    </div>
-
-    <div class="campo">
-      <label>Tipo *</label>
-      <input type="text" [(ngModel)]="tipo" placeholder="Jogador / Comissão técnica">
-      <div class="campo-hint">
-        Jogador: Atacante, Meia, Zagueiro, Goleiro...<br>
-        Comissão técnica: Auxiliar, Preparador físico...<br>
-        * Função definida pelo responsável do time
-      </div>
-    </div>
-
-    <!-- Tipo como select -->
-    <div class="campo">
-      <label>Selecione o tipo</label>
-      <select [(ngModel)]="tipoSelecionado">
-        <option value="">▼ Jogador / Comissão técnica</option>
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Tipo *</label>
+      <select class="form-select" [(ngModel)]="tipoSelecionado">
+        <option value="">Selecione o tipo...</option>
         <option value="JOGADOR">Jogador</option>
-        <option value="TREINADOR">Treinador</option>
-        <option value="AUXILIAR_TECNICO">Auxiliar Técnico</option>
-        <option value="PREPARADOR_FISICO">Preparador Físico</option>
+        <option value="TREINADOR">Técnico / Treinador</option>
+        <option value="AUXILIAR_TECNICO">Auxiliar técnico</option>
+        <option value="PREPARADOR_FISICO">Preparador físico</option>
         <option value="MEDICO">Médico</option>
       </select>
+      <small class="text-muted">A função específica no time é definida ao vincular ao elenco.</small>
     </div>
 
-    <div class="campo">
-      <label>Foto (opcional)</label>
-      <div class="foto-box">+ foto</div>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-dark" (click)="cadastrar()">Cadastrar</button>
-      <a class="btn" routerLink="/profissional/pesquisa">Cancelar</a>
-    </div>
-
-    <div class="notas" style="margin-top:10px">
-      <p>Nome e tipo obrigatórios (RN1, RN10)</p>
-      <p>Usuário autenticado (RN2)</p>
+    <div class="d-flex gap-2">
+      <a class="btn btn-secondary" routerLink="/profissional/pesquisa">Cancelar</a>
+      <button class="btn btn-primary ms-auto" (click)="cadastrar()">Cadastrar</button>
     </div>
   </div>
 </div>

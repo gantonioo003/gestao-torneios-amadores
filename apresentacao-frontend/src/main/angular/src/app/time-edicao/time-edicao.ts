@@ -21,13 +21,16 @@ export class TimeEdicao {
 
   ngOnInit() {
     const data = this.rota.snapshot.data[TimeEdicao.RECURSO];
-    if (data) { this.recurso = data; this.elenco = data.elenco ?? []; }
+    if (data) { this.recurso = data.time ?? data; this.elenco = this.recurso.elenco ?? []; }
   }
 
   salvar() {
-    const url = this.recurso.id ? `/backend/time/${this.recurso.id}/salvar` : '/backend/time/salvar';
-    this.http.post(url, { ...this.recurso, responsavelId: this.responsavelId })
-      .subscribe({ next: () => this.router.navigate(['/time/pesquisa']), error: e => alert(e.error?.mensagem ?? 'Erro') });
+    const url = this.recurso.id
+      ? `/backend/time/${this.recurso.id}/salvar?responsavelId=${this.responsavelId}`
+      : '/backend/time/salvar';
+    const destino = this.recurso.id ? ['/time', this.recurso.id, 'detalhes'] : ['/time/pesquisa'];
+    this.http.post(url, { id: this.recurso.id, nome: this.recurso.nome })
+      .subscribe({ next: () => this.router.navigate(destino), error: e => alert(e.error?.mensagem ?? 'Erro') });
   }
 
   buscarProfissionais() {
@@ -62,7 +65,7 @@ export class TimeEdicao {
     this.cancelarVinculo();
     this.http.get<any>(`/backend/time/${this.recurso.id}/edicao`)
       .pipe(catchError(() => of({ elenco: [] })))
-      .subscribe(r => this.elenco = r.elenco ?? []);
+      .subscribe(r => this.elenco = (r.time ?? r).elenco ?? []);
   }
 }
 

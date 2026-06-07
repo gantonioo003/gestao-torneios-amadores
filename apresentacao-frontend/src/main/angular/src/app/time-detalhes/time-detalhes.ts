@@ -45,6 +45,10 @@ export class TimeDetalhes implements OnInit {
     });
   }
 
+  funcaoLabel(funcao: string): string {
+    return funcao || 'Sem função definida';
+  }
+
   excluir() {
     if (!confirm('Excluir este time?')) return;
     this.http.post(`/backend/time/${this.time.id}/excluir?responsavelId=${this.responsavelId}`, {})

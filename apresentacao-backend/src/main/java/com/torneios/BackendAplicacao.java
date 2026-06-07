@@ -106,9 +106,24 @@ public class BackendAplicacao {
     public SolicitacaoParticipacaoServico solicitacaoServico(
             SolicitacaoParticipacaoRepositorio repositorio,
             TimeRepositorio timeRepositorio,
-            AutenticacaoServico autenticacaoServico) {
+            AutenticacaoServico autenticacaoServico,
+            TorneioRepositorio torneioRepositorio) {
         return new SolicitacaoParticipacaoServico(repositorio, timeRepositorio,
-            autenticacaoServico, (torneioId) -> false);
+            autenticacaoServico, new com.torneios.dominio.participacao.solicitacao.PoliticaParticipacaoTorneio() {
+                @Override
+                public boolean aceitaSolicitacoes(com.torneios.dominio.compartilhado.torneio.TorneioId torneioId) {
+                    return torneioRepositorio.buscarPorId(torneioId)
+                        .map(t -> t.aceitaSolicitacoes())
+                        .orElse(false);
+                }
+                @Override
+                public boolean usuarioEhOrganizador(com.torneios.dominio.compartilhado.torneio.TorneioId torneioId,
+                        com.torneios.dominio.compartilhado.usuario.UsuarioId usuarioId) {
+                    return torneioRepositorio.buscarPorId(torneioId)
+                        .map(t -> t.getOrganizadorId().equals(usuarioId))
+                        .orElse(false);
+                }
+            });
     }
 
     @Bean

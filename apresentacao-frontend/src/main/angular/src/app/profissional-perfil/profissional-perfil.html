@@ -1,85 +1,77 @@
-<div class="tela">
-  <div class="panel">
-    <div class="panel-title">F6.2 — PERFIL</div>
-
-    <a class="voltar" routerLink="/profissional/pesquisa">← Voltar</a>
-
-    <!-- Cabeçalho do perfil -->
-    <div style="text-align:center;margin-bottom:14px">
-      <div class="avatar">foto</div>
-      <div style="font-size:15px;font-weight:bold">{{ profissional.nome }}</div>
-      <div style="font-size:11px;color:#555;margin-top:2px">{{ tipoLabel(profissional.tipo) }}</div>
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand">Liga Amadora+</a>
+    <div class="navbar-nav ms-auto">
+      <a class="nav-link" routerLink="/time/pesquisa">Times</a>
+      <a class="nav-link active" routerLink="/profissional/pesquisa">Profissionais</a>
     </div>
+  </div>
+</nav>
 
-    <!-- Times Atuais -->
-    <div class="titulo-secao">Times Atuais</div>
+<div class="container py-5" style="max-width: 680px">
+  <a class="text-muted text-decoration-none mb-3 d-inline-block" routerLink="/profissional/pesquisa">← Voltar</a>
+
+  <!-- Cabeçalho do perfil -->
+  <div class="card p-4 mb-4">
+    <div class="d-flex align-items-center gap-4">
+      <div class="escudo-placeholder"><span>👤</span></div>
+      <div>
+        <h3 class="fw-bold mb-0">{{ profissional.nome }}</h3>
+        <span class="badge bg-secondary mt-1">{{ tipoLabel(profissional.tipo) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Times Atuais -->
+  <div class="card p-4 mb-4">
+    <h5 class="fw-semibold mb-3">Times Atuais</h5>
     @if (!timesAtuais.length) {
-      <div style="font-size:11px;color:#888;margin-bottom:8px">Sem vínculo ativo no momento.</div>
+      <p class="text-muted mb-0">Sem vínculo ativo no momento.</p>
     } @else {
-      @for (t of timesAtuais; track t.timeId) {
-        <div style="margin-bottom:4px">
-          <div style="font-weight:600;font-size:12px">{{ t.nomeTime }}</div>
-          <div style="font-size:11px;color:#555">Função: {{ t.funcao }} (def. pelo resp. do time)</div>
-        </div>
-      }
-    }
-
-    <!-- Histórico de Carreira -->
-    <div class="titulo-secao" style="margin-top:12px">Histórico de Carreira</div>
-    @if (!historico.length) {
-      <div style="font-size:11px;color:#888;margin-bottom:8px">Nenhum registro de carreira.</div>
-    } @else {
-      @for (r of historico; track r.id) {
-        <div class="hist-item">
-          <div class="hist-clube">{{ r.nomeDoClube }}</div>
-          <div class="hist-periodo">
-            {{ r.dataInicio }}
-            @if (r.dataFim) { – {{ r.dataFim }} } @else { – <em>atual</em> }
+      <div class="list-group list-group-flush">
+        @for (t of timesAtuais; track t.timeId) {
+          <div class="list-group-item px-0">
+            <div class="fw-semibold">{{ t.nomeTime }}</div>
+            <small class="text-muted">Função: {{ t.funcao }}</small>
           </div>
-          @if (r.motivoDeSaida) {
-            <div class="hist-saida">Saída: {{ motivoLabel(r.motivoDeSaida) }}</div>
-          }
-        </div>
-      }
+        }
+      </div>
     }
+  </div>
 
-    <!-- Adicionar registro -->
-    <div style="margin-top:8px">
-      <button class="btn btn-sm" (click)="mostrarFormCarreira = !mostrarFormCarreira">
-        + Adicionar registro de carreira
+  <!-- Histórico de Carreira -->
+  <div class="card p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="fw-semibold mb-0">Histórico de Carreira</h5>
+      <button class="btn btn-sm btn-primary" (click)="mostrarFormCarreira = !mostrarFormCarreira">
+        + Adicionar registro
       </button>
     </div>
 
-    <!-- Formulário de registro (F6.3 inline) -->
     @if (mostrarFormCarreira) {
-      <div style="border:1px solid #bbb;padding:10px;margin-top:10px;background:#fafafa">
-        <div style="font-size:12px;font-weight:600;margin-bottom:8px">Novo registro de carreira</div>
+      <div class="bg-light rounded p-3 mb-3">
+        <h6 class="fw-semibold mb-3">Novo registro de carreira</h6>
 
-        <div class="campo">
-          <label>Nome do time/clube *</label>
-          <input type="text" [(ngModel)]="carreiraForm.nomeDoClube" placeholder="Ex.: Real Esperança FC">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Nome do time / clube *</label>
+          <input class="form-control" [(ngModel)]="carreiraForm.nomeDoClube" placeholder="Ex.: Real Esperança FC">
         </div>
 
-        <div class="campo">
-          <label>Posição / Função *</label>
-          <input type="text" [(ngModel)]="carreiraForm.posicaoFuncao" placeholder="Atacante / Treinador principal...">
-        </div>
-
-        <div class="campos-2">
-          <div class="campo">
-            <label>Data de início *</label>
-            <input type="date" [(ngModel)]="carreiraForm.dataInicio">
+        <div class="row g-3 mb-3">
+          <div class="col">
+            <label class="form-label fw-semibold">Data de início *</label>
+            <input class="form-control" type="date" [(ngModel)]="carreiraForm.dataInicio">
           </div>
-          <div class="campo">
-            <label>Data de fim</label>
-            <input type="date" [(ngModel)]="carreiraForm.dataFim">
+          <div class="col">
+            <label class="form-label fw-semibold">Data de fim</label>
+            <input class="form-control" type="date" [(ngModel)]="carreiraForm.dataFim">
           </div>
         </div>
 
-        <div class="campo">
-          <label>Motivo de saída (opcional)</label>
-          <select [(ngModel)]="carreiraForm.motivoDeSaida">
-            <option value="">Fim de contrato / Transferência / Lesão / Aposentadoria</option>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Motivo de saída (opcional)</label>
+          <select class="form-select" [(ngModel)]="carreiraForm.motivoDeSaida">
+            <option value="">Selecione...</option>
             <option value="FIM_DE_CONTRATO">Fim de contrato</option>
             <option value="TRANSFERENCIA">Transferência</option>
             <option value="LESAO">Lesão</option>
@@ -87,25 +79,36 @@
           </select>
         </div>
 
-        <div class="btn-row">
-          <button class="btn btn-dark btn-sm" (click)="adicionarCarreira()">Salvar</button>
-          <button class="btn btn-sm" (click)="mostrarFormCarreira = false; carreiraForm = {}">Cancelar</button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-secondary btn-sm" (click)="mostrarFormCarreira = false; carreiraForm = {}">Cancelar</button>
+          <button class="btn btn-primary btn-sm ms-auto" (click)="adicionarCarreira()">Salvar</button>
         </div>
       </div>
     }
 
-    <!-- Ações do perfil -->
-    <div class="btn-row" style="margin-top:14px">
-      <a class="btn" [routerLink]="['/profissional', profissional.id, 'edicao']"
-         *ngIf="false">Editar perfil</a>
-      <button class="btn" (click)="editarPerfil()">Editar perfil</button>
-      <button class="btn btn-danger" (click)="removerPerfil()">Remover perfil</button>
-    </div>
+    @if (!historico.length) {
+      <p class="text-muted mb-0">Nenhum registro de carreira.</p>
+    } @else {
+      <div class="list-group list-group-flush">
+        @for (r of historico; track r.id) {
+          <div class="list-group-item px-0">
+            <div class="fw-semibold">{{ r.nomeDoClube }}</div>
+            <small class="text-muted">
+              {{ r.dataInicio }}
+              @if (r.dataFim) { — {{ r.dataFim }} } @else { — <em>atual</em> }
+            </small>
+            @if (r.motivoDeSaida) {
+              <div><small class="text-muted">Saída: {{ motivoLabel(r.motivoDeSaida) }}</small></div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
 
-    <div class="notas" style="margin-top:10px">
-      <p>Editar/Remover: só cadastrado (RN3)</p>
-      <p>Vinculado a time: remover bloq. (RN9)</p>
-      <p>Períodos sobrepostos bloqueados (RN6)</p>
-    </div>
+  <!-- Ações do perfil -->
+  <div class="d-flex gap-2">
+    <button class="btn btn-outline-secondary" (click)="editarPerfil()">Editar perfil</button>
+    <button class="btn btn-danger ms-auto" (click)="removerPerfil()">Remover perfil</button>
   </div>
 </div>

@@ -36,13 +36,13 @@ class TorneioRepositorioAplicacaoImpl implements TorneioRepositorioAplicacao {
 
     @Override
     public List<TorneioResumo> pesquisarResumos() {
-        return repositorio.findAll().stream().map(TorneioJpaResumo::new).toList();
+        return repositorio.findAll().stream().map(jpa -> (TorneioResumo) new TorneioJpaResumo(jpa)).toList();
     }
 
     @Override
     public List<TorneioResumo> pesquisarResumosPorOrganizador(long organizadorId) {
         return repositorio.findByOrganizadorId(organizadorId)
-                          .stream().map(TorneioJpaResumo::new).toList();
+                          .stream().map(jpa -> (TorneioResumo) new TorneioJpaResumo(jpa)).toList();
     }
 }
 
@@ -68,7 +68,7 @@ class PartidaRepositorioAplicacaoImpl implements PartidaRepositorioAplicacao {
     @Override
     public List<PartidaResumo> pesquisarResumosPorTorneio(long torneioId) {
         return repositorio.findByTorneioId(torneioId)
-                          .stream().map(PartidaJpaResumo::new).toList();
+                          .stream().map(jpa -> (PartidaResumo) new PartidaJpaResumo(jpa)).toList();
     }
 }
 
@@ -93,13 +93,13 @@ class SolicitacaoRepositorioAplicacaoImpl implements SolicitacaoRepositorioAplic
     @Override
     public List<SolicitacaoResumo> pesquisarPorSolicitante(long solicitanteId) {
         return repositorio.findBySolicitanteId(solicitanteId)
-                          .stream().map(SolicitacaoJpaResumo::new).toList();
+                          .stream().map(jpa -> (SolicitacaoResumo) new SolicitacaoJpaResumo(jpa)).toList();
     }
 
     @Override
     public List<SolicitacaoResumo> pesquisarPendentesPorTorneio(long torneioId) {
         return repositorio.findByTorneioIdAndStatus(torneioId, StatusSolicitacao.PENDENTE.name())
-                          .stream().map(SolicitacaoJpaResumo::new).toList();
+                          .stream().map(jpa -> (SolicitacaoResumo) new SolicitacaoJpaResumo(jpa)).toList();
     }
 }
 
@@ -145,7 +145,7 @@ class ProfissionalRepositorioAplicacaoImpl implements ProfissionalRepositorioApl
     @Override
     public List<ProfissionalResumo> pesquisarResumosPorNome(String nome) {
         return repositorio.findByNomeContainingIgnoreCase(nome)
-                          .stream().map(ProfissionalJpaResumo::new).toList();
+                          .stream().map(jpa -> (ProfissionalResumo) new ProfissionalJpaResumo(jpa)).toList();
     }
 
     @Override
@@ -169,7 +169,7 @@ record ProfissionalJpaResumoExpandido(ProfissionalEsportivoJpa jpa) implements P
 
     @Override
     public List<RegistroDeCarreiraResumo> getHistorico() {
-        return jpa.historico.stream().map(RegistroDeCarreiraJpaResumo::new).toList();
+        return jpa.historico.stream().map(r -> (RegistroDeCarreiraResumo) new RegistroDeCarreiraJpaResumo(r)).toList();
     }
 }
 
@@ -193,7 +193,7 @@ class TimeRepositorioAplicacaoImpl implements TimeRepositorioAplicacao {
     @Override
     public List<TimeResumo> pesquisarResumosPorResponsavel(long responsavelId) {
         return repositorio.findByResponsavelId(responsavelId)
-                          .stream().map(TimeJpaResumo::new).toList();
+                          .stream().map(jpa -> (TimeResumo) new TimeJpaResumo(jpa)).toList();
     }
 
     @Override
@@ -217,7 +217,7 @@ record TimeJpaResumoExpandido(TimeJpa jpa) implements TimeResumoExpandido {
 
     @Override
     public List<VinculoProfissionalResumo> getElenco() {
-        return jpa.elenco.stream().map(VinculoProfissionalJpaResumo::new).toList();
+        return jpa.elenco.stream().map(v -> (VinculoProfissionalResumo) new VinculoProfissionalJpaResumo(v)).toList();
     }
 }
 
