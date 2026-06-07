@@ -7,12 +7,6 @@ import java.util.logging.Logger;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 
-/**
- * Padrão Decorator — implementação concreta com log.
- *
- * Registra cada operação de escrita antes de delegar ao repositório real,
- * sem modificar a lógica de persistência.
- */
 public class TorneioRepositorioComLog extends TorneioRepositorioDecorador {
 
     private static final Logger LOG = Logger.getLogger(TorneioRepositorioComLog.class.getName());

@@ -11,7 +11,6 @@
 <div class="container py-5" style="max-width: 680px">
   <a class="text-muted text-decoration-none mb-3 d-inline-block" routerLink="/profissional/pesquisa">← Voltar</a>
 
-  <!-- Cabeçalho do perfil -->
   <div class="card p-4 mb-4">
     <div class="d-flex align-items-center gap-4">
       <div class="escudo-placeholder"><span>👤</span></div>
@@ -22,7 +21,6 @@
     </div>
   </div>
 
-  <!-- Times Atuais -->
   <div class="card p-4 mb-4">
     <h5 class="fw-semibold mb-3">Times Atuais</h5>
     @if (!timesAtuais.length) {
@@ -39,7 +37,6 @@
     }
   </div>
 
-  <!-- Histórico de Carreira -->
   <div class="card p-4 mb-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h5 class="fw-semibold mb-0">Histórico de Carreira</h5>
@@ -106,7 +103,6 @@
     }
   </div>
 
-  <!-- Ações do perfil -->
   <div class="d-flex gap-2">
     <button class="btn btn-outline-secondary" (click)="editarPerfil()">Editar perfil</button>
     <button class="btn btn-danger ms-auto" (click)="removerPerfil()">Remover perfil</button>

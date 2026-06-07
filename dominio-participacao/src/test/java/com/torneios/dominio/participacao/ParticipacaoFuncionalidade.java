@@ -30,17 +30,14 @@ public class ParticipacaoFuncionalidade implements EventoBarramento {
     protected static final TimeId TIME_A_ID = new TimeId(1L);
     protected static final TimeId TIME_B_ID = new TimeId(2L);
 
-    // Flags de política (mutáveis pelos steps)
     protected boolean torneioAceitaSolicitacoes = false;
     protected boolean usuarioEhOrganizador = false;
     protected boolean usuarioExiste = true;
     protected boolean torneioIniciado = false;
 
-    // Repositórios consolidados
     protected final Repositorio repositorio = new Repositorio();
     protected final CatalogoTorneiosDisponiveisMemoria catalogoTorneiosDisponiveis = new CatalogoTorneiosDisponiveisMemoria();
 
-    // Política (usa as flags acima por captura de referência)
     protected final PoliticaParticipacaoTorneio politicaParticipacao = new PoliticaParticipacaoTorneio() {
         @Override public boolean aceitaSolicitacoes(TorneioId torneioId) { return torneioAceitaSolicitacoes; }
         @Override public boolean usuarioEhOrganizador(TorneioId torneioId, UsuarioId usuarioId) {
@@ -49,7 +46,6 @@ public class ParticipacaoFuncionalidade implements EventoBarramento {
         @Override public boolean torneioIniciado(TorneioId torneioId) { return torneioIniciado; }
     };
 
-    // Serviços
     protected final AutenticacaoServico autenticacaoServico = new AutenticacaoServico();
     protected final ConsultaUsuario consultaUsuario = usuarioId -> usuarioId != null;
     protected final ContaUsuarioServico contaUsuarioServico = new ContaUsuarioServico(repositorio);

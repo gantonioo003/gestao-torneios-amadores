@@ -26,7 +26,7 @@ import com.torneios.dominio.participacao.time.TimeRepositorio;
 public class Repositorio implements TimeRepositorio, SolicitacaoParticipacaoRepositorio,
         ContaUsuarioRepositorio, ProfissionalEsportivoRepositorio {
 
-    /*-----------------------------------------------------------------------*/
+
     private final List<Time> times = new ArrayList<>();
 
     @Override
@@ -58,9 +58,9 @@ public class Repositorio implements TimeRepositorio, SolicitacaoParticipacaoRepo
         notNull(timeId, "O id do time nao pode ser nulo.");
         times.removeIf(t -> t.getId().equals(timeId));
     }
-    /*-----------------------------------------------------------------------*/
 
-    /*-----------------------------------------------------------------------*/
+
+
     private final List<SolicitacaoParticipacao> solicitacoes = new ArrayList<>();
 
     @Override
@@ -97,9 +97,9 @@ public class Repositorio implements TimeRepositorio, SolicitacaoParticipacaoRepo
                         && s.getTorneioId().equals(torneioId)
                         && s.getStatus() == StatusSolicitacao.PENDENTE);
     }
-    /*-----------------------------------------------------------------------*/
 
-    /*-----------------------------------------------------------------------*/
+
+
     private final Map<UsuarioId, ContaUsuario> contas = new LinkedHashMap<>();
 
     @Override
@@ -130,9 +130,9 @@ public class Repositorio implements TimeRepositorio, SolicitacaoParticipacaoRepo
         notNull(usuarioId, "O id do usuario nao pode ser nulo.");
         contas.remove(usuarioId);
     }
-    /*-----------------------------------------------------------------------*/
 
-    /*-----------------------------------------------------------------------*/
+
+
     private final Map<ProfissionalEsportivoId, ProfissionalEsportivo> profissionais = new LinkedHashMap<>();
 
     @Override
@@ -159,7 +159,7 @@ public class Repositorio implements TimeRepositorio, SolicitacaoParticipacaoRepo
         notNull(id, "O id do profissional nao pode ser nulo.");
         profissionais.remove(id);
     }
-    /*-----------------------------------------------------------------------*/
+
 
     public void limpar() {
         times.clear();

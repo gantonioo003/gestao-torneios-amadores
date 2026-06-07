@@ -6,7 +6,7 @@ import {
   __spreadProps,
   __spreadValues,
   map
-} from "./chunk-ZNCRG6OU.js";
+} from "./chunk-CYRY723S.js";
 
 // node_modules/@angular/core/fesm2022/untracked-BKcld_ew.mjs
 function defaultEquals(a, b) {
@@ -17171,14 +17171,6 @@ function setImmediateTriggers(injector, elementTriggers) {
     triggerHydrationFromBlockName(injector, elementTrigger.blockName);
   }
 }
-var _hmrWarningProduced = false;
-function logHmrWarning(injector) {
-  if (!_hmrWarningProduced) {
-    _hmrWarningProduced = true;
-    const console2 = injector.get(Console);
-    console2.log(formatRuntimeError(-751, "Angular has detected that this application contains `@defer` blocks and the hot module replacement (HMR) mode is enabled. All `@defer` block dependencies will be loaded eagerly."));
-  }
-}
 function ɵɵdefer(index, primaryTmplIndex, dependencyResolverFn, loadingTmplIndex, placeholderTmplIndex, errorTmplIndex, loadingConfigIndex, placeholderConfigIndex, enableTimerScheduling, flags) {
   const lView = getLView();
   const tView = getTView();
@@ -17187,7 +17179,7 @@ function ɵɵdefer(index, primaryTmplIndex, dependencyResolverFn, loadingTmplInd
   const injector = lView[INJECTOR];
   if (tView.firstCreatePass) {
     performanceMarkFeature("NgDefer");
-    if (ngDevMode && true && true) {
+    if (ngDevMode && true && false) {
       logHmrWarning(injector);
     }
     const tDetails = {
@@ -27232,6 +27224,7 @@ export {
 
 @angular/core/fesm2022/core.mjs:
 @angular/core/fesm2022/core.mjs:
+@angular/core/fesm2022/core.mjs:
   (*!
    * @license
    * Copyright Google LLC All Rights Reserved.
@@ -27240,4 +27233,4 @@ export {
    * found in the LICENSE file at https://angular.dev/license
    *)
 */
-//# sourceMappingURL=chunk-EAAUV2ZZ.js.map
+//# sourceMappingURL=chunk-TXYYIVFF.js.map

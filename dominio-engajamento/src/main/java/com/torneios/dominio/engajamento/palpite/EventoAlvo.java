@@ -5,10 +5,6 @@ import java.util.Objects;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 
-/**
- * Identifica de forma unica o evento sobre o qual um palpite e registrado.
- * Combina o tipo de palpite com o torneio e, quando aplicavel, com a partida.
- */
 public final class EventoAlvo {
 
     private final TipoPalpite tipo;

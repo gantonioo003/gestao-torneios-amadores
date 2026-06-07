@@ -7,13 +7,6 @@ import java.util.Objects;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 
-/**
- * Padrão Proxy — proxy de cache para {@link ConsultaElegibilidadeParticipanteTorneio}.
- *
- * Evita consultas repetidas ao serviço de participação para os mesmos times,
- * armazenando o resultado em memória e invalidando o cache ao vincular ou
- * desvincular times do torneio.
- */
 public class ConsultaElegibilidadeComCache implements ConsultaElegibilidadeParticipanteTorneio {
 
     private final ConsultaElegibilidadeParticipanteTorneio delegado;
@@ -53,14 +46,12 @@ public class ConsultaElegibilidadeComCache implements ConsultaElegibilidadeParti
         delegado.removerVinculoDoTimeAoTorneio(timeId, torneioId);
     }
 
-    /** Invalida todas as entradas de cache para o time informado. */
     public void invalidarCache(TimeId timeId) {
         cacheExistencia.remove(timeId);
         cacheTecnico.remove(timeId);
         cacheJogadores.remove(timeId);
     }
 
-    /** Limpa todo o cache. */
     public void limparCache() {
         cacheExistencia.clear();
         cacheTecnico.clear();

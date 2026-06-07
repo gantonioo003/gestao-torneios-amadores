@@ -55,9 +55,7 @@ public class EstatisticaJogador {
             case ASSISTENCIA -> assistencias++;
             case CARTAO_AMARELO -> cartoesAmarelos++;
             case CARTAO_VERMELHO -> cartoesVermelhos++;
-            case SUBSTITUICAO -> {
-                // Substituicao entra no scout detalhado da partida, mas nao altera rankings basicos.
-            }
+            case SUBSTITUICAO -> { }
         }
     }
 }

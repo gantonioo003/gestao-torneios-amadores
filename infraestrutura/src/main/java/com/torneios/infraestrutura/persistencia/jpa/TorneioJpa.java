@@ -111,7 +111,6 @@ class TorneioRepositorioImpl implements TorneioRepositorio {
                 new UsuarioId(jpa.organizadorId),
                 jpa.aceitaSolicitacoes);
 
-        // Replicar status — invocamos os métodos de transição em sequência
         if (jpa.status == StatusTorneio.ESTRUTURA_GERADA || jpa.status == StatusTorneio.INICIADO
                 || jpa.status == StatusTorneio.FINALIZADO) {
             jpa.participantes.forEach(id -> torneio.adicionarParticipante(new TimeId(id)));
@@ -124,7 +123,6 @@ class TorneioRepositorioImpl implements TorneioRepositorio {
             torneio.finalizar();
         }
 
-        // Para CONFIGURADO, apenas adicionar participantes (se houver)
         if (jpa.status == StatusTorneio.CONFIGURADO) {
             jpa.participantes.forEach(id -> torneio.adicionarParticipante(new TimeId(id)));
         }

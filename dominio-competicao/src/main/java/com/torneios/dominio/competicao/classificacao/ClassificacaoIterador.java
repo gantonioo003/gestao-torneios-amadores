@@ -5,12 +5,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-/**
- * Padrão Iterator.
- *
- * Percorre a lista de classificações em ordem de ranking (do 1.º colocado em
- * diante) sem expor a estrutura de dados interna ao cliente.
- */
 public class ClassificacaoIterador implements Iterator<Classificacao> {
 
     private final List<Classificacao> classificacoes;
@@ -34,7 +28,6 @@ public class ClassificacaoIterador implements Iterator<Classificacao> {
         return classificacoes.get(posicaoAtual++);
     }
 
-    /** Retorna a posição (1-based) do próximo elemento a ser retornado. */
     public int posicaoAtual() {
         return posicaoAtual + 1;
     }

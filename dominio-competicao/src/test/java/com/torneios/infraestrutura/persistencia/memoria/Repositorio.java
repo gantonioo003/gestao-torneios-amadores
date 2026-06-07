@@ -18,7 +18,7 @@ import com.torneios.dominio.competicao.partida.PartidaRepositorio;
 
 public class Repositorio implements PartidaRepositorio, EscalacaoRepositorio {
 
-    /*-----------------------------------------------------------------------*/
+
     private final Map<PartidaId, Partida> partidas = new HashMap<>();
 
     @Override
@@ -40,9 +40,9 @@ public class Repositorio implements PartidaRepositorio, EscalacaoRepositorio {
                 .filter(p -> p.getTorneioId().equals(torneioId))
                 .toList();
     }
-    /*-----------------------------------------------------------------------*/
 
-    /*-----------------------------------------------------------------------*/
+
+
     private final Map<String, Escalacao> escalacoes = new LinkedHashMap<>();
 
     @Override
@@ -67,7 +67,7 @@ public class Repositorio implements PartidaRepositorio, EscalacaoRepositorio {
     private String chave(PartidaId partidaId, TimeId timeId) {
         return partidaId.valor() + ":" + timeId.valor();
     }
-    /*-----------------------------------------------------------------------*/
+
 
     public void limpar() {
         partidas.clear();

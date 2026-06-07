@@ -15,7 +15,7 @@ import com.torneios.dominio.torneio.torneio.TorneioRepositorio;
 
 public class Repositorio implements TorneioRepositorio {
 
-    /*-----------------------------------------------------------------------*/
+
     private final Map<TorneioId, Torneio> torneios = new HashMap<>();
 
     @Override
@@ -42,7 +42,7 @@ public class Repositorio implements TorneioRepositorio {
                 .filter(t -> t.getOrganizadorId().equals(organizadorId))
                 .toList();
     }
-    /*-----------------------------------------------------------------------*/
+
 
     public void limpar() {
         torneios.clear();

@@ -190,9 +190,7 @@ public class ComparacaoDesempenhoServico {
                 case ASSISTENCIA -> assistencias++;
                 case CARTAO_AMARELO -> cartoesAmarelos++;
                 case CARTAO_VERMELHO -> cartoesVermelhos++;
-                case SUBSTITUICAO -> {
-                    // Substituicao entra no historico, mas nao pontua no comparativo basico.
-                }
+                case SUBSTITUICAO -> { }
             }
         }
 

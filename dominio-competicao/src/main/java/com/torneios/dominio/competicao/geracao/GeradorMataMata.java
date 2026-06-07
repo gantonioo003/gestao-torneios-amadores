@@ -7,11 +7,6 @@ import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.competicao.partida.Partida;
 
-/**
- * Padrão Template Method — implementação para Mata-Mata.
- *
- * Os times são emparelhados sequencialmente; cada partida elimina um time.
- */
 public class GeradorMataMata extends GeradorPartidas {
 
     @Override

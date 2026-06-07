@@ -17,10 +17,6 @@ import io.cucumber.java.pt.Quando;
 
 public class CompeticaoSteps extends CompeticaoFuncionalidade {
 
-    // =====================================================================
-    // F8: Gerar escalacao do time em mesa tatica para uma partida
-    // =====================================================================
-
     @Dado("que existe uma partida cadastrada no torneio sem exigencia de escalacao")
     public void que_existe_partida_sem_exigencia_escalacao() {
         configurarTorneioPontosCorridos(true);
@@ -247,10 +243,6 @@ public class CompeticaoSteps extends CompeticaoFuncionalidade {
         assertTrue(mesaTatica.getReservas().isEmpty());
     }
 
-    // =====================================================================
-    // F9: Gerenciar criacao, configuracao, repeticao e preparacao da competicao do torneio
-    // =====================================================================
-
     @Dado("que existe um torneio com formato pontos corridos")
     public void que_existe_torneio_pontos_corridos() {
         configurarTorneioPontosCorridos(true);
@@ -327,10 +319,6 @@ public class CompeticaoSteps extends CompeticaoFuncionalidade {
     public void que_estrutura_nao_foi_gerada() {
         assertFalse(consultaCompeticaoTorneio.estruturaGerada(TORNEIO_ID));
     }
-
-    // =====================================================================
-    // F12: Registrar placar oficial da partida e atualizar andamento da competicao
-    // =====================================================================
 
     @Dado("que existe uma partida cadastrada no torneio")
     public void que_existe_partida_cadastrada() {
@@ -413,10 +401,6 @@ public class CompeticaoSteps extends CompeticaoFuncionalidade {
             excecaoCapturada = e;
         }
     }
-
-    // =====================================================================
-    // F12: Atualizar andamento da competicao apos o resultado
-    // =====================================================================
 
     @Quando("o sistema gerenciar o andamento apos o resultado")
     public void o_sistema_gerenciar_andamento_apos_resultado() {
@@ -563,10 +547,6 @@ public class CompeticaoSteps extends CompeticaoFuncionalidade {
     public void o_sistema_deve_informar_competicao_nao_iniciada_sem_acento() {
         o_sistema_deve_informar_competicao_nao_iniciada();
     }
-
-    // =====================================================================
-    // Steps compartilhados
-    // =====================================================================
 
     @Entao("o sistema deve impedir a operacao")
     public void o_sistema_deve_impedir_operacao() {

@@ -39,7 +39,6 @@ export class TimeVincular implements OnInit {
       this.dataInicio = state.dataInicio ?? '';
       this.dataLimite = state.dataLimiteContrato ?? '';
     }
-    // carregar alguns profissionais para exibir como exemplos
     this.http.get<any[]>('/backend/profissional/pesquisa?nome=')
       .pipe(catchError(() => of([])))
       .subscribe(r => this.exemplos = r.slice(0, 3));

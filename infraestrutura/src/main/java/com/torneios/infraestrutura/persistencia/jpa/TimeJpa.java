@@ -77,15 +77,8 @@ class TimeRepositorioImpl implements TimeRepositorio {
         jpa.nome = time.getNome();
         jpa.responsavelId = time.getResponsavel().valor();
 
-        // torneios vinculados
         jpa.torneiosVinculados.clear();
-        // Time não expõe diretamente a coleção — usamos estaVinculadoATorneio
-        // Para persistir corretamente, precisamos de um getter; adicionamos via reflexão temporária
-        // ou simplesmente mantemos a lista via addTorneio no domínio
-        // Como Time não expõe getTorneiosVinculados, não persistimos nesta versão
-        // (a vinculação de torneio é gerenciada pelo domínio-torneio)
 
-        // elenco
         jpa.elenco.clear();
         long seq = 1L;
         for (var v : time.getElenco()) {

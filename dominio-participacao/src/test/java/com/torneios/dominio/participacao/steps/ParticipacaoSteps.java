@@ -31,7 +31,6 @@ import io.cucumber.java.pt.Quando;
 
 public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
 
-    // IDs auxiliares
     private static final JogadorId JOGADOR_ID = new JogadorId(10L);
     private static final TecnicoId TECNICO_ID = new TecnicoId(20L);
     private static final SolicitacaoParticipacaoId SOLICITACAO_ID = new SolicitacaoParticipacaoId(100L);
@@ -44,7 +43,6 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
 
     private UsuarioId usuarioAtual;
 
-    // Estado capturado durante execução
     private List<SolicitacaoParticipacao> solicitacoesCapturadas;
     private List<Time> timesCapturados;
     private List<TorneioDisponivel> torneiosDisponiveis;
@@ -68,10 +66,6 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         usuarioAtual = null;
     }
 
-    // =====================================================================
-    // Givens: Autenticação (compartilhado entre F2, F3, F4, F5, F6)
-    // =====================================================================
-
     @Dado("que o usuario esta autenticado")
     public void que_o_usuario_esta_autenticado() {
         usuarioAtual = USUARIO_AUTENTICADO_ID;
@@ -91,10 +85,6 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     public void que_o_usuario_nao_esta_autenticado_com_acento() {
         usuarioAtual = null;
     }
-
-    // =====================================================================
-    // F2: Gerenciar conta de usuario e autenticacao
-    // =====================================================================
 
     @Dado("que nao existe conta cadastrada para o email informado")
     public void que_nao_existe_conta_para_email_informado() {
@@ -193,10 +183,6 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     public void sistema_deve_impedir_cadastro_conta() {
         assertNotNull(excecaoCapturada);
     }
-
-    // =====================================================================
-    // F3 / F4: Candidatura e inscricoes em torneio
-    // =====================================================================
 
     @Dado("que ele é responsável por um time")
     @Dado("que ele e responsavel por um time")
@@ -360,10 +346,6 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         assertEquals(StatusSolicitacao.CANCELADA, repositorio.buscarPorId(SOLICITACAO_ID).orElseThrow().getStatus());
     }
 
-    // =====================================================================
-    // F5: Gerenciar times do usuario
-    // =====================================================================
-
     @Quando("ele cadastrar um novo time com nome valido")
     @Quando("ele cadastrar um novo time com informações válidas")
     public void cadastrar_time_nome_valido() {
@@ -408,8 +390,6 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     public void tentar_acessar_torneios() {
         acessar_area_torneios();
     }
-
-    // F5: VinculoProfissional (RN8, RN9, RN10)
 
     @Dado("que existe um profissional esportivo cadastrado")
     public void profissional_cadastrado() {
@@ -504,10 +484,6 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         assertNull(excecaoCapturada);
         assertTrue(repositorio.buscarPorId(TIME_A_ID).orElseThrow().getElenco().stream().noneMatch(v -> v.getProfissionalId().equals(PROFISSIONAL_ID)));
     }
-
-    // =====================================================================
-    // F6: Cadastrar profissional esportivo com registro de carreira
-    // =====================================================================
 
     @Dado("que existe um profissional esportivo cadastrado pelo usuario")
     public void profissional_cadastrado_pelo_usuario() {
@@ -648,10 +624,6 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         assertNotNull(excecaoCapturada);
     }
 
-    // =====================================================================
-    // Thens: compartilhados
-    // =====================================================================
-
     @Entao("o sistema deve impedir a operação")
     @Entao("o sistema deve impedir a operacao")
     public void impedir_operacao() {
@@ -664,12 +636,8 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
         assertNotNull(excecaoCapturada);
     }
 
-    // =====================================================================
-    // F3 / F4: Steps complementares de candidatura e inscricao
-    // =====================================================================
-
     @Dado("que ele nao possui time cadastrado")
-    public void ele_nao_possui_time_cadastrado() { /* repositório vazio */ }
+    public void ele_nao_possui_time_cadastrado() { }
 
     @Dado("que existe uma candidatura pendente do time")
     public void candidatura_pendente_do_time() {
@@ -705,7 +673,7 @@ public class ParticipacaoSteps extends ParticipacaoFuncionalidade {
     }
 
     @Dado("que nao existe solicitacao pendente para o torneio")
-    public void sem_solicitacao_pendente() { /* repositório vazio */ }
+    public void sem_solicitacao_pendente() { }
 
     @Quando("ele solicitar participacao em um torneio")
     public void ele_solicitar_participacao_em_torneio() {

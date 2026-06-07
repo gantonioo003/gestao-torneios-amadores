@@ -21,10 +21,6 @@ import com.torneios.infraestrutura.persistencia.memoria.ConsultaComparacaoDesemp
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaEstatisticaCompeticaoMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.EventoEstatisticoRepositorioMemoria;
 
-/**
- * Classe base para compartilhar preparacao e estado comum entre os steps
- * dos cenarios de estatisticas.
- */
 public abstract class EstatisticasFuncionalidade {
 
     protected static final UsuarioId ORGANIZADOR_ID = new UsuarioId(1L);

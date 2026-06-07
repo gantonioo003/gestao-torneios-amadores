@@ -7,13 +7,6 @@ import java.util.Optional;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 
-/**
- * Padrão Decorator — base abstrata.
- *
- * Envolve um {@link TorneioRepositorio} e delega todas as operações a ele,
- * permitindo que subclasses adicionem comportamento extra (log, cache,
- * validação, etc.) sem alterar a interface.
- */
 public abstract class TorneioRepositorioDecorador implements TorneioRepositorio {
 
     protected final TorneioRepositorio delegado;

@@ -38,7 +38,6 @@ public class GeradorPartidasServico {
         };
     }
 
-    // Padrão Template Method — delega para GeradorPontosCorridos e GeradorMataMata
     public List<Partida> gerarPontosCorridos(TorneioId torneioId,
                                              int quantidadeJogadoresPorEquipe,
                                              List<TimeId> participantes) {

@@ -7,11 +7,6 @@ import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.competicao.partida.Partida;
 
-/**
- * Padrão Template Method — implementação para Pontos Corridos.
- *
- * Todos os times se enfrentam entre si (round-robin).
- */
 public class GeradorPontosCorridos extends GeradorPartidas {
 
     @Override

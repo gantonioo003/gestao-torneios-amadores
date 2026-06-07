@@ -20,10 +20,6 @@ import io.cucumber.java.pt.Quando;
 
 public class EngajamentoSteps extends EngajamentoFuncionalidade {
 
-    // =====================================================================
-    // F1: Gerenciar palpites publicos
-    // =====================================================================
-
     @Dado("que o usuario esta autenticado")
     public void que_o_usuario_esta_autenticado() {
         consultaPalpite.autenticar(USUARIO_ID);
@@ -267,10 +263,6 @@ public class EngajamentoSteps extends EngajamentoFuncionalidade {
         }
     }
 
-    // =====================================================================
-    // F4: Gerenciar chat privado com solicitacoes de conversa
-    // =====================================================================
-
     @Dado("que existe outro usuario cadastrado na plataforma")
     public void que_existe_outro_usuario_cadastrado_na_plataforma() {
         consultaChat.cadastrarUsuario(OUTRO_USUARIO_ID);
@@ -393,10 +385,6 @@ public class EngajamentoSteps extends EngajamentoFuncionalidade {
         assertEquals(1, conversasPrivadas.size());
         assertEquals(StatusConversa.APROVADA, conversasPrivadas.get(0).getStatus());
     }
-
-    // =====================================================================
-    // F10: Gerenciar desafios e amistosos entre times
-    // =====================================================================
 
     @Dado("que existe um time desafiante com responsavel autenticado")
     public void que_existe_time_desafiante_com_responsavel_autenticado() {
@@ -544,10 +532,6 @@ public class EngajamentoSteps extends EngajamentoFuncionalidade {
         assertTrue(desafioAmistoso.getResultado().isPresent());
         assertEquals(1, historicoAmistosos.size());
     }
-
-    // =====================================================================
-    // F11: Gerenciar comunicados e feed social do torneio
-    // =====================================================================
 
     @Quando("ele publicar uma postagem no feed social com hashtag e midia")
     public void ele_publicar_postagem_feed_social_com_hashtag_midia() {

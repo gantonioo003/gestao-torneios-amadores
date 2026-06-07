@@ -89,7 +89,7 @@ class SolicitacaoParticipacaoRepositorioImpl implements SolicitacaoParticipacaoR
             case APROVADA -> sol.aprovar();
             case REJEITADA -> sol.rejeitar();
             case CANCELADA -> sol.cancelar(new UsuarioId(jpa.solicitanteId));
-            default -> { /* PENDENTE — estado inicial */ }
+            default -> { }
         }
         return sol;
     }

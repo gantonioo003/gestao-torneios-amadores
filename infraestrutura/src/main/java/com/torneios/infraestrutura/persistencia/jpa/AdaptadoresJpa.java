@@ -35,8 +35,6 @@ class EventoBarramentoImpl implements EventoBarramento {
     @Override
     @SuppressWarnings("unchecked")
     public <E> void adicionar(EventoObservador<E> observador) {
-        // Introspect the generic type via anonymous subclass trick is not possible at runtime;
-        // store under Object key for simplicity (all observers receive all events).
         observadores.computeIfAbsent(Object.class, k -> new ArrayList<>()).add(observador);
     }
 
@@ -143,7 +141,6 @@ class ConsultaCompeticaoTorneioJpa implements ConsultaCompeticaoTorneio {
 
     @Override
     public List<List<TimeId>> listarGrupos(TorneioId torneioId) {
-        // Grupos não são persistidos na versão atual — retorna lista vazia
         return Collections.emptyList();
     }
 }

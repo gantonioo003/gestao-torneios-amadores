@@ -13,10 +13,6 @@ import io.cucumber.java.pt.Quando;
 
 public class EstatisticasSteps extends EstatisticasFuncionalidade {
 
-    // =====================================================================
-    // F7: Comparar desempenho de times e jogadores
-    // =====================================================================
-
     @Dado("que existem estatisticas registradas para dois jogadores")
     public void que_existem_estatisticas_registradas_para_dois_jogadores() {
         configurarCenarioPadrao();
@@ -189,10 +185,6 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
         assertTrue(comparativoRepositorio.listarTodos().isEmpty());
     }
 
-    // =====================================================================
-    // F13: Gerenciar scout estatistico opcional da partida
-    // =====================================================================
-
     @Dado("que existe uma partida cadastrada")
     public void que_existe_partida_cadastrada() {
         configurarCenarioPadrao();
@@ -205,7 +197,6 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
 
     @Quando("ele optar por nao registrar eventos individuais da partida")
     public void ele_optar_por_nao_registrar_eventos_individuais_da_partida() {
-        // O scout e opcional; nenhum evento precisa ser criado.
     }
 
     @Entao("o sistema deve manter o scout opcional vazio")
@@ -355,10 +346,6 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
     public void o_sistema_deve_impedir_registro() {
         assertNotNull(excecaoCapturada);
     }
-
-    // =====================================================================
-    // F14: Consolidar estatisticas e rankings do torneio
-    // =====================================================================
 
     @Dado("que existem eventos registrados para um jogador")
     public void que_existem_eventos_registrados() {

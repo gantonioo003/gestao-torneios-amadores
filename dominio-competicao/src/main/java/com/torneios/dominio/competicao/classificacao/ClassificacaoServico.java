@@ -45,10 +45,6 @@ public class ClassificacaoServico {
                 .toList();
     }
 
-    /**
-     * Padrão Iterator — retorna um iterador sobre a classificação em ordem de
-     * pontuação, sem expor a estrutura de dados interna.
-     */
     public Iterator<Classificacao> iterador(TorneioId torneioId,
                                             Collection<TimeId> participantes,
                                             List<Partida> partidas) {

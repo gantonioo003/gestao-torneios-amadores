@@ -17,10 +17,6 @@ import io.cucumber.java.pt.Quando;
 
 public class TorneioSteps extends TorneioFuncionalidade {
 
-    // =====================================================================
-    // F9: Gerenciar criacao, configuracao, repeticao e preparacao da competicao do torneio
-    // =====================================================================
-
     @Dado("que o usuário está autenticado")
     public void que_o_usuario_esta_autenticado() {
         assertNotNull(ORGANIZADOR_ID);
@@ -101,10 +97,6 @@ public class TorneioSteps extends TorneioFuncionalidade {
             excecaoCapturada = e;
         }
     }
-
-    // =====================================================================
-    // F9: Gerenciar criacao, configuracao, repeticao e preparacao da competicao do torneio
-    // =====================================================================
 
     @Dado("que o usuario esta autenticado")
     public void que_o_usuario_esta_autenticado_sem_acento() {
@@ -270,17 +262,12 @@ public class TorneioSteps extends TorneioFuncionalidade {
 
     @Dado("que o torneio não possui participantes suficientes")
     public void que_torneio_nao_possui_participantes_suficientes() {
-        // Torneio criado sem participantes adicionados
     }
 
     @Entao("o sistema deve impedir a geração da estrutura")
     public void o_sistema_deve_impedir_geracao_estrutura() {
         assertNotNull(excecaoCapturada);
     }
-
-    // =====================================================================
-    // Steps historicos de apoio para participantes do torneio
-    // =====================================================================
 
     @Dado("que existe um torneio com vagas abertas")
     public void que_existe_torneio_com_vagas_abertas() {
@@ -290,7 +277,6 @@ public class TorneioSteps extends TorneioFuncionalidade {
 
     @Dado("que existe uma solicitação pendente de participação")
     public void que_existe_solicitacao_pendente() {
-        // No contexto do domínio-torneio, o participante já está pronto para ser aprovado.
     }
 
     @Dado("que o usuário autenticado é o organizador do torneio")
