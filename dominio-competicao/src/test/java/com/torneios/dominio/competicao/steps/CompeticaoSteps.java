@@ -557,4 +557,29 @@ public class CompeticaoSteps extends CompeticaoFuncionalidade {
     public void o_sistema_deve_impedir_operacao_com_acento() {
         o_sistema_deve_impedir_operacao();
     }
+
+    @Dado("que o usuario autenticado e o organizador do torneio")
+    public void que_usuario_e_organizador_sem_acento() {
+        que_usuario_e_organizador();
+    }
+
+    @Entao("o sistema deve atualizar automaticamente a classificacao ou chaveamento")
+    public void o_sistema_deve_atualizar_classificacao_ou_chaveamento_sem_acento() {
+        o_sistema_deve_atualizar_classificacao_ou_chaveamento();
+    }
+
+    @Dado("que o usuario autenticado nao e o organizador")
+    public void que_usuario_nao_e_organizador_sem_acento() {
+        que_usuario_nao_e_organizador();
+    }
+
+    @Dado("que nao existe a partida informada")
+    public void que_nao_existe_partida_sem_acento() {
+        que_nao_existe_partida();
+    }
+
+    @Quando("o usuario tentar registrar um resultado")
+    public void o_usuario_tentar_registrar_resultado_sem_acento() {
+        o_usuario_tentar_registrar_resultado();
+    }
 }
