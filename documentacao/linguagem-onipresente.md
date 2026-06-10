@@ -118,7 +118,7 @@ Modo de preparacao em que o sistema distribui automaticamente os times aprovados
 Modo de preparacao em que o organizador escolhe manualmente a ordem ou distribuicao dos times aprovados antes da geracao das partidas.
 
 ### Escalacao
-Configuracao opcional definida pelo responsavel do time ou pelo tecnico para uma partida especifica, contendo o esquema tatico, os jogadores titulares por posicao, os jogadores reservas e a distribuicao visual dos titulares em uma mesa tatica. Quando a partida exigir mesa tatica ou quando um time informar, os dois times devem informar. A escalacao pode ser editada ate o inicio da partida e fica congelada apos esse momento.
+Configuracao opcional definida pelo responsavel do time ou pelo tecnico para uma partida especifica, contendo o esquema tatico, os jogadores titulares por posicao, os jogadores reservas e a distribuicao visual dos titulares em uma mesa tatica. Essa visualizacao nao altera as regras da partida nem exige simetria entre os times. A escalacao pode ser editada ate o inicio da partida e fica congelada apos esse momento.
 
 ### Mesa tatica
 Representacao visual da escalacao em campo, gerada a partir do esquema tatico e dos titulares posicionados, para mostrar onde cada jogador inicia a partida.
@@ -151,7 +151,7 @@ Evento estatistico de advertencia recebido por um jogador durante a partida.
 Evento estatistico de expulsao recebido por um jogador durante a partida.
 
 ### Substituicao
-Evento estatistico opcional que registra a troca de um jogador por outro durante a partida. So pode existir quando a partida possui mesa tatica.
+Evento estatistico opcional que registra a troca de um jogador por outro durante a partida. Pode existir independentemente da mesa tatica, desde que os jogadores envolvidos pertencam aos times da partida.
 
 ### Artilharia
 Ranking dos jogadores com maior numero de gols no torneio, calculado quando houver registro de gols.

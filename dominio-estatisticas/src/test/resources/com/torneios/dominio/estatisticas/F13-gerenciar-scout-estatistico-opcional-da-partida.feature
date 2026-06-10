@@ -22,17 +22,11 @@ Feature: Gerenciar scout estatistico opcional da partida
     When ele registrar cartao amarelo ou vermelho para jogadores
     Then o sistema deve armazenar os eventos corretamente
 
-  Scenario: Registrar substituicao quando a partida possui mesa tatica
-    Given que existe uma partida cadastrada com mesa tatica informada
+  Scenario: Registrar substituicao mesmo quando a partida nao possui mesa tatica
+    Given que existe uma partida cadastrada sem mesa tatica informada
     And que o usuario autenticado e o organizador
     When ele registrar uma substituicao trocando um jogador por outro
     Then o sistema deve armazenar a substituicao no scout da partida
-
-  Scenario: Impedir substituicao quando a partida nao possui mesa tatica
-    Given que existe uma partida cadastrada sem mesa tatica informada
-    And que o usuario autenticado e o organizador
-    When ele tentar registrar uma substituicao na partida
-    Then o sistema deve impedir a operacao
 
   Scenario: Corrigir evento individual do scout
     Given que existe um evento individual registrado no scout da partida

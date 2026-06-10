@@ -66,7 +66,6 @@ public class EscalacaoServico {
 
     public void congelarEscalacoesDaPartida(PartidaId partidaId) {
         List<Escalacao> escalacoes = escalacaoRepositorio.listarPorPartida(partidaId);
-        validarObrigatoriedadeOuSimetria(partidaId, escalacoes);
         for (Escalacao escalacao : escalacoes) {
             escalacao.congelar();
             escalacaoRepositorio.salvar(escalacao);
@@ -100,20 +99,6 @@ public class EscalacaoServico {
         if (consultaSuporte.partidaIniciada(partidaId)) {
             throw new OperacaoNaoPermitidaException(
                     "Nao e permitido alterar a escalacao apos o inicio da partida.");
-        }
-    }
-
-    private void validarObrigatoriedadeOuSimetria(PartidaId partidaId, List<Escalacao> escalacoes) {
-        List<TimeId> timesDaPartida = consultaSuporte.listarTimesDaPartida(partidaId);
-        if (timesDaPartida.isEmpty()) {
-            return;
-        }
-
-        boolean escalacaoObrigatoria = consultaSuporte.escalacaoObrigatoriaNaPartida(partidaId);
-        boolean existeEscalacaoInformada = !escalacoes.isEmpty();
-        if ((escalacaoObrigatoria || existeEscalacaoInformada) && escalacoes.size() < timesDaPartida.size()) {
-            throw new RegraDeNegocioException(
-                    "Quando a mesa tatica for obrigatoria ou um time informar mesa tatica, todos os times da partida devem informar mesa tatica.");
         }
     }
 

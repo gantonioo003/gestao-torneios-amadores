@@ -21,6 +21,7 @@ import com.torneios.dominio.competicao.classificacao.Classificacao;
 import com.torneios.dominio.competicao.classificacao.ClassificacaoServico;
 import com.torneios.dominio.competicao.escalacao.Escalacao;
 import com.torneios.dominio.competicao.escalacao.EscalacaoId;
+import com.torneios.dominio.competicao.escalacao.EscalacaoRepositorio;
 import com.torneios.dominio.competicao.escalacao.MesaTatica;
 import com.torneios.dominio.competicao.escalacao.EscalacaoServico;
 import com.torneios.dominio.competicao.escalacao.JogadorEscalado;
@@ -28,6 +29,7 @@ import com.torneios.dominio.competicao.geracao.GeradorPartidasServico;
 import com.torneios.dominio.competicao.geracao.PreparacaoCompeticao;
 import com.torneios.dominio.competicao.partida.AtualizacaoCompeticao;
 import com.torneios.dominio.competicao.partida.Partida;
+import com.torneios.dominio.competicao.partida.PartidaRepositorio;
 import com.torneios.dominio.competicao.partida.PartidaServico;
 import com.torneios.dominio.competicao.resultado.ResultadoPartida;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaSuporteEscalacaoMemoria;
@@ -57,6 +59,8 @@ public class CompeticaoFuncionalidade implements EventoBarramento {
     protected static final JogadorId JOGADOR_FORA_ELENCO_ID = new JogadorId(999L);
 
     protected final Repositorio repositorio = new Repositorio();
+    protected final PartidaRepositorio partidaRepositorio = repositorio;
+    protected final EscalacaoRepositorio escalacaoRepositorio = repositorio;
     protected final ConsultaCompeticaoTorneioMemoria consultaCompeticaoTorneio = new ConsultaCompeticaoTorneioMemoria();
     protected final ConsultaSuporteEscalacaoMemoria consultaEscalacao = new ConsultaSuporteEscalacaoMemoria();
     protected final GeradorPartidasServico geradorPartidasServico = new GeradorPartidasServico();
@@ -111,16 +115,11 @@ public class CompeticaoFuncionalidade implements EventoBarramento {
     }
 
     protected void configurarSuporteEscalacao(boolean partidaIniciada) {
-        configurarSuporteEscalacao(partidaIniciada, false);
-    }
-
-    protected void configurarSuporteEscalacao(boolean partidaIniciada, boolean escalacaoObrigatoria) {
         consultaEscalacao.registrarPartida(
                 PARTIDA_ID,
                 FormatoEquipe.CINCO_POR_CINCO,
                 partidaIniciada,
-                List.of(TIME_A_ID, TIME_B_ID),
-                escalacaoObrigatoria);
+                List.of(TIME_A_ID, TIME_B_ID));
         consultaEscalacao.registrarResponsavel(TIME_A_ID, ORGANIZADOR_ID);
         consultaEscalacao.registrarResponsavel(TIME_B_ID, OUTRO_USUARIO_ID);
         consultaEscalacao.registrarTecnico(TIME_A_ID, TECNICO_ID);

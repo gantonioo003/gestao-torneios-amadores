@@ -23,12 +23,12 @@ O sistema proposto permite:
 - usar amistosos apenas como recurso opcional, sem obrigar o fluxo dos torneios
 - preparar a competicao com estrutura, rodadas e partidas por sorteio automatico ou montagem manual
 - repetir torneios finalizados como novas edicoes mantendo o historico anterior
-- gerar escalacao em mesa tatica opcionalmente, ou exigir essa mesa quando a regra da partida/torneio pedir
+- gerar uma visualizacao opcional da escalacao do time em mesa tatica quando o responsavel quiser representar o time em campo
 - publicar postagens no feed social geral com midia e hashtags
 - publicar comunicados, comentarios, curtidas, reacoes e atualizacoes automaticas no feed social
 - registrar palpites publicos de usuarios e visitantes, com janela de participacao, contagem e apuracao
 - registrar resultados oficiais de partidas e atualizar automaticamente o andamento da competicao
-- gerenciar scout estatistico opcional com eventos individuais, gols, assistencias, cartoes e substituicoes condicionadas a mesa tatica
+- gerenciar scout estatistico opcional com eventos individuais, gols, assistencias, cartoes e substituicoes independentemente da mesa tatica
 - consolidar notas, artilharia, lideres de assistencias, historico dos jogadores e historico estatistico por edicao quando houver eventos registrados
 - gerar comparativos de desempenho entre times e jogadores, salvando, consultando e atualizando apenas os comparativos escolhidos
 - acompanhar classificacao, chaveamento e andamento das partidas
@@ -177,7 +177,7 @@ Inclui classes voltadas a:
 - resultado da partida
 - classificacao
 - chaveamento
-- geracao opcional de escalacao em mesa tatica para a partida
+- geracao opcional de visualizacao da escalacao em mesa tatica para a partida
 - rodada
 - preparacao da competicao com partidas e rodadas
 
@@ -202,7 +202,7 @@ Inclui classes voltadas a:
 
 - eventos estatisticos opcionais
 - subclasses de eventos como gol e cartoes
-- substituicoes quando houver mesa tatica
+- substituicoes registradas como evento estatistico independente da mesa tatica
 - nota estatistica quando houver eventos registrados
 - consolidacao de desempenho, rankings e historico dos jogadores
 - arquivamento de estatisticas por edicao do torneio

@@ -1,25 +1,19 @@
-Feature: Gerar escalacao do time em mesa tatica para uma partida
+Feature: Gerenciar visualizacao da escalacao do time em mesa tatica para uma partida
 
   As a responsavel pelo time ou tecnico associado
-  I want gerar a escalacao em uma mesa tatica com esquema, titulares por posicao e reservas
+  I want gerar uma visualizacao da escalacao em uma mesa tatica com esquema, titulares por posicao e reservas
   So that a partida tenha uma representacao visual organizada do time em campo
 
-  Scenario: Permitir partida sem mesa tatica quando ela nao for obrigatoria
+  Scenario: Permitir partida seguir normalmente sem mesa tatica
     Given que existe uma partida cadastrada no torneio sem exigencia de escalacao
     When o sistema congelar as escalacoes antes do inicio
     Then a partida deve seguir sem escalacao cadastrada
 
-  Scenario: Impedir inicio com mesa tatica informada por apenas um time
+  Scenario: Permitir que apenas um time gere mesa tatica sem bloquear a partida
     Given que existe uma partida cadastrada no torneio sem exigencia de escalacao
     And que apenas um time informou a escalacao
-    When o sistema tentar congelar as escalacoes antes do inicio
-    Then o sistema deve impedir a operacao
-
-  Scenario: Impedir inicio de partida que exige mesa tatica sem todos os times escalados
-    Given que existe uma partida cadastrada no torneio com escalacao obrigatoria
-    And que apenas um time informou a escalacao
-    When o sistema tentar congelar as escalacoes antes do inicio
-    Then o sistema deve impedir a operacao
+    When o sistema congelar as escalacoes antes do inicio
+    Then o sistema deve manter apenas a mesa tatica informada sem bloquear a partida
 
   Scenario: Gerar mesa tatica com esquema tatico, titulares por posicao e reservas com sucesso
     Given que existe uma partida cadastrada no torneio com formato de equipe definido

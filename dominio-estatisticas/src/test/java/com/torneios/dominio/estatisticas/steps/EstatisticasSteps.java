@@ -232,12 +232,6 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
         }
     }
 
-    @Dado("que existe uma partida cadastrada com mesa tatica informada")
-    public void que_existe_partida_cadastrada_com_escalacao_informada() {
-        configurarCenarioPadrao();
-        consultaEstatisticaCompeticao.registrarEscalacaoDaPartida(PARTIDA_ID);
-    }
-
     @Dado("que existe uma partida cadastrada sem mesa tatica informada")
     public void que_existe_partida_cadastrada_sem_escalacao_informada() {
         configurarCenarioPadrao();
@@ -251,11 +245,6 @@ public class EstatisticasSteps extends EstatisticasFuncionalidade {
         } catch (Exception e) {
             excecaoCapturada = e;
         }
-    }
-
-    @Quando("ele tentar registrar uma substituicao na partida")
-    public void ele_tentar_registrar_substituicao_na_partida() {
-        ele_registrar_substituicao_trocando_jogador_por_outro();
     }
 
     @Entao("o sistema deve armazenar a substituicao no scout da partida")

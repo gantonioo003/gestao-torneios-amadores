@@ -39,9 +39,24 @@ Cenarios principais:
 
 ---
 
-### F3. Gerenciar inscricoes, curadoria e participantes finais do torneio
+### F3. Gerenciar comunicacao privada com solicitacoes de conversa
+Dominio: dominio-engajamento
+Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F3-gerenciar-chat-privado-com-solicitacoes-de-conversa.feature
+
+Cenarios principais:
+- solicitar conversa privada com outro usuario
+- aprovar solicitacao de conversa
+- recusar solicitacao de conversa
+- enviar mensagem em conversa aprovada
+- impedir mensagem antes da aprovacao da conversa
+- consultar historico de conversas aprovadas
+- impedir solicitacao de conversa por usuario nao autenticado
+
+---
+
+### F4. Gerenciar inscricoes, curadoria e participantes finais do torneio
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F3-gerenciar-inscricoes-e-participantes-do-torneio.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F4-gerenciar-inscricoes-e-participantes-do-torneio.feature
 
 Cenarios principais:
 - enviar candidatura com time cadastrado
@@ -59,21 +74,6 @@ Cenarios principais:
 - impedir alteracao da lista final apos inicio do torneio
 - visualizar lista de times candidatos pendentes
 - informar ausencia de solicitacoes pendentes para avaliacao
-
----
-
-### F4. Gerenciar comunicacao privada com solicitacoes de conversa
-Dominio: dominio-engajamento
-Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F4-gerenciar-chat-privado-com-solicitacoes-de-conversa.feature
-
-Cenarios principais:
-- solicitar conversa privada com outro usuario
-- aprovar solicitacao de conversa
-- recusar solicitacao de conversa
-- enviar mensagem em conversa aprovada
-- impedir mensagem antes da aprovacao da conversa
-- consultar historico de conversas aprovadas
-- impedir solicitacao de conversa por usuario nao autenticado
 
 ---
 
@@ -125,14 +125,13 @@ Cenarios principais:
 
 ---
 
-### F8. Gerenciar a geracao opcional da mesa tatica do time para uma partida
+### F8. Gerenciar a visualizacao opcional da escalacao do time em mesa tatica para uma partida
 Dominio: dominio-competicao
 Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F8-gerar-escalacao-em-mesa-tatica.feature
 
 Cenarios principais:
-- permitir partida sem mesa tatica quando ela nao for obrigatoria
-- impedir inicio com mesa tatica informada por apenas um time
-- impedir inicio de partida que exige mesa tatica sem todos os times escalados
+- permitir partida seguir normalmente sem mesa tatica
+- permitir que apenas um time gere mesa tatica sem bloquear a partida
 - gerar mesa tatica com esquema tatico, titulares por posicao e reservas com sucesso
 - permitir geracao da mesa tatica tanto pelo responsavel do time quanto pelo tecnico associado
 - impedir geracao de mesa tatica por usuario que nao e responsavel nem tecnico do time
@@ -229,8 +228,7 @@ Cenarios principais:
 - manter a partida sem scout detalhado quando o organizador nao quiser registrar eventos individuais
 - registrar gol e assistencia em uma partida
 - registrar cartoes em uma partida
-- registrar substituicao quando a partida possui mesa tatica
-- impedir substituicao quando a partida nao possui mesa tatica
+- registrar substituicao mesmo quando a partida nao possui mesa tatica
 - corrigir evento individual do scout
 - remover evento individual do scout
 - impedir gerenciamento do scout por usuario nao organizador
@@ -247,6 +245,10 @@ Cenarios principais:
 - gerar ranking de artilharia
 - atualizar estatisticas apos novos eventos
 - nao consolidar estatisticas detalhadas quando nao houver eventos registrados
+
+---
+
+### F15.
 
 ---
 
@@ -302,7 +304,7 @@ Cenarios principais:
 - RN43. Usuario pode atualizar comparativo salvo quando os dados mudarem.
 - RN44. Usuario pode excluir comparativo salvo.
 - RN45. O sistema deve impedir comparativo sem dados estatisticos suficientes.
-- RN46. A mesa tatica e opcional quando o torneio ou a partida nao exigirem esse detalhamento.
+- RN46. A mesa tatica e sempre opcional e funciona apenas como visualizacao da escalacao do time em campo.
 - RN47. A mesa tatica pode ser gerada pelo responsavel do time ou pelo tecnico.
 - RN48. O esquema tatico da mesa tatica deve ser compativel com o formato de equipe.
 - RN49. A quantidade de titulares da mesa tatica deve ser igual ao formato de equipe.
@@ -311,8 +313,8 @@ Cenarios principais:
 - RN52. Sem limite maximo de reservas na mesa tatica.
 - RN53. Mesmo jogador nao pode ser titular e reserva simultaneamente na mesma mesa tatica.
 - RN54. A mesa tatica pode ser editada ate o inicio da partida.
-- RN55. Se a partida ou o torneio exigir mesa tatica, os dois times devem informar mesa tatica antes do inicio.
-- RN56. Se um time informar mesa tatica em uma partida opcional, o outro time tambem deve informar para manter equilibrio de dados.
+- RN55. A ausencia de mesa tatica nao impede o inicio da partida, o andamento da competicao nem o registro de eventos estatisticos.
+- RN56. Um time pode gerar mesa tatica mesmo que o outro nao gere, pois essa visualizacao nao altera as regras da partida.
 
 ### Organizacao e comunicacao
 - RN57. Apenas usuarios autenticados podem criar torneios.
@@ -359,4 +361,4 @@ Cenarios principais:
 - RN96. Na ausencia de scout detalhado, apenas o placar oficial da partida deve ser exibido.
 - RN97. Eventos do scout estatistico podem ser corrigidos ou removidos pelo organizador.
 - RN98. A consolidacao das estatisticas atualiza notas, artilharia, lideres de assistencias e historico dos jogadores.
-- RN99. Substituicao so pode ser registrada quando a partida possui mesa tatica.
+- RN99. Substituicao pode ser registrada no scout estatistico independentemente da mesa tatica, desde que os jogadores envolvidos pertencam aos times da partida.

@@ -22,28 +22,21 @@ public class ConsultaSuporteEscalacaoMemoria implements ConsultaSuporteEscalacao
     private final Map<TimeId, List<JogadorId>> elencoPorTime = new HashMap<>();
     private final Map<PartidaId, FormatoEquipe> formatoPorPartida = new HashMap<>();
     private final Map<PartidaId, List<TimeId>> timesPorPartida = new HashMap<>();
-    private final Set<PartidaId> partidasComEscalacaoObrigatoria = new HashSet<>();
 
     public void registrarPartida(PartidaId partidaId, FormatoEquipe formatoEquipe, boolean iniciada) {
-        registrarPartida(partidaId, formatoEquipe, iniciada, List.of(), false);
+        registrarPartida(partidaId, formatoEquipe, iniciada, List.of());
     }
 
     public void registrarPartida(PartidaId partidaId,
                                  FormatoEquipe formatoEquipe,
                                  boolean iniciada,
-                                 List<TimeId> times,
-                                 boolean escalacaoObrigatoria) {
+                                 List<TimeId> times) {
         formatoPorPartida.put(partidaId, formatoEquipe);
         timesPorPartida.put(partidaId, List.copyOf(times));
         if (iniciada) {
             partidasIniciadas.add(partidaId);
         } else {
             partidasIniciadas.remove(partidaId);
-        }
-        if (escalacaoObrigatoria) {
-            partidasComEscalacaoObrigatoria.add(partidaId);
-        } else {
-            partidasComEscalacaoObrigatoria.remove(partidaId);
         }
     }
 
@@ -66,11 +59,6 @@ public class ConsultaSuporteEscalacaoMemoria implements ConsultaSuporteEscalacao
     @Override
     public boolean partidaIniciada(PartidaId partidaId) {
         return partidasIniciadas.contains(partidaId);
-    }
-
-    @Override
-    public boolean escalacaoObrigatoriaNaPartida(PartidaId partidaId) {
-        return partidasComEscalacaoObrigatoria.contains(partidaId);
     }
 
     @Override

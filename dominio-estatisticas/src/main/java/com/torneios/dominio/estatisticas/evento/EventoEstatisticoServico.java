@@ -66,10 +66,6 @@ public class EventoEstatisticoServico {
                                                    JogadorId jogadorSaiuId,
                                                    JogadorId jogadorEntrouId) {
         validarRegistroBase(torneioId, partidaId, organizadorId);
-        if (!consultaEstatisticaCompeticao.partidaPossuiEscalacao(partidaId)) {
-            throw new RegraDeNegocioException(
-                    "Substituicao so pode ser registrada quando a partida possui mesa tatica.");
-        }
         validarJogadorDaPartida(partidaId, jogadorSaiuId);
         validarJogadorDaPartida(partidaId, jogadorEntrouId);
 

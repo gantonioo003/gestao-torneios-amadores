@@ -22,15 +22,7 @@ public class CompeticaoSteps extends CompeticaoFuncionalidade {
         configurarTorneioPontosCorridos(true);
         Partida partida = new Partida(PARTIDA_ID, TORNEIO_ID, TIME_A_ID, TIME_B_ID, "Pontos corridos", 5);
         partidaRepositorio.salvar(partida);
-        configurarSuporteEscalacao(false, false);
-    }
-
-    @Dado("que existe uma partida cadastrada no torneio com escalacao obrigatoria")
-    public void que_existe_partida_com_escalacao_obrigatoria() {
-        configurarTorneioPontosCorridos(true);
-        Partida partida = new Partida(PARTIDA_ID, TORNEIO_ID, TIME_A_ID, TIME_B_ID, "Pontos corridos", 5);
-        partidaRepositorio.salvar(partida);
-        configurarSuporteEscalacao(false, true);
+        configurarSuporteEscalacao(false);
     }
 
     @Dado("que apenas um time informou a escalacao")
@@ -58,6 +50,14 @@ public class CompeticaoSteps extends CompeticaoFuncionalidade {
     public void a_partida_deve_seguir_sem_escalacao_cadastrada() {
         assertNull(excecaoCapturada);
         assertTrue(escalacaoRepositorio.listarPorPartida(PARTIDA_ID).isEmpty());
+    }
+
+    @Entao("o sistema deve manter apenas a mesa tatica informada sem bloquear a partida")
+    public void o_sistema_deve_manter_apenas_mesa_tatica_informada() {
+        assertNull(excecaoCapturada);
+        assertEquals(1, escalacaoRepositorio.listarPorPartida(PARTIDA_ID).size());
+        assertTrue(escalacaoRepositorio.buscarPorPartidaETime(PARTIDA_ID, TIME_A_ID).isPresent());
+        assertTrue(escalacaoRepositorio.buscarPorPartidaETime(PARTIDA_ID, TIME_B_ID).isEmpty());
     }
 
     @Dado("que existe uma partida cadastrada no torneio com formato de equipe definido")

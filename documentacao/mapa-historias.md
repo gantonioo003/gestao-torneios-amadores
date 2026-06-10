@@ -66,8 +66,8 @@
 - Como responsavel por um time, quero indicar os jogadores titulares por posicao para montar minha mesa tatica inicial.
 - Como responsavel por um time, quero indicar os jogadores reservas da partida para deixar a equipe completa e organizada antes do jogo.
 - Como tecnico associado ao time, quero definir e ajustar a mesa tatica da partida ate seu inicio para garantir a melhor formacao possivel.
-- Como responsavel por um time, quero poder deixar a partida sem mesa tatica quando ela nao for obrigatoria para simplificar torneios menores.
-- Como organizador, quero exigir mesa tatica em torneios que precisam de scout estatistico mais completo para padronizar os dados.
+- Como responsavel por um time, quero poder deixar a partida sem mesa tatica para simplificar torneios menores quando eu nao quiser montar essa visualizacao.
+- Como responsavel por um time, quero gerar a mesa tatica mesmo que o outro time nao gere, porque essa visualizacao representa apenas meu time.
 - Como organizador, quero visualizar as mesas taticas confirmadas dos times antes da partida para validar a competicao.
 
 ## 7. Gestao de partidas e andamento da competicao
@@ -79,7 +79,7 @@
 ## 8. Estatisticas e desempenho dos jogadores
 - Como organizador, quero registrar gols e assistencias de uma partida para acompanhar o desempenho ofensivo dos jogadores.
 - Como organizador, quero registrar cartoes amarelos e vermelhos para refletir eventos disciplinares da partida.
-- Como organizador, quero registrar substituicoes quando houver mesa tatica para manter o scout detalhado fiel ao jogo.
+- Como organizador, quero registrar substituicoes no scout detalhado mesmo sem mesa tatica para manter os dados da partida completos.
 - Como organizador, quero corrigir ou remover eventos do scout estatistico para manter os dados da partida consistentes.
 - Como organizador, quero registrar eventos estatisticos apenas quando desejar detalhar a partida.
 - Como organizador, quero que o sistema consolide automaticamente notas, artilharia, lideres de assistencias e historico dos jogadores quando houver eventos registrados.

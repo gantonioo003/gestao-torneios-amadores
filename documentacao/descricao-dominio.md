@@ -8,7 +8,7 @@ O sistema tem como objetivo permitir que usuarios criem, gerenciem e participem 
 
 Alem da gestao da competicao, o sistema permite a participacao de diferentes usuarios, possibilitando cadastro de conta como jogador ou organizador, login, edicao e exclusao da propria conta, gerenciamento completo de inscricoes de times em torneios abertos, acompanhamento de status, cancelamento de candidatura pendente, aprovacao ou rejeicao pelo organizador, chat privado com solicitacoes de conversa, desafios amistosos opcionais entre times, geracao opcional da escalacao de cada time em uma mesa tatica para cada partida, registro de palpites publicos por usuarios autenticados ou visitantes e publicacao de postagens, comunicados e interacoes sociais no feed.
 
-O sistema tambem permite o gerenciamento de um scout estatistico opcional das partidas, com registro, correcao e remocao de gols, assistencias, cartoes e substituicoes. Substituicoes so fazem sentido quando a partida possui mesa tatica, enquanto os demais eventos continuam opcionais.
+O sistema tambem permite o gerenciamento de um scout estatistico opcional das partidas, com registro, correcao e remocao de gols, assistencias, cartoes e substituicoes. Esses eventos sao independentes da existencia de mesa tatica e servem para detalhar o jogo quando o organizador quiser.
 
 ---
 
@@ -22,7 +22,7 @@ Competicoes amadoras costumam ser organizadas manualmente, o que dificulta o con
 - comunicacao privada entre usuarios com solicitacoes de conversa
 - desafios e amistosos opcionais entre times
 - jogadores e tecnicos
-- mesa tatica opcional dos times em cada partida
+- visualizacao opcional da escalacao dos times em mesa tatica
 - partidas e resultados
 - classificacao e chaveamento
 - estatisticas dos jogadores
@@ -123,9 +123,9 @@ Fora do fluxo formal dos torneios, responsaveis por times podem, opcionalmente, 
 
 O organizador define o formato do torneio, gerencia os participantes aprovados e prepara a competicao, gerando estrutura, rodadas e partidas conforme o formato escolhido. Depois de adicionar os times, a competicao pode ser montada por sorteio automatico ou manualmente, permitindo que o organizador escolha a ordem dos confrontos ou a distribuicao dos times.
 
-Antes de cada partida, o usuario responsavel pelo time ou o tecnico associado pode gerar a escalacao do time em uma mesa tatica, escolhendo o esquema tatico, indicando os jogadores titulares por posicao e os jogadores reservas e posicionando visualmente o time em campo. A mesa tatica e opcional quando a partida nao exige esse nivel de detalhe; porem, se o torneio exigir mesa tatica ou se um time informar sua mesa tatica, os dois times da partida devem informar para manter equilibrio nos dados. A mesa tatica pode ser editada ate o inicio da partida e fica congelada apos esse momento.
+Antes de cada partida, o usuario responsavel pelo time ou o tecnico associado pode gerar a visualizacao da escalacao do time em uma mesa tatica, escolhendo o esquema tatico, indicando os jogadores titulares por posicao e os jogadores reservas e posicionando visualmente o time em campo. A mesa tatica e sempre opcional, nao interfere no andamento do torneio e pode ser editada ate o inicio da partida, ficando congelada apos esse momento.
 
-Durante a competicao, o organizador registra obrigatoriamente os resultados das partidas para atualizar o andamento do torneio, incluindo classificacao, chaveamento e status das partidas. De forma independente e opcional, o organizador pode gerenciar o scout estatistico da partida, registrando, corrigindo ou removendo eventos individuais como gols, assistencias, cartoes e substituicoes. Substituicoes so podem ser registradas se houver mesa tatica na partida.
+Durante a competicao, o organizador registra obrigatoriamente os resultados das partidas para atualizar o andamento do torneio, incluindo classificacao, chaveamento e status das partidas. De forma independente e opcional, o organizador pode gerenciar o scout estatistico da partida, registrando, corrigindo ou removendo eventos individuais como gols, assistencias, cartoes e substituicoes. Esse scout funciona mesmo quando nao existe mesa tatica na partida.
 
 Quando houver eventos registrados, o sistema consolida automaticamente estatisticas e rankings do torneio, atualizando notas dos jogadores, artilharia, lideres de assistencias e historico de desempenho. A partir desses dados, usuarios tambem podem gerar comparativos temporarios entre jogadores ou times, usando estatisticas, historico de partidas e posicao relativa nos rankings. O comparativo so e salvo quando o usuario escolher guardar aquela analise para consulta posterior, podendo tambem atualizar ou excluir comparativos salvos.
 
