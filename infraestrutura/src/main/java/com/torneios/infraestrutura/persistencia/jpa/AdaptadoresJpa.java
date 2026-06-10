@@ -43,7 +43,7 @@ class EventoBarramentoImpl implements EventoBarramento {
     public <E> void postar(E evento) {
         List<EventoObservador> lista = observadores.getOrDefault(Object.class, Collections.emptyList());
         for (EventoObservador obs : lista) {
-            try { obs.notificar(evento); } catch (Exception ignored) { }
+            try { obs.aoOcorrer(evento); } catch (Exception ignored) { }
         }
     }
 }
