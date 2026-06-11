@@ -196,22 +196,24 @@ RN88. O sistema nao deve permitir registrar resultado para uma partida inexisten
 
 RN89. O resultado da partida pode ser registrado independentemente do registro de eventos estatisticos.
 
-RN90. O sistema pode registrar gols, assistencias, cartoes amarelos, cartoes vermelhos e substituicoes no scout opcional de cada partida.
+RN90. O sistema pode registrar gols, assistências, cartões amarelos, cartões vermelhos, faltas e substituições no scout opcional de cada partida, vinculando cada evento a um jogador da escalação confirmada e ao minuto da partida.
 
-RN91. A nota estatistica de cada jogador deve ser calculada automaticamente a partir dos eventos registrados na partida, quando esses eventos existirem.
+RN91. Eventos de scout só podem ser inseridos, editados ou removidos enquanto a partida estiver em andamento ou em até 48 horas após ser marcada como finalizada, após esse prazo a súmula torna-se somente leitura de forma irreversível.
 
-RN92. A nota estatistica do jogador deve ser calculada por meio de uma formula baseada em pesos associados aos eventos registrados.
+RN92. Ao registrar um segundo cartão amarelo para um jogador na mesma partida, o sistema deve converter automaticamente o evento para cartão vermelho e marcar o jogador como expulso, impedindo novos eventos para ele naquela partida.
 
-RN93. Na versao inicial do sistema, a formula da nota estatistica deve considerar gols, assistencias, cartoes amarelos e cartoes vermelhos.
+RN93. O sistema deve validar substituições com base em duas dimensões simultâneas: o total de trocas do time não pode exceder o limite configurado no torneio, e as substituições devem ocorrer em no máximo o número de paradas de jogo permitidas pela configuração do torneio.
 
-RN94. Eventos positivos devem aumentar a nota estatistica do jogador, enquanto eventos negativos devem reduzi-la.
+RN94. Ao remover ou corrigir qualquer evento de scout, o sistema deve executar uma transação atômica que reverte o placar, os contadores estatísticos do jogador e o status dele em campo, realizando rollback completo em caso de falha em qualquer etapa.
 
-RN95. O sistema deve atualizar automaticamente a artilharia do torneio com base nos gols registrados, quando houver registro de eventos.
+RN95. O sistema deve verificar o acúmulo de cartões amarelos do jogador em toda a edição do torneio e gerar automaticamente uma suspensão para a próxima partida quando o total atingir o múltiplo do limite configurado.
 
-RN96. Na ausencia de scout detalhado registrado, o sistema deve manter disponivel apenas o placar oficial da partida, sem exibir nota estatistica, artilharia ou estatisticas detalhadas.
+RN96. A consolidação das estatísticas deve atualizar artilharia, líderes de assistências e histórico dos jogadores de forma incremental a cada evento registrado, sem recalcular todos os eventos anteriores do zero.
 
-RN97. Eventos do scout estatistico podem ser corrigidos ou removidos pelo organizador do torneio.
+RN97. A artilharia deve ser ordenada com critérios de desempate em cascata: maior número de gols, depois mais assistências, depois menos cartões vermelhos, depois menos cartões amarelos, depois mais minutos jogados.
 
-RN98. A consolidacao das estatisticas deve atualizar notas, artilharia, lideres de assistencias e historico dos jogadores a partir dos eventos registrados.
+RN98. Para figurar no ranking de melhor avaliado da edição, o jogador deve ter participado em no mínimo 30% das partidas finalizadas realizadas pelo seu time na edição.
 
-RN99. Substituicoes podem ser registradas no scout estatistico independentemente da mesa tatica, desde que os jogadores envolvidos pertencam aos times da partida.
+RN99. Quando um resultado ou evento de scout for corrigido após o fechamento de uma partida, o sistema deve executar um recálculo retroativo completo da edição, zerando e reprocessando toda a classificação e os scouts consolidados de todos os jogadores afetados, registrando log de auditoria da operação.
+
+RN100. Quando todas as partidas de uma edição estiverem finalizadas, o organizador pode encerrar a edição, momento em que o sistema registra o campeão, vice e destaques de forma imutável no histórico da liga.
