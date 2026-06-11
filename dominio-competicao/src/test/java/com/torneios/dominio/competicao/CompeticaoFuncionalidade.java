@@ -65,36 +65,75 @@ public class CompeticaoFuncionalidade implements EventoBarramento {
     protected static final JogadorId JOGADOR_7_ID = new JogadorId(7L);
     protected static final JogadorId JOGADOR_FORA_ELENCO_ID = new JogadorId(999L);
 
-    protected final Repositorio repositorio = new Repositorio();
-    protected final PartidaRepositorio partidaRepositorio = repositorio;
-    protected final EscalacaoRepositorio escalacaoRepositorio = repositorio;
-    protected final ContestacaoResultadoRepositorio contestacaoRepositorio = repositorio;
-    protected final ConsultaCompeticaoTorneioMemoria consultaCompeticaoTorneio = new ConsultaCompeticaoTorneioMemoria();
-    protected final ConsultaSuporteEscalacaoMemoria consultaEscalacao = new ConsultaSuporteEscalacaoMemoria();
-    protected final ConsultaContestacaoResultadoMemoria consultaContestacao = new ConsultaContestacaoResultadoMemoria();
-    protected final GeradorPartidasServico geradorPartidasServico = new GeradorPartidasServico();
-    protected final ClassificacaoServico classificacaoServico = new ClassificacaoServico();
-    protected final ChaveamentoServico chaveamentoServico = new ChaveamentoServico();
-    protected final PartidaServico partidaServico = new PartidaServico(
-            repositorio, consultaCompeticaoTorneio, geradorPartidasServico,
-            classificacaoServico, chaveamentoServico, this);
-    protected final EscalacaoServico escalacaoServico = new EscalacaoServico(repositorio, consultaEscalacao);
-    protected final ContestacaoResultadoServico contestacaoResultadoServico = new ContestacaoResultadoServico(
-            repositorio, repositorio, consultaCompeticaoTorneio, consultaContestacao);
+    protected static Repositorio repositorio = new Repositorio();
+    protected static PartidaRepositorio partidaRepositorio = repositorio;
+    protected static EscalacaoRepositorio escalacaoRepositorio = repositorio;
+    protected static ContestacaoResultadoRepositorio contestacaoRepositorio = repositorio;
+    protected static ConsultaCompeticaoTorneioMemoria consultaCompeticaoTorneio = new ConsultaCompeticaoTorneioMemoria();
+    protected static ConsultaSuporteEscalacaoMemoria consultaEscalacao = new ConsultaSuporteEscalacaoMemoria();
+    protected static ConsultaContestacaoResultadoMemoria consultaContestacao = new ConsultaContestacaoResultadoMemoria();
+    protected static GeradorPartidasServico geradorPartidasServico = new GeradorPartidasServico();
+    protected static ClassificacaoServico classificacaoServico = new ClassificacaoServico();
+    protected static ChaveamentoServico chaveamentoServico = new ChaveamentoServico();
+    protected static PartidaServico partidaServico;
+    protected static EscalacaoServico escalacaoServico = new EscalacaoServico(repositorio, consultaEscalacao);
+    protected static ContestacaoResultadoServico contestacaoResultadoServico;
 
-    protected List<Object> eventos = new ArrayList<>();
+    protected static List<Object> eventos = new ArrayList<>();
 
-    protected List<Partida> partidasGeradas;
-    protected PreparacaoCompeticao preparacaoCompeticao;
-    protected AtualizacaoCompeticao atualizacaoCompeticao;
-    protected List<Classificacao> classificacao;
-    protected Chaveamento chaveamento;
-    protected Escalacao escalacao;
-    protected MesaTatica mesaTatica;
-    protected ContestacaoResultado contestacaoResultado;
-    protected java.util.List<ContestacaoResultado> contestacoes;
-    protected Exception excecaoCapturada;
-    protected UsuarioId usuarioSolicitanteId = ORGANIZADOR_ID;
+    protected static List<Partida> partidasGeradas;
+    protected static PreparacaoCompeticao preparacaoCompeticao;
+    protected static AtualizacaoCompeticao atualizacaoCompeticao;
+    protected static List<Classificacao> classificacao;
+    protected static Chaveamento chaveamento;
+    protected static Escalacao escalacao;
+    protected static MesaTatica mesaTatica;
+    protected static ContestacaoResultado contestacaoResultado;
+    protected static java.util.List<ContestacaoResultado> contestacoes;
+    protected static Exception excecaoCapturada;
+    protected static UsuarioId usuarioSolicitanteId = ORGANIZADOR_ID;
+
+    static {
+        partidaServico = new PartidaServico(repositorio, consultaCompeticaoTorneio,
+                geradorPartidasServico, classificacaoServico, chaveamentoServico,
+                new EventoBarramento() {
+                    @Override public <E> void adicionar(EventoObservador<E> obs) { throw new UnsupportedOperationException(); }
+                    @Override public <E> void postar(E evento) { eventos.add(evento); }
+                });
+        contestacaoResultadoServico = new ContestacaoResultadoServico(
+                repositorio, repositorio, consultaCompeticaoTorneio, consultaContestacao);
+    }
+
+    public void resetar() {
+        repositorio = new Repositorio();
+        partidaRepositorio = repositorio;
+        escalacaoRepositorio = repositorio;
+        contestacaoRepositorio = repositorio;
+        consultaCompeticaoTorneio = new ConsultaCompeticaoTorneioMemoria();
+        consultaEscalacao = new ConsultaSuporteEscalacaoMemoria();
+        consultaContestacao = new ConsultaContestacaoResultadoMemoria();
+        geradorPartidasServico = new GeradorPartidasServico();
+        classificacaoServico = new ClassificacaoServico();
+        chaveamentoServico = new ChaveamentoServico();
+        partidaServico = new PartidaServico(repositorio, consultaCompeticaoTorneio,
+                geradorPartidasServico, classificacaoServico, chaveamentoServico, this);
+        escalacaoServico = new EscalacaoServico(repositorio, consultaEscalacao);
+        contestacaoResultadoServico = new ContestacaoResultadoServico(
+                repositorio, repositorio, consultaCompeticaoTorneio, consultaContestacao);
+
+        eventos = new ArrayList<>();
+        partidasGeradas = null;
+        preparacaoCompeticao = null;
+        atualizacaoCompeticao = null;
+        classificacao = null;
+        chaveamento = null;
+        escalacao = null;
+        mesaTatica = null;
+        contestacaoResultado = null;
+        contestacoes = null;
+        excecaoCapturada = null;
+        usuarioSolicitanteId = ORGANIZADOR_ID;
+    }
 
     @Override
     public <E> void adicionar(EventoObservador<E> observador) {

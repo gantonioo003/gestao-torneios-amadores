@@ -46,38 +46,71 @@ public abstract class EngajamentoFuncionalidade {
     protected static final long JOGADOR_A_ID = 11L;
     protected static final long JOGADOR_B_ID = 12L;
 
-    protected final PalpiteRepositorioMemoria palpiteRepositorio = new PalpiteRepositorioMemoria();
-    protected final ConsultaSuportePalpiteMemoria consultaPalpite = new ConsultaSuportePalpiteMemoria();
-    protected final PalpiteServico palpiteServico = new PalpiteServico(palpiteRepositorio, consultaPalpite);
+    protected static PalpiteRepositorioMemoria palpiteRepositorio = new PalpiteRepositorioMemoria();
+    protected static ConsultaSuportePalpiteMemoria consultaPalpite = new ConsultaSuportePalpiteMemoria();
+    protected static PalpiteServico palpiteServico = new PalpiteServico(palpiteRepositorio, consultaPalpite);
 
-    protected final FeedTorneioRepositorioMemoria feedRepositorio = new FeedTorneioRepositorioMemoria();
-    protected final ConsultaSuporteFeedTorneioMemoria consultaFeed = new ConsultaSuporteFeedTorneioMemoria();
-    protected final FeedTorneioServico feedTorneioServico = new FeedTorneioServico(feedRepositorio, consultaFeed);
+    protected static FeedTorneioRepositorioMemoria feedRepositorio = new FeedTorneioRepositorioMemoria();
+    protected static ConsultaSuporteFeedTorneioMemoria consultaFeed = new ConsultaSuporteFeedTorneioMemoria();
+    protected static FeedTorneioServico feedTorneioServico = new FeedTorneioServico(feedRepositorio, consultaFeed);
 
-    protected final DesafioAmistosoRepositorioMemoria desafioAmistosoRepositorio = new DesafioAmistosoRepositorioMemoria();
-    protected final ConsultaSuporteDesafioAmistosoMemoria consultaDesafio = new ConsultaSuporteDesafioAmistosoMemoria();
-    protected final DesafioAmistosoServico desafioAmistosoServico = new DesafioAmistosoServico(
+    protected static DesafioAmistosoRepositorioMemoria desafioAmistosoRepositorio = new DesafioAmistosoRepositorioMemoria();
+    protected static ConsultaSuporteDesafioAmistosoMemoria consultaDesafio = new ConsultaSuporteDesafioAmistosoMemoria();
+    protected static DesafioAmistosoServico desafioAmistosoServico = new DesafioAmistosoServico(
             desafioAmistosoRepositorio, consultaDesafio);
 
-    protected final ConversaPrivadaRepositorioMemoria conversaPrivadaRepositorio = new ConversaPrivadaRepositorioMemoria();
-    protected final ConsultaSuporteChatMemoria consultaChat = new ConsultaSuporteChatMemoria();
-    protected final ChatPrivadoServico chatPrivadoServico = new ChatPrivadoServico(
+    protected static ConversaPrivadaRepositorioMemoria conversaPrivadaRepositorio = new ConversaPrivadaRepositorioMemoria();
+    protected static ConsultaSuporteChatMemoria consultaChat = new ConsultaSuporteChatMemoria();
+    protected static ChatPrivadoServico chatPrivadoServico = new ChatPrivadoServico(
             conversaPrivadaRepositorio, consultaChat);
 
-    protected EventoAlvo eventoAlvo;
-    protected Palpite palpite;
-    protected List<Palpite> palpitesApurados;
-    protected PercentuaisPalpite percentuaisPalpite;
-    protected long resultadoReal;
+    protected static EventoAlvo eventoAlvo;
+    protected static Palpite palpite;
+    protected static List<Palpite> palpitesApurados;
+    protected static PercentuaisPalpite percentuaisPalpite;
+    protected static long resultadoReal;
 
-    protected PublicacaoFeed publicacaoFeed;
-    protected List<PublicacaoFeed> publicacoesFeed;
-    protected DesafioAmistoso desafioAmistoso;
-    protected List<DesafioAmistoso> historicoAmistosos;
-    protected ConversaPrivada conversaPrivada;
-    protected MensagemChat mensagemChat;
-    protected List<ConversaPrivada> conversasPrivadas;
-    protected Exception excecaoCapturada;
+    protected static PublicacaoFeed publicacaoFeed;
+    protected static List<PublicacaoFeed> publicacoesFeed;
+    protected static DesafioAmistoso desafioAmistoso;
+    protected static List<DesafioAmistoso> historicoAmistosos;
+    protected static ConversaPrivada conversaPrivada;
+    protected static MensagemChat mensagemChat;
+    protected static List<ConversaPrivada> conversasPrivadas;
+    protected static Exception excecaoCapturada;
+
+    public void resetar() {
+        palpiteRepositorio = new PalpiteRepositorioMemoria();
+        consultaPalpite = new ConsultaSuportePalpiteMemoria();
+        palpiteServico = new PalpiteServico(palpiteRepositorio, consultaPalpite);
+
+        feedRepositorio = new FeedTorneioRepositorioMemoria();
+        consultaFeed = new ConsultaSuporteFeedTorneioMemoria();
+        feedTorneioServico = new FeedTorneioServico(feedRepositorio, consultaFeed);
+
+        desafioAmistosoRepositorio = new DesafioAmistosoRepositorioMemoria();
+        consultaDesafio = new ConsultaSuporteDesafioAmistosoMemoria();
+        desafioAmistosoServico = new DesafioAmistosoServico(desafioAmistosoRepositorio, consultaDesafio);
+
+        conversaPrivadaRepositorio = new ConversaPrivadaRepositorioMemoria();
+        consultaChat = new ConsultaSuporteChatMemoria();
+        chatPrivadoServico = new ChatPrivadoServico(conversaPrivadaRepositorio, consultaChat);
+
+        eventoAlvo = null;
+        palpite = null;
+        palpitesApurados = null;
+        percentuaisPalpite = null;
+        resultadoReal = 0L;
+
+        publicacaoFeed = null;
+        publicacoesFeed = null;
+        desafioAmistoso = null;
+        historicoAmistosos = null;
+        conversaPrivada = null;
+        mensagemChat = null;
+        conversasPrivadas = null;
+        excecaoCapturada = null;
+    }
 
     protected void configurarEventoDePartidaAberto() {
         eventoAlvo = EventoAlvo.paraPartida(TORNEIO_ID, PARTIDA_ID);

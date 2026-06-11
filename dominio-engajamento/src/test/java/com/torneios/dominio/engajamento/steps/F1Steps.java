@@ -1,0 +1,261 @@
+package com.torneios.dominio.engajamento.steps;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.torneios.dominio.engajamento.EngajamentoFuncionalidade;
+import com.torneios.dominio.engajamento.palpite.OpcaoPalpite;
+
+import io.cucumber.java.pt.Dado;
+import io.cucumber.java.pt.Entao;
+import io.cucumber.java.pt.Quando;
+
+public class F1Steps extends EngajamentoFuncionalidade {
+
+    @Dado("que o usuario esta autenticado")
+    public void que_o_usuario_esta_autenticado() {
+        consultaPalpite.autenticar(USUARIO_ID);
+        consultaFeed.autenticar(USUARIO_ID);
+        consultaChat.autenticar(USUARIO_ID);
+    }
+
+    @Dado("que existe uma partida cadastrada com janela de votacao aberta")
+    public void que_existe_partida_com_janela_aberta() {
+        configurarEventoDePartidaAberto();
+    }
+
+    @Quando("ele registrar um palpite indicando o time vencedor da partida")
+    public void ele_registrar_palpite_vencedor_partida() {
+        try {
+            palpite = palpiteServico.registrarOuAtualizar(
+                    palpiteId(1L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(TIME_A_ID));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve armazenar o palpite do usuario para a partida")
+    public void o_sistema_deve_armazenar_palpite_partida() {
+        assertNull(excecaoCapturada);
+        assertTrue(palpiteRepositorio.buscarPorUsuarioEEvento(USUARIO_ID, eventoAlvo).isPresent());
+    }
+
+    @Dado("que existe um torneio que ainda nao foi iniciado")
+    public void que_existe_torneio_nao_iniciado() {
+        configurarEventoCampeaoAberto();
+    }
+
+    @Quando("ele registrar um palpite indicando o time campeao do torneio")
+    public void ele_registrar_palpite_campeao() {
+        try {
+            configurarEventoCampeaoAberto();
+            palpite = palpiteServico.registrarOuAtualizar(
+                    palpiteId(2L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(TIME_A_ID));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele registrar um palpite indicando o jogador artilheiro do torneio")
+    public void ele_registrar_palpite_artilheiro() {
+        try {
+            configurarEventoArtilheiroAberto();
+            palpite = palpiteServico.registrarOuAtualizar(
+                    palpiteId(3L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(JOGADOR_A_ID));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele registrar um palpite indicando o jogador lider de assistencias do torneio")
+    public void ele_registrar_palpite_lider_assistencias() {
+        try {
+            configurarEventoLiderAssistenciasAberto();
+            palpite = palpiteServico.registrarOuAtualizar(
+                    palpiteId(4L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(JOGADOR_A_ID));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve armazenar o palpite do usuario para o torneio")
+    public void o_sistema_deve_armazenar_palpite_torneio() {
+        assertNull(excecaoCapturada);
+        assertTrue(palpiteRepositorio.buscarPorUsuarioEEvento(USUARIO_ID, eventoAlvo).isPresent());
+    }
+
+    @Dado("que o usuario nao esta autenticado")
+    public void que_o_usuario_nao_esta_autenticado() {
+        configurarEventoDePartidaAberto();
+        configurarTorneioComPartidaNoFeed();
+    }
+
+    @Dado("que o visitante nao esta autenticado")
+    public void que_o_visitante_nao_esta_autenticado() {
+        configurarEventoDePartidaAberto();
+    }
+
+    @Quando("ele registrar um palpite publico indicando o time vencedor da partida")
+    public void ele_registrar_palpite_publico_vencedor_partida() {
+        try {
+            palpite = palpiteServico.registrarOuAtualizarComoVisitante(
+                    palpiteId(5L), VISITANTE_ID, eventoAlvo, new OpcaoPalpite(TIME_A_ID));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve armazenar o palpite do visitante para a partida")
+    public void o_sistema_deve_armazenar_palpite_visitante_partida() {
+        assertNull(excecaoCapturada);
+        assertTrue(palpiteRepositorio.buscarPorVotanteEEvento("VISITANTE:" + VISITANTE_ID, eventoAlvo).isPresent());
+    }
+
+    @Dado("que ele ja registrou um palpite para um evento com janela de votacao aberta")
+    public void que_ele_ja_registrou_palpite_evento_aberto() {
+        configurarEventoDePartidaAberto();
+        palpite = palpiteServico.registrarOuAtualizar(
+                palpiteId(6L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(TIME_A_ID));
+    }
+
+    @Quando("ele registrar um novo palpite para o mesmo evento alvo")
+    public void ele_registrar_novo_palpite_mesmo_evento() {
+        try {
+            palpite = palpiteServico.registrarOuAtualizar(
+                    palpiteId(7L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(TIME_B_ID));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve manter apenas o palpite mais recente do usuario para aquele evento")
+    public void o_sistema_deve_manter_palpite_mais_recente() {
+        assertNull(excecaoCapturada);
+        assertEquals(1, palpiteRepositorio.listarPorEvento(eventoAlvo).size());
+        assertEquals(TIME_B_ID, palpiteRepositorio.buscarPorUsuarioEEvento(USUARIO_ID, eventoAlvo).get().getOpcao().valor());
+    }
+
+    @Quando("ele alterar a opcao do palpite")
+    public void ele_alterar_opcao_palpite() {
+        try {
+            palpite = palpiteServico.registrarOuAtualizar(
+                    palpiteId(8L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(TIME_B_ID));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve atualizar o palpite do usuario para o evento")
+    public void o_sistema_deve_atualizar_palpite_usuario() {
+        assertNull(excecaoCapturada);
+        assertEquals(TIME_B_ID, palpiteRepositorio.buscarPorUsuarioEEvento(USUARIO_ID, eventoAlvo).get().getOpcao().valor());
+    }
+
+    @Dado("que existe uma partida que ja foi iniciada")
+    public void que_existe_partida_ja_iniciada() {
+        configurarEventoDePartidaAberto();
+        consultaPalpite.iniciarPartida(PARTIDA_ID);
+    }
+
+    @Quando("ele tentar registrar ou alterar um palpite sobre o vencedor dessa partida")
+    public void ele_tentar_registrar_alterar_palpite_partida_iniciada() {
+        try {
+            palpite = palpiteServico.registrarOuAtualizar(
+                    palpiteId(5L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(TIME_A_ID));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele tentar registrar um palpite indicando um time que nao participa da partida")
+    public void ele_tentar_palpite_opcao_invalida() {
+        try {
+            palpite = palpiteServico.registrarOuAtualizar(
+                    palpiteId(9L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(999L));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Dado("que existem multiplos palpites registrados para um mesmo evento alvo")
+    public void que_existem_multiplos_palpites() {
+        configurarEventoDePartidaAberto();
+        consultaPalpite.autenticar(USUARIO_ID);
+        consultaPalpite.autenticar(OUTRO_USUARIO_ID);
+        palpiteServico.registrarOuAtualizar(palpiteId(10L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(TIME_A_ID));
+        palpiteServico.registrarOuAtualizar(palpiteId(11L), OUTRO_USUARIO_ID, eventoAlvo, new OpcaoPalpite(TIME_B_ID));
+    }
+
+    @Quando("o sistema for consultado pelos percentuais do evento")
+    public void sistema_consultar_percentuais_evento() {
+        percentuaisPalpite = palpiteServico.obterPercentuais(eventoAlvo);
+    }
+
+    @Entao("ele deve retornar a distribuicao percentual de votos por opcao")
+    public void deve_retornar_percentuais_votos() {
+        assertEquals(2, percentuaisPalpite.getTotalPalpites());
+        assertEquals(50.0, percentuaisPalpite.getPercentuaisPorOpcao().get(new OpcaoPalpite(TIME_A_ID)));
+        assertEquals(50.0, percentuaisPalpite.getPercentuaisPorOpcao().get(new OpcaoPalpite(TIME_B_ID)));
+    }
+
+    @Dado("que existe um palpite registrado para um evento ja concluido")
+    public void que_existe_palpite_evento_concluido() {
+        consultaPalpite.autenticar(USUARIO_ID);
+        configurarEventoDePartidaAberto();
+        palpite = palpiteServico.registrarOuAtualizar(
+                palpiteId(12L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(TIME_A_ID));
+        consultaPalpite.encerrarPartida(PARTIDA_ID);
+    }
+
+    @Dado("que a opcao escolhida pelo usuario corresponde ao resultado real")
+    public void que_opcao_corresponde_resultado_real() {
+        resultadoReal = TIME_A_ID;
+    }
+
+    @Dado("que a opcao escolhida pelo usuario nao corresponde ao resultado real")
+    public void que_opcao_nao_corresponde_resultado_real() {
+        resultadoReal = TIME_B_ID;
+    }
+
+    @Quando("o sistema apurar o evento alvo")
+    public void o_sistema_apurar_evento_alvo() {
+        try {
+            palpitesApurados = palpiteServico.apurar(eventoAlvo, resultadoReal);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o palpite do usuario deve ser marcado como acertado")
+    public void palpite_deve_ser_marcado_acertado() {
+        assertNull(excecaoCapturada);
+        assertTrue(palpitesApurados.get(0).acertou().orElse(false));
+    }
+
+    @Entao("o palpite do usuario deve ser marcado como nao acertado")
+    public void palpite_deve_ser_marcado_nao_acertado() {
+        assertNull(excecaoCapturada);
+        assertFalse(palpitesApurados.get(0).acertou().orElse(true));
+    }
+
+    @Dado("que existe um palpite ja apurado")
+    public void que_existe_palpite_ja_apurado() {
+        que_existe_palpite_evento_concluido();
+        resultadoReal = TIME_A_ID;
+        palpitesApurados = palpiteServico.apurar(eventoAlvo, resultadoReal);
+        palpite = palpitesApurados.get(0);
+    }
+
+    @Quando("o usuario tentar alterar a opcao desse palpite")
+    public void usuario_tentar_alterar_opcao_palpite_apurado() {
+        try {
+            palpite.alterarOpcao(new OpcaoPalpite(TIME_B_ID));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve impedir a operacao")
+    public void sistema_deve_impedir_operacao() {
+        assertNotNull(excecaoCapturada);
+    }
+}
