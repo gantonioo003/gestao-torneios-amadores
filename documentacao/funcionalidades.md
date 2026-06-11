@@ -28,8 +28,8 @@ F11. Gerenciar o ecossistema de feed social da plataforma e dos torneios, permit
 ## Partidas, andamento e estatisticas
 F12. Gerenciar o registro do placar oficial da partida e a atualizacao automatica do andamento da competicao, permitindo salvar resultado mesmo sem eventos estatisticos e refletindo classificacao, chaveamento e status das partidas apos cada resultado
 
-F13. Gerenciar o scout estatistico opcional e detalhado da partida, registrando, corrigindo e removendo eventos individuais dos jogadores, incluindo substituicoes independentemente da mesa tatica
+F13. Gerenciar o scout estatístico opcional e detalhado da partida, registrando, corrigindo e removendo eventos individuais dos jogadores, incluindo substituições com controle de paradas de jogo, expulsão automática por segundo cartão amarelo, suspensão automática por acúmulo de cartões entre partidas e reversibilidade em cascata ao corrigir qualquer evento.
 
-F14. Gerenciar a consolidacao historica das estatisticas e rankings do torneio, atualizando notas, artilharia, lideres de assistencias, historico dos jogadores e historico estatistico das edicoes
+F14. Gerenciar a consolidação histórica das estatísticas e rankings do torneio, atualizando artilharia com desempate em cascata, líderes de assistências, melhor nota com elegibilidade mínima de participação, estatísticas de carreira acumuladas por jogador, recálculo retroativo completo da edição quando um resultado é corrigido após fechamento, e arquivamento imutável na galeria histórica.
 
 F15.
