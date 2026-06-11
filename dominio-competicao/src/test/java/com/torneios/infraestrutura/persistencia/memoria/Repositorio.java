@@ -11,15 +11,19 @@ import java.util.Optional;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
+import com.torneios.dominio.competicao.contestacao.ContestacaoResultado;
+import com.torneios.dominio.competicao.contestacao.ContestacaoResultadoId;
+import com.torneios.dominio.competicao.contestacao.ContestacaoResultadoRepositorio;
 import com.torneios.dominio.competicao.escalacao.Escalacao;
 import com.torneios.dominio.competicao.escalacao.EscalacaoRepositorio;
 import com.torneios.dominio.competicao.partida.Partida;
 import com.torneios.dominio.competicao.partida.PartidaRepositorio;
 
-public class Repositorio implements PartidaRepositorio, EscalacaoRepositorio {
-
+public class Repositorio implements PartidaRepositorio, EscalacaoRepositorio, ContestacaoResultadoRepositorio {
 
     private final Map<PartidaId, Partida> partidas = new HashMap<>();
+    private final Map<String, Escalacao> escalacoes = new LinkedHashMap<>();
+    private final Map<ContestacaoResultadoId, ContestacaoResultado> contestacoes = new LinkedHashMap<>();
 
     @Override
     public void salvar(Partida partida) {
@@ -41,10 +45,6 @@ public class Repositorio implements PartidaRepositorio, EscalacaoRepositorio {
                 .toList();
     }
 
-
-
-    private final Map<String, Escalacao> escalacoes = new LinkedHashMap<>();
-
     @Override
     public void salvar(Escalacao escalacao) {
         notNull(escalacao, "A escalacao nao pode ser nula.");
@@ -64,13 +64,49 @@ public class Repositorio implements PartidaRepositorio, EscalacaoRepositorio {
                 .toList();
     }
 
+    @Override
+    public void salvar(ContestacaoResultado contestacao) {
+        notNull(contestacao, "A contestacao nao pode ser nula.");
+        contestacoes.put(contestacao.getId(), contestacao);
+    }
+
+    @Override
+    public Optional<ContestacaoResultado> buscarPorId(ContestacaoResultadoId contestacaoId) {
+        notNull(contestacaoId, "O id da contestacao nao pode ser nulo.");
+        return Optional.ofNullable(contestacoes.get(contestacaoId));
+    }
+
+    @Override
+    public List<ContestacaoResultado> listarContestacoesPorTorneio(TorneioId torneioId) {
+        notNull(torneioId, "O id do torneio nao pode ser nulo.");
+        return contestacoes.values().stream()
+                .filter(c -> c.getTorneioId().equals(torneioId))
+                .toList();
+    }
+
+    @Override
+    public List<ContestacaoResultado> listarContestacoesPorPartida(PartidaId partidaId) {
+        notNull(partidaId, "O id da partida nao pode ser nulo.");
+        return contestacoes.values().stream()
+                .filter(c -> c.getPartidaId().equals(partidaId))
+                .toList();
+    }
+
+    @Override
+    public boolean existePendentePorPartidaETime(PartidaId partidaId, TimeId timeId) {
+        return contestacoes.values().stream()
+                .anyMatch(c -> c.getPartidaId().equals(partidaId)
+                        && c.getTimeSolicitanteId().equals(timeId)
+                        && c.pendente());
+    }
+
     private String chave(PartidaId partidaId, TimeId timeId) {
         return partidaId.valor() + ":" + timeId.valor();
     }
 
-
     public void limpar() {
         partidas.clear();
         escalacoes.clear();
+        contestacoes.clear();
     }
 }

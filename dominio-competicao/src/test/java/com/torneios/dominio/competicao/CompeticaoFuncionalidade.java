@@ -16,6 +16,10 @@ import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.competicao.chaveamento.Chaveamento;
+import com.torneios.dominio.competicao.contestacao.ContestacaoResultado;
+import com.torneios.dominio.competicao.contestacao.ContestacaoResultadoId;
+import com.torneios.dominio.competicao.contestacao.ContestacaoResultadoRepositorio;
+import com.torneios.dominio.competicao.contestacao.ContestacaoResultadoServico;
 import com.torneios.dominio.competicao.chaveamento.ChaveamentoServico;
 import com.torneios.dominio.competicao.classificacao.Classificacao;
 import com.torneios.dominio.competicao.classificacao.ClassificacaoServico;
@@ -33,6 +37,7 @@ import com.torneios.dominio.competicao.partida.PartidaRepositorio;
 import com.torneios.dominio.competicao.partida.PartidaServico;
 import com.torneios.dominio.competicao.resultado.ResultadoPartida;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaSuporteEscalacaoMemoria;
+import com.torneios.infraestrutura.persistencia.memoria.ConsultaContestacaoResultadoMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaCompeticaoTorneioMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.Repositorio;
 
@@ -46,6 +51,8 @@ public class CompeticaoFuncionalidade implements EventoBarramento {
     protected static final TimeId TIME_C_ID = new TimeId(3L);
     protected static final TimeId TIME_D_ID = new TimeId(4L);
     protected static final PartidaId PARTIDA_ID = new PartidaId(1L);
+    protected static final ContestacaoResultadoId CONTESTACAO_ID = new ContestacaoResultadoId(1L);
+    protected static final ContestacaoResultadoId OUTRA_CONTESTACAO_ID = new ContestacaoResultadoId(2L);
     protected static final EscalacaoId ESCALACAO_ID = new EscalacaoId(1L);
     protected static final EscalacaoId ESCALACAO_TIME_B_ID = new EscalacaoId(2L);
     protected static final TecnicoId TECNICO_ID = new TecnicoId(1L);
@@ -61,8 +68,10 @@ public class CompeticaoFuncionalidade implements EventoBarramento {
     protected final Repositorio repositorio = new Repositorio();
     protected final PartidaRepositorio partidaRepositorio = repositorio;
     protected final EscalacaoRepositorio escalacaoRepositorio = repositorio;
+    protected final ContestacaoResultadoRepositorio contestacaoRepositorio = repositorio;
     protected final ConsultaCompeticaoTorneioMemoria consultaCompeticaoTorneio = new ConsultaCompeticaoTorneioMemoria();
     protected final ConsultaSuporteEscalacaoMemoria consultaEscalacao = new ConsultaSuporteEscalacaoMemoria();
+    protected final ConsultaContestacaoResultadoMemoria consultaContestacao = new ConsultaContestacaoResultadoMemoria();
     protected final GeradorPartidasServico geradorPartidasServico = new GeradorPartidasServico();
     protected final ClassificacaoServico classificacaoServico = new ClassificacaoServico();
     protected final ChaveamentoServico chaveamentoServico = new ChaveamentoServico();
@@ -70,6 +79,8 @@ public class CompeticaoFuncionalidade implements EventoBarramento {
             repositorio, consultaCompeticaoTorneio, geradorPartidasServico,
             classificacaoServico, chaveamentoServico, this);
     protected final EscalacaoServico escalacaoServico = new EscalacaoServico(repositorio, consultaEscalacao);
+    protected final ContestacaoResultadoServico contestacaoResultadoServico = new ContestacaoResultadoServico(
+            repositorio, repositorio, consultaCompeticaoTorneio, consultaContestacao);
 
     protected List<Object> eventos = new ArrayList<>();
 
@@ -80,7 +91,10 @@ public class CompeticaoFuncionalidade implements EventoBarramento {
     protected Chaveamento chaveamento;
     protected Escalacao escalacao;
     protected MesaTatica mesaTatica;
+    protected ContestacaoResultado contestacaoResultado;
+    protected java.util.List<ContestacaoResultado> contestacoes;
     protected Exception excecaoCapturada;
+    protected UsuarioId usuarioSolicitanteId = ORGANIZADOR_ID;
 
     @Override
     public <E> void adicionar(EventoObservador<E> observador) {
@@ -90,6 +104,20 @@ public class CompeticaoFuncionalidade implements EventoBarramento {
     @Override
     public <E> void postar(E evento) {
         eventos.add(evento);
+    }
+
+    protected void configurarCenarioContestacaoPadrao(boolean resultadoRegistrado) {
+        configurarTorneioPontosCorridos(true);
+        consultaContestacao.registrarResponsavel(TIME_A_ID, ORGANIZADOR_ID);
+        consultaContestacao.registrarResponsavel(TIME_B_ID, OUTRO_USUARIO_ID);
+        consultaContestacao.registrarPrazo(TORNEIO_ID, 48);
+
+        Partida partida = new Partida(PARTIDA_ID, TORNEIO_ID, TIME_A_ID, TIME_B_ID,
+                "Rodada 1", 5);
+        if (resultadoRegistrado) {
+            partida.registrarResultado(new ResultadoPartida(2, 1), java.time.LocalDateTime.now().minusHours(2));
+        }
+        partidaServico.salvar(partida);
     }
 
     protected void configurarTorneioPontosCorridos(boolean estruturaGerada) {

@@ -1,5 +1,6 @@
 package com.torneios.dominio.competicao.partida;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import com.torneios.dominio.compartilhado.partida.PartidaId;
@@ -16,10 +17,11 @@ public class Partida {
     private final String etapa;
     private final int quantidadeJogadoresPorEquipe;
     private ResultadoPartida resultado;
+    private LocalDateTime dataHoraRegistroResultado;
     private boolean encerrada;
 
     public Partida(PartidaId id, TorneioId torneioId, TimeId mandante, TimeId visitante) {
-        this(id, torneioId, mandante, visitante, "Fase unica", 0);
+        this(id, torneioId, mandante, visitante, "Fase unica", 5);
     }
 
     public Partida(PartidaId id,
@@ -74,15 +76,34 @@ public class Partida {
         return resultado;
     }
 
+    public LocalDateTime getDataHoraRegistroResultado() {
+        return dataHoraRegistroResultado;
+    }
+
     public boolean estaEncerrada() {
         return encerrada;
     }
 
     public void registrarResultado(ResultadoPartida resultado) {
+        registrarResultado(resultado, LocalDateTime.now());
+    }
+
+    public void registrarResultado(ResultadoPartida resultado, LocalDateTime dataHoraRegistro) {
         if (encerrada) {
             throw new IllegalStateException("Nao e permitido registrar resultado novamente para uma partida encerrada.");
         }
         this.resultado = Objects.requireNonNull(resultado, "O resultado da partida e obrigatorio.");
+        this.dataHoraRegistroResultado = Objects.requireNonNull(dataHoraRegistro,
+                "A data de registro do resultado e obrigatoria.");
         this.encerrada = true;
+    }
+
+    public void corrigirResultadoOficial(ResultadoPartida resultado, LocalDateTime dataHoraCorrecao) {
+        if (!encerrada || this.resultado == null) {
+            throw new IllegalStateException("Nao e permitido corrigir resultado de uma partida sem resultado oficial.");
+        }
+        this.resultado = Objects.requireNonNull(resultado, "O resultado corrigido da partida e obrigatorio.");
+        this.dataHoraRegistroResultado = Objects.requireNonNull(dataHoraCorrecao,
+                "A data de correcao do resultado e obrigatoria.");
     }
 }
