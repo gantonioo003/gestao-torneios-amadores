@@ -12,14 +12,21 @@ public class RegistroDeCarreira {
     private LocalDate dataInicio;
     private LocalDate dataFim;
     private MotivoDeSaida motivoDeSaida;
+    private String descricao;
 
     public RegistroDeCarreira(RegistroDeCarreiraId id, String nomeDoClube, LocalDate dataInicio,
             LocalDate dataFim, MotivoDeSaida motivoDeSaida) {
+        this(id, nomeDoClube, dataInicio, dataFim, motivoDeSaida, null);
+    }
+
+    public RegistroDeCarreira(RegistroDeCarreiraId id, String nomeDoClube, LocalDate dataInicio,
+            LocalDate dataFim, MotivoDeSaida motivoDeSaida, String descricao) {
         this.id = Objects.requireNonNull(id, "O id do registro e obrigatorio.");
         this.nomeDoClube = validarNomeDoClube(nomeDoClube);
         this.dataInicio = Objects.requireNonNull(dataInicio, "A data de inicio e obrigatoria.");
         setDataFim(dataFim);
         this.motivoDeSaida = motivoDeSaida;
+        this.descricao = descricao;
     }
 
     public RegistroDeCarreiraId getId() { return id; }
@@ -27,6 +34,8 @@ public class RegistroDeCarreira {
     public LocalDate getDataInicio() { return dataInicio; }
     public LocalDate getDataFim() { return dataFim; }
     public MotivoDeSaida getMotivoDeSaida() { return motivoDeSaida; }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
     public void setDataFim(LocalDate dataFim) {
         if (dataFim != null && !dataFim.isAfter(dataInicio)) {

@@ -53,6 +53,7 @@ class RegistroDeCarreiraJpa {
     LocalDate dataInicio;
     LocalDate dataFim;
     String motivoDeSaida;
+    String descricao;
 }
 
 interface ProfissionalJpaRepository extends JpaRepository<ProfissionalEsportivoJpa, Long> {
@@ -82,6 +83,7 @@ class ProfissionalEsportivoRepositorioImpl implements ProfissionalEsportivoRepos
             rJpa.dataInicio = r.getDataInicio();
             rJpa.dataFim = r.getDataFim();
             rJpa.motivoDeSaida = r.getMotivoDeSaida() != null ? r.getMotivoDeSaida().name() : null;
+            rJpa.descricao = r.getDescricao();
             jpa.historico.add(rJpa);
         }
         repositorio.save(jpa);
@@ -114,7 +116,7 @@ class ProfissionalEsportivoRepositorioImpl implements ProfissionalEsportivoRepos
             var motivo = r.motivoDeSaida != null ? MotivoDeSaida.valueOf(r.motivoDeSaida) : null;
             p.adicionarRegistroDeCarreira(new RegistroDeCarreira(
                 new RegistroDeCarreiraId(r.id),
-                r.nomeDoClube, r.dataInicio, r.dataFim, motivo
+                r.nomeDoClube, r.dataInicio, r.dataFim, motivo, r.descricao
             ));
         }
         return p;

@@ -76,6 +76,12 @@
           </select>
         </div>
 
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Descrição do motivo (opcional)</label>
+          <textarea class="form-control" rows="3" [(ngModel)]="carreiraForm.descricao"
+            placeholder="Ex.: rompeu ligamentos do joelho esquerdo"></textarea>
+        </div>
+
         <div class="d-flex gap-2">
           <button class="btn btn-secondary btn-sm" (click)="mostrarFormCarreira = false; carreiraForm = {}">Cancelar</button>
           <button class="btn btn-primary btn-sm ms-auto" (click)="adicionarCarreira()">Salvar</button>
@@ -96,6 +102,9 @@
             </small>
             @if (r.motivoDeSaida) {
               <div><small class="text-muted">Saída: {{ motivoLabel(r.motivoDeSaida) }}</small></div>
+            }
+            @if (r.descricao) {
+              <div><small class="text-muted fst-italic">{{ r.descricao }}</small></div>
             }
           </div>
         }

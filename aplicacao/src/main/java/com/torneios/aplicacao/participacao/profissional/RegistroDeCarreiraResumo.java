@@ -8,4 +8,5 @@ public interface RegistroDeCarreiraResumo {
     LocalDate getDataInicio();
     LocalDate getDataFim();
     String getMotivoDeSaida();
+    String getDescricao();
 }

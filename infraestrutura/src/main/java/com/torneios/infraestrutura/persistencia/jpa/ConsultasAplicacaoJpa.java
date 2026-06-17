@@ -179,6 +179,7 @@ record RegistroDeCarreiraJpaResumo(RegistroDeCarreiraJpa jpa) implements Registr
     @Override public LocalDate getDataInicio() { return jpa.dataInicio; }
     @Override public LocalDate getDataFim()    { return jpa.dataFim; }
     @Override public String getMotivoDeSaida() { return jpa.motivoDeSaida; }
+    @Override public String getDescricao()      { return jpa.descricao; }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

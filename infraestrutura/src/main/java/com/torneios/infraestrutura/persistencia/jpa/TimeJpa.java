@@ -78,6 +78,9 @@ class TimeRepositorioImpl implements TimeRepositorio {
         jpa.responsavelId = time.getResponsavel().valor();
 
         jpa.torneiosVinculados.clear();
+        for (var torneioId : time.getTorneiosVinculados()) {
+            jpa.torneiosVinculados.add(torneioId.valor());
+        }
 
         jpa.elenco.clear();
         long seq = 1L;

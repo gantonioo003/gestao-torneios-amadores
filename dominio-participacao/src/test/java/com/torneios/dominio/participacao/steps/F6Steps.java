@@ -28,7 +28,7 @@ public class F6Steps extends ParticipacaoFuncionalidade {
 
     @Dado("que o profissional ja possui um registro de carreira no periodo")
     public void profissional_com_registro() {
-        profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, REGISTRO_ID, "Clube Anterior", LocalDate.of(2020, 1, 1), LocalDate.of(2021, 12, 31), MotivoDeSaida.FIM_DE_CONTRATO);
+        profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, REGISTRO_ID, "Clube Anterior", LocalDate.of(2020, 1, 1), LocalDate.of(2021, 12, 31), MotivoDeSaida.FIM_DE_CONTRATO, null);
     }
 
     @Quando("ele cadastrar um profissional esportivo com nome e tipo validos")
@@ -73,32 +73,32 @@ public class F6Steps extends ParticipacaoFuncionalidade {
 
     @Quando("ele adicionar um registro de carreira com nome do clube data de inicio e motivo de saida validos")
     public void adicionar_registro_valido() {
-        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(70L), "Clube Novo", LocalDate.of(2022, 1, 1), LocalDate.of(2023, 12, 31), MotivoDeSaida.TRANSFERENCIA); } catch (Exception e) { excecaoCapturada = e; }
+        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(70L), "Clube Novo", LocalDate.of(2022, 1, 1), LocalDate.of(2023, 12, 31), MotivoDeSaida.TRANSFERENCIA, null); } catch (Exception e) { excecaoCapturada = e; }
     }
 
     @Quando("ele tentar adicionar um registro de carreira sem informar o nome do clube")
     public void adicionar_registro_sem_clube() {
-        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(70L), "", LocalDate.of(2022, 1, 1), null, null); } catch (Exception e) { excecaoCapturada = e; }
+        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(70L), "", LocalDate.of(2022, 1, 1), null, null, null); } catch (Exception e) { excecaoCapturada = e; }
     }
 
     @Quando("ele tentar adicionar um registro de carreira sem data de inicio")
     public void adicionar_registro_sem_data() {
-        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(70L), "Clube X", null, null, null); } catch (Exception e) { excecaoCapturada = e; }
+        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(70L), "Clube X", null, null, null, null); } catch (Exception e) { excecaoCapturada = e; }
     }
 
     @Quando("ele tentar adicionar um registro com data de fim anterior a data de inicio")
     public void adicionar_registro_data_invalida() {
-        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(70L), "Clube X", LocalDate.of(2022, 6, 1), LocalDate.of(2022, 1, 1), null); } catch (Exception e) { excecaoCapturada = e; }
+        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(70L), "Clube X", LocalDate.of(2022, 6, 1), LocalDate.of(2022, 1, 1), null, null); } catch (Exception e) { excecaoCapturada = e; }
     }
 
     @Quando("ele tentar adicionar um registro de carreira com periodo sobreposto")
     public void adicionar_registro_sobreposto() {
-        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(71L), "Outro Clube", LocalDate.of(2020, 6, 1), LocalDate.of(2021, 6, 1), null); } catch (Exception e) { excecaoCapturada = e; }
+        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(71L), "Outro Clube", LocalDate.of(2020, 6, 1), LocalDate.of(2021, 6, 1), null, null); } catch (Exception e) { excecaoCapturada = e; }
     }
 
     @Quando("ele tentar adicionar um registro de carreira com motivo de saida invalido")
     public void adicionar_registro_motivo_invalido() {
-        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(72L), "Clube Z", LocalDate.of(2019, 1, 1), LocalDate.of(2019, 12, 31), null); } catch (Exception e) { excecaoCapturada = e; }
+        try { profissionalServico.adicionarRegistroDeCarreira(PROFISSIONAL_ID, usuarioAtual, new RegistroDeCarreiraId(72L), "Clube Z", LocalDate.of(2019, 1, 1), LocalDate.of(2019, 12, 31), null, null); } catch (Exception e) { excecaoCapturada = e; }
     }
 
     @Quando("ele remover o registro de carreira")

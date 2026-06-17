@@ -76,7 +76,7 @@ class ProfissionalControlador {
         var registroId = new RegistroDeCarreiraId(gerarId());
         profissionalServico.adicionarRegistroDeCarreira(new ProfissionalEsportivoId(id),
             new UsuarioId(cadastranteId), registroId, dto.nomeDoClube,
-            dto.dataInicio, dto.dataFim, dto.motivoDeSaida);
+            dto.dataInicio, dto.dataFim, dto.motivoDeSaida, dto.descricao);
     }
 
     @RequestMapping(method = POST, path = "{id}/remover-carreira/{registroId}")

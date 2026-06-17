@@ -29,5 +29,6 @@ public class ProfissionalFormulario {
         public LocalDate dataInicio;
         public LocalDate dataFim;
         public MotivoDeSaida motivoDeSaida;
+        public String descricao;
     }
 }

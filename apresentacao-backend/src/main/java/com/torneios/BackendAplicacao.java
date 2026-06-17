@@ -78,8 +78,9 @@ public class BackendAplicacao {
     @Bean
     public TimeServico timeServico(TimeRepositorio timeRepositorio,
             AutenticacaoServico autenticacaoServico,
-            ResponsavelTimeServico responsavelTimeServico) {
-        return new TimeServico(timeRepositorio, autenticacaoServico, responsavelTimeServico);
+            ResponsavelTimeServico responsavelTimeServico,
+            ProfissionalEsportivoRepositorio profissionalRepositorio) {
+        return new TimeServico(timeRepositorio, autenticacaoServico, responsavelTimeServico, profissionalRepositorio);
     }
 
     @Bean

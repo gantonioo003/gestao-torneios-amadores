@@ -125,6 +125,7 @@ public class Time {
         torneiosVinculados.add(torneioId);
     }
 
+    public Set<TorneioId> getTorneiosVinculados() { return Collections.unmodifiableSet(torneiosVinculados); }
     public boolean estaVinculadoATorneio() { return !torneiosVinculados.isEmpty(); }
     public boolean possuiJogador(JogadorId jogadorId) { return jogadores.containsKey(jogadorId); }
     public boolean estaVinculadoAoTorneio(TorneioId torneioId) { return torneiosVinculados.contains(torneioId); }

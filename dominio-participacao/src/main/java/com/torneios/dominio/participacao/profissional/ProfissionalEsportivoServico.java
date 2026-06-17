@@ -46,12 +46,12 @@ public class ProfissionalEsportivoServico {
 
     public void adicionarRegistroDeCarreira(ProfissionalEsportivoId id, UsuarioId solicitanteId,
             RegistroDeCarreiraId registroId, String nomeDoClube, LocalDate dataInicio,
-            LocalDate dataFim, MotivoDeSaida motivoDeSaida) {
+            LocalDate dataFim, MotivoDeSaida motivoDeSaida, String descricao) {
         autenticacaoServico.exigirAutenticacao(solicitanteId);
         ProfissionalEsportivo profissional = obter(id);
         validarCadastrante(profissional, solicitanteId);
         profissional.adicionarRegistroDeCarreira(
-            new RegistroDeCarreira(registroId, nomeDoClube, dataInicio, dataFim, motivoDeSaida));
+            new RegistroDeCarreira(registroId, nomeDoClube, dataInicio, dataFim, motivoDeSaida, descricao));
         repositorio.salvar(profissional);
     }
 
