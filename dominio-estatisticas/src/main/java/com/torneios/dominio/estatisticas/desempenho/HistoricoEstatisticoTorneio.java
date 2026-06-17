@@ -19,8 +19,11 @@ public class HistoricoEstatisticoTorneio {
             throw new IllegalArgumentException("O numero da edicao deve ser maior que zero.");
         }
         this.numeroEdicao = numeroEdicao;
-        this.estatisticasArquivadas = List.copyOf(Objects.requireNonNull(estatisticasArquivadas,
-                "As estatisticas arquivadas sao obrigatorias."));
+        this.estatisticasArquivadas = Objects.requireNonNull(estatisticasArquivadas,
+                "As estatisticas arquivadas sao obrigatorias.")
+                .stream()
+                .map(EstatisticaJogador::copiar)
+                .toList();
     }
 
     public TorneioId getTorneioId() {
@@ -32,6 +35,6 @@ public class HistoricoEstatisticoTorneio {
     }
 
     public List<EstatisticaJogador> getEstatisticasArquivadas() {
-        return estatisticasArquivadas;
+        return estatisticasArquivadas.stream().map(EstatisticaJogador::copiar).toList();
     }
 }

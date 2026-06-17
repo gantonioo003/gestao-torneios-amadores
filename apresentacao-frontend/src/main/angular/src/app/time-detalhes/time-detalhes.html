@@ -1,69 +1,70 @@
-<nav class="navbar navbar-expand-lg">
-  <div class="container">
-    <a class="navbar-brand">Liga Amadora+</a>
-    <div class="navbar-nav ms-auto">
-      <a class="nav-link" routerLink="/time/pesquisa">Times</a>
-      <a class="nav-link" routerLink="/profissional/pesquisa">Profissionais</a>
-    </div>
-  </div>
-</nav>
-
-<div class="container py-5">
-  <a class="text-muted text-decoration-none mb-3 d-inline-block" routerLink="/time/pesquisa">← Voltar</a>
-
-  <div class="card p-4 mb-4">
-    <div class="d-flex align-items-center gap-3">
-      <div class="escudo-placeholder"><span>🛡️</span></div>
+<main class="page">
+  <div class="hero-row">
+    <div class="post-head">
+      <div class="crest"><i class="bi bi-shield"></i></div>
       <div>
-        <h3 class="fw-bold mb-0">{{ time.nome }}</h3>
-        <small class="text-muted">ID #{{ time.id }}</small>
+        <div class="eyebrow">Perfil do time</div>
+        <h1 class="page-title">{{ time.nome || 'Unidos do Bairro' }}</h1>
+        <p class="page-subtitle">Partidas, elenco, torneios vinculados e estatisticas do time.</p>
       </div>
     </div>
+    <a class="btn btn-outline" [routerLink]="['/time', time.id || 1, 'edicao']">Editar perfil</a>
   </div>
 
-  <div class="card p-4 mb-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="fw-semibold mb-0">Elenco e Comissão</h5>
-      <a class="btn btn-sm btn-primary" [routerLink]="['/time', time.id, 'vincular']">+ Vincular profissional</a>
-    </div>
-    @if (!elenco.length) {
-      <p class="text-muted mb-0">Nenhum profissional vinculado.</p>
-    } @else {
-      <div class="list-group list-group-flush">
-        @for (v of elenco; track v.profissionalId) {
-          <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
-            <div>
-              <div class="fw-semibold">{{ v.nomeProfissional }}</div>
-              <small class="text-muted">{{ funcaoLabel(v.funcao) }} — Desde {{ v.dataInicio }}</small>
-            </div>
-            <div class="d-flex gap-2">
-              <button class="btn btn-sm btn-outline-secondary" (click)="editarVinculo(v)">Editar</button>
-              <button class="btn btn-sm btn-outline-danger" (click)="removerVinculo(v.profissionalId)">Remover</button>
-            </div>
+  <div class="grid layout-2-1">
+    <section class="grid">
+      <div class="grid grid-4">
+        <div class="card" style="text-align: center"><strong style="font-size: 26px">23</strong><div class="small muted">Jogos</div></div>
+        <div class="card" style="text-align: center"><strong style="font-size: 26px">14</strong><div class="small muted">Vitorias</div></div>
+        <div class="card" style="text-align: center"><strong style="font-size: 26px">5</strong><div class="small muted">Empates</div></div>
+        <div class="card" style="text-align: center"><strong style="font-size: 26px">3</strong><div class="small muted">Derrotas</div></div>
+      </div>
+
+      <section class="card panel-strong">
+        <h2 class="section-title">Elenco e comissao</h2>
+        @if (!elenco.length) {
+          <div class="grid grid-3">
+            <div class="mini-row"><span>Joao Silva</span><span class="status status-green">ATA</span></div>
+            <div class="mini-row"><span>Pedro Santos</span><span class="status status-green">MEI</span></div>
+            <div class="mini-row"><span>Carlos Lima</span><span class="status status-green">TEC</span></div>
           </div>
+        } @else {
+          @for (v of elenco; track v.profissionalId) {
+            <div class="mini-row">
+              <div><strong>{{ v.nomeProfissional }}</strong><div class="small muted">{{ funcaoLabel(v.funcao) }} - Desde {{ v.dataInicio }}</div></div>
+              <div style="display: flex; gap: 6px">
+                <button class="btn btn-sm btn-outline" (click)="editarVinculo(v)">Editar</button>
+                <button class="btn btn-sm btn-danger" (click)="removerVinculo(v.profissionalId)">Remover</button>
+              </div>
+            </div>
+          }
+        }
+        <a class="btn btn-outline btn-block" style="margin-top: 12px" [routerLink]="['/time', time.id || 1, 'vincular']">Vincular profissional</a>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">Ultimos jogos</h2>
+        <div class="mini-row"><span>Unidos do Bairro</span><strong>2 x 1</strong><span>Real Esperanca</span></div>
+        <div class="mini-row"><span>Resenha FC</span><strong>1 x 1</strong><span>Unidos do Bairro</span></div>
+        <div class="mini-row"><span>Unidos do Bairro</span><strong>3 x 0</strong><span>Vila FC</span></div>
+      </section>
+    </section>
+
+    <aside class="grid">
+      <div class="card">
+        <h2 class="section-title">Torneios vinculados</h2>
+        @if (!torneios.length) {
+          <div class="mini-row"><span>Copa Bairro 2024</span><span class="status status-green">Em andamento</span></div>
+          <div class="mini-row"><span>Liga Amigos</span><span class="status status-warn">Inscrito</span></div>
+        } @else {
+          @for (t of torneios; track t.id) {
+            <div class="mini-row"><span>{{ t.nome }}</span><span class="status status-green">{{ t.status }}</span></div>
+          }
         }
       </div>
-    }
+      <a class="btn btn-primary btn-block" routerLink="/desafio">Propor amistoso</a>
+      <a class="btn btn-outline btn-block" routerLink="/ranking">Comparar time</a>
+      <button class="btn btn-danger btn-block" (click)="excluir()">Excluir time</button>
+    </aside>
   </div>
-
-  <div class="card p-4 mb-4">
-    <h5 class="fw-semibold mb-3">Torneios Vinculados</h5>
-    @if (!torneios.length) {
-      <p class="text-muted mb-0">Nenhum torneio vinculado.</p>
-    } @else {
-      <div class="list-group list-group-flush">
-        @for (t of torneios; track t.id) {
-          <div class="list-group-item px-0 d-flex justify-content-between">
-            <span>{{ t.nome }}</span>
-            <span class="badge-verde">{{ t.status }}</span>
-          </div>
-        }
-      </div>
-    }
-  </div>
-
-  <div class="d-flex gap-2">
-    <a class="btn btn-outline-secondary" [routerLink]="['/time', time.id, 'edicao']">Editar time</a>
-    <button class="btn btn-danger" (click)="excluir()">Excluir time</button>
-  </div>
-</div>
+</main>

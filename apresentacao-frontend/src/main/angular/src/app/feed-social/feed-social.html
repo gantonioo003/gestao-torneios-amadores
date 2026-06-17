@@ -1,63 +1,71 @@
-<div style="display:grid;grid-template-columns:1fr 280px;gap:16px;max-width:1100px;margin:20px auto;padding:0 16px">
-
-  <div>
-    <div class="bw" style="margin-bottom:14px">
-      <span class="bico">🔍</span>
-      <input type="text" [(ngModel)]="busca" placeholder="Buscar no feed...">
+<main class="page">
+  <div class="hero-row">
+    <div>
+      <div class="eyebrow">Comunidade</div>
+      <h1 class="page-title">Feed social do torneio</h1>
+      <p class="page-subtitle">Comunicados, postagens de times, comentarios de partida e atualizacoes automaticas em um lugar so.</p>
     </div>
-
-    <div class="tabs">
-      <button class="tab" [class.a]="aba==='todos'" (click)="aba='todos'">Todos</button>
-      <button class="tab" [class.a]="aba==='torneios'" (click)="aba='torneios'">Torneios</button>
-      <button class="tab" [class.a]="aba==='partidas'" (click)="aba='partidas'">Partidas</button>
-      <button class="tab" [class.a]="aba==='times'" (click)="aba='times'">Times</button>
-    </div>
-
-    <div class="card" style="margin-bottom:14px">
-      <div class="fg"><textarea [(ngModel)]="novoPost" rows="2" placeholder="Compartilhe algo com a comunidade..."></textarea></div>
-      <div style="display:flex;justify-content:flex-end;gap:6px">
-        <button class="btn btn-g btn-sm">📷 Foto</button>
-        <button class="btn btn-p btn-sm" (click)="publicar()">Publicar</button>
-      </div>
-    </div>
-
-    @for (p of feedFiltrado(); track p.id) {
-      <div class="card" style="margin-bottom:10px">
-        <div class="fhdr">
-          <div class="av">{{p.av}}</div>
-          <div style="flex:1">
-            <div class="fautor">{{p.autor}}</div>
-            <div class="ftempo">{{p.tempo}}</div>
-          </div>
-          <span class="bdg bdg-c">{{p.tipo}}</span>
-        </div>
-        <div class="ftexto" style="margin:8px 0">{{p.texto}}</div>
-        @if (p.img) { <div style="background:var(--verde-light);border-radius:6px;padding:20px;text-align:center;margin-bottom:8px;color:var(--verde-dark);font-size:11px">📸 {{p.img}}</div> }
-        <div style="font-size:11px;color:var(--verde);margin-bottom:8px">{{p.tags}}</div>
-        <div class="face">
-          <button class="fac" (click)="curtir(p)">❤ {{p.curtidas}} Curtir</button>
-          <button class="fac">💬 {{p.comentarios}} Comentar</button>
-          <button class="fac">↗ Compartilhar</button>
-          <button class="fac">↩ Reagir</button>
-        </div>
-        @if (p.atualizacao) {
-          <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--borda);font-size:11px;color:var(--muted)">
-            🔄 {{p.atualizacao}}
-          </div>
-        }
-      </div>
-    }
+    <a class="btn btn-outline" routerLink="/chat"><i class="bi bi-chat-dots"></i> Chat privado</a>
   </div>
 
-  <div>
-    <div class="card">
-      <div class="ct">Hashtag</div>
-      <div class="fg"><input type="text" placeholder="#hashtag..." [(ngModel)]="hashtag"></div>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">
-        @for (h of hashtags; track h) {
-          <span class="bdg bdg-a" style="cursor:pointer" (click)="hashtag=h">{{h}}</span>
-        }
+  <div class="grid layout-2-1">
+    <section class="grid">
+      <div class="card panel-strong">
+        <div class="tabs" style="margin-bottom: 12px">
+          <button class="tab" [class.active]="aba === 'todos'" (click)="aba = 'todos'">Todos</button>
+          <button class="tab" [class.active]="aba === 'torneios'" (click)="aba = 'torneios'">Torneios</button>
+          <button class="tab" [class.active]="aba === 'partidas'" (click)="aba = 'partidas'">Partidas</button>
+          <button class="tab" [class.active]="aba === 'times'" (click)="aba = 'times'">Times</button>
+        </div>
+        <div class="field" style="display: flex; gap: 8px">
+          <input [(ngModel)]="novoPost" placeholder="Compartilhe uma atualizacao">
+          <button class="btn btn-primary" (click)="publicar()">Publicar</button>
+        </div>
       </div>
-    </div>
+
+      @for (post of feedFiltrado(); track post.autor + post.tempo) {
+        <article class="card post">
+          <div class="post-head">
+            <div class="avatar"><i class="bi bi-megaphone"></i></div>
+            <div>
+              <strong>{{ post.autor }}</strong>
+              <div class="small muted">{{ post.tempo }} - {{ post.tipo }}</div>
+            </div>
+          </div>
+          <p style="margin: 0">{{ post.texto }}</p>
+          @if (post.imagem) {
+            <div class="post-image">
+              <div style="text-align: center"><i class="bi bi-camera" style="font-size: 34px"></i><div>Imagem da partida</div></div>
+            </div>
+          }
+          <span style="color: var(--green-dark); font-weight: 800">{{ post.tags }}</span>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap">
+            <button class="btn btn-sm" (click)="curtir(post)"><i class="bi bi-heart"></i> {{ post.curtidas }}</button>
+            <button class="btn btn-sm"><i class="bi bi-chat"></i> {{ post.comentarios }}</button>
+            <button class="btn btn-sm"><i class="bi bi-emoji-smile"></i> Reagir</button>
+          </div>
+        </article>
+      }
+    </section>
+
+    <aside class="grid">
+      <div class="card">
+        <h2 class="section-title">Buscar</h2>
+        <div class="field"><input [(ngModel)]="busca" placeholder="Buscar no feed"></div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Hashtags</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <span class="status status-green">#CopaBairro</span>
+          <span class="status status-green">#Golaco</span>
+          <span class="status status-green">#FutAmador</span>
+          <span class="status status-green">#Juntos</span>
+        </div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Acesso</h2>
+        <p class="muted">Visitante pode ver e filtrar. Usuario logado pode postar, comentar, curtir e reagir.</p>
+      </div>
+    </aside>
   </div>
-</div>
+</main>

@@ -1,6 +1,7 @@
 services:
   mysql:
     image: mysql:8.4
+    container_name: torneios-mysql
     environment:
       MYSQL_DATABASE: torneios
       MYSQL_USER: torneios
@@ -10,7 +11,37 @@ services:
       - "3306:3306"
     volumes:
       - torneios_data:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  backend:
+    build:
+      context: .
+      dockerfile: apresentacao-backend/Dockerfile
+    container_name: torneios-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/torneios?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: torneios
+      SPRING_DATASOURCE_PASSWORD: torneios
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apresentacao-frontend/Dockerfile
+    container_name: torneios-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
 
 volumes:
   torneios_data:

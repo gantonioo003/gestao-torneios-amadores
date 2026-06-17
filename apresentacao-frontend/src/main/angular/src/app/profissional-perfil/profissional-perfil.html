@@ -1,119 +1,77 @@
-<nav class="navbar navbar-expand-lg">
-  <div class="container">
-    <a class="navbar-brand">Liga Amadora+</a>
-    <div class="navbar-nav ms-auto">
-      <a class="nav-link" routerLink="/time/pesquisa">Times</a>
-      <a class="nav-link active" routerLink="/profissional/pesquisa">Profissionais</a>
-    </div>
-  </div>
-</nav>
-
-<div class="container py-5" style="max-width: 680px">
-  <a class="text-muted text-decoration-none mb-3 d-inline-block" routerLink="/profissional/pesquisa">← Voltar</a>
-
-  <div class="card p-4 mb-4">
-    <div class="d-flex align-items-center gap-4">
-      <div class="escudo-placeholder"><span>👤</span></div>
+<main class="page">
+  <div class="hero-row">
+    <div class="post-head">
+      <div class="avatar photo" style="width: 82px; height: 82px; font-size: 28px">JS</div>
       <div>
-        <h3 class="fw-bold mb-0">{{ profissional.nome }}</h3>
-        <span class="badge bg-secondary mt-1">{{ tipoLabel(profissional.tipo) }}</span>
+        <div class="eyebrow">Perfil do jogador</div>
+        <h1 class="page-title">{{ profissional.nome || 'Joao Silva' }}</h1>
+        <p class="page-subtitle">{{ tipoLabel(profissional.tipo || 'JOGADOR') }} com historico, vinculos e estatisticas acumuladas.</p>
       </div>
     </div>
+    <button class="btn btn-outline" (click)="editarPerfil()">Editar perfil</button>
   </div>
 
-  <div class="card p-4 mb-4">
-    <h5 class="fw-semibold mb-3">Times Atuais</h5>
-    @if (!timesAtuais.length) {
-      <p class="text-muted mb-0">Sem vínculo ativo no momento.</p>
-    } @else {
-      <div class="list-group list-group-flush">
-        @for (t of timesAtuais; track t.timeId) {
-          <div class="list-group-item px-0">
-            <div class="fw-semibold">{{ t.nomeTime }}</div>
-            <small class="text-muted">Função: {{ t.funcao }}</small>
+  <div class="grid layout-2-1">
+    <section class="grid">
+      <div class="grid grid-4">
+        <div class="card" style="text-align: center"><strong style="font-size: 28px">18</strong><div class="small muted">Gols</div></div>
+        <div class="card" style="text-align: center"><strong style="font-size: 28px">7</strong><div class="small muted">Assist.</div></div>
+        <div class="card" style="text-align: center"><strong style="font-size: 28px">7.8</strong><div class="small muted">Media</div></div>
+        <div class="card" style="text-align: center"><strong style="font-size: 28px">1o</strong><div class="small muted">Ranking</div></div>
+      </div>
+
+      <section class="card panel-strong">
+        <h2 class="section-title">Times atuais</h2>
+        @if (!timesAtuais.length) {
+          <div class="mini-row"><span>Unidos do Bairro</span><span class="status status-green">Atacante</span></div>
+        } @else {
+          @for (t of timesAtuais; track t.timeId) {
+            <div class="mini-row"><span>{{ t.nomeTime }}</span><span class="status status-green">{{ t.funcao }}</span></div>
+          }
+        }
+      </section>
+
+      <section class="card">
+        <div class="mini-row" style="border: 0; padding-top: 0">
+          <h2 class="section-title" style="margin: 0">Historico de carreira</h2>
+          <button class="btn btn-sm btn-primary" (click)="mostrarFormCarreira = !mostrarFormCarreira">Adicionar registro</button>
+        </div>
+
+        @if (mostrarFormCarreira) {
+          <div class="card" style="box-shadow: none; margin-bottom: 12px">
+            <div class="form-grid">
+              <div class="field"><label>Time / clube</label><input [(ngModel)]="carreiraForm.nomeDoClube"></div>
+              <div class="grid grid-2">
+                <div class="field"><label>Inicio</label><input type="date" [(ngModel)]="carreiraForm.dataInicio"></div>
+                <div class="field"><label>Fim</label><input type="date" [(ngModel)]="carreiraForm.dataFim"></div>
+              </div>
+              <button class="btn btn-primary" (click)="adicionarCarreira()">Salvar registro</button>
+            </div>
           </div>
         }
-      </div>
-    }
-  </div>
 
-  <div class="card p-4 mb-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="fw-semibold mb-0">Histórico de Carreira</h5>
-      <button class="btn btn-sm btn-primary" (click)="mostrarFormCarreira = !mostrarFormCarreira">
-        + Adicionar registro
-      </button>
-    </div>
-
-    @if (mostrarFormCarreira) {
-      <div class="bg-light rounded p-3 mb-3">
-        <h6 class="fw-semibold mb-3">Novo registro de carreira</h6>
-
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Nome do time / clube *</label>
-          <input class="form-control" [(ngModel)]="carreiraForm.nomeDoClube" placeholder="Ex.: Real Esperança FC">
-        </div>
-
-        <div class="row g-3 mb-3">
-          <div class="col">
-            <label class="form-label fw-semibold">Data de início *</label>
-            <input class="form-control" type="date" [(ngModel)]="carreiraForm.dataInicio">
-          </div>
-          <div class="col">
-            <label class="form-label fw-semibold">Data de fim</label>
-            <input class="form-control" type="date" [(ngModel)]="carreiraForm.dataFim">
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Motivo de saída (opcional)</label>
-          <select class="form-select" [(ngModel)]="carreiraForm.motivoDeSaida">
-            <option value="">Selecione...</option>
-            <option value="FIM_DE_CONTRATO">Fim de contrato</option>
-            <option value="TRANSFERENCIA">Transferência</option>
-            <option value="LESAO">Lesão</option>
-            <option value="APOSENTADORIA">Aposentadoria</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Descrição do motivo (opcional)</label>
-          <textarea class="form-control" rows="3" [(ngModel)]="carreiraForm.descricao"
-            placeholder="Ex.: rompeu ligamentos do joelho esquerdo"></textarea>
-        </div>
-
-        <div class="d-flex gap-2">
-          <button class="btn btn-secondary btn-sm" (click)="mostrarFormCarreira = false; carreiraForm = {}">Cancelar</button>
-          <button class="btn btn-primary btn-sm ms-auto" (click)="adicionarCarreira()">Salvar</button>
-        </div>
-      </div>
-    }
-
-    @if (!historico.length) {
-      <p class="text-muted mb-0">Nenhum registro de carreira.</p>
-    } @else {
-      <div class="list-group list-group-flush">
-        @for (r of historico; track r.id) {
-          <div class="list-group-item px-0">
-            <div class="fw-semibold">{{ r.nomeDoClube }}</div>
-            <small class="text-muted">
-              {{ r.dataInicio }}
-              @if (r.dataFim) { — {{ r.dataFim }} } @else { — <em>atual</em> }
-            </small>
-            @if (r.motivoDeSaida) {
-              <div><small class="text-muted">Saída: {{ motivoLabel(r.motivoDeSaida) }}</small></div>
-            }
-            @if (r.descricao) {
-              <div><small class="text-muted fst-italic">{{ r.descricao }}</small></div>
-            }
-          </div>
+        @if (!historico.length) {
+          <div class="mini-row"><span>Unidos do Bairro</span><span class="muted">2024 - atual</span></div>
+          <div class="mini-row"><span>Real Esperanca FC</span><span class="muted">2023</span></div>
+        } @else {
+          @for (r of historico; track r.id) {
+            <div class="mini-row">
+              <div><strong>{{ r.nomeDoClube }}</strong><div class="small muted">{{ r.dataInicio }} - {{ r.dataFim || 'atual' }}</div></div>
+            </div>
+          }
         }
-      </div>
-    }
-  </div>
+      </section>
+    </section>
 
-  <div class="d-flex gap-2">
-    <button class="btn btn-outline-secondary" (click)="editarPerfil()">Editar perfil</button>
-    <button class="btn btn-danger ms-auto" (click)="removerPerfil()">Remover perfil</button>
+    <aside class="grid">
+      <div class="card">
+        <h2 class="section-title">Mapa estatistico</h2>
+        <div class="mini-row"><span>Finalizacao</span><strong>82%</strong></div>
+        <div class="mini-row"><span>Participacao em gols</span><strong>25</strong></div>
+        <div class="mini-row"><span>Cartoes</span><strong>2</strong></div>
+      </div>
+      <a class="btn btn-primary btn-block" routerLink="/ranking">Comparar com outro jogador</a>
+      <button class="btn btn-danger btn-block" (click)="removerPerfil()">Remover perfil</button>
+    </aside>
   </div>
-</div>
+</main>

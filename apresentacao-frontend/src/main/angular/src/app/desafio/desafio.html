@@ -1,50 +1,58 @@
-<div class="page">
-  <div class="ph"><h1>Desafios e Amistosos</h1></div>
-  <div class="g2" style="align-items:start;gap:16px">
-
-    <div class="card">
-      <div class="ct">Propor Desafio / Amistoso</div>
-      <div class="fg"><label>Desafiante</label><input type="text" value="Unidos do Bairro" readonly></div>
-      <div class="fg">
-        <label>Desafiado</label>
-        <select [(ngModel)]="timeDesafiado">
-          <option value="">Selecionar time...</option>
-          @for (t of times; track t.id) { <option [value]="t.id">{{t.nome}}</option> }
-        </select>
-      </div>
-      <div class="f2">
-        <div class="fg"><label>Data</label><input type="date" [(ngModel)]="data"></div>
-        <div class="fg"><label>Hora</label><input type="time" [(ngModel)]="hora"></div>
-      </div>
-      <div class="fg"><label>Local</label><input type="text" [(ngModel)]="local" placeholder="Campo de Vila"></div>
-      <div class="fg"><label>Mensagem (opcional)</label><textarea [(ngModel)]="mensagem" rows="2" placeholder="Bora um jogo!"></textarea></div>
-      <button class="btn btn-p btn-full" (click)="propor()">Propor desafio</button>
-    </div>
-
-    <div class="card">
-      <div class="ct">Histórico de Amistosos</div>
-      <table class="tbl">
-        <thead><tr><th>Data</th><th>Jogo</th><th>Placar</th><th>Status</th><th>Ações</th></tr></thead>
-        <tbody>
-          @for (a of historico; track a.id) {
-            <tr>
-              <td style="font-size:11px;white-space:nowrap">{{a.data}}</td>
-              <td style="font-size:11px">{{a.jogo}}</td>
-              <td style="font-weight:700;color:var(--verde)">{{a.placar}}</td>
-              <td>
-                @if(a.status==='Vitória'){<span class="bdg bdg-v">{{a.status}}</span>}
-                @else if(a.status==='Derrota'){<span class="bdg bdg-r">{{a.status}}</span>}
-                @else{<span class="bdg bdg-w">{{a.status}}</span>}
-              </td>
-              <td>
-                <button class="btn btn-g btn-xs">Aceitar</button>
-                <button class="btn btn-d btn-xs">Recusar</button>
-                <a class="btn btn-o btn-xs">Registrar resultado</a>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+<main class="page">
+  <div class="hero-row">
+    <div>
+      <div class="eyebrow">Amistosos</div>
+      <h1 class="page-title">Desafios entre times</h1>
+      <p class="page-subtitle">Times podem propor amistosos, reagendar e registrar resultado sem misturar com torneios oficiais.</p>
     </div>
   </div>
-</div>
+
+  <div class="grid layout-1-2">
+    <section class="card panel-strong">
+      <h2 class="section-title">Propor desafio</h2>
+      <div class="form-grid">
+        <div class="field">
+          <label>Desafiado</label>
+          <select [(ngModel)]="timeDesafiado">
+            @for (time of times; track time) {
+              <option>{{ time }}</option>
+            }
+          </select>
+        </div>
+        <div class="grid grid-3">
+          <div class="field"><label>Data</label><input type="date" [(ngModel)]="data"></div>
+          <div class="field"><label>Hora</label><input type="time" [(ngModel)]="hora"></div>
+          <div class="field"><label>Local</label><input [(ngModel)]="local"></div>
+        </div>
+        <div class="field">
+          <label>Mensagem</label>
+          <textarea [(ngModel)]="mensagem"></textarea>
+        </div>
+        <button class="btn btn-primary btn-block" (click)="propor()">Propor desafio</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">Historico de amistosos</h2>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Data</th><th>Jogo</th><th>Status</th><th>Acoes</th></tr></thead>
+          <tbody>
+            @for (jogo of historico; track jogo.jogo) {
+              <tr>
+                <td>{{ jogo.data }}</td>
+                <td><strong>{{ jogo.jogo }}</strong></td>
+                <td><span class="status status-green">{{ jogo.status }}</span></td>
+                <td>
+                  <button class="btn btn-sm btn-outline">Aceitar</button>
+                  <button class="btn btn-sm btn-warn">Reagendar</button>
+                  <button class="btn btn-sm">Resultado</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>

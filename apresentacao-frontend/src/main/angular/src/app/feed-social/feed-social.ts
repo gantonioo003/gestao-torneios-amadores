@@ -1,21 +1,46 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
-@Component({ selector: 'app-feed-social', imports: [FormsModule], templateUrl: './feed-social.html' })
+@Component({
+  selector: 'app-feed-social',
+  imports: [FormsModule, RouterLink],
+  templateUrl: './feed-social.html'
+})
 export class FeedSocial {
-  aba='todos'; busca=''; novoPost=''; hashtag='';
-  hashtags=['#CopaBairro','#Gólaco','#FutAmador','#Juntos','#PartidaDoAno'];
+  aba = 'todos';
+  busca = '';
+  novoPost = '';
+
   posts = [
-    {id:1,av:'⚽',autor:'Copa Bairro 2024',tempo:'2h',tipo:'Torneio',texto:'Que partida! Unidos do Bairro venceu Real Esperança por 2×1 na Copa da Amizade. Rodada 4 foi de tirar o fôlego!',img:'Foto do jogo',tags:'#CopaBairro #Gólaco',curtidas:24,comentarios:18,atualizacao:''},
-    {id:2,av:'🏃',autor:'Vila FC',tempo:'3h',tipo:'Time',texto:'Face total no próximo desafio! Paleta na bola!',img:'',tags:'#FutAmador',curtidas:15,comentarios:6,atualizacao:''},
-    {id:3,av:'🏆',autor:'Liga Amigos',tempo:'5h',tipo:'Torneio',texto:'Atualização de partida: Unidos do Bairro 2 × 1 Real Esperança. N° Rodada 4 · Copa da Amizade.',img:'',tags:'',curtidas:9,comentarios:2,atualizacao:'Unidos do Bairro 2 × 1 Real Esperança · N° · Rodada 4 · Copa da Amizade'}
+    { autor: 'Copa Bairro 2024', tempo: '2h', tipo: 'torneios', texto: 'Que partida! Unidos do Bairro venceu Real Esperanca por 2x1 na Copa da Amizade.', tags: '#CopaBairro #Golaco', curtidas: 24, comentarios: 18, imagem: true },
+    { autor: 'Vila FC', tempo: '3h', tipo: 'times', texto: 'Foco total no proximo desafio. Nosso elenco esta fechado para a rodada.', tags: '#FutAmador', curtidas: 15, comentarios: 6, imagem: false },
+    { autor: 'Liga Amigos', tempo: '5h', tipo: 'partidas', texto: 'Atualizacao automatica: Unidos do Bairro 2 x 1 Real Esperanca.', tags: '#Rodada4', curtidas: 9, comentarios: 2, imagem: false }
   ];
+
   feedFiltrado() {
-    let f = this.posts;
-    if (this.aba!=='todos') f = f.filter(p => p.tipo.toLowerCase()===this.aba.slice(0,-1));
-    if (this.busca) f = f.filter(p => p.texto.toLowerCase().includes(this.busca.toLowerCase()));
-    return f;
+    let resultado = this.posts;
+    if (this.aba !== 'todos') resultado = resultado.filter(post => post.tipo === this.aba);
+    if (this.busca.trim()) resultado = resultado.filter(post => post.texto.toLowerCase().includes(this.busca.toLowerCase()));
+    return resultado;
   }
-  curtir(p: any) { p.curtidas++; }
-  publicar() { if (!this.novoPost.trim()) return; this.posts.unshift({id:Date.now(),av:'👤',autor:'Lucas Lima',tempo:'agora',tipo:'Todos',texto:this.novoPost,img:'',tags:'',curtidas:0,comentarios:0,atualizacao:''}); this.novoPost=''; }
+
+  curtir(post: any) {
+    post.curtidas++;
+  }
+
+  publicar() {
+    if (!this.novoPost.trim()) return;
+    this.posts.unshift({
+      autor: 'Lucas Lima',
+      tempo: 'agora',
+      tipo: 'times',
+      texto: this.novoPost,
+      tags: '#LigaAmadora',
+      curtidas: 0,
+      comentarios: 0,
+      imagem: false
+    });
+    this.novoPost = '';
+  }
 }

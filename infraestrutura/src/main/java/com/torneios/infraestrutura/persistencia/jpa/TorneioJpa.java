@@ -14,6 +14,7 @@ import com.torneios.dominio.compartilhado.enumeracao.StatusTorneio;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
+import com.torneios.dominio.torneio.torneio.HistoricoEdicaoTorneio;
 import com.torneios.dominio.torneio.torneio.Torneio;
 import com.torneios.dominio.torneio.torneio.TorneioRepositorio;
 
@@ -25,6 +26,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
@@ -48,6 +50,8 @@ class TorneioJpa {
 
     boolean aceitaSolicitacoes;
 
+    Integer edicaoAtual;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
     StatusTorneio status;
@@ -56,6 +60,9 @@ class TorneioJpa {
     @CollectionTable(name = "TORNEIO_PARTICIPANTE", joinColumns = @JoinColumn(name = "TORNEIO_ID"))
     @Column(name = "TIME_ID")
     List<Long> participantes = new ArrayList<>();
+
+    @Lob
+    String historicoEdicoesData;
 }
 
 interface TorneioJpaRepository extends JpaRepository<TorneioJpa, Long> {
@@ -77,11 +84,16 @@ class TorneioRepositorioImpl implements TorneioRepositorio {
         jpa.formatoEquipe = torneio.getFormatoEquipe();
         jpa.organizadorId = torneio.getOrganizadorId().valor();
         jpa.aceitaSolicitacoes = torneio.aceitaSolicitacoes();
+        jpa.edicaoAtual = torneio.getEdicaoAtual();
         jpa.status = torneio.getStatus();
 
         jpa.participantes.clear();
         torneio.getParticipantesAprovados()
                .forEach(p -> jpa.participantes.add(p.getTimeId().valor()));
+        jpa.historicoEdicoesData = PersistenciaTextoUtil.serializarLinhas(
+                torneio.getHistoricoEdicoes().stream()
+                        .map(this::serializarHistorico)
+                        .toList());
 
         repositorio.save(jpa);
     }
@@ -126,7 +138,37 @@ class TorneioRepositorioImpl implements TorneioRepositorio {
         if (jpa.status == StatusTorneio.CONFIGURADO) {
             jpa.participantes.forEach(id -> torneio.adicionarParticipante(new TimeId(id)));
         }
+        if (jpa.edicaoAtual != null) {
+            ReflexaoDominioJpa.definirCampo(torneio, "edicaoAtual", jpa.edicaoAtual);
+        }
+        ReflexaoDominioJpa.listarCampo(torneio, "historicoEdicoes").addAll(
+                PersistenciaTextoUtil.desserializarLinhas(jpa.historicoEdicoesData).stream()
+                        .map(linha -> desserializarHistorico(torneio.getId(), linha))
+                        .toList());
 
         return torneio;
+    }
+
+    private List<String> serializarHistorico(HistoricoEdicaoTorneio historico) {
+        List<String> linha = new ArrayList<>();
+        linha.add(String.valueOf(historico.getNumeroEdicao()));
+        linha.add(historico.getNomeTorneio());
+        linha.add(PersistenciaTextoUtil.serializarLista(
+                historico.getParticipantes().stream()
+                        .map(TimeId::valor)
+                        .map(String::valueOf)
+                        .toList()));
+        return linha;
+    }
+
+    private HistoricoEdicaoTorneio desserializarHistorico(TorneioId torneioId, List<String> linha) {
+        return new HistoricoEdicaoTorneio(
+                torneioId,
+                Integer.parseInt(linha.get(0)),
+                linha.get(1),
+                PersistenciaTextoUtil.desserializarLista(linha.get(2)).stream()
+                        .map(Long::parseLong)
+                        .map(TimeId::new)
+                        .toList());
     }
 }

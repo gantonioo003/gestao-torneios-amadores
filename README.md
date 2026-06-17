@@ -1,268 +1,234 @@
-﻿# Gestao de Torneios Amadores de Futebol com Estatisticas
+# Gestao de Torneios Amadores
 
-Projeto academico desenvolvido para a disciplina de Requisitos e Projeto de Software, com foco em Domain-Driven Design (DDD), Behavior-Driven Development (BDD) e arquitetura modular com Maven.
+Projeto academico para gestao de torneios amadores de futebol, com foco em DDD, BDD, arquitetura limpa, backend Spring Boot, frontend Angular e infraestrutura com persistencia em MySQL.
 
-O sistema tem como objetivo apoiar a gestao de torneios amadores de futebol, incluindo cadastro e organizacao de torneios, participacao de times, gerenciamento da competicao, engajamento social em formato de feed e chat, palpites publicos e consolidacao opcional de estatisticas de desempenho.
+A proposta evolui de um simples gerenciador de torneios para uma plataforma social de futebol amador: times, jogadores, torneios, partidas, palpites, feed, chat privado, amistosos e estatisticas convivem no mesmo ecossistema.
 
-## Visao Geral
+## Objetivo
 
-O projeto foi modelado para atender um cenario em que competicoes amadoras sao organizadas manualmente, com pouca padronizacao e alto risco de inconsistencias em inscricoes, partidas, classificacao e estatisticas.
+O sistema apoia organizadores, responsaveis por times, jogadores e visitantes em um fluxo completo:
 
-O fluxo principal do sistema depende do registro de torneios, participantes, partidas e placares. O registro de eventos detalhados, como gols por jogador, assistencias, cartoes e substituicoes, e complementar: o torneio pode acontecer normalmente apenas com o resultado oficial de cada partida, e as estatisticas so aparecem quando esses eventos forem informados.
+- criar conta, autenticar, editar dados e excluir a propria conta;
+- gerenciar comunicacao privada entre usuarios por solicitacao de conversa;
+- cadastrar times e profissionais esportivos;
+- organizar torneios, participantes, inscricoes e novas edicoes;
+- preparar competicoes com estrutura, rodadas e partidas;
+- visualizar escalacao opcional em mesa tatica;
+- registrar placar oficial e atualizar andamento da competicao;
+- registrar scout estatistico opcional independente da mesa tatica;
+- consolidar rankings, artilharia, assistencias, notas e historico;
+- publicar e consultar feed social, comunicados, comentarios e reacoes;
+- registrar palpites publicos e desafios amistosos opcionais.
 
-O sistema proposto permite:
+## Funcionalidades
 
-- criar e configurar torneios
-- cadastrar conta como jogador ou organizador, realizar login, editar dados e excluir conta
-- definir formato de competicao e formato de equipe
-- cadastrar times e gerenciar elenco, jogadores e tecnico
-- permitir que jogadores usem a plataforma para buscar times e acompanhar oportunidades
-- gerenciar o ciclo de inscricoes de times, com candidatura, acompanhamento de status, cancelamento quando pendente, avaliacao e lista final de participantes
-- usar comunicacao privada com solicitacao previa antes de liberar mensagens entre usuarios
-- propor, aceitar, reagendar e registrar desafios amistosos entre times com historico proprio
-- usar amistosos apenas como recurso opcional, sem obrigar o fluxo dos torneios
-- preparar a competicao com estrutura, rodadas e partidas por sorteio automatico ou montagem manual
-- repetir torneios finalizados como novas edicoes mantendo o historico anterior
-- gerar uma visualizacao opcional da escalacao do time em mesa tatica quando o responsavel quiser representar o time em campo
-- publicar postagens no feed social geral com midia e hashtags
-- publicar comunicados, comentarios, curtidas, reacoes e atualizacoes automaticas no feed social
-- registrar palpites publicos de usuarios e visitantes, com janela de participacao, contagem e apuracao
-- registrar resultados oficiais de partidas e atualizar automaticamente o andamento da competicao
-- gerenciar scout estatistico opcional com eventos individuais, gols, assistencias, cartoes e substituicoes independentemente da mesa tatica
-- consolidar notas, artilharia, lideres de assistencias, historico dos jogadores e historico estatistico por edicao quando houver eventos registrados
-- gerar comparativos de desempenho entre times e jogadores, salvando, consultando e atualizando apenas os comparativos escolhidos
-- acompanhar classificacao, chaveamento e andamento das partidas
+As funcionalidades completas estao descritas em [`documentacao/funcionalidades.md`](documentacao/funcionalidades.md).
 
-## Estado Atual do Projeto
+Resumo atual:
 
-O projeto encontra-se estruturado em modulos de dominio e ja possui:
+- F1: palpites publicos;
+- F2: conta de usuario e autenticacao;
+- F3: comunicacao privada entre usuarios;
+- F4: inscricoes e participantes do torneio;
+- F5: times do usuario;
+- F6: profissionais esportivos;
+- F7: comparativos de desempenho;
+- F8: mesa tatica opcional;
+- F9: ciclo estrutural do torneio;
+- F10: desafios e amistosos;
+- F11: feed social;
+- F12: placar oficial e andamento da competicao;
+- F13: scout estatistico opcional;
+- F14: consolidacao historica de estatisticas e rankings;
+- F15: espaco reservado para evolucao futura.
 
-- documentacao funcional e de negocio
-- linguagem onipresente
-- mapa de historias do usuario
-- modelagem com Context Mapper
-- cenarios BDD em arquivos `.feature`
-- automacao Cucumber distribuida por dominio com `steps` e repositorios em memoria
-- implementacao da camada de dominio nos modulos principais
-- prototipos de baixa e alta fidelidade na documentacao
-- Maven Wrapper configurado no repositorio
+## Arquitetura
 
-No estado atual, o foco principal esta na Entrega 1, com enfase em modelagem de dominio, especificacao comportamental e organizacao da base para a implementacao posterior das demais camadas.
+O projeto segue uma organizacao modular inspirada em DDD e arquitetura limpa.
 
-## Abordagem Arquitetural
+Camadas principais:
 
-O projeto segue uma organizacao modular orientada a contexto de negocio. Cada modulo representa um conjunto coeso de responsabilidades do dominio.
+- `dominio-*`: regras centrais de negocio, entidades, value objects, servicos de dominio e repositorios abstratos;
+- `aplicacao`: casos de uso e orquestracao entre dominios;
+- `infraestrutura`: implementacoes tecnicas, persistencia e repositorios concretos;
+- `apresentacao-backend`: API REST com Spring Boot;
+- `apresentacao-frontend`: interface web em Angular;
+- `documentacao`: artefatos de requisitos, regras, BDD, linguagem onipresente, prototipos e mapa de historias.
 
-### Modulos atuais
+Contextos de dominio:
 
-- `dominio-compartilhado`: ids, entidades compartilhadas, enumeracoes, excecoes e eventos de dominio reutilizaveis
-- `dominio-participacao`: conta de usuario com tipo jogador ou organizador, autenticacao, inscricoes e participantes do torneio, times, jogadores, tecnico e responsavel do time
-- `dominio-torneio`: criacao, configuracao e repeticao do torneio, participantes aprovados, organizador, edicoes e estrutura da competicao
-- `dominio-competicao`: partidas, resultados, rodadas, classificacao, chaveamento, geracao de escalacao em mesa tatica e preparacao da competicao por sorteio ou montagem manual
-- `dominio-estatisticas`: eventos estatisticos opcionais, nota estatistica, desempenho e artilharia
-- `dominio-engajamento`: palpites publicos, chat privado com solicitacoes de conversa, desafios amistosos opcionais entre times, postagens sociais, comunicados oficiais, comentarios, curtidas, reacoes e feed social
-- `pai`: modulo pai Maven com configuracao compartilhada
+- `dominio-compartilhado`;
+- `dominio-participacao`;
+- `dominio-torneio`;
+- `dominio-competicao`;
+- `dominio-estatisticas`;
+- `dominio-engajamento`.
 
-## Domain-Driven Design
+## Modelagem DDD
 
-O projeto adota DDD como base para organizacao do conhecimento de negocio e para separacao de responsabilidades entre contextos.
+A modelagem estrategica esta centralizada no arquivo [`torneio.cml`](torneio.cml), na raiz do repositorio.
 
-### Subdominios e contextos principais
+Esse arquivo representa:
 
-- Participacao
-- Torneio
-- Competicao
-- Estatisticas
-- Engajamento
-- Compartilhado
+- subdominios do projeto;
+- bounded contexts;
+- relacionamentos entre contextos;
+- agregados, entidades, value objects, servicos e repositorios;
+- separacao entre participacao, torneio, competicao, estatisticas, engajamento e compartilhado.
 
-A modelagem estrategica foi registrada em [torneio.cml](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/torneio.cml).
+## BDD e Testes
 
-## Behavior-Driven Development
+Os cenarios BDD foram escritos em Gherkin e automatizados com Cucumber.
 
-Os comportamentos esperados do sistema foram especificados com Cucumber e Gherkin.
+As features e steps ficam distribuidos por dominio, seguindo a responsabilidade principal de cada funcionalidade:
 
-As features estao distribuidas por dominio em:
+- `dominio-participacao/src/test/resources`;
+- `dominio-torneio/src/test/resources`;
+- `dominio-competicao/src/test/resources`;
+- `dominio-estatisticas/src/test/resources`;
+- `dominio-engajamento/src/test/resources`.
 
-- `dominio-participacao/src/test/resources`
-- `dominio-torneio/src/test/resources`
-- `dominio-competicao/src/test/resources`
-- `dominio-estatisticas/src/test/resources`
-- `dominio-engajamento/src/test/resources`
+Cada modulo de dominio possui estrutura propria de teste com:
 
-Cada modulo tambem possui automacao de teste com:
-
-- `RunCucumber.java`
-- classe auxiliar de funcionalidade do dominio
-- `steps/` com step definitions
-- repositorios e consultas em memoria para sustentar os cenarios BDD
+- `RunCucumber.java`;
+- classes auxiliares de funcionalidade;
+- `steps/`;
+- repositorios em memoria para apoiar os cenarios.
 
 ## Estrutura do Repositorio
 
 ```text
-gestao-torneios-amadores
-|
+gestao-torneios-amadores/
+|-- aplicacao/
+|-- apresentacao-backend/
+|-- apresentacao-frontend/
 |-- documentacao/
-|   |-- descricao-dominio.md
-|   |-- linguagem-onipresente.md
-|   |-- funcionalidades.md
-|   |-- regras-de-negocio.md
-|   |-- mapa-historias.md
 |   |-- cenarios-bdd.md
+|   |-- descricao-dominio.md
+|   |-- funcionalidades.md
+|   |-- linguagem-onipresente.md
+|   |-- mapa-historias.md
+|   |-- regras-de-negocio.md
 |   `-- prototipos/
-|       |-- baixa-fidelidade/
-|       `-- alta-fidelidade/
-|
 |-- dominio-compartilhado/
+|-- dominio-competicao/
+|-- dominio-engajamento/
+|-- dominio-estatisticas/
 |-- dominio-participacao/
 |-- dominio-torneio/
-|-- dominio-competicao/
-|-- dominio-estatisticas/
-|-- dominio-engajamento/
-|
-|-- .mvn/
+|-- features/
+|-- infraestrutura/
 |-- pai/
+|-- scripts/
+|-- docker-compose.yml
 |-- pom.xml
+|-- torneio.cml
 |-- mvnw
-|-- mvnw.cmd
-|-- README.md
-`-- torneio.cml
+`-- mvnw.cmd
 ```
 
-## Estrutura de Dominio Implementada
+## Requisitos
 
-Atualmente, a camada `src/main/java` ja possui uma base inicial de implementacao em todos os modulos de dominio.
+Para executar localmente sem Docker:
 
-### `dominio-compartilhado`
+- Java 21 ou superior;
+- Maven Wrapper do proprio projeto;
+- Node.js compativel com Angular 19;
+- MySQL 8.4 ou superior.
 
-Inclui elementos comuns reutilizados por outros modulos, como:
+Para executar com Docker:
 
-- `Usuario` e `UsuarioId`
-- `Jogador` e `JogadorId`
-- `Tecnico` e `TecnicoId`
-- `TimeId`
-- `TorneioId`
-- `PartidaId`
-- enumeracoes de formato, status e tipo de evento
-- excecoes de dominio
-- eventos de dominio
+- Docker;
+- Docker Compose.
 
-### `dominio-participacao`
+## Execucao Local
 
-Inclui classes voltadas a:
-
-- autenticacao de acesso
-- conta de usuario e login
-- tipo de conta jogador ou organizador
-- inscricoes e participantes do torneio
-- gestao de times
-- gestao integrada de jogadores e tecnico do time
-- definicao de responsavel do time
-
-### `dominio-torneio`
-
-Inclui classes voltadas a:
-
-- torneio
-- edicoes e historico de edicoes do torneio
-- participante do torneio
-- estrutura da competicao por sorteio ou montagem manual
-- regras do organizador
-
-### `dominio-competicao`
-
-Inclui classes voltadas a:
-
-- partida
-- resultado da partida
-- classificacao
-- chaveamento
-- geracao opcional de visualizacao da escalacao em mesa tatica para a partida
-- rodada
-- preparacao da competicao com partidas e rodadas
-
-### `dominio-engajamento`
-
-Inclui classes voltadas a:
-
-- palpites de usuarios autenticados
-- apuracao automatica de palpites
-- chat privado com aba de solicitados, aprovacao de conversa e mensagens
-- desafios e amistosos entre times
-- historico de amistosos dos times
-- comunicados oficiais do torneio
-- postagens sociais com hashtags e midias
-- comentarios em partidas
-- curtidas e reacoes no feed
-- atualizacoes automaticas no feed social
-
-### `dominio-estatisticas`
-
-Inclui classes voltadas a:
-
-- eventos estatisticos opcionais
-- subclasses de eventos como gol e cartoes
-- substituicoes registradas como evento estatistico independente da mesa tatica
-- nota estatistica quando houver eventos registrados
-- consolidacao de desempenho, rankings e historico dos jogadores
-- arquivamento de estatisticas por edicao do torneio
-- artilharia baseada nos gols registrados
-- comparativos temporarios e salvos de desempenho entre times e jogadores
-
-## Documentacao do Projeto
-
-Os principais artefatos da Entrega 1 estao organizados em [documentacao](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao):
-
-- [descricao-dominio.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/descricao-dominio.md)
-- [linguagem-onipresente.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/linguagem-onipresente.md)
-- [funcionalidades.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/funcionalidades.md)
-- [regras-de-negocio.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/regras-de-negocio.md)
-- [mapa-historias.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/mapa-historias.md)
-- [cenarios-bdd.md](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/cenarios-bdd.md)
-- [prototipo-baixa-fidelidade.png](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/prototipos/baixa-fidelidade/prototipo-baixa-fidelidade.png)
-- [prototipo-alta-fidelidade.png](C:/Users/ganto/OneDrive/Área%20de%20Trabalho/gestao-torneios-amadores/documentacao/prototipos/alta-fidelidade/prototipo-alta-fidelidade.png)
-
-## Tecnologias Utilizadas
-
-- Java
-- Maven
-- Maven Wrapper
-- Spring Boot Parent no modulo pai
-- JUnit 5
-- Cucumber
-- Context Mapper
-
-## Como Executar
-
-### Verificar a versao do Maven Wrapper
+Verificar Maven:
 
 ```powershell
 .\mvnw.cmd -v
 ```
 
-### Executar testes Maven
+Compilar backend com dependencias:
+
+```powershell
+.\mvnw.cmd -pl apresentacao-backend -am -DskipTests compile
+```
+
+Executar testes:
 
 ```powershell
 .\mvnw.cmd test
 ```
 
-No estado atual, a suite cobre os modulos de dominio com cenarios Cucumber e testes auxiliares, incluindo os fluxos de torneio, participacao, competicao, estatisticas e engajamento.
-
-### Executar um modulo especifico
+Executar um modulo especifico:
 
 ```powershell
 .\mvnw.cmd test -pl dominio-torneio -am
 ```
 
-## Proximas Etapas
+Subir frontend Angular:
 
-As proximas evolucoes previstas para o projeto incluem:
+```powershell
+cd apresentacao-frontend\src\main\angular
+npm install
+npm start
+```
 
-- ampliar a implementacao dos comportamentos de dominio
-- introduzir camada de aplicacao
-- implementar persistencia objeto-relacional
-- desenvolver camada de apresentacao web
+## Execucao com Docker
+
+Subir banco, backend e frontend:
+
+```powershell
+docker compose up --build
+```
+
+Servicos:
+
+- Frontend: `http://localhost:4200`;
+- Backend: `http://localhost:8080`;
+- Swagger/OpenAPI: `http://localhost:8080/swagger-ui.html`;
+- MySQL: `localhost:3306`.
+
+Parar os servicos:
+
+```powershell
+docker compose down
+```
+
+Remover tambem o volume do banco:
+
+```powershell
+docker compose down -v
+```
+
+## Banco de Dados
+
+Configuracao padrao local:
+
+- database: `torneios`;
+- usuario Docker: `torneios`;
+- senha Docker: `torneios`;
+- root password Docker: `root`.
+
+O backend aceita variaveis de ambiente Spring, entao no Docker ele aponta para o servico `mysql`. Fora do Docker, usa `localhost` como padrao.
+
+## Documentacao
+
+Principais artefatos:
+
+- [`documentacao/descricao-dominio.md`](documentacao/descricao-dominio.md);
+- [`documentacao/linguagem-onipresente.md`](documentacao/linguagem-onipresente.md);
+- [`documentacao/funcionalidades.md`](documentacao/funcionalidades.md);
+- [`documentacao/regras-de-negocio.md`](documentacao/regras-de-negocio.md);
+- [`documentacao/mapa-historias.md`](documentacao/mapa-historias.md);
+- [`documentacao/cenarios-bdd.md`](documentacao/cenarios-bdd.md);
+- [`documentacao/prototipos`](documentacao/prototipos).
+
+## Estado Atual
+
+O projeto possui modelagem de dominio, documentacao, cenarios BDD, camadas de dominio, aplicacao, infraestrutura, backend e frontend. A implementacao ainda pode evoluir em cobertura de testes integrados, refinamento de persistencia e integracao completa entre todas as telas e endpoints, mas a base estrutural ja representa o projeto completo.
 
 ## Autor
 
-Projeto desenvolvido como parte da disciplina de Requisitos e Projeto de Software.
+Projeto desenvolvido para a disciplina de Requisitos e Projeto de Software.

@@ -1,21 +1,39 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
-@Component({ selector: 'app-partida-detalhes', imports: [], templateUrl: './partida-detalhes.html' })
+@Component({
+  selector: 'app-partida-detalhes',
+  imports: [FormsModule, RouterLink],
+  templateUrl: './partida-detalhes.html'
+})
 export class PartidaDetalhes {
-  abaEv='Todos'; abasEventos=['Todos','Gols','Assistências','Cartões','Substituições'];
-  titulares=[1,2,3,4,5,6,7,8,9,10,11];
-  eventos=[
-    {id:1,min:12,ico:'⚽',desc:'João Silva',time:'Unidos do Bairro'},
-    {id:2,min:27,ico:'🟨',desc:'Cartão amarelo Lucas Lima',time:'Real Esperança'},
-    {id:3,min:45,ico:'⚽',desc:'Pedro Santos',time:'Unidos do Bairro'},
-    {id:4,min:62,ico:'⚽',desc:'Gabriel Sousa',time:'Real Esperança'},
-    {id:5,min:71,ico:'🔄',desc:'Substituição Matheus Alves',time:'Unidos do Bairro'}
+  golsCasa = 2;
+  golsVisitante = 1;
+  esquemaCasa = '4-4-2';
+  esquemaVisitante = '4-2-3-1';
+
+  jogadoresCasa = [
+    { n: '1 Alisson', x: 8, y: 50, nota: 6.3 },
+    { n: '4 Marquinhos', x: 23, y: 62, nota: 5.9 },
+    { n: '8 B. Guimaraes', x: 37, y: 56, nota: 8.1 },
+    { n: '7 Vinicius Jr.', x: 44, y: 38, nota: 6.9 },
+    { n: '11 Raphinha', x: 31, y: 24, nota: 6.5 },
+    { n: '16 D. Santos', x: 18, y: 24, nota: 6.7 }
   ];
-  classificacao=[
-    {pos:1,nome:'Unidos do Bairro',j:4,v:3,d:1,gp:8,gc:3,pts:9},
-    {pos:2,nome:'Resenha FC',j:4,v:2,d:1,gp:6,gc:4,pts:7},
-    {pos:3,nome:'Vila FC',j:4,v:1,d:1,gp:5,gc:5,pts:5},
-    {pos:4,nome:'Real Esperança',j:4,v:1,d:3,gp:3,gc:10,pts:3}
+
+  jogadoresVisitante = [
+    { n: '23 M. Shobeir', x: 92, y: 50, nota: 7.2 },
+    { n: '11 M. Ziko', x: 64, y: 48, nota: 7.1 },
+    { n: '19 M. Attia', x: 74, y: 64, nota: 7.0 },
+    { n: '17 M. Lasheen', x: 76, y: 35, nota: 6.8 },
+    { n: '3 M. Hany', x: 86, y: 24, nota: 6.1 }
   ];
-  proximosJogos=[{id:1,timeCasa:'Vila FC',timeVisit:'Os Parças'},{id:2,timeCasa:'Resenha FC',timeVisit:'Unidos do Bairro'}];
+
+  classificacao = [
+    { pos: 1, nome: 'Unidos do Bairro', pts: 9 },
+    { pos: 2, nome: 'Resenha FC', pts: 7 },
+    { pos: 3, nome: 'Vila FC', pts: 5 },
+    { pos: 4, nome: 'Real Esperanca', pts: 3 }
+  ];
 }

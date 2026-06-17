@@ -1,69 +1,63 @@
-<nav class="navbar navbar-expand-lg">
-  <div class="container">
-    <a class="navbar-brand">Liga Amadora+</a>
-    <div class="navbar-nav ms-auto">
-      <a class="nav-link" routerLink="/time/pesquisa">Times</a>
-      <a class="nav-link" routerLink="/profissional/pesquisa">Profissionais</a>
+<main class="page page-narrow">
+  <div class="hero-row">
+    <div>
+      <div class="eyebrow">Elenco e comissao</div>
+      <h1 class="page-title">Vincular profissional</h1>
+      <p class="page-subtitle">Escolha jogador, tecnico ou membro da comissao e defina sua funcao no time.</p>
     </div>
+    <a class="btn btn-outline" [routerLink]="['/time', timeId, 'detalhes']"><i class="bi bi-arrow-left"></i> Voltar</a>
   </div>
-</nav>
 
-<div class="container py-5" style="max-width: 600px">
-  <a class="text-muted text-decoration-none mb-3 d-inline-block" [routerLink]="['/time', timeId, 'detalhes']">← Voltar</a>
-  <h2 class="fw-bold mb-4">Vincular profissional</h2>
-
-  <div class="card p-4">
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Buscar profissional *</label>
-      @if (!selecionado) {
-        <input class="form-control" [(ngModel)]="termoBusca" (input)="buscar()" placeholder="Nome ou tipo...">
-        @if (resultados.length > 0) {
-          <div class="list-group mt-1">
-            @for (p of resultados; track p.id) {
-              <button class="list-group-item list-group-item-action py-2" (click)="selecionar(p)">
-                <span class="fw-semibold">{{ p.nome }}</span>
-                <span class="text-muted ms-2">· {{ tipoLabel(p.tipo) }}</span>
-              </button>
-            }
+  <section class="card panel-strong">
+    <div class="form-grid">
+      <div class="field">
+        <label>Buscar profissional</label>
+        @if (!selecionado) {
+          <input [(ngModel)]="termoBusca" (input)="buscar()" placeholder="Nome ou tipo">
+          @if (resultados.length > 0) {
+            <div style="margin-top: 8px">
+              @for (p of resultados; track p.id) {
+                <button class="btn btn-block" style="justify-content: flex-start; margin-bottom: 6px" (click)="selecionar(p)">
+                  <span class="avatar" style="width: 30px; height: 30px">{{ p.nome?.[0] || 'P' }}</span>
+                  <strong>{{ p.nome }}</strong>
+                  <span class="muted">{{ tipoLabel(p.tipo) }}</span>
+                </button>
+              }
+            </div>
+          }
+          @if (!termoBusca && exemplos.length > 0) {
+            <div style="margin-top: 8px">
+              @for (p of exemplos; track p.id) {
+                <button class="btn btn-block" style="justify-content: flex-start; margin-bottom: 6px" (click)="selecionar(p)">
+                  <span class="avatar" style="width: 30px; height: 30px">{{ p.nome?.[0] || 'P' }}</span>
+                  <strong>{{ p.nome }}</strong>
+                  <span class="muted">{{ tipoLabel(p.tipo) }}</span>
+                </button>
+              }
+            </div>
+          }
+        } @else {
+          <div class="mini-row card" style="box-shadow: none">
+            <span><strong>{{ selecionado.nome }}</strong></span>
+            <button class="btn btn-sm" (click)="limpar()">Trocar</button>
           </div>
         }
-        @if (!termoBusca && exemplos.length > 0) {
-          <div class="list-group mt-1">
-            @for (p of exemplos; track p.id) {
-              <button class="list-group-item list-group-item-action py-2" (click)="selecionar(p)">
-                <span class="fw-semibold">{{ p.nome }}</span>
-                <span class="text-muted ms-2">· {{ tipoLabel(p.tipo) }}</span>
-              </button>
-            }
-          </div>
-        }
-      } @else {
-        <div class="d-flex align-items-center justify-content-between p-2 bg-light rounded border">
-          <span class="fw-semibold">{{ selecionado.nome }}</span>
-          <button class="btn btn-sm btn-outline-secondary" (click)="limpar()">✕ Trocar</button>
-        </div>
-      }
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Função no time *</label>
-      <input class="form-control" [(ngModel)]="funcao" placeholder="Ex.: Atacante / Treinador / Auxiliar...">
-    </div>
-
-    <div class="row g-3 mb-4">
-      <div class="col">
-        <label class="form-label fw-semibold">Data de início *</label>
-        <input class="form-control" type="date" [(ngModel)]="dataInicio">
       </div>
-      <div class="col">
-        <label class="form-label fw-semibold">Data limite do contrato</label>
-        <input class="form-control" type="date" [(ngModel)]="dataLimite">
+
+      <div class="field">
+        <label>Funcao no time</label>
+        <input [(ngModel)]="funcao" placeholder="Ex.: Atacante / Treinador / Auxiliar">
+      </div>
+
+      <div class="grid grid-2">
+        <div class="field"><label>Data de inicio</label><input type="date" [(ngModel)]="dataInicio"></div>
+        <div class="field"><label>Data limite do contrato</label><input type="date" [(ngModel)]="dataLimite"></div>
+      </div>
+
+      <div class="grid grid-2">
+        <a class="btn" [routerLink]="['/time', timeId, 'detalhes']">Cancelar</a>
+        <button class="btn btn-primary" (click)="vincular()">Vincular</button>
       </div>
     </div>
-
-    <div class="d-flex gap-2">
-      <a class="btn btn-secondary" [routerLink]="['/time', timeId, 'detalhes']">Cancelar</a>
-      <button class="btn btn-primary ms-auto" (click)="vincular()">Vincular</button>
-    </div>
-  </div>
-</div>
+  </section>
+</main>

@@ -42,6 +42,7 @@ class ContaUsuarioRepositorioImpl implements ContaUsuarioRepositorio {
         jpa.id = conta.getId().valor();
         jpa.nome = conta.getNome();
         jpa.email = conta.getEmail();
+        jpa.senha = ReflexaoDominioJpa.valorCampo(conta, "senha", String.class);
         jpa.tipo = conta.getTipo().name();
         repositorio.save(jpa);
     }

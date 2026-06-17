@@ -1,40 +1,59 @@
-<nav class="navbar navbar-expand-lg">
-  <div class="container">
-    <a class="navbar-brand">Liga Amadora+</a>
-    <div class="navbar-nav ms-auto">
-      <a class="nav-link" routerLink="/time/pesquisa">Times</a>
-      <a class="nav-link active" routerLink="/profissional/pesquisa">Profissionais</a>
+<main class="page">
+  <div class="hero-row">
+    <div>
+      <div class="eyebrow">Mercado amador</div>
+      <h1 class="page-title">Busca de jogadores e comissao</h1>
+      <p class="page-subtitle">Cadastre e consulte jogadores, tecnicos e profissionais que podem ser vinculados aos times.</p>
     </div>
+    <a class="btn btn-primary" routerLink="/profissional/criacao"><i class="bi bi-person-plus"></i> Cadastrar</a>
   </div>
-</nav>
-<div class="container py-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold mb-0">Profissionais Esportivos</h2>
-    <a class="btn btn-primary" routerLink="/profissional/criacao">+ Cadastrar</a>
-  </div>
-  <div class="input-group mb-4" style="max-width:400px">
-    <input class="form-control" [(ngModel)]="termoBusca" placeholder="Buscar por nome..." (input)="buscar()">
-    <span class="input-group-text">🔍</span>
-  </div>
-  <div class="card">
-    <table class="table mb-0">
-      <thead>
-        <tr><th>Nome</th><th>Tipo</th><th></th></tr>
-      </thead>
-      <tbody>
-        @for (p of lista; track p.id) {
-          <tr>
-            <td class="fw-semibold">{{ p.nome }}</td>
-            <td><span class="badge bg-secondary">{{ p.tipo }}</span></td>
-            <td class="text-end">
-              <a class="btn btn-sm btn-outline-primary" [routerLink]="['/profissional', p.id, 'perfil']">Ver / Editar</a>
-            </td>
-          </tr>
-        }
-        @if (lista.length === 0) {
-          <tr><td colspan="3" class="text-center text-muted py-4">Nenhum profissional encontrado.</td></tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</div>
+
+  <section class="card panel-strong" style="margin-bottom: 14px">
+    <div class="field" style="display: flex; gap: 8px">
+      <input [(ngModel)]="termoBusca" placeholder="Buscar por nome" (input)="buscar()">
+      <button class="btn btn-outline"><i class="bi bi-search"></i></button>
+    </div>
+  </section>
+
+  @if (lista.length === 0) {
+    <section class="grid grid-4">
+      <article class="card">
+        <div class="post-head"><div class="avatar photo">JS</div><div><strong>Joao Silva</strong><div class="small muted">Jogador - Atacante</div></div></div>
+        <div class="mini-row"><span>Nota media</span><span class="rating">7.8</span></div>
+        <a class="btn btn-outline btn-block" routerLink="/profissional/1/perfil">Ver perfil</a>
+      </article>
+      <article class="card">
+        <div class="post-head"><div class="avatar photo">PS</div><div><strong>Pedro Santos</strong><div class="small muted">Jogador - Meia</div></div></div>
+        <div class="mini-row"><span>Nota media</span><span class="rating">7.5</span></div>
+        <a class="btn btn-outline btn-block" routerLink="/profissional/2/perfil">Ver perfil</a>
+      </article>
+      <article class="card">
+        <div class="post-head"><div class="avatar">CL</div><div><strong>Carlos Lima</strong><div class="small muted">Tecnico</div></div></div>
+        <div class="mini-row"><span>Time atual</span><strong>Unidos</strong></div>
+        <a class="btn btn-outline btn-block" routerLink="/profissional/3/perfil">Ver perfil</a>
+      </article>
+      <article class="card">
+        <div class="post-head"><div class="avatar photo">GS</div><div><strong>Gabriel Souza</strong><div class="small muted">Jogador - Ponta</div></div></div>
+        <div class="mini-row"><span>Assistencias</span><strong>11</strong></div>
+        <a class="btn btn-outline btn-block" routerLink="/profissional/4/perfil">Ver perfil</a>
+      </article>
+    </section>
+  } @else {
+    <section class="card">
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Nome</th><th>Tipo</th><th></th></tr></thead>
+          <tbody>
+            @for (p of lista; track p.id) {
+              <tr>
+                <td><strong>{{ p.nome }}</strong></td>
+                <td><span class="status status-gray">{{ p.tipo }}</span></td>
+                <td style="text-align: right"><a class="btn btn-sm btn-outline" [routerLink]="['/profissional', p.id, 'perfil']">Ver / Editar</a></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+</main>

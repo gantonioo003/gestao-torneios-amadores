@@ -1,0 +1,77 @@
+<main class="page">
+  <div class="hero-row">
+    <div>
+      <div class="eyebrow">Scout da partida</div>
+      <h1 class="page-title">Eventos e sumula estatistica</h1>
+      <p class="page-subtitle">O placar oficial pode existir sozinho, e o scout detalhado entra quando houver dados individuais para registrar.</p>
+    </div>
+    <span class="status status-green">Ao vivo</span>
+  </div>
+
+  <div class="grid layout-2-1">
+    <section class="card panel-strong">
+      <div class="tabs" style="margin-bottom: 14px">
+        @for (a of abas; track a) {
+          <button class="tab" [class.active]="aba === a" (click)="aba = a">{{ a }}</button>
+        }
+      </div>
+
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Min</th>
+              <th>Jogador</th>
+              <th>Time</th>
+              <th>Tipo</th>
+              <th>Descricao</th>
+              <th>Acoes</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (e of eventosFiltrados(); track e.min + e.jogador) {
+              <tr>
+                <td><strong>{{ e.min }}'</strong></td>
+                <td>{{ e.jogador }}</td>
+                <td>{{ e.time }}</td>
+                <td><span class="status status-green">{{ e.tipo }}</span></td>
+                <td>{{ e.detalhe }}</td>
+                <td>
+                  <button class="btn btn-sm"><i class="bi bi-pencil"></i></button>
+                  <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid grid-3" style="margin-top: 14px">
+        <button class="btn btn-primary"><i class="bi bi-plus-circle"></i> Registrar evento</button>
+        <button class="btn btn-outline"><i class="bi bi-pencil-square"></i> Corrigir</button>
+        <button class="btn btn-danger"><i class="bi bi-x-circle"></i> Remover</button>
+      </div>
+    </section>
+
+    <aside class="grid">
+      <div class="card">
+        <h2 class="section-title">Resumo da partida</h2>
+        <div class="score">
+          <div style="text-align: center"><div class="crest"><i class="bi bi-shield"></i></div><strong>Unidos</strong></div>
+          <div class="score-number">2 x 1</div>
+          <div style="text-align: center"><div class="crest"><i class="bi bi-shield"></i></div><strong>Real</strong></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Impacto automatico</h2>
+        <div class="mini-row"><span>Nota de Joao Silva</span><strong class="rating">7.8</strong></div>
+        <div class="mini-row"><span>Artilharia</span><strong>+1 gol</strong></div>
+        <div class="mini-row"><span>Controle disciplinar</span><strong>1 cartao</strong></div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Observacao</h2>
+        <p class="muted">A mesa tatica e apenas uma visualizacao da escalacao. Os eventos estatisticos funcionam independentemente dela.</p>
+      </div>
+    </aside>
+  </div>
+</main>

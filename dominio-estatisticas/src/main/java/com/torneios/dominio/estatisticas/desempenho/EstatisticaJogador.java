@@ -21,6 +21,19 @@ public class EstatisticaJogador {
         this.jogadorId = java.util.Objects.requireNonNull(jogadorId, "O jogador da estatistica e obrigatorio.");
     }
 
+    private EstatisticaJogador(TorneioId torneioId,
+                               JogadorId jogadorId,
+                               int gols,
+                               int assistencias,
+                               int cartoesAmarelos,
+                               int cartoesVermelhos) {
+        this(torneioId, jogadorId);
+        this.gols = gols;
+        this.assistencias = assistencias;
+        this.cartoesAmarelos = cartoesAmarelos;
+        this.cartoesVermelhos = cartoesVermelhos;
+    }
+
     public TorneioId getTorneioId() {
         return torneioId;
     }
@@ -43,6 +56,16 @@ public class EstatisticaJogador {
 
     public int getCartoesVermelhos() {
         return cartoesVermelhos;
+    }
+
+    public EstatisticaJogador copiar() {
+        return new EstatisticaJogador(
+                torneioId,
+                jogadorId,
+                gols,
+                assistencias,
+                cartoesAmarelos,
+                cartoesVermelhos);
     }
 
     public void registrarEvento(TipoEventoEstatistico tipo) {

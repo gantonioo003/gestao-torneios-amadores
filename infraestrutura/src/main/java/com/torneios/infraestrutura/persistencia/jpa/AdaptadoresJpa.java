@@ -141,6 +141,20 @@ class ConsultaCompeticaoTorneioJpa implements ConsultaCompeticaoTorneio {
 
     @Override
     public List<List<TimeId>> listarGrupos(TorneioId torneioId) {
-        return Collections.emptyList();
+        var torneio = obter(torneioId);
+        if (torneio.getFormato() != FormatoTorneio.FASE_DE_GRUPOS_COM_MATA_MATA) {
+            return Collections.emptyList();
+        }
+        List<TimeId> participantes = listarParticipantesAprovados(torneioId);
+        if (participantes.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<List<TimeId>> grupos = new ArrayList<>();
+        grupos.add(new ArrayList<>());
+        grupos.add(new ArrayList<>());
+        for (int i = 0; i < participantes.size(); i++) {
+            grupos.get(i % grupos.size()).add(participantes.get(i));
+        }
+        return grupos;
     }
 }

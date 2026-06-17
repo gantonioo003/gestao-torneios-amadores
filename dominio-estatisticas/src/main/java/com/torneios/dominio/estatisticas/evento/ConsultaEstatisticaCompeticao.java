@@ -1,5 +1,7 @@
 package com.torneios.dominio.estatisticas.evento;
 
+import java.util.List;
+
 import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
@@ -12,4 +14,8 @@ public interface ConsultaEstatisticaCompeticao {
     boolean partidaPertenceAoTorneio(PartidaId partidaId, TorneioId torneioId);
 
     boolean jogadorPertenceAosTimesDaPartida(PartidaId partidaId, JogadorId jogadorId);
+
+    default List<PartidaId> listarPartidasDoJogadorNoTorneio(TorneioId torneioId, JogadorId jogadorId) {
+        return List.of();
+    }
 }

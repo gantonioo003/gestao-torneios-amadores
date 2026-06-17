@@ -1,5 +1,6 @@
 package com.torneios.infraestrutura.persistencia.jpa;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +39,9 @@ class PartidaJpa {
 
     @Column(nullable = true)
     Integer golsVisitante;
+
+    @Column(nullable = true)
+    LocalDateTime dataHoraRegistroResultado;
 }
 
 interface PartidaJpaRepository extends JpaRepository<PartidaJpa, Long> {
@@ -64,6 +68,11 @@ class PartidaRepositorioImpl implements PartidaRepositorio {
         if (partida.getResultado() != null) {
             jpa.golsMandante = partida.getResultado().golsMandante();
             jpa.golsVisitante = partida.getResultado().golsVisitante();
+            jpa.dataHoraRegistroResultado = partida.getDataHoraRegistroResultado();
+        } else {
+            jpa.golsMandante = null;
+            jpa.golsVisitante = null;
+            jpa.dataHoraRegistroResultado = null;
         }
 
         repositorio.save(jpa);
@@ -89,8 +98,9 @@ class PartidaRepositorioImpl implements PartidaRepositorio {
                 jpa.etapa,
                 jpa.quantidadeJogadoresPorEquipe);
 
-        if (jpa.encerrada && jpa.golsMandante != null && jpa.golsVisitante != null) {
-            partida.registrarResultado(new ResultadoPartida(jpa.golsMandante, jpa.golsVisitante));
+        if (jpa.encerrada && jpa.golsMandante != null && jpa.golsVisitante != null && jpa.dataHoraRegistroResultado != null) {
+            partida.registrarResultado(new ResultadoPartida(jpa.golsMandante, jpa.golsVisitante),
+                    jpa.dataHoraRegistroResultado);
         }
 
         return partida;

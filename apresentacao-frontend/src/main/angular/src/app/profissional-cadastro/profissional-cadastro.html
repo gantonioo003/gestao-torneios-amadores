@@ -1,39 +1,34 @@
-<nav class="navbar navbar-expand-lg">
-  <div class="container">
-    <a class="navbar-brand">Liga Amadora+</a>
-    <div class="navbar-nav ms-auto">
-      <a class="nav-link" routerLink="/time/pesquisa">Times</a>
-      <a class="nav-link active" routerLink="/profissional/pesquisa">Profissionais</a>
+<main class="page page-narrow">
+  <div class="hero-row">
+    <div>
+      <div class="eyebrow">Cadastro esportivo</div>
+      <h1 class="page-title">Novo profissional esportivo</h1>
+      <p class="page-subtitle">O perfil pode depois ser vinculado ao elenco de um time e ganhar historico estatistico.</p>
     </div>
+    <a class="btn btn-outline" routerLink="/profissional/pesquisa"><i class="bi bi-arrow-left"></i> Voltar</a>
   </div>
-</nav>
 
-<div class="container py-5" style="max-width: 600px">
-  <a class="text-muted text-decoration-none mb-3 d-inline-block" routerLink="/profissional/pesquisa">← Voltar</a>
-  <h2 class="fw-bold mb-4">Novo profissional esportivo</h2>
-
-  <div class="card p-4">
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Nome completo *</label>
-      <input class="form-control" [(ngModel)]="nome" placeholder="Ex.: João Silva">
+  <section class="card panel-strong">
+    <div class="form-grid">
+      <div class="field">
+        <label>Nome completo</label>
+        <input [(ngModel)]="nome" placeholder="Ex.: Joao Silva">
+      </div>
+      <div class="field">
+        <label>Tipo</label>
+        <select [(ngModel)]="tipoSelecionado">
+          <option value="">Selecione o tipo</option>
+          <option value="JOGADOR">Jogador</option>
+          <option value="TREINADOR">Tecnico / Treinador</option>
+          <option value="AUXILIAR_TECNICO">Auxiliar tecnico</option>
+          <option value="PREPARADOR_FISICO">Preparador fisico</option>
+          <option value="MEDICO">Medico</option>
+        </select>
+      </div>
+      <div class="grid grid-2">
+        <a class="btn" routerLink="/profissional/pesquisa">Cancelar</a>
+        <button class="btn btn-primary" (click)="cadastrar()">Cadastrar</button>
+      </div>
     </div>
-
-    <div class="mb-4">
-      <label class="form-label fw-semibold">Tipo *</label>
-      <select class="form-select" [(ngModel)]="tipoSelecionado">
-        <option value="">Selecione o tipo...</option>
-        <option value="JOGADOR">Jogador</option>
-        <option value="TREINADOR">Técnico / Treinador</option>
-        <option value="AUXILIAR_TECNICO">Auxiliar técnico</option>
-        <option value="PREPARADOR_FISICO">Preparador físico</option>
-        <option value="MEDICO">Médico</option>
-      </select>
-      <small class="text-muted">A função específica no time é definida ao vincular ao elenco.</small>
-    </div>
-
-    <div class="d-flex gap-2">
-      <a class="btn btn-secondary" routerLink="/profissional/pesquisa">Cancelar</a>
-      <button class="btn btn-primary ms-auto" (click)="cadastrar()">Cadastrar</button>
-    </div>
-  </div>
-</div>
+  </section>
+</main>

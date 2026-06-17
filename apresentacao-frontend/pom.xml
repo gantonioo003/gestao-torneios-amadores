@@ -87,7 +87,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        src/main/angular/dist/torneios/browser
+                                        src/main/angular/dist/gestao-torneios-frontend/browser
                                     </directory>
                                 </resource>
                             </resources>

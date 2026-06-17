@@ -1,0 +1,9 @@
+.git
+.codex-temp
+.vscode
+**/target
+**/node_modules
+**/.angular
+**/dist
+**/*.log
+**/.DS_Store

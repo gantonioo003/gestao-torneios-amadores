@@ -1,6 +1,10 @@
 package com.torneios.dominio.estatisticas.evento;
 
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.torneios.dominio.compartilhado.enumeracao.TipoEventoEstatistico;
 import com.torneios.dominio.compartilhado.excecao.EntidadeNaoEncontradaException;
@@ -12,6 +16,9 @@ import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 
 public class EventoEstatisticoServico {
+
+    private static final int LIMITE_EXPULSAO_POR_AMARELOS = 2;
+    private static final int LIMITE_SUSPENSAO_POR_ACUMULO = 3;
 
     private final EventoEstatisticoRepositorio eventoEstatisticoRepositorio;
     private final ConsultaEstatisticaCompeticao consultaEstatisticaCompeticao;
@@ -46,8 +53,10 @@ public class EventoEstatisticoServico {
                                                     PartidaId partidaId,
                                                     UsuarioId organizadorId,
                                                     JogadorId jogadorId) {
-        return registrarEvento(eventoId, torneioId, partidaId, organizadorId, jogadorId,
+        EventoEstatistico eventoEstatistico = registrarEvento(eventoId, torneioId, partidaId, organizadorId, jogadorId,
                 TipoEventoEstatistico.CARTAO_AMARELO);
+        reprocessarDisciplinaDoJogador(torneioId, partidaId, jogadorId);
+        return eventoEstatistico;
     }
 
     public EventoEstatistico registrarCartaoVermelho(long eventoId,
@@ -55,8 +64,10 @@ public class EventoEstatisticoServico {
                                                      PartidaId partidaId,
                                                      UsuarioId organizadorId,
                                                      JogadorId jogadorId) {
-        return registrarEvento(eventoId, torneioId, partidaId, organizadorId, jogadorId,
+        EventoEstatistico eventoEstatistico = registrarEvento(eventoId, torneioId, partidaId, organizadorId, jogadorId,
                 TipoEventoEstatistico.CARTAO_VERMELHO);
+        reprocessarDisciplinaDoJogador(torneioId, partidaId, jogadorId);
+        return eventoEstatistico;
     }
 
     public EventoEstatistico registrarSubstituicao(long eventoId,
@@ -65,12 +76,25 @@ public class EventoEstatisticoServico {
                                                    UsuarioId organizadorId,
                                                    JogadorId jogadorSaiuId,
                                                    JogadorId jogadorEntrouId) {
+        return registrarSubstituicao(eventoId, torneioId, partidaId, organizadorId, jogadorSaiuId,
+                jogadorEntrouId, null, null);
+    }
+
+    public EventoEstatistico registrarSubstituicao(long eventoId,
+                                                   TorneioId torneioId,
+                                                   PartidaId partidaId,
+                                                   UsuarioId organizadorId,
+                                                   JogadorId jogadorSaiuId,
+                                                   JogadorId jogadorEntrouId,
+                                                   Integer ordemParadaJogo,
+                                                   String descricaoParadaJogo) {
         validarRegistroBase(torneioId, partidaId, organizadorId);
         validarJogadorDaPartida(partidaId, jogadorSaiuId);
         validarJogadorDaPartida(partidaId, jogadorEntrouId);
 
         EventoEstatistico eventoEstatistico = new Substituicao(
-                eventoId, torneioId, partidaId, jogadorSaiuId, jogadorEntrouId);
+                eventoId, torneioId, partidaId, jogadorSaiuId, jogadorEntrouId,
+                ordemParadaJogo, descricaoParadaJogo);
         eventoEstatisticoRepositorio.salvar(eventoEstatistico);
         return eventoEstatistico;
     }
@@ -105,7 +129,34 @@ public class EventoEstatisticoServico {
                                              TipoEventoEstatistico novoTipo) {
         EventoEstatistico eventoExistente = obterEventoDoScout(eventoId, torneioId, partidaId);
         validarRegistro(torneioId, partidaId, organizadorId, jogadorId);
-        return registrarEvento(eventoExistente.getId(), torneioId, partidaId, organizadorId, jogadorId, novoTipo);
+        eventoEstatisticoRepositorio.remover(eventoExistente.getId());
+        EventoEstatistico corrigido = registrarEvento(eventoExistente.getId(), torneioId, partidaId, organizadorId,
+                jogadorId, novoTipo);
+        reprocessarEmCascata(torneioId, partidaId, eventoExistente, corrigido);
+        return corrigido;
+    }
+
+    public EventoEstatistico corrigirSubstituicao(long eventoId,
+                                                  TorneioId torneioId,
+                                                  PartidaId partidaId,
+                                                  UsuarioId organizadorId,
+                                                  JogadorId jogadorSaiuId,
+                                                  JogadorId jogadorEntrouId,
+                                                  Integer ordemParadaJogo,
+                                                  String descricaoParadaJogo) {
+        EventoEstatistico eventoExistente = obterEventoDoScout(eventoId, torneioId, partidaId);
+        eventoEstatisticoRepositorio.remover(eventoExistente.getId());
+        EventoEstatistico corrigido = registrarSubstituicao(
+                eventoId,
+                torneioId,
+                partidaId,
+                organizadorId,
+                jogadorSaiuId,
+                jogadorEntrouId,
+                ordemParadaJogo,
+                descricaoParadaJogo);
+        reprocessarEmCascata(torneioId, partidaId, eventoExistente, corrigido);
+        return corrigido;
     }
 
     public void removerEvento(long eventoId,
@@ -113,8 +164,45 @@ public class EventoEstatisticoServico {
                               PartidaId partidaId,
                               UsuarioId organizadorId) {
         validarRegistroBase(torneioId, partidaId, organizadorId);
-        obterEventoDoScout(eventoId, torneioId, partidaId);
+        EventoEstatistico evento = obterEventoDoScout(eventoId, torneioId, partidaId);
         eventoEstatisticoRepositorio.remover(eventoId);
+        reprocessarEmCascata(torneioId, partidaId, evento, null);
+    }
+
+    public ControleDisciplinarJogador consultarControleDisciplinar(TorneioId torneioId,
+                                                                   PartidaId partidaId,
+                                                                   JogadorId jogadorId) {
+        Objects.requireNonNull(torneioId, "O torneio do controle disciplinar e obrigatorio.");
+        Objects.requireNonNull(partidaId, "A partida do controle disciplinar e obrigatoria.");
+        Objects.requireNonNull(jogadorId, "O jogador do controle disciplinar e obrigatorio.");
+
+        List<EventoEstatistico> eventosDoJogadorNoTorneio = eventoEstatisticoRepositorio
+                .listarPorJogadorNoTorneio(jogadorId, torneioId);
+        List<EventoEstatistico> eventosDaPartida = eventosDoJogadorNoTorneio.stream()
+                .filter(evento -> evento.getPartidaId().equals(partidaId))
+                .toList();
+        int amarelosNoTorneio = contarPorTipo(eventosDoJogadorNoTorneio, TipoEventoEstatistico.CARTAO_AMARELO);
+        int amarelosNaPartida = contarPorTipo(eventosDaPartida, TipoEventoEstatistico.CARTAO_AMARELO);
+        int vermelhosNoTorneio = contarPorTipo(eventosDoJogadorNoTorneio, TipoEventoEstatistico.CARTAO_VERMELHO);
+        boolean expulsoAutomaticamenteNaPartida = eventosDaPartida.stream()
+                .anyMatch(evento -> evento.getTipo() == TipoEventoEstatistico.CARTAO_VERMELHO && evento.isAutomatico());
+        boolean suspensaoAutomaticaPendente = amarelosNoTorneio > 0
+                && amarelosNoTorneio % LIMITE_SUSPENSAO_POR_ACUMULO == 0;
+        List<Long> eventosAutomaticos = eventosDoJogadorNoTorneio.stream()
+                .filter(EventoEstatistico::isAutomatico)
+                .map(EventoEstatistico::getId)
+                .toList();
+
+        return new ControleDisciplinarJogador(
+                torneioId,
+                partidaId,
+                jogadorId,
+                amarelosNoTorneio,
+                amarelosNaPartida,
+                vermelhosNoTorneio,
+                expulsoAutomaticamenteNaPartida,
+                suspensaoAutomaticaPendente,
+                eventosAutomaticos);
     }
 
     private void validarRegistro(TorneioId torneioId,
@@ -151,5 +239,71 @@ public class EventoEstatisticoServico {
             throw new RegraDeNegocioException("O evento informado nao pertence ao scout estatistico da partida.");
         }
         return evento;
+    }
+
+    private void reprocessarEmCascata(TorneioId torneioId,
+                                      PartidaId partidaId,
+                                      EventoEstatistico eventoAnterior,
+                                      EventoEstatistico eventoNovo) {
+        Set<JogadorId> jogadoresAfetados = new LinkedHashSet<>();
+        jogadoresAfetados.addAll(jogadoresAfetados(eventoAnterior));
+        jogadoresAfetados.addAll(jogadoresAfetados(eventoNovo));
+        for (JogadorId jogadorAfetado : jogadoresAfetados) {
+            reprocessarDisciplinaDoJogador(torneioId, partidaId, jogadorAfetado);
+        }
+    }
+
+    private Set<JogadorId> jogadoresAfetados(EventoEstatistico eventoEstatistico) {
+        if (eventoEstatistico == null) {
+            return Set.of();
+        }
+        Set<JogadorId> jogadores = new LinkedHashSet<>();
+        jogadores.add(eventoEstatistico.getJogadorId());
+        if (eventoEstatistico instanceof Substituicao substituicao) {
+            jogadores.add(substituicao.getJogadorSaiuId());
+            jogadores.add(substituicao.getJogadorEntrouId());
+        }
+        return jogadores;
+    }
+
+    private void reprocessarDisciplinaDoJogador(TorneioId torneioId, PartidaId partidaId, JogadorId jogadorId) {
+        List<EventoEstatistico> eventosDaPartida = eventoEstatisticoRepositorio.listarPorPartida(partidaId).stream()
+                .filter(evento -> evento.getJogadorId().equals(jogadorId))
+                .sorted(java.util.Comparator.comparingLong(EventoEstatistico::getId))
+                .toList();
+
+        List<EventoEstatistico> automaticos = eventosDaPartida.stream()
+                .filter(EventoEstatistico::isAutomatico)
+                .toList();
+        for (EventoEstatistico automatico : automaticos) {
+            eventoEstatisticoRepositorio.remover(automatico.getId());
+        }
+
+        List<EventoEstatistico> amarelos = eventosDaPartida.stream()
+                .filter(evento -> evento.getTipo() == TipoEventoEstatistico.CARTAO_AMARELO)
+                .toList();
+        boolean possuiVermelhoManual = eventosDaPartida.stream()
+                .anyMatch(evento -> evento.getTipo() == TipoEventoEstatistico.CARTAO_VERMELHO && !evento.isAutomatico());
+
+        if (amarelos.size() >= LIMITE_EXPULSAO_POR_AMARELOS && !possuiVermelhoManual) {
+            EventoEstatistico segundoAmarelo = amarelos.get(LIMITE_EXPULSAO_POR_AMARELOS - 1);
+            long eventoAutomaticoId = gerarIdEventoAutomatico(segundoAmarelo.getId());
+            eventoEstatisticoRepositorio.salvar(CartaoVermelho.automaticoPorSegundoAmarelo(
+                    eventoAutomaticoId,
+                    torneioId,
+                    partidaId,
+                    jogadorId,
+                    segundoAmarelo.getId()));
+        }
+    }
+
+    private int contarPorTipo(List<EventoEstatistico> eventos, TipoEventoEstatistico tipoEventoEstatistico) {
+        return (int) eventos.stream()
+                .filter(evento -> evento.getTipo() == tipoEventoEstatistico)
+                .count();
+    }
+
+    private long gerarIdEventoAutomatico(long eventoOrigemId) {
+        return eventoOrigemId * 1_000L + 901L;
     }
 }

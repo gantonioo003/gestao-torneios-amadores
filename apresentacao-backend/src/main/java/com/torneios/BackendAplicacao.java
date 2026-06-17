@@ -9,26 +9,68 @@ import org.springframework.context.annotation.Primary;
 
 import com.torneios.aplicacao.competicao.andamento.PartidaRepositorioAplicacao;
 import com.torneios.aplicacao.competicao.andamento.PartidaServicoAplicacao;
+import com.torneios.aplicacao.competicao.escalacao.EscalacaoServicoAplicacao;
+import com.torneios.aplicacao.competicao.resultado.ResultadoCompeticaoServicoAplicacao;
+import com.torneios.aplicacao.engajamento.chat.ChatPrivadoServicoAplicacao;
+import com.torneios.aplicacao.engajamento.desafio.DesafioServicoAplicacao;
+import com.torneios.aplicacao.engajamento.feed.FeedServicoAplicacao;
+import com.torneios.aplicacao.engajamento.palpite.PalpiteServicoAplicacao;
+import com.torneios.aplicacao.estatisticas.comparacao.ComparativoDesempenhoServicoAplicacao;
+import com.torneios.aplicacao.estatisticas.ranking.RankingServicoAplicacao;
+import com.torneios.aplicacao.estatisticas.sumula.SumulaEstatisticaServicoAplicacao;
+import com.torneios.aplicacao.participacao.acesso.AcessoPlataformaServicoAplicacao;
 import com.torneios.aplicacao.participacao.candidatura.SolicitacaoRepositorioAplicacao;
 import com.torneios.aplicacao.participacao.candidatura.SolicitacaoServicoAplicacao;
 import com.torneios.aplicacao.participacao.conta.ContaRepositorioAplicacao;
 import com.torneios.aplicacao.participacao.conta.ContaServicoAplicacao;
+import com.torneios.aplicacao.participacao.inscricao.InscricaoServicoAplicacao;
 import com.torneios.aplicacao.participacao.profissional.ProfissionalRepositorioAplicacao;
 import com.torneios.aplicacao.participacao.profissional.ProfissionalServicoAplicacao;
 import com.torneios.aplicacao.participacao.time.TimeRepositorioAplicacao;
 import com.torneios.aplicacao.participacao.time.TimeServicoAplicacao;
 import com.torneios.aplicacao.torneio.criacao.TorneioRepositorioAplicacao;
 import com.torneios.aplicacao.torneio.criacao.TorneioServicoAplicacao;
+import com.torneios.aplicacao.torneio.preparacao.PreparacaoTorneioServicoAplicacao;
 import com.torneios.dominio.compartilhado.evento.EventoBarramento;
 import com.torneios.dominio.competicao.chaveamento.ChaveamentoServico;
 import com.torneios.dominio.competicao.classificacao.ClassificacaoServico;
+import com.torneios.dominio.competicao.contestacao.ConsultaContestacaoResultado;
+import com.torneios.dominio.competicao.contestacao.ContestacaoResultadoRepositorio;
+import com.torneios.dominio.competicao.contestacao.ContestacaoResultadoServico;
+import com.torneios.dominio.competicao.escalacao.ConsultaSuporteEscalacao;
+import com.torneios.dominio.competicao.escalacao.EscalacaoRepositorio;
+import com.torneios.dominio.competicao.escalacao.EscalacaoServico;
 import com.torneios.dominio.competicao.geracao.GeradorPartidasServico;
 import com.torneios.dominio.competicao.partida.ConsultaCompeticaoTorneio;
 import com.torneios.dominio.competicao.partida.PartidaRepositorio;
 import com.torneios.dominio.competicao.partida.PartidaServico;
+import com.torneios.dominio.engajamento.chat.ChatPrivadoServico;
+import com.torneios.dominio.engajamento.chat.ConsultaSuporteChat;
+import com.torneios.dominio.engajamento.chat.ConversaPrivadaRepositorio;
+import com.torneios.dominio.engajamento.desafio.ConsultaSuporteDesafioAmistoso;
+import com.torneios.dominio.engajamento.desafio.DesafioAmistosoRepositorio;
+import com.torneios.dominio.engajamento.desafio.DesafioAmistosoServico;
+import com.torneios.dominio.engajamento.feed.ConsultaSuporteFeedTorneio;
+import com.torneios.dominio.engajamento.feed.FeedTorneioRepositorio;
+import com.torneios.dominio.engajamento.feed.FeedTorneioServico;
+import com.torneios.dominio.engajamento.palpite.ConsultaSuportePalpite;
+import com.torneios.dominio.engajamento.palpite.PalpiteRepositorio;
+import com.torneios.dominio.engajamento.palpite.PalpiteServico;
+import com.torneios.dominio.estatisticas.artilharia.ArtilhariaServico;
+import com.torneios.dominio.estatisticas.comparacao.ComparacaoDesempenhoServico;
+import com.torneios.dominio.estatisticas.comparacao.ComparativoDesempenhoRepositorio;
+import com.torneios.dominio.estatisticas.comparacao.ConsultaComparacaoDesempenho;
+import com.torneios.dominio.estatisticas.desempenho.EstatisticaServico;
+import com.torneios.dominio.estatisticas.evento.ConsultaEstatisticaCompeticao;
+import com.torneios.dominio.estatisticas.evento.EventoEstatisticoRepositorio;
+import com.torneios.dominio.estatisticas.evento.EventoEstatisticoServico;
+import com.torneios.dominio.estatisticas.nota.CalculadoraNotaEstatistica;
+import com.torneios.dominio.participacao.acesso.AcessoGerenciamentoTorneioServico;
 import com.torneios.dominio.participacao.acesso.AutenticacaoServico;
+import com.torneios.dominio.participacao.acesso.CatalogoTorneiosDisponiveis;
 import com.torneios.dominio.participacao.acesso.ContaUsuarioRepositorio;
 import com.torneios.dominio.participacao.acesso.ContaUsuarioServico;
+import com.torneios.dominio.participacao.acesso.VisualizacaoTorneioServico;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoRepositorio;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoServico;
 import com.torneios.dominio.participacao.responsavel.ConsultaUsuario;
@@ -47,7 +89,6 @@ import com.torneios.dominio.torneio.torneio.TorneioServico;
 @SpringBootApplication
 public class BackendAplicacao {
 
-    // ── Autenticação e acesso ──────────────────────────────────────
     @Bean
     public AutenticacaoServico autenticacaoServico() {
         return new AutenticacaoServico();
@@ -59,11 +100,28 @@ public class BackendAplicacao {
     }
 
     @Bean
-    public ContaServicoAplicacao contaServicoAplicacao(ContaRepositorioAplicacao repositorio) {
-        return new ContaServicoAplicacao(repositorio);
+    public ContaServicoAplicacao contaServicoAplicacao(ContaRepositorioAplicacao repositorio,
+                                                       ContaUsuarioServico contaUsuarioServico) {
+        return new ContaServicoAplicacao(repositorio, contaUsuarioServico);
     }
 
-    // ── Time ───────────────────────────────────────────────────────
+    @Bean
+    public VisualizacaoTorneioServico visualizacaoTorneioServico(CatalogoTorneiosDisponiveis catalogoTorneiosDisponiveis) {
+        return new VisualizacaoTorneioServico(catalogoTorneiosDisponiveis);
+    }
+
+    @Bean
+    public AcessoGerenciamentoTorneioServico acessoGerenciamentoTorneioServico(AutenticacaoServico autenticacaoServico) {
+        return new AcessoGerenciamentoTorneioServico(autenticacaoServico);
+    }
+
+    @Bean
+    public AcessoPlataformaServicoAplicacao acessoPlataformaServicoAplicacao(
+            VisualizacaoTorneioServico visualizacaoTorneioServico,
+            AcessoGerenciamentoTorneioServico acessoGerenciamentoTorneioServico) {
+        return new AcessoPlataformaServicoAplicacao(visualizacaoTorneioServico, acessoGerenciamentoTorneioServico);
+    }
+
     @Bean
     public ConsultaUsuario consultaUsuario(ContaUsuarioRepositorio repositorio) {
         return usuarioId -> repositorio.buscarPorId(usuarioId).isPresent();
@@ -71,15 +129,15 @@ public class BackendAplicacao {
 
     @Bean
     public ResponsavelTimeServico responsavelTimeServico(TimeRepositorio timeRepositorio,
-            ConsultaUsuario consultaUsuario) {
+                                                         ConsultaUsuario consultaUsuario) {
         return new ResponsavelTimeServico(timeRepositorio, consultaUsuario);
     }
 
     @Bean
     public TimeServico timeServico(TimeRepositorio timeRepositorio,
-            AutenticacaoServico autenticacaoServico,
-            ResponsavelTimeServico responsavelTimeServico,
-            ProfissionalEsportivoRepositorio profissionalRepositorio) {
+                                   AutenticacaoServico autenticacaoServico,
+                                   ResponsavelTimeServico responsavelTimeServico,
+                                   ProfissionalEsportivoRepositorio profissionalRepositorio) {
         return new TimeServico(timeRepositorio, autenticacaoServico, responsavelTimeServico, profissionalRepositorio);
     }
 
@@ -88,52 +146,52 @@ public class BackendAplicacao {
         return new TimeServicoAplicacao(repositorio);
     }
 
-    // ── Profissional ───────────────────────────────────────────────
     @Bean
-    public ProfissionalEsportivoServico profissionalServico(
-            ProfissionalEsportivoRepositorio repositorio,
-            AutenticacaoServico autenticacaoServico) {
+    public ProfissionalEsportivoServico profissionalServico(ProfissionalEsportivoRepositorio repositorio,
+                                                            AutenticacaoServico autenticacaoServico) {
         return new ProfissionalEsportivoServico(repositorio, autenticacaoServico);
     }
 
     @Bean
-    public ProfissionalServicoAplicacao profissionalServicoAplicacao(
-            ProfissionalRepositorioAplicacao repositorio) {
+    public ProfissionalServicoAplicacao profissionalServicoAplicacao(ProfissionalRepositorioAplicacao repositorio) {
         return new ProfissionalServicoAplicacao(repositorio);
     }
 
-    // ── Solicitação ────────────────────────────────────────────────
     @Bean
-    public SolicitacaoParticipacaoServico solicitacaoServico(
-            SolicitacaoParticipacaoRepositorio repositorio,
-            TimeRepositorio timeRepositorio,
-            AutenticacaoServico autenticacaoServico,
-            TorneioRepositorio torneioRepositorio) {
+    public SolicitacaoParticipacaoServico solicitacaoServico(SolicitacaoParticipacaoRepositorio repositorio,
+                                                             TimeRepositorio timeRepositorio,
+                                                             AutenticacaoServico autenticacaoServico,
+                                                             TorneioRepositorio torneioRepositorio) {
         return new SolicitacaoParticipacaoServico(repositorio, timeRepositorio,
-            autenticacaoServico, new com.torneios.dominio.participacao.solicitacao.PoliticaParticipacaoTorneio() {
-                @Override
-                public boolean aceitaSolicitacoes(com.torneios.dominio.compartilhado.torneio.TorneioId torneioId) {
-                    return torneioRepositorio.buscarPorId(torneioId)
-                        .map(t -> t.aceitaSolicitacoes())
-                        .orElse(false);
-                }
-                @Override
-                public boolean usuarioEhOrganizador(com.torneios.dominio.compartilhado.torneio.TorneioId torneioId,
-                        com.torneios.dominio.compartilhado.usuario.UsuarioId usuarioId) {
-                    return torneioRepositorio.buscarPorId(torneioId)
-                        .map(t -> t.getOrganizadorId().equals(usuarioId))
-                        .orElse(false);
-                }
-            });
+                autenticacaoServico, new com.torneios.dominio.participacao.solicitacao.PoliticaParticipacaoTorneio() {
+                    @Override
+                    public boolean aceitaSolicitacoes(com.torneios.dominio.compartilhado.torneio.TorneioId torneioId) {
+                        return torneioRepositorio.buscarPorId(torneioId)
+                                .map(t -> t.aceitaSolicitacoes())
+                                .orElse(false);
+                    }
+
+                    @Override
+                    public boolean usuarioEhOrganizador(
+                            com.torneios.dominio.compartilhado.torneio.TorneioId torneioId,
+                            com.torneios.dominio.compartilhado.usuario.UsuarioId usuarioId) {
+                        return torneioRepositorio.buscarPorId(torneioId)
+                                .map(t -> t.getOrganizadorId().equals(usuarioId))
+                                .orElse(false);
+                    }
+                });
     }
 
     @Bean
-    public SolicitacaoServicoAplicacao solicitacaoServicoAplicacao(
-            SolicitacaoRepositorioAplicacao repositorio) {
+    public SolicitacaoServicoAplicacao solicitacaoServicoAplicacao(SolicitacaoRepositorioAplicacao repositorio) {
         return new SolicitacaoServicoAplicacao(repositorio);
     }
 
-    // ── Torneio ────────────────────────────────────────────────────
+    @Bean
+    public InscricaoServicoAplicacao inscricaoServicoAplicacao(SolicitacaoParticipacaoServico solicitacaoParticipacaoServico) {
+        return new InscricaoServicoAplicacao(solicitacaoParticipacaoServico);
+    }
+
     @Bean
     @Primary
     public ConsultaElegibilidadeParticipanteTorneio consultaElegibilidadeComCache(
@@ -143,13 +201,14 @@ public class BackendAplicacao {
 
     @Bean
     public TorneioServico torneioServico(TorneioRepositorio torneioRepositorio,
-            ConsultaElegibilidadeParticipanteTorneio consultaElegibilidade,
-            EventoBarramento barramento) {
-        return new TorneioServico(torneioRepositorio,
-            new OrganizadorTorneioServico(),
-            new GeradorEstruturaCompeticaoServico(),
-            consultaElegibilidade,
-            barramento);
+                                         ConsultaElegibilidadeParticipanteTorneio consultaElegibilidade,
+                                         EventoBarramento barramento) {
+        return new TorneioServico(
+                torneioRepositorio,
+                new OrganizadorTorneioServico(),
+                new GeradorEstruturaCompeticaoServico(),
+                consultaElegibilidade,
+                barramento);
     }
 
     @Bean
@@ -157,22 +216,154 @@ public class BackendAplicacao {
         return new TorneioServicoAplicacao(repositorio);
     }
 
-    // ── Partida ────────────────────────────────────────────────────
     @Bean
     public PartidaServico partidaServico(PartidaRepositorio partidaRepositorio,
-            ConsultaCompeticaoTorneio consultaCompeticaoTorneio,
-            EventoBarramento barramento) {
-        return new PartidaServico(partidaRepositorio,
-            consultaCompeticaoTorneio,
-            new GeradorPartidasServico(),
-            new ClassificacaoServico(),
-            new ChaveamentoServico(),
-            barramento);
+                                         ConsultaCompeticaoTorneio consultaCompeticaoTorneio,
+                                         EventoBarramento barramento) {
+        return new PartidaServico(
+                partidaRepositorio,
+                consultaCompeticaoTorneio,
+                new GeradorPartidasServico(),
+                new ClassificacaoServico(),
+                new ChaveamentoServico(),
+                barramento);
     }
 
     @Bean
     public PartidaServicoAplicacao partidaServicoAplicacao(PartidaRepositorioAplicacao repositorio) {
         return new PartidaServicoAplicacao(repositorio);
+    }
+
+    @Bean
+    public EscalacaoServico escalacaoServico(EscalacaoRepositorio escalacaoRepositorio,
+                                             ConsultaSuporteEscalacao consultaSuporteEscalacao) {
+        return new EscalacaoServico(escalacaoRepositorio, consultaSuporteEscalacao);
+    }
+
+    @Bean
+    public EscalacaoServicoAplicacao escalacaoServicoAplicacao(EscalacaoServico escalacaoServico) {
+        return new EscalacaoServicoAplicacao(escalacaoServico);
+    }
+
+    @Bean
+    public PreparacaoTorneioServicoAplicacao preparacaoTorneioServicoAplicacao(TorneioServico torneioServico,
+                                                                               PartidaServico partidaServico) {
+        return new PreparacaoTorneioServicoAplicacao(torneioServico, partidaServico);
+    }
+
+    @Bean
+    public ContestacaoResultadoServico contestacaoResultadoServico(PartidaRepositorio partidaRepositorio,
+                                                                   ContestacaoResultadoRepositorio contestacaoResultadoRepositorio,
+                                                                   ConsultaCompeticaoTorneio consultaCompeticaoTorneio,
+                                                                   ConsultaContestacaoResultado consultaContestacaoResultado) {
+        return new ContestacaoResultadoServico(
+                partidaRepositorio,
+                contestacaoResultadoRepositorio,
+                consultaCompeticaoTorneio,
+                consultaContestacaoResultado);
+    }
+
+    @Bean
+    public ResultadoCompeticaoServicoAplicacao resultadoCompeticaoServicoAplicacao(PartidaServico partidaServico,
+                                                                                   ContestacaoResultadoServico contestacaoResultadoServico) {
+        return new ResultadoCompeticaoServicoAplicacao(partidaServico, contestacaoResultadoServico);
+    }
+
+    @Bean
+    public CalculadoraNotaEstatistica calculadoraNotaEstatistica() {
+        return new CalculadoraNotaEstatistica();
+    }
+
+    @Bean
+    public EventoEstatisticoServico eventoEstatisticoServico(EventoEstatisticoRepositorio eventoEstatisticoRepositorio,
+                                                             ConsultaEstatisticaCompeticao consultaEstatisticaCompeticao) {
+        return new EventoEstatisticoServico(eventoEstatisticoRepositorio, consultaEstatisticaCompeticao);
+    }
+
+    @Bean
+    public SumulaEstatisticaServicoAplicacao sumulaEstatisticaServicoAplicacao(
+            EventoEstatisticoServico eventoEstatisticoServico,
+            EventoEstatisticoRepositorio eventoEstatisticoRepositorio) {
+        return new SumulaEstatisticaServicoAplicacao(eventoEstatisticoServico, eventoEstatisticoRepositorio);
+    }
+
+    @Bean
+    public EstatisticaServico estatisticaServico(EventoEstatisticoRepositorio eventoEstatisticoRepositorio,
+                                                 CalculadoraNotaEstatistica calculadoraNotaEstatistica) {
+        return new EstatisticaServico(eventoEstatisticoRepositorio, calculadoraNotaEstatistica);
+    }
+
+    @Bean
+    public ArtilhariaServico artilhariaServico(EstatisticaServico estatisticaServico) {
+        return new ArtilhariaServico(estatisticaServico);
+    }
+
+    @Bean
+    public RankingServicoAplicacao rankingServicoAplicacao(EstatisticaServico estatisticaServico,
+                                                           ArtilhariaServico artilhariaServico) {
+        return new RankingServicoAplicacao(estatisticaServico, artilhariaServico);
+    }
+
+    @Bean
+    public ComparacaoDesempenhoServico comparacaoDesempenhoServico(
+            EventoEstatisticoRepositorio eventoEstatisticoRepositorio,
+            ComparativoDesempenhoRepositorio comparativoDesempenhoRepositorio,
+            ConsultaComparacaoDesempenho consultaComparacaoDesempenho) {
+        return new ComparacaoDesempenhoServico(
+                eventoEstatisticoRepositorio,
+                comparativoDesempenhoRepositorio,
+                consultaComparacaoDesempenho);
+    }
+
+    @Bean
+    public ComparativoDesempenhoServicoAplicacao comparativoDesempenhoServicoAplicacao(
+            ComparacaoDesempenhoServico comparacaoDesempenhoServico) {
+        return new ComparativoDesempenhoServicoAplicacao(comparacaoDesempenhoServico);
+    }
+
+    @Bean
+    public ChatPrivadoServico chatPrivadoServico(ConversaPrivadaRepositorio conversaPrivadaRepositorio,
+                                                 ConsultaSuporteChat consultaSuporteChat) {
+        return new ChatPrivadoServico(conversaPrivadaRepositorio, consultaSuporteChat);
+    }
+
+    @Bean
+    public ChatPrivadoServicoAplicacao chatPrivadoServicoAplicacao(ChatPrivadoServico chatPrivadoServico) {
+        return new ChatPrivadoServicoAplicacao(chatPrivadoServico);
+    }
+
+    @Bean
+    public FeedTorneioServico feedTorneioServico(FeedTorneioRepositorio feedTorneioRepositorio,
+                                                 ConsultaSuporteFeedTorneio consultaSuporteFeedTorneio) {
+        return new FeedTorneioServico(feedTorneioRepositorio, consultaSuporteFeedTorneio);
+    }
+
+    @Bean
+    public FeedServicoAplicacao feedServicoAplicacao(FeedTorneioServico feedTorneioServico) {
+        return new FeedServicoAplicacao(feedTorneioServico);
+    }
+
+    @Bean
+    public PalpiteServico palpiteServico(PalpiteRepositorio palpiteRepositorio,
+                                         ConsultaSuportePalpite consultaSuportePalpite) {
+        return new PalpiteServico(palpiteRepositorio, consultaSuportePalpite);
+    }
+
+    @Bean
+    public PalpiteServicoAplicacao palpiteServicoAplicacao(PalpiteServico palpiteServico,
+                                                           PalpiteRepositorio palpiteRepositorio) {
+        return new PalpiteServicoAplicacao(palpiteServico, palpiteRepositorio);
+    }
+
+    @Bean
+    public DesafioAmistosoServico desafioAmistosoServico(DesafioAmistosoRepositorio desafioAmistosoRepositorio,
+                                                         ConsultaSuporteDesafioAmistoso consultaSuporteDesafioAmistoso) {
+        return new DesafioAmistosoServico(desafioAmistosoRepositorio, consultaSuporteDesafioAmistoso);
+    }
+
+    @Bean
+    public DesafioServicoAplicacao desafioServicoAplicacao(DesafioAmistosoServico desafioAmistosoServico) {
+        return new DesafioServicoAplicacao(desafioAmistosoServico);
     }
 
     public static void main(String[] args) {

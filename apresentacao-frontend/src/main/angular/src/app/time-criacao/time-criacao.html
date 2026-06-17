@@ -1,25 +1,32 @@
-<nav class="navbar navbar-expand-lg">
-  <div class="container">
-    <a class="navbar-brand">Liga Amadora+</a>
-    <div class="navbar-nav ms-auto">
-      <a class="nav-link active" routerLink="/time/pesquisa">Times</a>
-      <a class="nav-link" routerLink="/profissional/pesquisa">Profissionais</a>
+<main class="page page-narrow">
+  <div class="hero-row">
+    <div>
+      <div class="eyebrow">Novo perfil de time</div>
+      <h1 class="page-title">Novo time</h1>
+      <p class="page-subtitle">O time vira uma identidade da plataforma, com elenco, torneios e historico.</p>
     </div>
+    <a class="btn btn-outline" routerLink="/time/pesquisa"><i class="bi bi-arrow-left"></i> Voltar</a>
   </div>
-</nav>
 
-<div class="container py-5" style="max-width: 600px">
-  <a class="text-muted text-decoration-none mb-3 d-inline-block" routerLink="/time/pesquisa">← Voltar</a>
-  <h2 class="fw-bold mb-4">Novo time</h2>
+  <section class="card panel-strong">
+    <div class="post-head" style="margin-bottom: 18px">
+      <div class="crest"><i class="bi bi-shield"></i></div>
+      <div>
+        <strong>Escudo do time</strong>
+        <div class="small muted">Imagem pode ser alterada depois.</div>
+      </div>
+      <button class="btn btn-outline" style="margin-left: auto">Alterar imagem</button>
+    </div>
 
-  <div class="card p-4">
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Nome do time *</label>
-      <input class="form-control" [(ngModel)]="nome" placeholder="Ex.: Unidos do Bairro">
+    <div class="form-grid">
+      <div class="field">
+        <label>Nome do time</label>
+        <input [(ngModel)]="nome" placeholder="Ex.: Unidos do Bairro">
+      </div>
+      <div class="grid grid-2">
+        <a class="btn" routerLink="/time/pesquisa">Cancelar</a>
+        <button class="btn btn-primary" (click)="criar()">Criar time</button>
+      </div>
     </div>
-    <div class="d-flex gap-2 mt-2">
-      <a class="btn btn-secondary" routerLink="/time/pesquisa">Cancelar</a>
-      <button class="btn btn-primary ms-auto" (click)="criar()">Criar time</button>
-    </div>
-  </div>
-</div>
+  </section>
+</main>

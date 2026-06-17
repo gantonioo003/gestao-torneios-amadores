@@ -1,29 +1,63 @@
-<div style="min-height:calc(100vh - 48px);display:flex;align-items:center;justify-content:center;background:var(--fundo)">
-  <div class="card" style="width:380px;padding:28px">
-    <div style="text-align:center;margin-bottom:20px">
-      <div style="font-size:20px;font-weight:700">Liga Amadora<span style="color:var(--verde)">+</span></div>
-    </div>
-    <div class="tabs">
-      <button class="tab" [class.a]="aba==='entrar'" (click)="aba='entrar'">Entrar</button>
-      <button class="tab" [class.a]="aba==='criar'" (click)="aba='criar'">Criar conta</button>
-    </div>
-    @if (aba==='entrar') {
-      <div class="fg"><label>E-mail</label><input type="email" [(ngModel)]="email" placeholder="seu@email.com"></div>
-      <div class="fg"><label>Senha</label><input type="password" [(ngModel)]="senha" placeholder="••••••••"></div>
-      <a href="#" style="font-size:11px;color:var(--muted);display:block;margin-bottom:12px">Esqueci minha senha</a>
-      <button class="btn btn-p btn-full" (click)="entrar()">Entrar</button>
-      <div style="text-align:center;font-size:11px;color:var(--muted);margin:12px 0">ou entre com</div>
-      <div class="g2" style="gap:8px">
-        <button class="btn btn-g btn-full">🌐 Google</button>
-        <button class="btn btn-g btn-full">📘 Facebook</button>
+<main class="page page-narrow">
+  <section class="card panel-strong" style="padding: 28px">
+    <div style="text-align: center; margin-bottom: 22px">
+      <div class="brand" style="justify-content: center">
+        <span class="brand-mark"><i class="bi bi-shield"></i></span>
+        <span>Liga Amadora<span class="brand-plus">+</span></span>
       </div>
-      <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--muted)">Não tem uma conta? <a style="color:var(--verde);cursor:pointer" (click)="aba='criar'">Criar conta</a></div>
+      <p class="muted" style="margin: 10px 0 0">Entre para gerenciar times, torneios, chats e estatisticas.</p>
+    </div>
+
+    <div class="tabs" style="margin-bottom: 18px">
+      <button class="tab" [class.active]="aba === 'entrar'" (click)="aba = 'entrar'">Entrar</button>
+      <button class="tab" [class.active]="aba === 'criar'" (click)="aba = 'criar'">Criar conta</button>
+    </div>
+
+    @if (aba === 'entrar') {
+      <div class="form-grid">
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" [(ngModel)]="email" placeholder="seu&#64;email.com">
+        </div>
+        <div class="field">
+          <label>Senha</label>
+          <input type="password" [(ngModel)]="senha" placeholder="********">
+        </div>
+        <button class="btn btn-primary btn-block" (click)="entrar()">Entrar</button>
+      </div>
     } @else {
-      <div class="fg"><label>Nome completo</label><input type="text" [(ngModel)]="nome" placeholder="Seu nome"></div>
-      <div class="fg"><label>E-mail</label><input type="email" [(ngModel)]="email" placeholder="seu@email.com"></div>
-      <div class="fg"><label>Senha</label><input type="password" [(ngModel)]="senha" placeholder="••••••••"></div>
-      <button class="btn btn-p btn-full" (click)="criar()">Criar conta</button>
-      <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--muted)">Já tem conta? <a style="color:var(--verde);cursor:pointer" (click)="aba='entrar'">Entrar</a></div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Nome completo</label>
+          <input [(ngModel)]="nome" placeholder="Lucas Lima">
+        </div>
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" [(ngModel)]="email" placeholder="lucas&#64;email.com">
+        </div>
+        <div class="field">
+          <label>Tipo de conta</label>
+          <select [(ngModel)]="tipo">
+            <option>Jogador</option>
+            <option>Organizador</option>
+            <option>Responsavel por time</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Senha</label>
+          <input type="password" [(ngModel)]="senha" placeholder="********">
+        </div>
+        <button class="btn btn-primary btn-block" (click)="criar()">Criar conta</button>
+      </div>
     }
-  </div>
-</div>
+
+    <div class="grid grid-2" style="margin-top: 16px">
+      <button class="btn"><i class="bi bi-google"></i> Google</button>
+      <button class="btn"><i class="bi bi-facebook"></i> Facebook</button>
+    </div>
+
+    <div style="text-align: center; margin-top: 16px">
+      <a class="small muted" routerLink="/">Voltar para home publica</a>
+    </div>
+  </section>
+</main>
