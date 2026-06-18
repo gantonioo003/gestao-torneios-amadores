@@ -15,7 +15,7 @@ type AbaTorneio = 'competicao' | 'estatisticas' | 'regras' | 'configuracao';
 })
 export class TorneioDetalhes implements OnInit {
   aba: AbaTorneio = 'competicao';
-  torneioId = 0;
+  torneioId = '';
   torneio: any = {};
   times: any[] = [];
   profissionais: any[] = [];
@@ -44,7 +44,7 @@ export class TorneioDetalhes implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.torneioId = Number(this.route.snapshot.paramMap.get('id'));
+    this.torneioId = this.route.snapshot.paramMap.get('id') ?? '';
     this.carregarTudo();
   }
 
