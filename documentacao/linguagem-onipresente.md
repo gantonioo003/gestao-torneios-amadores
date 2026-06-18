@@ -3,7 +3,7 @@
 ## Termos principais do dominio
 
 ### Usuario
-Pessoa que utiliza o sistema com conta cadastrada. Para criar torneios, gerenciar times e participar de fluxos protegidos, o usuario precisa estar autenticado.
+Pessoa que utiliza o sistema com conta cadastrada. Para criar torneios, administrar times e participar de fluxos protegidos, o usuario precisa estar autenticado e possuir o tipo de conta adequado.
 
 ### Visitante
 Pessoa sem login que pode acessar areas publicas da plataforma e registrar palpites identificados por sessao ou outro identificador tecnico.
@@ -12,13 +12,16 @@ Pessoa sem login que pode acessar areas publicas da plataforma e registrar palpi
 Cadastro que identifica o usuario na plataforma, contendo nome, email, senha e tipo de conta. Pode ser criada, editada e excluida pelo proprio usuario.
 
 ### Tipo de conta
-Classificacao principal da conta dentro da plataforma. Pode ser jogador ou organizador.
+Classificacao principal da conta dentro da plataforma. Pode ser jogador, organizador, treinador ou auxiliar.
 
 ### Conta de jogador
 Conta usada por atleta que deseja acompanhar torneios, interagir no feed, registrar palpites, consultar estatisticas e buscar times para jogar.
 
 ### Conta de organizador
-Conta usada por responsavel por time ou torneio para criar competicoes, gerenciar times, organizar participantes, registrar resultados e publicar comunicados.
+Conta dedicada a criar competicoes, organizar participantes, conduzir o andamento do torneio, registrar resultados e publicar comunicados oficiais.
+
+### Conta de treinador
+Conta responsavel por criar e administrar times, seus elencos e candidaturas em torneios.
 
 ### Login
 Processo de autenticacao realizado com email e senha validos para liberar o acesso do usuario as funcionalidades protegidas.

@@ -59,6 +59,16 @@ Feature: Gerenciar identidade, conta, autenticacao, perfil e permissoes
     When o sistema verificar a permissao para gerenciar times
     Then o sistema deve impedir a operacao
 
+  Scenario: Permitir gestao de times apenas ao treinador
+    Given que existe uma conta de treinador cadastrada
+    When o sistema verificar a permissao para gerenciar times
+    Then a conta deve possuir permissao para gerenciar times
+
+  Scenario: Impedir organizador de gerenciar times
+    Given que existe uma conta organizadora cadastrada
+    When o sistema verificar a permissao para gerenciar times
+    Then o sistema deve impedir a operacao
+
   Scenario: Salvar torneio no perfil da conta
     Given que existe uma conta cadastrada para o usuario
     When o usuario salvar um torneio para acompanhar depois

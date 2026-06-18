@@ -52,4 +52,14 @@ record PartidaJpaResumo(PartidaJpa jpa) implements PartidaResumo {
     public boolean isEncerrada() {
         return jpa.encerrada;
     }
+
+    @Override
+    public Integer getGolsMandante() {
+        return jpa.golsMandante;
+    }
+
+    @Override
+    public Integer getGolsVisitante() {
+        return jpa.golsVisitante;
+    }
 }

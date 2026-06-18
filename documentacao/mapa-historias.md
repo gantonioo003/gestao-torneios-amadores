@@ -3,7 +3,8 @@
 ## 1. Conta, autenticacao e engajamento
 - Como visitante, quero criar uma conta para acessar as funcionalidades protegidas da plataforma.
 - Como jogador, quero criar uma conta de jogador para buscar times, acompanhar competicoes e interagir na plataforma.
-- Como organizador, quero criar uma conta de organizador para gerenciar times ou torneios.
+- Como organizador, quero criar uma conta de organizador para configurar e conduzir torneios.
+- Como treinador, quero criar e administrar meus times e elencos.
 - Como usuario cadastrado, quero fazer login com email e senha para entrar no sistema.
 - Como usuario autenticado, quero editar meus dados cadastrais para manter minha conta atualizada.
 - Como usuario autenticado, quero excluir minha conta caso nao queira mais utilizar a plataforma.

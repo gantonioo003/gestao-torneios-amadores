@@ -155,17 +155,13 @@ public class BackendAplicacao {
     public TimeServico timeServico(TimeRepositorio timeRepositorio,
                                    AutenticacaoServico autenticacaoServico,
                                    ResponsavelTimeServico responsavelTimeServico,
-                                   ProfissionalEsportivoRepositorio profissionalRepositorio,
-                                   TorneioRepositorio torneioRepositorio) {
+                                   ProfissionalEsportivoRepositorio profissionalRepositorio) {
         return new TimeServico(
                 timeRepositorio,
                 autenticacaoServico,
                 responsavelTimeServico,
                 profissionalRepositorio,
-                (time, usuarioId) -> time.getResponsavel().equals(usuarioId)
-                        || torneioRepositorio.listarPorOrganizador(usuarioId).stream()
-                                .anyMatch(torneio -> torneio.possuiParticipante(time.getId())
-                                        || time.estaVinculadoAoTorneio(torneio.getId())));
+                (time, usuarioId) -> time.getResponsavel().equals(usuarioId));
     }
 
     @Bean

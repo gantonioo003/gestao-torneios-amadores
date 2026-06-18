@@ -198,7 +198,7 @@ public class TimeServico {
         Time time = obterTime(timeId);
         if (!politicaGestaoElenco.podeGerenciar(time, usuarioId)) {
             throw new OperacaoNaoPermitidaException(
-                    "Apenas o responsavel do time ou o organizador de um torneio vinculado pode gerenciar o elenco.");
+                    "Apenas o treinador responsavel pelo time pode gerenciar o elenco.");
         }
         return time;
     }

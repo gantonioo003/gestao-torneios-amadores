@@ -32,11 +32,11 @@ RN14. O usuario pode editar os dados cadastrais da propria conta.
 
 RN15. O usuario pode excluir a propria conta, removendo seu acesso ao sistema.
 
-RN16. A conta de usuario pode ser do tipo jogador ou organizador.
+RN16. A conta de usuario pode representar jogador, treinador, membro de comissao ou organizador.
 
 RN17. Contas do tipo jogador podem usar a plataforma para buscar times e acompanhar oportunidades de participacao.
 
-RN18. Contas do tipo organizador podem representar responsaveis por times ou organizadores de torneios.
+RN18. Contas do tipo organizador gerenciam exclusivamente torneios; somente contas de treinador podem criar e administrar times e elencos.
 
 RN19. Apenas usuarios autenticados podem solicitar conversas privadas no chat.
 
@@ -58,7 +58,7 @@ RN25. O sistema deve impedir nova solicitacao quando ja existir conversa solicit
 
 RN26. Apenas usuarios autenticados podem gerenciar inscricoes de participacao em torneios.
 
-RN27. Para enviar candidatura de participacao em um torneio, o usuario deve possuir ao menos um time previamente cadastrado no sistema.
+RN27. Para enviar candidatura de participacao em um torneio, o treinador deve possuir ao menos um time previamente cadastrado no sistema.
 
 RN28. Um torneio pode ser criado ja com todos os times participantes definidos ou com vagas abertas para solicitacoes de participacao.
 
@@ -76,7 +76,7 @@ RN33. Um time so pode participar de um torneio se estiver devidamente inscrito o
 
 ## Times, elenco e desempenho
 
-RN34. Apenas usuario autenticado responsavel pelo time pode cadastrar, editar, excluir ou consultar informacoes protegidas desse time.
+RN34. Apenas a conta de treinador responsavel pelo time pode cadastrar, editar, excluir ou consultar informacoes protegidas desse time.
 
 RN35. Um time vinculado a torneio nao pode ser excluido enquanto o vinculo impedir a remocao segura.
 
@@ -144,7 +144,7 @@ RN64. As partidas do torneio devem respeitar a quantidade de jogadores definida 
 
 RN65. O uso de desafios e amistosos e opcional e nao impede o funcionamento dos torneios oficiais.
 
-RN66. Apenas usuario autenticado responsavel por um time pode propor desafio amistoso para outro time.
+RN66. Apenas o treinador responsavel por um time pode propor desafio amistoso para outro time.
 
 RN67. Um time nao pode desafiar ele mesmo.
 

@@ -13,7 +13,7 @@ public enum TipoContaUsuario {
     }
 
     public boolean podeGerenciarTimes() {
-        return this == ORGANIZADOR || this == TREINADOR || this == AUXILIAR_TECNICO;
+        return this == TREINADOR;
     }
 
     public boolean possuiPerfilProfissional() {

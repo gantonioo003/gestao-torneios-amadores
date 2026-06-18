@@ -58,10 +58,17 @@
           <span class="stat-icon"><i class="bi bi-trophy"></i></span>
           <span><strong>{{ meusTorneios.length }}</strong><small>torneios organizados</small></span>
         </div>
-        <div class="stat-card">
-          <span class="stat-icon"><i class="bi bi-shield-check"></i></span>
-          <span><strong>{{ meusTimes.length }}</strong><small>times administrados</small></span>
-        </div>
+        @if (conta.podeGerenciarTimes) {
+          <div class="stat-card">
+            <span class="stat-icon"><i class="bi bi-shield-check"></i></span>
+            <span><strong>{{ meusTimes.length }}</strong><small>times administrados</small></span>
+          </div>
+        } @else {
+          <div class="stat-card">
+            <span class="stat-icon"><i class="bi bi-people"></i></span>
+            <span><strong>{{ atividade?.torneiosParticipando?.length || 0 }}</strong><small>torneios disputados</small></span>
+          </div>
+        }
         <div class="stat-card">
           <span class="stat-icon"><i class="bi bi-bookmark"></i></span>
           <span><strong>{{ atividade?.torneiosSalvos?.length || 0 }}</strong><small>torneios salvos</small></span>
@@ -505,7 +512,7 @@
                   <i class="bi bi-chevron-down"></i>
                 </summary>
                 <div class="settings-disclosure-content help-content">
-                  Organizadores podem criar torneios. Contas autorizadas a gerenciar times podem cadastrar equipes, profissionais e elencos.
+                  Organizadores gerenciam torneios. Treinadores criam times e administram seus elencos.
                 </div>
               </details>
 

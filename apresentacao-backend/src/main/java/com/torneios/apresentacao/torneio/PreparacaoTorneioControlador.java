@@ -85,6 +85,14 @@ class PreparacaoTorneioControlador {
         return preparacaoTorneioServicoAplicacao.fecharSolicitacoes(id, exigirOrganizador(sessao));
     }
 
+    @RequestMapping(method = POST, path = "{id}/renomear")
+    PreparacaoTorneioServicoAplicacao.TorneioResumoAplicacao renomear(@PathVariable long id,
+                                                                      @RequestBody RenomearTorneioDto dto,
+                                                                      HttpSession sessao) {
+        return preparacaoTorneioServicoAplicacao.renomearTorneio(
+                id, exigirOrganizador(sessao), dto.nome);
+    }
+
     @RequestMapping(method = POST, path = "{id}/gerar-estrutura-sorteio")
     PreparacaoTorneioServicoAplicacao.EstruturaCompeticaoResumo gerarEstruturaPorSorteio(@PathVariable long id,
                                                                                           @RequestParam long organizadorId,
@@ -152,5 +160,9 @@ class PreparacaoTorneioControlador {
         public String formatoEquipe;
         public long organizadorId;
         public boolean aceitaSolicitacoes;
+    }
+
+    static class RenomearTorneioDto {
+        public String nome;
     }
 }

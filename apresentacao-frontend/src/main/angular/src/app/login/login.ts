@@ -37,11 +37,11 @@ export class Login implements AfterViewInit {
 
   readonly tiposConta = [
     { valor: 'JOGADOR', nome: 'Jogador', descricao: 'Tenha sua página, acompanhe times e oportunidades.' },
-    { valor: 'TREINADOR', nome: 'Técnico / treinador', descricao: 'Crie e administre times, elenco e comissão.' },
-    { valor: 'AUXILIAR_TECNICO', nome: 'Auxiliar técnico', descricao: 'Ajude na gestão de times e profissionais.' },
+    { valor: 'TREINADOR', nome: 'Técnico / treinador', descricao: 'Crie e administre seus times, elenco e comissão.' },
+    { valor: 'AUXILIAR_TECNICO', nome: 'Auxiliar técnico', descricao: 'Tenha seu perfil profissional e participe de elencos.' },
     { valor: 'PREPARADOR_FISICO', nome: 'Preparador físico', descricao: 'Mantenha seu perfil profissional na plataforma.' },
     { valor: 'MEDICO', nome: 'Médico', descricao: 'Participe como profissional da comissão técnica.' },
-    { valor: 'ORGANIZADOR', nome: 'Organizador', descricao: 'Crie torneios e também possa administrar times.' }
+    { valor: 'ORGANIZADOR', nome: 'Organizador', descricao: 'Crie, configure e conduza torneios do início ao encerramento.' }
   ];
 
   constructor(

@@ -97,6 +97,18 @@ public class TorneioServico {
         torneioRepositorio.salvar(torneio);
     }
 
+    public void renomearTorneio(TorneioId torneioId, UsuarioId organizadorId, String novoNome) {
+        Torneio torneio = obterTorneio(torneioId);
+        organizadorTorneioServico.validarPermissao(torneio, organizadorId);
+        if (torneio.getStatus() == com.torneios.dominio.compartilhado.enumeracao.StatusTorneio.INICIADO
+                || torneio.getStatus() == com.torneios.dominio.compartilhado.enumeracao.StatusTorneio.FINALIZADO) {
+            throw new com.torneios.dominio.compartilhado.excecao.OperacaoNaoPermitidaException(
+                    "O nome do torneio nao pode ser alterado depois do inicio.");
+        }
+        torneio.renomear(novoNome);
+        torneioRepositorio.salvar(torneio);
+    }
+
     public EstruturaCompeticao gerarEstruturaCompeticao(TorneioId torneioId, UsuarioId organizadorId) {
         Torneio torneio = obterTorneio(torneioId);
         organizadorTorneioServico.validarPermissao(torneio, organizadorId);

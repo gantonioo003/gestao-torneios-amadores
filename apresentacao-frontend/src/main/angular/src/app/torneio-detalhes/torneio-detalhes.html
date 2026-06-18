@@ -1,99 +1,147 @@
-<main class="page">
-  <div class="hero-row">
-    <div>
-      <div class="eyebrow">Torneio e inscricoes</div>
-      <h1 class="page-title">{{ torneio.nome || 'Torneio' }}</h1>
-      <p class="page-subtitle">Central publica do torneio com participantes, partidas, ranking e regras da competicao.</p>
-    </div>
-    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
-      @if (usuario()) {
-        <button class="btn btn-outline" [disabled]="salvandoTorneio" (click)="alternarTorneioSalvo()">
-          <i class="bi" [class.bi-bookmark-fill]="torneioEstaSalvo()" [class.bi-bookmark]="!torneioEstaSalvo()"></i>
-          {{ torneioEstaSalvo() ? 'Salvo' : 'Salvar torneio' }}
+<main class="page tournament-page">
+  @if (carregando) {
+    <section class="empty-state">Carregando torneio...</section>
+  } @else {
+    <header class="tournament-hero">
+      <div class="tournament-emblem"><i class="bi bi-trophy"></i></div>
+      <div class="tournament-identity">
+        <div class="eyebrow">Competicao · Edicao {{ torneio.edicaoAtual || 1 }}</div>
+        <h1>{{ torneio.nome || 'Torneio' }}</h1>
+        <div class="tournament-meta">
+          <span><i class="bi bi-diagram-3"></i> {{ formatoLabel() }}</span>
+          <span><i class="bi bi-people"></i> {{ formatoEquipeLabel() }}</span>
+          <span><i class="bi bi-shield-check"></i> {{ participantes.length }} participante(s)</span>
+        </div>
+      </div>
+      <div class="tournament-actions">
+        <span class="status tournament-status" [class.status-green]="torneio.status === 'INICIADO'" [class.status-warn]="torneio.status === 'CONFIGURADO'">
+          {{ statusLabel() }}
+        </span>
+        @if (usuario()) {
+          <button class="btn hero-action" [disabled]="salvandoTorneio" (click)="alternarTorneioSalvo()">
+            <i class="bi" [class.bi-bookmark-fill]="torneioEstaSalvo()" [class.bi-bookmark]="!torneioEstaSalvo()"></i>
+            {{ torneioEstaSalvo() ? 'Salvo' : 'Acompanhar' }}
+          </button>
+        }
+      </div>
+    </header>
+
+    <nav class="tournament-tabs" aria-label="Areas do torneio">
+      <button [class.active]="aba === 'competicao'" (click)="abrirAba('competicao')">
+        <i class="bi" [class.bi-table]="usaClassificacao" [class.bi-diagram-3]="!usaClassificacao"></i>
+        {{ usaClassificacao ? 'Classificacao' : 'Chaveamento' }}
+      </button>
+      <button [class.active]="aba === 'estatisticas'" (click)="abrirAba('estatisticas')">
+        <i class="bi bi-bar-chart"></i> Estatisticas
+      </button>
+      <button [class.active]="aba === 'regras'" (click)="abrirAba('regras')">
+        <i class="bi bi-journal-text"></i> Regras
+      </button>
+      @if (podeGerenciar()) {
+        <button class="configuration-tab" [class.active]="aba === 'configuracao'" (click)="abrirAba('configuracao')">
+          <i class="bi bi-sliders"></i> Configurar torneio
         </button>
       }
-      <span class="status status-green">{{ statusLabel() }}</span>
-    </div>
-  </div>
+    </nav>
 
-  <div class="grid layout-2-1">
-    <section class="card panel-strong">
-      <div class="tabs" style="margin-bottom: 14px">
-        <button class="tab" [class.active]="aba === 'participantes'" (click)="aba = 'participantes'">Participantes</button>
-        <button class="tab" [class.active]="aba === 'ranking'" (click)="aba = 'ranking'">Ranking</button>
-        <button class="tab" [class.active]="aba === 'partidas'" (click)="aba = 'partidas'">Partidas</button>
-        <button class="tab" [class.active]="aba === 'regras'" (click)="aba = 'regras'">Regras</button>
-      </div>
+    @if (mensagem) {
+      <div class="tournament-message success"><i class="bi bi-check-circle"></i> {{ mensagem }}</div>
+    }
+    @if (erro) {
+      <div class="tournament-message error"><i class="bi bi-exclamation-circle"></i> {{ erro }}</div>
+    }
 
-      @if (aba === 'participantes') {
-        <div class="grid" [class.grid-2]="podeGerenciar()">
-          <div>
-            <h2 class="section-title">Participantes confirmados</h2>
-            @for (time of confirmados; track time) {
-              <div class="mini-row">
-                <span>{{ time }}</span>
-                <span class="status status-green"><i class="bi bi-check-circle"></i></span>
+    @if (aba !== 'configuracao') {
+      <div class="tournament-workspace">
+        <aside class="match-sidebar">
+          <section class="card featured-match">
+            <div class="sidebar-heading">
+              <div><div class="eyebrow">Destaque</div><h2>Proxima partida</h2></div>
+              <i class="bi bi-stars"></i>
+            </div>
+
+            @if (partidaDestaque; as destaque) {
+              <div class="featured-stage">{{ destaque.etapa || 'Proxima rodada' }}</div>
+              <div class="featured-versus">
+                <span><i class="bi bi-shield"></i><strong>{{ nomeTime(destaque.mandanteId) }}</strong></span>
+                <b>{{ placarPartida(destaque) }}</b>
+                <span><i class="bi bi-shield"></i><strong>{{ nomeTime(destaque.visitanteId) }}</strong></span>
+              </div>
+              <a class="btn btn-outline btn-block" [routerLink]="['/partida', destaque.id]">Abrir partida</a>
+            } @else {
+              <div class="sidebar-empty">
+                <i class="bi bi-calendar2-plus"></i>
+                <strong>Partidas ainda nao geradas</strong>
+                <small>O calendario aparece quando a estrutura for preparada.</small>
               </div>
             }
-          </div>
+          </section>
 
-          @if (podeGerenciar()) {
-            <div>
-              <h2 class="section-title">Solicitacoes pendentes</h2>
-              @for (time of pendentes; track time) {
-                <div class="mini-row">
-                  <span>{{ time }}</span>
-                  <div style="display: flex; gap: 6px">
-                    <button class="btn btn-sm btn-outline" (click)="aprovar(time)">Aprovar</button>
-                    <button class="btn btn-sm btn-danger" (click)="rejeitar(time)">Rejeitar</button>
-                  </div>
-                </div>
-              }
-              <button class="btn btn-danger btn-block" style="margin-top: 12px">Remover antes do inicio</button>
+          <section class="card match-list-card">
+            <div class="sidebar-heading">
+              <div><div class="eyebrow">Calendario</div><h2>Partidas</h2></div>
+              <span>{{ partidas.length }}</span>
             </div>
-          }
-        </div>
-      }
 
-      @if (aba === 'ranking') {
-        <div class="tournament-ranking">
-          <div class="ranking-intro">
-            <div>
-              <div class="eyebrow">Desempenho do torneio</div>
-              <h2>Classificacao e destaques</h2>
-              <p>Esta area e publica e pode ser acompanhada mesmo sem entrar em uma conta.</p>
-            </div>
-            <span class="status status-green"><i class="bi bi-globe2"></i> Publico</span>
-          </div>
-
-          @if (carregandoRanking) {
-            <div class="empty-state">Carregando ranking do torneio...</div>
-          } @else {
-            <section class="ranking-block">
-              <div class="ranking-block-heading">
-                <div>
-                  <div class="eyebrow">Times</div>
-                  <h3>Classificacao</h3>
-                </div>
-                <i class="bi bi-list-ol"></i>
+            @if (partidas.length) {
+              <div class="match-list">
+                @for (partida of partidas; track partida.id) {
+                  <a class="match-list-row" [routerLink]="['/partida', partida.id]">
+                    <small>{{ partida.etapa || 'Rodada' }}</small>
+                    <span><strong>{{ nomeTime(partida.mandanteId) }}</strong><b>{{ placarPartida(partida) }}</b><strong>{{ nomeTime(partida.visitanteId) }}</strong></span>
+                    <em [class.finished]="partida.encerrada">{{ partida.encerrada ? 'Finalizada' : 'Pendente' }}</em>
+                  </a>
+                }
               </div>
+            } @else {
+              <p class="muted small">Nenhuma partida cadastrada nesta edicao.</p>
+            }
+          </section>
 
+          @if (usuario()?.tipo === 'TREINADOR' && torneio.aceitaSolicitacoes && meusTimes.length) {
+            <section class="card participation-card">
+              <div class="eyebrow">Inscricoes abertas</div>
+              <h2>Inscrever meu time</h2>
+              <select [(ngModel)]="timeInscricaoSelecionado">
+                <option [ngValue]="undefined">Escolha um time</option>
+                @for (time of meusTimes; track time.id) {
+                  <option [ngValue]="time.id">{{ time.nome }}</option>
+                }
+              </select>
+              <button class="btn btn-primary btn-block" [disabled]="!!processando" (click)="solicitarParticipacao()">
+                Enviar solicitacao
+              </button>
+            </section>
+          }
+        </aside>
+
+        <section class="card panel-strong tournament-main">
+          @if (aba === 'competicao') {
+            <div class="content-heading">
+              <div>
+                <div class="eyebrow">{{ formatoLabel() }}</div>
+                <h2>{{ usaClassificacao ? 'Classificacao da edicao' : 'Caminho ate o titulo' }}</h2>
+                <p>{{ usaClassificacao ? 'Tabela atualizada pelos resultados oficiais das partidas.' : 'Confrontos organizados por fase eliminatoria.' }}</p>
+              </div>
+              <span class="status status-green"><i class="bi bi-globe2"></i> Publico</span>
+            </div>
+
+            @if (usaClassificacao) {
               @if (classificacao.length) {
-                <div class="table-wrap">
-                  <table class="table">
+                <div class="standings-table-wrap">
+                  <table class="standings-table">
                     <thead>
-                      <tr><th>#</th><th>Time</th><th>V</th><th>E</th><th>D</th><th>GP</th><th>GC</th><th>SG</th><th>Pts</th></tr>
+                      <tr><th>#</th><th>Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>SG</th><th>Pts</th></tr>
                     </thead>
                     <tbody>
                       @for (linha of classificacao; track linha.timeId; let posicao = $index) {
                         <tr>
-                          <td>{{ posicao + 1 }}</td>
-                          <td><strong>{{ nomeTime(linha.timeId) }}</strong></td>
+                          <td><span class="position" [class.leader]="posicao < 2">{{ posicao + 1 }}</span></td>
+                          <td><a [routerLink]="['/time', linha.timeId, 'detalhes']"><i class="bi bi-shield"></i><strong>{{ nomeTime(linha.timeId) }}</strong></a></td>
+                          <td>{{ linha.vitorias + linha.empates + linha.derrotas }}</td>
                           <td>{{ linha.vitorias }}</td>
                           <td>{{ linha.empates }}</td>
                           <td>{{ linha.derrotas }}</td>
-                          <td>{{ linha.golsPro }}</td>
-                          <td>{{ linha.golsContra }}</td>
                           <td>{{ linha.saldoGols }}</td>
                           <td><strong>{{ linha.pontos }}</strong></td>
                         </tr>
@@ -102,105 +150,227 @@
                   </table>
                 </div>
               } @else {
-                <div class="ranking-empty">A classificacao aparecera quando os primeiros resultados forem registrados.</div>
-              }
-            </section>
-
-            <div class="ranking-columns">
-              <section class="ranking-block">
-                <div class="ranking-block-heading">
-                  <div>
-                    <div class="eyebrow">Gols</div>
-                    <h3>Artilharia</h3>
-                  </div>
-                  <i class="bi bi-bullseye"></i>
+                <div class="competition-empty">
+                  <i class="bi bi-table"></i>
+                  <strong>A tabela comeca com os primeiros resultados</strong>
+                  <p>Os participantes e partidas ja podem ser acompanhados pela lateral.</p>
                 </div>
+              }
+            }
 
+            @if (usaChaveamento) {
+              <div class="bracket-section" [class.after-standings]="usaClassificacao">
+                @if (usaClassificacao) {
+                  <div class="subsection-heading"><div><div class="eyebrow">Fase eliminatoria</div><h3>Chaveamento</h3></div></div>
+                }
+                <div class="bracket-board">
+                  @for (fase of partidasPorEtapa; track fase.nome) {
+                    <section class="bracket-phase">
+                      <h3>{{ fase.nome }}</h3>
+                      @if (fase.partidas.length) {
+                        @for (partida of fase.partidas; track partida.id) {
+                          <a class="bracket-match" [routerLink]="['/partida', partida.id]">
+                            <span><i class="bi bi-shield"></i>{{ nomeTime(partida.mandanteId) }}<b>{{ partida.golsMandante ?? '-' }}</b></span>
+                            <span><i class="bi bi-shield"></i>{{ nomeTime(partida.visitanteId) }}<b>{{ partida.golsVisitante ?? '-' }}</b></span>
+                          </a>
+                        }
+                      } @else {
+                        <div class="bracket-placeholder">Confrontos aguardando preparacao</div>
+                      }
+                    </section>
+                  }
+                </div>
+              </div>
+            }
+          }
+
+          @if (aba === 'estatisticas') {
+            <div class="content-heading">
+              <div>
+                <div class="eyebrow">Desempenho individual</div>
+                <h2>Estatisticas do torneio</h2>
+                <p>Artilharia, assistencias e numeros consolidados desta edicao.</p>
+              </div>
+            </div>
+
+            <div class="statistics-overview">
+              <div><span><i class="bi bi-controller"></i></span><strong>{{ partidas.length }}</strong><small>partidas</small></div>
+              <div><span><i class="bi bi-check2-circle"></i></span><strong>{{ partidasFinalizadas }}</strong><small>resultados oficiais</small></div>
+              <div><span><i class="bi bi-people"></i></span><strong>{{ participantes.length }}</strong><small>participantes</small></div>
+            </div>
+
+            <div class="statistics-columns">
+              <section class="stat-ranking">
+                <div class="stat-ranking-head"><span><i class="bi bi-bullseye"></i></span><div><div class="eyebrow">Gols</div><h3>Artilharia</h3></div></div>
                 @if (artilharia.length) {
                   @for (jogador of artilharia; track jogador.jogadorId; let posicao = $index) {
-                    <a class="ranking-row" [routerLink]="['/profissional', jogador.jogadorId, 'perfil']">
-                      <span>{{ posicao + 1 }}</span>
-                      <strong>{{ nomeProfissional(jogador.jogadorId) }}</strong>
-                      <b>{{ jogador.gols }}</b>
+                    <a [routerLink]="['/profissional', jogador.jogadorId, 'perfil']">
+                      <span>{{ posicao + 1 }}</span><strong>{{ nomeProfissional(jogador.jogadorId) }}</strong><b>{{ jogador.gols }}</b>
                     </a>
                   }
                 } @else {
-                  <div class="ranking-empty">Ainda nao ha gols registrados neste torneio.</div>
+                  <div class="stat-empty">Nenhum gol registrado.</div>
                 }
               </section>
 
-              <section class="ranking-block">
-                <div class="ranking-block-heading">
-                  <div>
-                    <div class="eyebrow">Criacao de jogadas</div>
-                    <h3>Assistencias</h3>
-                  </div>
-                  <i class="bi bi-diagram-3"></i>
-                </div>
-
+              <section class="stat-ranking">
+                <div class="stat-ranking-head"><span><i class="bi bi-diagram-3"></i></span><div><div class="eyebrow">Criacao</div><h3>Assistencias</h3></div></div>
                 @if (assistencias.length) {
                   @for (jogador of assistencias; track jogador.jogadorId; let posicao = $index) {
-                    <a class="ranking-row" [routerLink]="['/profissional', jogador.jogadorId, 'perfil']">
-                      <span>{{ posicao + 1 }}</span>
-                      <strong>{{ nomeProfissional(jogador.jogadorId) }}</strong>
-                      <b>{{ jogador.assistencias }}</b>
+                    <a [routerLink]="['/profissional', jogador.jogadorId, 'perfil']">
+                      <span>{{ posicao + 1 }}</span><strong>{{ nomeProfissional(jogador.jogadorId) }}</strong><b>{{ jogador.assistencias }}</b>
                     </a>
                   }
                 } @else {
-                  <div class="ranking-empty">Ainda nao ha assistencias registradas neste torneio.</div>
+                  <div class="stat-empty">Nenhuma assistencia registrada.</div>
                 }
               </section>
             </div>
           }
-        </div>
-      }
 
-      @if (aba === 'partidas') {
-        @for (p of partidas; track p.id) {
-          <div class="mini-row">
-            <span>{{ p.casa }}</span>
-            <strong>{{ p.placar }}</strong>
-            <span>{{ p.visitante }}</span>
-            <span class="status" [class.status-green]="p.status === 'Finalizada'" [class.status-warn]="p.status === 'Pendente'">{{ p.status }}</span>
-            <a class="btn btn-sm btn-outline" [routerLink]="['/partida', p.id]">Abrir</a>
+          @if (aba === 'regras') {
+            <div class="content-heading">
+              <div>
+                <div class="eyebrow">Regulamento da edicao</div>
+                <h2>Regras do torneio</h2>
+                <p>Condicoes aplicadas automaticamente pela plataforma.</p>
+              </div>
+            </div>
+
+            <div class="rules-grid">
+              <article><span><i class="bi bi-diagram-3"></i></span><div><strong>Formato</strong><p>{{ formatoLabel() }} com minimo de {{ quantidadeMinimaParticipantes }} times.</p></div></article>
+              <article><span><i class="bi bi-people"></i></span><div><strong>Equipes</strong><p>{{ formatoEquipeLabel() }} em campo por equipe.</p></div></article>
+              <article><span><i class="bi bi-door-open"></i></span><div><strong>Inscricoes</strong><p>{{ torneio.aceitaSolicitacoes ? 'Times podem enviar solicitacoes enquanto o torneio nao iniciar.' : 'Novas solicitacoes estao fechadas.' }}</p></div></article>
+              <article><span><i class="bi bi-shield-check"></i></span><div><strong>Elegibilidade</strong><p>Todo time precisa ter treinador e jogadores suficientes para o formato.</p></div></article>
+              <article><span><i class="bi bi-graph-up"></i></span><div><strong>Resultados</strong><p>Placares oficiais atualizam classificacao e chaveamento automaticamente.</p></div></article>
+              <article><span><i class="bi bi-clipboard2-data"></i></span><div><strong>Scout</strong><p>Eventos individuais sao opcionais e alimentam as estatisticas da edicao.</p></div></article>
+            </div>
+
+            <section class="participants-section">
+              <div class="subsection-heading"><div><div class="eyebrow">Times confirmados</div><h3>Participantes</h3></div><span>{{ participantes.length }}</span></div>
+              @if (participantes.length) {
+                <div class="participant-grid">
+                  @for (timeId of participantes; track timeId) {
+                    <a [routerLink]="['/time', timeId, 'detalhes']"><i class="bi bi-shield"></i><strong>{{ nomeTime(timeId) }}</strong><i class="bi bi-chevron-right"></i></a>
+                  }
+                </div>
+              } @else {
+                <div class="stat-empty">Nenhum participante confirmado.</div>
+              }
+            </section>
+          }
+        </section>
+      </div>
+    }
+
+    @if (aba === 'configuracao' && podeGerenciar()) {
+      <section class="configuration-shell">
+        <div class="configuration-intro">
+          <div>
+            <div class="eyebrow">Painel do organizador</div>
+            <h2>Configurar torneio</h2>
+            <p>Siga o fluxo da esquerda para a direita. Cada etapa libera a proxima.</p>
           </div>
-        }
-      }
-
-      @if (aba === 'regras') {
-        <div class="grid grid-3">
-          <div class="card"><strong>Formato</strong><p class="muted small">Grupos + mata-mata</p></div>
-          <div class="card"><strong>Equipe</strong><p class="muted small">11 titulares + 7 reservas</p></div>
-          <div class="card"><strong>Entrada</strong><p class="muted small">Solicitacoes abertas ate o inicio</p></div>
+          <span class="status status-green"><i class="bi bi-shield-lock"></i> Somente organizador</span>
         </div>
-      }
 
-      <div class="grid grid-2" style="margin-top: 16px">
-        <button class="btn btn-primary">Solicitar participacao</button>
-        <button class="btn">Cancelar candidatura pendente</button>
-      </div>
-    </section>
-
-    <aside class="grid">
-      @if (podeGerenciar()) {
-      <div class="card">
-        <h2 class="section-title">Proximo jogo</h2>
-        <div class="score">
-          <div style="text-align: center"><div class="crest"><i class="bi bi-shield"></i></div><strong>Unidos</strong></div>
-          <div class="score-number" style="font-size: 34px">x</div>
-          <div style="text-align: center"><div class="crest"><i class="bi bi-shield"></i></div><strong>Resenha</strong></div>
+        <div class="configuration-progress">
+          <span class="done"><i class="bi bi-check-lg"></i><b>1</b><small>Dados</small></span>
+          <span [class.done]="participantesSuficientes"><i class="bi bi-check-lg"></i><b>2</b><small>Participantes</small></span>
+          <span [class.done]="torneio.status !== 'CONFIGURADO'"><i class="bi bi-check-lg"></i><b>3</b><small>Estrutura</small></span>
+          <span [class.done]="torneio.status === 'INICIADO' || torneio.status === 'FINALIZADO'"><i class="bi bi-check-lg"></i><b>4</b><small>Andamento</small></span>
+          <span [class.done]="torneio.status === 'FINALIZADO'"><i class="bi bi-check-lg"></i><b>5</b><small>Encerramento</small></span>
         </div>
-        <a class="btn btn-outline btn-block" style="margin-top: 12px" routerLink="/partida/1">Ir para partida</a>
-      </div>
-      }
-      <div class="card">
-        <h2 class="section-title">Acompanhar torneio</h2>
-        <button class="btn btn-outline btn-block" (click)="aba = 'ranking'">Ver ranking do torneio</button>
-        @if (podeGerenciar()) {
-          <a class="btn btn-outline btn-block" style="margin-top: 8px" routerLink="/torneio/criacao">Editar preparacao</a>
-          <a class="btn btn-outline btn-block" style="margin-top: 8px" routerLink="/feed">Publicar comunicado</a>
-        }
-      </div>
-    </aside>
-  </div>
+
+        <div class="configuration-grid">
+          <section class="config-card">
+            <div class="config-card-head"><span>1</span><div><h3>Identidade e inscricoes</h3><p>Ajustes permitidos antes do inicio.</p></div></div>
+            <div class="field"><label>Nome do torneio</label><input [(ngModel)]="nomeEdicao" [disabled]="!podeConfigurarAntesDoInicio()"></div>
+            <button class="btn btn-outline" [disabled]="!podeConfigurarAntesDoInicio() || !!processando" (click)="salvarNome()">Salvar nome</button>
+            <div class="config-summary">
+              <div><span>Formato</span><strong>{{ formatoLabel() }}</strong></div>
+              <div><span>Equipe</span><strong>{{ formatoEquipeLabel() }}</strong></div>
+            </div>
+            <button class="setting-toggle" [disabled]="!podeConfigurarAntesDoInicio() || !!processando" (click)="alternarSolicitacoes()">
+              <span><i class="bi" [class.bi-toggle-on]="torneio.aceitaSolicitacoes" [class.bi-toggle-off]="!torneio.aceitaSolicitacoes"></i></span>
+              <span><strong>Solicitacoes de times</strong><small>{{ torneio.aceitaSolicitacoes ? 'Abertas para treinadores' : 'Fechadas' }}</small></span>
+            </button>
+          </section>
+
+          <section class="config-card config-participants">
+            <div class="config-card-head"><span>2</span><div><h3>Participantes</h3><p>{{ participantes.length }}/{{ quantidadeMinimaParticipantes }} para liberar a estrutura.</p></div></div>
+            <div class="participant-progress"><i [style.width.%]="progressoParticipantes"></i></div>
+
+            @if (podeConfigurarAntesDoInicio() && timesDisponiveisParaAdicionar.length) {
+              <div class="inline-control">
+                <select [(ngModel)]="timeSelecionado">
+                  <option [ngValue]="undefined">Adicionar time existente</option>
+                  @for (time of timesDisponiveisParaAdicionar; track time.id) {
+                    <option [ngValue]="time.id">{{ time.nome }}</option>
+                  }
+                </select>
+                <button class="btn btn-primary" [disabled]="!!processando" (click)="adicionarParticipante()">Adicionar</button>
+              </div>
+            }
+
+            <div class="config-list">
+              @for (timeId of participantes; track timeId) {
+                <div><span><i class="bi bi-shield"></i><strong>{{ nomeTime(timeId) }}</strong></span>
+                  @if (podeConfigurarAntesDoInicio()) {
+                    <button [disabled]="!!processando" (click)="removerParticipante(timeId)"><i class="bi bi-x-lg"></i></button>
+                  }
+                </div>
+              }
+              @if (!participantes.length) {
+                <p>Nenhum time confirmado ainda.</p>
+              }
+            </div>
+
+            @if (solicitacoesPendentes.length) {
+              <div class="pending-requests">
+                <div class="eyebrow">Solicitacoes pendentes</div>
+                @for (solicitacao of solicitacoesPendentes; track solicitacao.id) {
+                  <div>
+                    <span><strong>{{ nomeTime(solicitacao.timeId) }}</strong><small>Aguardando avaliacao</small></span>
+                    <button class="btn btn-sm btn-primary" [disabled]="!!processando" (click)="aprovarSolicitacao(solicitacao)">Aprovar</button>
+                    <button class="btn btn-sm btn-danger" [disabled]="!!processando" (click)="rejeitarSolicitacao(solicitacao.id)">Recusar</button>
+                  </div>
+                }
+              </div>
+            }
+          </section>
+
+          <section class="config-card">
+            <div class="config-card-head"><span>3</span><div><h3>Estrutura e partidas</h3><p>Gere o calendario conforme o formato escolhido.</p></div></div>
+            <div class="config-callout" [class.ready]="participantesSuficientes">
+              <i class="bi" [class.bi-check-circle]="participantesSuficientes" [class.bi-exclamation-circle]="!participantesSuficientes"></i>
+              <span><strong>{{ participantesSuficientes ? 'Participantes suficientes' : 'Faltam participantes' }}</strong><small>Minimo exigido: {{ quantidadeMinimaParticipantes }}</small></span>
+            </div>
+            <button class="btn btn-primary btn-block" [disabled]="torneio.status !== 'CONFIGURADO' || !participantesSuficientes || !!processando" (click)="prepararCompeticao()">
+              <i class="bi bi-shuffle"></i> Gerar estrutura e partidas
+            </button>
+            @if (torneio.status !== 'CONFIGURADO') {
+              <small class="config-complete"><i class="bi bi-check-circle"></i> Estrutura preparada com {{ partidas.length }} partida(s).</small>
+            }
+          </section>
+
+          <section class="config-card">
+            <div class="config-card-head"><span>4</span><div><h3>Andamento da edicao</h3><p>Controle o momento competitivo do torneio.</p></div></div>
+            <div class="current-state">
+              <span>Status atual</span><strong>{{ statusLabel() }}</strong>
+            </div>
+            @if (torneio.status === 'ESTRUTURA_GERADA') {
+              <button class="btn btn-primary btn-block" [disabled]="!!processando" (click)="iniciarTorneio()"><i class="bi bi-play-fill"></i> Iniciar torneio</button>
+            } @else if (torneio.status === 'INICIADO') {
+              <button class="btn btn-danger btn-block" [disabled]="!!processando" (click)="finalizarTorneio()"><i class="bi bi-flag"></i> Finalizar edicao</button>
+            } @else if (torneio.status === 'FINALIZADO') {
+              <button class="btn btn-primary btn-block" [disabled]="!!processando" (click)="repetirTorneio()"><i class="bi bi-arrow-repeat"></i> Criar nova edicao</button>
+            } @else {
+              <p class="config-help">Prepare a estrutura para liberar o inicio do torneio.</p>
+            }
+          </section>
+        </div>
+      </section>
+    }
+  }
 </main>

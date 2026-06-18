@@ -1,33 +1,42 @@
-<main class="page">
+<main class="page tournament-create-page">
   <div class="hero-row">
     <div>
-      <div class="eyebrow">Organizacao do torneio</div>
-      <h1 class="page-title">Criar torneio + preparar competicao</h1>
-      <p class="page-subtitle">O organizador define formato, equipe, regras de entrada e ja escolhe como gerar estrutura, rodadas e partidas.</p>
+      <div class="eyebrow">Nova competicao</div>
+      <h1 class="page-title">Criar torneio</h1>
+      <p class="page-subtitle">Defina a base da competicao. Participantes, estrutura e andamento serao configurados na pagina do torneio.</p>
     </div>
     <a class="btn btn-outline" routerLink="/home-logada"><i class="bi bi-arrow-left"></i> Voltar</a>
   </div>
 
-  <div class="grid layout-1-2">
-    <section class="card panel-strong">
-      <h2 class="section-title">Dados do torneio</h2>
+  @if (erro) {
+    <div class="create-error"><i class="bi bi-exclamation-circle"></i> {{ erro }}</div>
+  }
+
+  <div class="create-layout">
+    <section class="card panel-strong create-form">
+      <div class="create-section-heading">
+        <span>1</span>
+        <div><div class="eyebrow">Identidade</div><h2>Dados principais</h2></div>
+      </div>
+
       <div class="form-grid">
         <div class="field">
           <label>Nome do torneio</label>
-          <input [(ngModel)]="nome">
+          <input [(ngModel)]="nome" placeholder="Ex.: Copa do Bairro 2026">
         </div>
+
         <div class="grid grid-2">
           <div class="field">
-            <label>Formato</label>
+            <label>Formato da competicao</label>
             <select [(ngModel)]="formato">
               <option value="FASE_DE_GRUPOS_COM_MATA_MATA">Grupos + mata-mata</option>
               <option value="PONTOS_CORRIDOS">Pontos corridos</option>
               <option value="MATA_MATA">Mata-mata</option>
-              <option value="FINAL_UNICA">Final única</option>
+              <option value="FINAL_UNICA">Final unica</option>
             </select>
           </div>
           <div class="field">
-            <label>Formato de equipe</label>
+            <label>Jogadores em campo</label>
             <select [(ngModel)]="equipe">
               <option value="TRES_POR_TRES">3 por 3</option>
               <option value="CINCO_POR_CINCO">5 por 5</option>
@@ -36,57 +45,39 @@
             </select>
           </div>
         </div>
-        <div class="grid grid-2">
-          <div class="field">
-            <label>Inscricao</label>
-            <select [(ngModel)]="inscricao">
-              <option value="ABERTA">Aberta</option>
-              <option value="FECHADA">Fechada</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Participantes iniciais</label>
-            <input type="number" [(ngModel)]="participantes">
-          </div>
-        </div>
-        <div class="field">
-          <label>Regras de entrada</label>
-          <textarea [(ngModel)]="regras"></textarea>
-        </div>
+
+        <label class="registration-choice">
+          <input type="checkbox" [(ngModel)]="aceitaSolicitacoes">
+          <span><i class="bi bi-people"></i></span>
+          <span><strong>Abrir solicitacoes de times</strong><small>Treinadores poderao enviar seus times para avaliacao.</small></span>
+        </label>
       </div>
+
+      <button class="btn btn-primary btn-block create-submit" [disabled]="criando" (click)="criar()">
+        {{ criando ? 'Criando...' : 'Criar e continuar configuracao' }} <i class="bi bi-arrow-right"></i>
+      </button>
     </section>
 
-    <section class="grid">
-      <div class="card">
-        <h2 class="section-title">Preparar conforme formato escolhido</h2>
-        <div class="grid grid-3">
-          <button class="card" [class.panel-strong]="modoPreparacao === 'sorteio'" (click)="modoPreparacao = 'sorteio'">
-            <i class="bi bi-shuffle" style="font-size: 30px; color: var(--green)"></i>
-            <strong>Gerar estrutura</strong>
-            <span class="small muted">Sorteio automatico dos confrontos</span>
-          </button>
-          <button class="card" [class.panel-strong]="modoPreparacao === 'manual'" (click)="modoPreparacao = 'manual'">
-            <i class="bi bi-calendar-week" style="font-size: 30px; color: var(--green)"></i>
-            <strong>Gerar rodadas</strong>
-            <span class="small muted">Ordem manual ou por calendario</span>
-          </button>
-          <button class="card">
-            <i class="bi bi-controller" style="font-size: 30px; color: var(--green)"></i>
-            <strong>Gerar partidas</strong>
-            <span class="small muted">Jogos conforme formato</span>
-          </button>
-        </div>
+    <aside class="card create-preview">
+      <div class="create-section-heading">
+        <span>2</span>
+        <div><div class="eyebrow">Proxima etapa</div><h2>Como o fluxo continua</h2></div>
       </div>
 
-      <div class="card">
-        <h2 class="section-title">Previa do fluxo</h2>
-        <div class="mini-row"><span>Formato escolhido</span><strong>{{ formato }}</strong></div>
-        <div class="mini-row"><span>Equipe</span><strong>{{ equipe }}</strong></div>
-        <div class="mini-row"><span>Entrada</span><span class="status status-green">{{ inscricao === 'ABERTA' ? 'Aberta' : 'Fechada' }}</span></div>
-        <div class="mini-row"><span>Preparacao</span><strong>{{ modoPreparacao === 'sorteio' ? 'Sorteio automatico' : 'Montagem manual' }}</strong></div>
+      <div class="preview-emblem"><i class="bi bi-trophy"></i></div>
+      <h3>{{ nome || 'Seu novo torneio' }}</h3>
+      <p>{{ formatoLabel() }} · minimo de {{ minimoParticipantes }} times</p>
+
+      <div class="next-steps">
+        <span><i class="bi bi-1-circle"></i><b>Adicionar e aprovar participantes</b></span>
+        <span><i class="bi bi-2-circle"></i><b>Gerar estrutura, rodadas e partidas</b></span>
+        <span><i class="bi bi-3-circle"></i><b>Iniciar e acompanhar a competicao</b></span>
       </div>
 
-      <button class="btn btn-primary btn-block" (click)="criar()">Preparar competicao</button>
-    </section>
+      <div class="preview-note">
+        <i class="bi bi-info-circle"></i>
+        <p>Formato e quantidade de jogadores definem toda a estrutura. Escolha com cuidado antes de criar.</p>
+      </div>
+    </aside>
   </div>
 </main>
