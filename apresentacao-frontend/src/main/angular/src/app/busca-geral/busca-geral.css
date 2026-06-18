@@ -1,0 +1,354 @@
+.search-page {
+  width: min(1120px, calc(100% - 32px));
+}
+
+.global-search {
+  margin-bottom: 18px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.global-search > i {
+  color: var(--green-dark);
+  font-size: 20px;
+}
+
+.global-search input {
+  min-height: 42px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 16px;
+}
+
+.search-summary {
+  margin: 0 2px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.clear-search {
+  padding: 0;
+  color: var(--green-dark);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.search-results {
+  display: grid;
+  gap: 14px;
+}
+
+.discovery-section {
+  margin-top: 24px;
+}
+
+.discovery-heading {
+  margin-bottom: 14px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.discovery-heading h2 {
+  margin: 3px 0 0;
+  font-size: 24px;
+}
+
+.featured-tournaments {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.featured-tournament {
+  min-height: 210px;
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 100% 0, rgba(18, 184, 95, .18), transparent 13rem),
+    linear-gradient(145deg, #fff, #f1f8f3);
+  border: 1px solid #dce8df;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(24, 33, 31, .06);
+  position: relative;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.featured-tournament:hover {
+  border-color: rgba(18, 184, 95, .42);
+  box-shadow: 0 18px 42px rgba(24, 33, 31, .1);
+  transform: translateY(-3px);
+}
+
+.featured-rank {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  color: rgba(7, 130, 70, .1);
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.featured-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  color: var(--green-dark);
+  background: var(--green-soft);
+  border-radius: 14px;
+  font-size: 20px;
+}
+
+.featured-copy {
+  margin-top: auto;
+  display: grid;
+  gap: 4px;
+}
+
+.featured-copy strong {
+  font-size: 20px;
+}
+
+.featured-copy small,
+.explore-copy small {
+  color: var(--muted);
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.explore-tournament {
+  min-width: 0;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .9);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(24, 33, 31, .04);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.explore-tournament:hover {
+  border-color: rgba(18, 184, 95, .35);
+  box-shadow: 0 14px 34px rgba(24, 33, 31, .08);
+  transform: translateY(-3px);
+}
+
+.explore-pattern {
+  min-height: 132px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(255, 255, 255, .28), transparent 6rem),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, .07) 0 14px, transparent 14px 28px),
+    linear-gradient(145deg, #087d45, #14b861);
+  font-size: 34px;
+}
+
+.explore-pattern.pattern-alt {
+  background:
+    radial-gradient(circle at 30% 80%, rgba(18, 184, 95, .22), transparent 7rem),
+    repeating-linear-gradient(45deg, rgba(24, 33, 31, .04) 0 12px, transparent 12px 24px),
+    linear-gradient(145deg, #f4f0e4, #fff);
+  color: var(--green-dark);
+}
+
+.explore-pattern.pattern-dark {
+  background:
+    radial-gradient(circle at 75% 15%, rgba(18, 184, 95, .32), transparent 8rem),
+    linear-gradient(145deg, #18211f, #27463a);
+}
+
+.explore-copy {
+  min-width: 0;
+  padding: 13px 14px;
+  display: grid;
+  gap: 3px;
+}
+
+.explore-copy strong,
+.explore-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-group {
+  padding: 0;
+  overflow: hidden;
+}
+
+.result-group:hover {
+  transform: none;
+}
+
+.result-heading {
+  min-height: 76px;
+  padding: 14px 18px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  background: #f8faf8;
+  border-bottom: 1px solid var(--line);
+}
+
+.result-heading h2 {
+  margin: 2px 0 0;
+  font-size: 20px;
+}
+
+.result-heading > span:last-child {
+  min-width: 28px;
+  min-height: 28px;
+  display: grid;
+  place-items: center;
+  color: var(--green-dark);
+  background: var(--green-soft);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.result-heading-icon,
+.result-icon,
+.search-empty-icon {
+  display: grid;
+  place-items: center;
+  color: var(--green-dark);
+  background: var(--green-soft);
+}
+
+.result-heading-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
+.result-row {
+  min-height: 68px;
+  padding: 12px 18px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  transition: background-color .2s ease, padding-left .2s ease;
+}
+
+.result-row:last-child {
+  border-bottom: 0;
+}
+
+.result-row:hover {
+  padding-left: 22px;
+  background: #fbfdfb;
+}
+
+.result-icon {
+  width: 38px;
+  height: 42px;
+  border-radius: 10px 10px 14px 14px;
+}
+
+.person-icon {
+  height: 38px;
+  border-radius: 50%;
+}
+
+.result-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.result-copy strong,
+.result-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-copy small,
+.result-row > i {
+  color: var(--muted);
+}
+
+.search-empty {
+  min-height: 280px;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+}
+
+.search-empty-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  font-size: 22px;
+}
+
+.search-empty h2,
+.search-empty p {
+  margin: 0;
+}
+
+@media (max-width: 680px) {
+  .search-page {
+    width: min(100% - 20px, 1120px);
+  }
+
+  .global-search {
+    grid-template-columns: auto 1fr;
+  }
+
+  .global-search .btn {
+    grid-column: 1 / -1;
+  }
+
+  .featured-tournaments,
+  .explore-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .discovery-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .explore-tournament {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+  }
+
+  .explore-pattern {
+    min-height: 104px;
+  }
+
+  .result-row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .result-row .status {
+    display: none;
+  }
+}

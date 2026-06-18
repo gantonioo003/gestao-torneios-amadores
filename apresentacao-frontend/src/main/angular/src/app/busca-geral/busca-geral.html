@@ -1,0 +1,170 @@
+<main class="page search-page">
+  <div class="hero-row">
+    <div>
+      <div class="eyebrow">Tudo em um so lugar</div>
+      <h1 class="page-title">Buscar na Liga Amadora+</h1>
+      <p class="page-subtitle">
+        Encontre torneios, times, jogadores e membros de comissao sem precisar trocar de pagina.
+      </p>
+    </div>
+    @if (usuario()?.podeCriarTorneio) {
+      <a class="btn btn-primary" routerLink="/torneio/criacao">
+        <i class="bi bi-plus-circle"></i> Criar torneio
+      </a>
+    }
+  </div>
+
+  <section class="card panel-strong global-search">
+    <i class="bi bi-search"></i>
+    <input
+      [(ngModel)]="termo"
+      (keyup.enter)="buscar()"
+      placeholder="Digite o nome de um torneio, time ou pessoa"
+      aria-label="Buscar torneios, times e pessoas">
+    <button class="btn btn-primary" (click)="buscar()">Buscar</button>
+  </section>
+
+  @if (carregando) {
+    <section class="empty-state">Buscando na plataforma...</section>
+  } @else if (emDescoberta && torneios.length) {
+    <section class="discovery-section">
+      <div class="discovery-heading">
+        <div>
+          <div class="eyebrow">Em destaque</div>
+          <h2>Torneios para acompanhar agora</h2>
+        </div>
+        <span class="muted small">Atualizado pela atividade da plataforma</span>
+      </div>
+
+      <div class="featured-tournaments">
+        @for (torneio of torneiosDestaque; track torneio.id; let posicao = $index) {
+          <a class="featured-tournament" [routerLink]="['/torneio', torneio.id]">
+            <span class="featured-rank">0{{ posicao + 1 }}</span>
+            <span class="featured-icon"><i class="bi bi-trophy"></i></span>
+            <span class="featured-copy">
+              <strong>{{ torneio.nome }}</strong>
+              <small>{{ statusTorneio(torneio.status) }}</small>
+            </span>
+            <span class="status" [class.status-green]="torneio.status === 'INICIADO'" [class.status-warn]="torneio.status === 'CONFIGURADO'">
+              {{ torneio.aceitaSolicitacoes ? 'Aceitando times' : statusTorneio(torneio.status) }}
+            </span>
+          </a>
+        }
+      </div>
+    </section>
+
+    <section class="discovery-section">
+      <div class="discovery-heading">
+        <div>
+          <div class="eyebrow">Descobrir</div>
+          <h2>Explorar torneios</h2>
+        </div>
+        <span class="muted small">{{ torneios.length }} torneio(s)</span>
+      </div>
+
+      <div class="explore-grid">
+        @for (torneio of torneios; track torneio.id; let posicao = $index) {
+          <a class="explore-tournament" [routerLink]="['/torneio', torneio.id]">
+            <span class="explore-pattern" [class.pattern-alt]="posicao % 3 === 1" [class.pattern-dark]="posicao % 3 === 2">
+              <i class="bi bi-trophy"></i>
+            </span>
+            <span class="explore-copy">
+              <strong>{{ torneio.nome }}</strong>
+              <small>{{ statusTorneio(torneio.status) }}</small>
+            </span>
+          </a>
+        }
+      </div>
+    </section>
+  } @else if (!totalResultados) {
+    <section class="empty-state search-empty">
+      <span class="search-empty-icon"><i class="bi bi-search"></i></span>
+      <h2>Nenhum resultado encontrado</h2>
+      <p>Tente outro nome ou deixe o campo vazio para explorar o que esta disponivel.</p>
+    </section>
+  } @else {
+    <div class="search-summary">
+      <span>{{ totalResultados }} resultado(s)</span>
+      @if (termo) {
+        <button class="clear-search" (click)="termo = ''; buscar()">Limpar busca</button>
+      }
+    </div>
+
+    <div class="search-results">
+      @if (torneios.length) {
+        <section class="card panel-strong result-group">
+          <div class="result-heading">
+            <span class="result-heading-icon"><i class="bi bi-trophy"></i></span>
+            <div>
+              <div class="eyebrow">Principal</div>
+              <h2>Torneios</h2>
+            </div>
+            <span>{{ torneios.length }}</span>
+          </div>
+
+          @for (torneio of torneios; track torneio.id) {
+            <a class="result-row" [routerLink]="['/torneio', torneio.id]">
+              <span class="result-icon"><i class="bi bi-trophy"></i></span>
+              <span class="result-copy">
+                <strong>{{ torneio.nome }}</strong>
+                <small>{{ statusTorneio(torneio.status) }}</small>
+              </span>
+              <span class="status" [class.status-green]="torneio.status === 'INICIADO'" [class.status-warn]="torneio.status === 'CONFIGURADO'">
+                {{ torneio.aceitaSolicitacoes ? 'Aceitando times' : statusTorneio(torneio.status) }}
+              </span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          }
+        </section>
+      }
+
+      @if (times.length) {
+        <section class="card result-group">
+          <div class="result-heading">
+            <span class="result-heading-icon"><i class="bi bi-shield"></i></span>
+            <div>
+              <div class="eyebrow">Participantes</div>
+              <h2>Times</h2>
+            </div>
+            <span>{{ times.length }}</span>
+          </div>
+
+          @for (time of times; track time.id) {
+            <a class="result-row" [routerLink]="['/time', time.id, 'detalhes']">
+              <span class="result-icon"><i class="bi bi-shield"></i></span>
+              <span class="result-copy">
+                <strong>{{ time.nome }}</strong>
+                <small>Perfil do time</small>
+              </span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          }
+        </section>
+      }
+
+      @if (profissionais.length) {
+        <section class="card result-group">
+          <div class="result-heading">
+            <span class="result-heading-icon"><i class="bi bi-person-badge"></i></span>
+            <div>
+              <div class="eyebrow">Elencos</div>
+              <h2>Jogadores e comissao</h2>
+            </div>
+            <span>{{ profissionais.length }}</span>
+          </div>
+
+          @for (profissional of profissionais; track profissional.id) {
+            <a class="result-row" [routerLink]="['/profissional', profissional.id, 'perfil']">
+              <span class="result-icon person-icon"><i class="bi bi-person"></i></span>
+              <span class="result-copy">
+                <strong>{{ profissional.nome }}</strong>
+                <small>{{ tipoProfissional(profissional.tipo) }}</small>
+              </span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          }
+        </section>
+      }
+    </div>
+  }
+</main>

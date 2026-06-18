@@ -30,7 +30,7 @@ export class TorneioCriacao {
       formatoEquipe: this.equipe,
       aceitaSolicitacoes: this.inscricao === 'ABERTA'
     }).subscribe({
-      next: () => this.router.navigate(['/torneios']),
+      next: () => this.router.navigate(['/buscar']),
       error: erro => alert(erro.error?.mensagem ?? 'Não foi possível criar o torneio.')
     });
   }

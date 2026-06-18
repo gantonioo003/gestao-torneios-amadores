@@ -1,36 +1,47 @@
-import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { catchError, of } from 'rxjs';
 import { AuthService } from '../core/auth.service';
 
 @Component({
   selector: 'app-home-publica',
   imports: [RouterLink],
-  templateUrl: './home-publica.html'
+  templateUrl: './home-publica.html',
+  styleUrl: './home-publica.css'
 })
-export class HomePublica {
+export class HomePublica implements OnInit {
   readonly usuario = this.auth.usuario;
+  torneiosDestaque: any[] = [];
 
-  constructor(private readonly auth: AuthService) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly auth: AuthService
+  ) {}
+
+  ngOnInit() {
+    this.http.get<any[]>('/backend/torneio/pesquisa?nome=')
+      .pipe(catchError(() => of([])))
+      .subscribe(torneios => {
+        this.torneiosDestaque = [...torneios]
+          .sort((a, b) => (b.status === 'INICIADO' ? 1 : 0) - (a.status === 'INICIADO' ? 1 : 0))
+          .slice(0, 4);
+      });
+  }
+
+  statusTorneio(status: string): string {
+    const labels: Record<string, string> = {
+      CONFIGURADO: 'Inscricoes abertas',
+      ESTRUTURA_GERADA: 'Estrutura pronta',
+      INICIADO: 'Em andamento',
+      FINALIZADO: 'Finalizado'
+    };
+    return labels[status] ?? 'Torneio';
+  }
 
   torneiosVivos = [
     { id: 1, nome: 'Copa Bairro 2024', rodada: 'Rodada 4', casa: 'Unidos do Bairro', golsCasa: 2, golsVisitante: 1, visitante: 'Real Esperanca', minuto: 78 },
     { id: 2, nome: 'Liga Amigos', rodada: 'Rodada 2', casa: 'Vila FC', golsCasa: 0, golsVisitante: 0, visitante: 'Resenha FC', minuto: 45 }
-  ];
-
-  rankTimes = [
-    { pos: 1, nome: 'Unidos do Bairro', pts: 18 },
-    { pos: 2, nome: 'Real Esperanca', pts: 15 },
-    { pos: 3, nome: 'Resenha FC', pts: 14 },
-    { pos: 4, nome: 'Vila FC', pts: 12 },
-    { pos: 5, nome: 'Os Parcas', pts: 11 }
-  ];
-
-  rankJogadores = [
-    { pos: 1, nome: 'Joao Silva', gols: 18 },
-    { pos: 2, nome: 'Pedro Santos', gols: 15 },
-    { pos: 3, nome: 'Lucas Lima', gols: 12 },
-    { pos: 4, nome: 'Gabriel Souza', gols: 10 },
-    { pos: 5, nome: 'Matheus Alves', gols: 9 }
   ];
 
   palpites = [
@@ -44,5 +55,11 @@ export class HomePublica {
     { autor: 'Copa Bairro 2024', tempo: '2h', texto: 'Unidos do Bairro venceu Real Esperanca por 2x1 em jogo eletrizante.', tag: '#CopaBairro' },
     { autor: 'Liga Amigos', tempo: '4h', texto: 'Rodada com partidas abertas para palpites da comunidade.', tag: '#FutAmador' },
     { autor: 'Real Esperanca FC', tempo: '6h', texto: 'Proximo jogo vale lideranca do grupo.', tag: '#Juntos' }
+  ];
+
+  novidades = [
+    { icone: 'bi-search', titulo: 'Busca unificada', texto: 'Torneios, times e pessoas no mesmo lugar.' },
+    { icone: 'bi-bar-chart', titulo: 'Ranking por torneio', texto: 'Classificacao e destaques dentro de cada competicao.' },
+    { icone: 'bi-lightning-charge', titulo: 'Palpites publicos', texto: 'Visitantes tambem participam dos percentuais.' }
   ];
 }

@@ -27,7 +27,7 @@ export class TimeEdicao {
     const url = this.recurso.id
       ? `/backend/time/${this.recurso.id}/salvar`
       : '/backend/time/salvar';
-    const destino = this.recurso.id ? ['/time', this.recurso.id, 'detalhes'] : ['/time/pesquisa'];
+    const destino = this.recurso.id ? ['/time', this.recurso.id, 'detalhes'] : ['/buscar'];
     this.http.post(url, { id: this.recurso.id, nome: this.recurso.nome })
       .subscribe({ next: () => this.router.navigate(destino), error: e => alert(e.error?.mensagem ?? 'Erro') });
   }

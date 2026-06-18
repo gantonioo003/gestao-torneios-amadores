@@ -70,7 +70,7 @@ export class TimeDetalhes implements OnInit {
     if (!confirm('Excluir este time?')) return;
     this.http.post(`/backend/time/${this.time.id}/excluir`, {})
       .subscribe({
-        next: () => this.router.navigate(['/time/pesquisa']),
+        next: () => this.router.navigate(['/buscar']),
         error: (e) => alert(e.error?.message ?? 'Erro. Verifique se o time está vinculado a torneios.')
       });
   }

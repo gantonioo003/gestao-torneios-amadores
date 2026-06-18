@@ -57,7 +57,7 @@ export class ProfissionalPerfil implements OnInit {
     this.http.post(
       `/backend/profissional/${this.profissional.id}/excluir`, {}
     ).subscribe({
-      next: () => this.router.navigate(['/profissional/pesquisa']),
+      next: () => this.router.navigate(['/buscar']),
       error: (e) => alert(e.error?.message ?? 'Erro ao remover.')
     });
   }

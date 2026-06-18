@@ -26,13 +26,13 @@ export class ProfissionalEdicao {
       ? `/backend/profissional/${this.recurso.id}/salvar`
       : '/backend/profissional/salvar';
     this.http.post(url, { ...this.recurso })
-      .subscribe({ next: () => this.router.navigate(['/profissional/pesquisa']), error: e => alert(e.error?.mensagem ?? 'Erro') });
+      .subscribe({ next: () => this.router.navigate(['/buscar']), error: e => alert(e.error?.mensagem ?? 'Erro') });
   }
 
   excluir() {
     if (!confirm('Remover este perfil?')) return;
     this.http.post(`/backend/profissional/${this.recurso.id}/excluir`, {})
-      .subscribe({ next: () => this.router.navigate(['/profissional/pesquisa']), error: e => alert(e.error?.mensagem ?? 'Erro') });
+      .subscribe({ next: () => this.router.navigate(['/buscar']), error: e => alert(e.error?.mensagem ?? 'Erro') });
   }
 
   adicionarCarreira() {

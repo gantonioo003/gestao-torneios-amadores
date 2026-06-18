@@ -18,7 +18,7 @@ export class TimeCriacao {
     if (!this.nome.trim()) { alert('Nome do time é obrigatório.'); return; }
     this.http.post('/backend/time/salvar', { nome: this.nome })
       .subscribe({
-        next: () => this.router.navigate(['/time/pesquisa']),
+        next: () => this.router.navigate(['/buscar']),
         error: (e) => alert(e.error?.message ?? 'Erro ao criar time.')
       });
   }

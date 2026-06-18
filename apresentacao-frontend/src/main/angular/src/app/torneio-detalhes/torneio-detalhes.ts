@@ -1,16 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { catchError, forkJoin, of } from 'rxjs';
 import { AuthService } from '../core/auth.service';
 
 @Component({
   selector: 'app-torneio-detalhes',
   imports: [RouterLink],
-  templateUrl: './torneio-detalhes.html'
+  templateUrl: './torneio-detalhes.html',
+  styleUrl: './torneio-detalhes.css'
 })
 export class TorneioDetalhes implements OnInit {
   aba = 'participantes';
   torneio: any = {};
+  times: any[] = [];
+  profissionais: any[] = [];
+  classificacao: any[] = [];
+  artilharia: any[] = [];
+  assistencias: any[] = [];
+  carregandoRanking = true;
   salvandoTorneio = false;
   readonly usuario = this.auth.usuario;
 
@@ -22,9 +30,28 @@ export class TorneioDetalhes implements OnInit {
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.http.get<any[]>('/backend/torneio/pesquisa').subscribe({
-      next: torneios => this.torneio = torneios.find(torneio => torneio.id === id) ?? {},
-      error: () => this.torneio = {}
+    forkJoin({
+      torneios: this.http.get<any[]>('/backend/torneio/pesquisa').pipe(catchError(() => of([]))),
+      times: this.http.get<any[]>('/backend/time/pesquisa?nome=').pipe(catchError(() => of([]))),
+      profissionais: this.http.get<any[]>('/backend/profissional/pesquisa?nome=').pipe(catchError(() => of([]))),
+      classificacao: this.http.get<any[]>(`/backend/resultado-competicao/${id}/classificacao`).pipe(catchError(() => of([]))),
+      artilharia: this.http.get<any[]>(`/backend/ranking-estatistico/${id}/artilharia`).pipe(catchError(() => of([]))),
+      assistencias: this.http.get<any[]>(`/backend/ranking-estatistico/${id}/assistencias`).pipe(catchError(() => of([])))
+    }).subscribe({
+      next: dados => {
+        this.torneio = dados.torneios.find(torneio => torneio.id === id) ?? {};
+        this.times = dados.times;
+        this.profissionais = dados.profissionais;
+        this.classificacao = [...dados.classificacao]
+          .sort((a, b) => b.pontos - a.pontos || b.saldoGols - a.saldoGols);
+        this.artilharia = dados.artilharia;
+        this.assistencias = dados.assistencias;
+        this.carregandoRanking = false;
+      },
+      error: () => {
+        this.torneio = {};
+        this.carregandoRanking = false;
+      }
     });
   }
 
@@ -59,15 +86,17 @@ export class TorneioDetalhes implements OnInit {
     return labels[this.torneio.status] ?? 'Torneio';
   }
 
+  nomeTime(timeId: number): string {
+    return this.times.find(time => time.id === timeId)?.nome ?? `Time #${timeId}`;
+  }
+
+  nomeProfissional(jogadorId: number): string {
+    return this.profissionais.find(profissional => profissional.id === jogadorId)?.nome
+      ?? `Jogador #${jogadorId}`;
+  }
+
   confirmados = ['Unidos do Bairro', 'Resenha FC', 'Vila FC', 'Real Esperanca', 'Os Parcas', 'Liga Amigos', 'Super Time', 'Amigos FC'];
   pendentes = ['Goleira FC', 'Bola na Rede', 'Amigos do Futebol'];
-
-  classificacao = [
-    { pos: 1, nome: 'Unidos do Bairro', j: 4, v: 3, e: 0, d: 1, gp: 8, gc: 3, pts: 9 },
-    { pos: 2, nome: 'Resenha FC', j: 4, v: 2, e: 1, d: 1, gp: 6, gc: 4, pts: 7 },
-    { pos: 3, nome: 'Vila FC', j: 4, v: 1, e: 2, d: 1, gp: 5, gc: 5, pts: 5 },
-    { pos: 4, nome: 'Real Esperanca', j: 4, v: 1, e: 0, d: 3, gp: 3, gc: 10, pts: 3 }
-  ];
 
   partidas = [
     { id: 1, casa: 'Unidos do Bairro', placar: '2 x 1', visitante: 'Real Esperanca', status: 'Finalizada' },

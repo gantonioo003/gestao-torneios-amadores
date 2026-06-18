@@ -1,0 +1,99 @@
+.tournament-ranking {
+  display: grid;
+  gap: 14px;
+}
+
+.ranking-intro,
+.ranking-block-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.ranking-intro {
+  padding: 8px 2px 4px;
+  align-items: flex-end;
+}
+
+.ranking-intro h2 {
+  margin: 3px 0 0;
+  font-size: 25px;
+}
+
+.ranking-intro p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.ranking-block {
+  min-width: 0;
+  padding: 16px;
+  background: #fbfcfb;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.ranking-block-heading {
+  margin-bottom: 12px;
+}
+
+.ranking-block-heading h3 {
+  margin: 2px 0 0;
+  font-size: 18px;
+}
+
+.ranking-block-heading > i {
+  color: var(--green-dark);
+  font-size: 21px;
+}
+
+.ranking-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ranking-row {
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.ranking-row > span {
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.ranking-row > b {
+  min-width: 28px;
+  text-align: right;
+}
+
+.ranking-row:hover strong {
+  color: var(--green-dark);
+}
+
+.ranking-empty {
+  padding: 24px 14px;
+  color: var(--muted);
+  background: #fff;
+  border: 1px dashed #d5ddd7;
+  border-radius: 9px;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .ranking-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .ranking-intro {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -23,7 +23,7 @@ export class ProfissionalCadastro {
       nome: this.nome,
       tipo: this.tipoSelecionado
     }).subscribe({
-      next: () => this.router.navigate(['/profissional/pesquisa']),
+      next: () => this.router.navigate(['/buscar']),
       error: (e) => alert(e.error?.message ?? 'Erro ao cadastrar.')
     });
   }

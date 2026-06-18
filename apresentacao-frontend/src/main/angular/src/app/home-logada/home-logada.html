@@ -76,7 +76,7 @@
                 <div class="eyebrow">Descoberta</div>
                 <h2 class="section-title">Torneios em destaque</h2>
               </div>
-              <a class="btn btn-sm btn-outline" routerLink="/torneios">Ver todos</a>
+              <a class="btn btn-sm btn-outline" routerLink="/buscar">Ver todos</a>
             </div>
             @if (destaques.length) {
               <div class="featured-grid">
@@ -97,7 +97,7 @@
             <article class="card">
               <div class="account-section-heading">
                 <h2 class="section-title">Meus times</h2>
-                <a class="btn btn-sm btn-outline" routerLink="/time/pesquisa">Abrir área de times</a>
+                <a class="btn btn-sm btn-outline" routerLink="/buscar">Buscar times</a>
               </div>
               @if (meusTimes.length) {
                 @for (time of meusTimes; track time.id) {
@@ -159,7 +159,7 @@
             <a class="account-shortcut" routerLink="/feed">
               <i class="bi bi-megaphone"></i><span>Feed social</span><i class="bi bi-chevron-right"></i>
             </a>
-            <a class="account-shortcut" routerLink="/torneios">
+            <a class="account-shortcut" routerLink="/buscar">
               <i class="bi bi-bookmark"></i>
               <span>Torneios salvos</span>
               <strong>{{ atividade?.torneiosSalvos?.length || 0 }}</strong>
@@ -173,9 +173,7 @@
 
           <article class="card">
             <h2 class="section-title">Explorar</h2>
-            <a class="account-shortcut" routerLink="/torneios"><i class="bi bi-trophy"></i><span>Torneios</span><i class="bi bi-arrow-right"></i></a>
-            <a class="account-shortcut" routerLink="/time/pesquisa"><i class="bi bi-shield"></i><span>Times</span><i class="bi bi-arrow-right"></i></a>
-            <a class="account-shortcut" routerLink="/profissional/pesquisa"><i class="bi bi-person-badge"></i><span>Jogadores e comissão</span><i class="bi bi-arrow-right"></i></a>
+            <a class="account-shortcut" routerLink="/buscar"><i class="bi bi-search"></i><span>Buscar torneios, times e pessoas</span><i class="bi bi-arrow-right"></i></a>
           </article>
         </aside>
       </div>
@@ -458,7 +456,7 @@
                   <span class="settings-row-copy"><strong>Mensagens e solicitações</strong><small>Abra seu histórico de conversas privadas.</small></span>
                   <i class="bi bi-chevron-right"></i>
                 </a>
-                <a class="settings-row" routerLink="/torneios">
+                <a class="settings-row" routerLink="/buscar">
                   <span class="settings-row-icon"><i class="bi bi-bookmark"></i></span>
                   <span class="settings-row-copy"><strong>Torneios salvos</strong><small>Retome os campeonatos que você decidiu acompanhar.</small></span>
                   <i class="bi bi-chevron-right"></i>

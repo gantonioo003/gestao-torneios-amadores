@@ -1,71 +1,92 @@
-<main class="page">
-  <div class="hero-row">
+<main class="page home-page">
+  <div class="hero-row home-hero">
     <div>
-      <div class="eyebrow">Futebol amador ao vivo</div>
-      <h1 class="page-title">Futebol amador com torneio, ranking e comunidade</h1>
-      <p class="page-subtitle">Acompanhe jogos em andamento, vote nos palpites, veja rankings e entre na conversa da comunidade.</p>
+      <div class="eyebrow">Torneios de futebol amador</div>
+      <h1 class="page-title">Acompanhe a competicao do inicio ao titulo</h1>
+      <p class="page-subtitle">
+        Encontre torneios, acompanhe jogos e classificacoes, conheca os participantes e entre na comunidade.
+      </p>
     </div>
-    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <div class="home-actions">
+      <a class="btn btn-primary" routerLink="/buscar"><i class="bi bi-search"></i> Explorar torneios</a>
       @if (usuario()) {
-        <a class="btn btn-primary" routerLink="/home-logada">Ir para meu painel</a>
+        <a class="btn btn-outline" routerLink="/home-logada">Meu painel</a>
       } @else {
         <a class="btn btn-outline" routerLink="/login">Entrar</a>
-        <a class="btn btn-primary" routerLink="/login">Criar conta</a>
       }
     </div>
   </div>
 
-  <div class="grid layout-2-1">
-    <section class="grid">
-      <div class="grid grid-2">
-        <article class="card panel-strong">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px">
-            <h2 class="section-title" style="margin: 0">Torneios ao vivo</h2>
-            <span class="status status-red">Ao vivo</span>
-          </div>
-          @for (jogo of torneiosVivos; track jogo.id) {
-            <div class="mini-row">
-              <div>
-                <strong>{{ jogo.nome }}</strong>
-                <div class="small muted">{{ jogo.rodada }}</div>
-              </div>
-              <div class="score" style="gap: 8px">
-                <span>{{ jogo.casa }}</span>
-                <strong>{{ jogo.golsCasa }}</strong>
-                <span>x</span>
-                <strong>{{ jogo.golsVisitante }}</strong>
-                <span>{{ jogo.visitante }}</span>
-                <span class="status status-green">{{ jogo.minuto }}'</span>
-              </div>
-            </div>
-          }
-          <a class="btn btn-outline btn-block" routerLink="/torneios">Explorar torneios</a>
-        </article>
-
-        <article class="card">
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
-            <h2 class="section-title">Palpites</h2>
-            <a class="btn btn-sm btn-outline" routerLink="/palpites">Ver todos</a>
-          </div>
-          @for (p of palpites; track p.pergunta) {
-            <div style="margin-bottom: 12px">
-              <div class="mini-row" style="border: 0; padding: 0 0 5px">
-                <span><strong>{{ p.pergunta }}</strong> <span class="muted">- {{ p.opcao }}</span></span>
-                <a class="btn btn-sm btn-outline" routerLink="/palpites">Votar</a>
-              </div>
-              <div class="progress-track"><div class="progress-fill" [style.width]="p.pct + '%'"></div></div>
-              <div class="small muted" style="text-align: right">{{ p.pct }}%</div>
-            </div>
-          }
-          <p class="small muted" style="margin: 0">Visitantes tambem votam e entram nos percentuais da comunidade.</p>
-        </article>
+  <section class="card panel-strong live-games">
+    <div class="home-section-heading">
+      <div>
+        <div class="eyebrow">Agora na plataforma</div>
+        <h2>Jogos ao vivo</h2>
       </div>
+      <span class="status status-red"><i class="bi bi-broadcast"></i> Ao vivo</span>
+    </div>
 
-      <section class="card">
-        <h2 class="section-title">Feed social</h2>
-        <div class="grid grid-3">
+    <div class="live-game-grid">
+      @for (jogo of torneiosVivos; track jogo.id) {
+        <article class="live-game">
+          <div class="live-game-meta">
+            <span>{{ jogo.nome }}</span>
+            <small>{{ jogo.rodada }} · {{ jogo.minuto }}'</small>
+          </div>
+          <div class="live-score">
+            <span>{{ jogo.casa }}</span>
+            <strong>{{ jogo.golsCasa }}</strong>
+            <small>x</small>
+            <strong>{{ jogo.golsVisitante }}</strong>
+            <span>{{ jogo.visitante }}</span>
+          </div>
+          <a routerLink="/buscar">Ver competicao <i class="bi bi-arrow-right"></i></a>
+        </article>
+      }
+    </div>
+
+    <a class="btn btn-outline home-explore-button" routerLink="/buscar">Ver todos os torneios</a>
+  </section>
+
+  <div class="home-content">
+    <section class="grid">
+      <article class="card popular-predictions">
+        <div class="home-section-heading compact-heading">
+          <div>
+            <div class="eyebrow">Opiniao da comunidade</div>
+            <h2>Mais palpitados hoje</h2>
+          </div>
+          <a class="btn btn-sm btn-outline" routerLink="/palpites">Participar</a>
+        </div>
+
+        <div class="prediction-list">
+          @for (p of palpites; track p.pergunta) {
+            <div class="prediction-row">
+              <span>
+                <strong>{{ p.opcao }}</strong>
+                <small>{{ p.pergunta }}</small>
+              </span>
+              <span class="prediction-progress">
+                <i [style.width]="p.pct + '%'"></i>
+              </span>
+              <b>{{ p.pct }}%</b>
+            </div>
+          }
+        </div>
+      </article>
+
+      <section class="card social-feed">
+        <div class="home-section-heading compact-heading">
+          <div>
+            <div class="eyebrow">Movimentacao dos torneios</div>
+            <h2>Feed social</h2>
+          </div>
+          <a class="btn btn-sm btn-outline" routerLink="/feed">Abrir feed</a>
+        </div>
+
+        <div class="feed-grid">
           @for (post of posts; track post.autor) {
-            <article class="post">
+            <article class="feed-post">
               <div class="post-head">
                 <div class="avatar"><i class="bi bi-megaphone"></i></div>
                 <div>
@@ -73,36 +94,54 @@
                   <div class="small muted">{{ post.tempo }}</div>
                 </div>
               </div>
-              <p style="margin: 0">{{ post.texto }}</p>
-              <span class="small" style="color: var(--green-dark)">{{ post.tag }}</span>
+              <p>{{ post.texto }}</p>
+              <span>{{ post.tag }}</span>
             </article>
           }
         </div>
       </section>
     </section>
 
-    <aside class="grid">
-      <div class="card">
-        <h2 class="section-title">Ranking de times</h2>
-        @for (time of rankTimes; track time.pos) {
-          <div class="mini-row">
-            <span><strong>{{ time.pos }}</strong> {{ time.nome }}</span>
-            <strong>{{ time.pts }}</strong>
+    <aside class="grid home-aside">
+      <section class="card">
+        <div class="home-section-heading compact-heading">
+          <div>
+            <div class="eyebrow">Descobrir</div>
+            <h2>Torneios em destaque</h2>
           </div>
-        }
-        <a class="btn btn-outline btn-block" routerLink="/ranking">Ver ranking completo</a>
-      </div>
+        </div>
 
-      <div class="card">
-        <h2 class="section-title">Ranking de jogadores</h2>
-        @for (jogador of rankJogadores; track jogador.pos) {
-          <div class="mini-row">
-            <span><strong>{{ jogador.pos }}</strong> {{ jogador.nome }}</span>
-            <strong>{{ jogador.gols }}</strong>
+        @for (torneio of torneiosDestaque; track torneio.id) {
+          <a class="home-tournament-row" [routerLink]="['/torneio', torneio.id]">
+            <span><i class="bi bi-trophy"></i></span>
+            <span>
+              <strong>{{ torneio.nome }}</strong>
+              <small>{{ statusTorneio(torneio.status) }}</small>
+            </span>
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        }
+        <a class="btn btn-outline btn-block" routerLink="/buscar">Explorar torneios</a>
+      </section>
+
+      <section class="card platform-news">
+        <div class="home-section-heading compact-heading">
+          <div>
+            <div class="eyebrow">Liga Amadora+</div>
+            <h2>Novidades da plataforma</h2>
+          </div>
+        </div>
+
+        @for (novidade of novidades; track novidade.titulo) {
+          <div class="platform-news-row">
+            <i class="bi" [class]="novidade.icone"></i>
+            <span>
+              <strong>{{ novidade.titulo }}</strong>
+              <small>{{ novidade.texto }}</small>
+            </span>
           </div>
         }
-        <a class="btn btn-outline btn-block" routerLink="/ranking">Ver ranking completo</a>
-      </div>
+      </section>
     </aside>
   </div>
 </main>
