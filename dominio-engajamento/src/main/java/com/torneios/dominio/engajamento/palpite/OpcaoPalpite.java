@@ -14,3 +14,5 @@ public record OpcaoPalpite(long valor) {
         return Objects.equals(this.valor, resultadoReal);
     }
 }
+
+

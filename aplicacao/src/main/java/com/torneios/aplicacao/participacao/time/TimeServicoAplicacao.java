@@ -17,6 +17,10 @@ public class TimeServicoAplicacao {
         return repositorio.pesquisarResumosPorResponsavel(responsavelId);
     }
 
+    public List<TimeResumo> pesquisarResumosGerenciaveis(long usuarioId) {
+        return repositorio.pesquisarResumosGerenciaveis(usuarioId);
+    }
+
     public List<TimeResumo> pesquisarResumos(String nome) {
         return repositorio.pesquisarResumos(nome == null ? "" : nome.trim());
     }

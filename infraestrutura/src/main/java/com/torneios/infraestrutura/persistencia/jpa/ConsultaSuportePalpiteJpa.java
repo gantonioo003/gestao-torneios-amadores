@@ -14,7 +14,7 @@ import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.competicao.partida.Partida;
 import com.torneios.dominio.competicao.partida.PartidaRepositorio;
 import com.torneios.dominio.engajamento.palpite.ConsultaSuportePalpite;
-import com.torneios.dominio.engajamento.palpite.EventoAlvo;
+import com.torneios.dominio.engajamento.palpite.EventoAlvoPalpite;
 import com.torneios.dominio.engajamento.palpite.OpcaoPalpite;
 import com.torneios.dominio.participacao.acesso.AutenticacaoServico;
 import com.torneios.dominio.participacao.profissional.TipoProfissional;
@@ -71,7 +71,7 @@ class ConsultaSuportePalpiteJpa implements ConsultaSuportePalpite {
     }
 
     @Override
-    public boolean opcaoValidaParaEvento(EventoAlvo eventoAlvo, OpcaoPalpite opcao) {
+    public boolean opcaoValidaParaEvento(EventoAlvoPalpite eventoAlvo, OpcaoPalpite opcao) {
         Objects.requireNonNull(eventoAlvo, "O evento do palpite e obrigatorio.");
         Objects.requireNonNull(opcao, "A opcao do palpite e obrigatoria.");
         return switch (eventoAlvo.getTipo()) {
@@ -101,3 +101,5 @@ class ConsultaSuportePalpiteJpa implements ConsultaSuportePalpite {
                 .orElse(List.of());
     }
 }
+
+

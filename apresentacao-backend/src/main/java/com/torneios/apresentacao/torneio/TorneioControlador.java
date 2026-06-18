@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.torneio.criacao.TorneioResumo;
 import com.torneios.aplicacao.torneio.criacao.TorneioServicoAplicacao;
+import com.torneios.aplicacao.engajamento.palpite.ApuracaoAutomaticaPalpiteServicoAplicacao;
 import com.torneios.apresentacao.SessaoUsuario;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
@@ -30,6 +31,7 @@ class TorneioControlador {
     @Autowired TorneioServico torneioServico;
     @Autowired TorneioServicoAplicacao torneioServicoConsulta;
     @Autowired ContaUsuarioServico contaUsuarioServico;
+    @Autowired ApuracaoAutomaticaPalpiteServicoAplicacao apuracaoAutomaticaPalpiteServico;
 
     @RequestMapping(method = GET, path = "pesquisa")
     List<? extends TorneioResumo> pesquisar(
@@ -71,6 +73,7 @@ class TorneioControlador {
         long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
         contaUsuarioServico.exigirPodeCriarTorneio(new UsuarioId(usuarioId));
         torneioServico.finalizarTorneio(new TorneioId(id), new UsuarioId(usuarioId));
+        apuracaoAutomaticaPalpiteServico.apurarRankingsDoTorneio(id);
     }
 
     @RequestMapping(method = POST, path = "{id}/abrir-solicitacoes")
@@ -99,3 +102,5 @@ class TorneioControlador {
         return id == 0 ? 1L : id;
     }
 }
+
+

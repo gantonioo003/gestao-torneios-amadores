@@ -2,10 +2,10 @@
   <div class="hero-row">
     <div>
       <div class="eyebrow">Comunidade de times</div>
-      <h1 class="page-title">{{ aba === 'meus' ? 'Meus times' : 'Encontre um time' }}</h1>
+      <h1 class="page-title">{{ aba === 'meus' ? 'Times que posso gerenciar' : 'Encontre um time' }}</h1>
       <p class="page-subtitle">
         {{ aba === 'meus'
-          ? 'Administre apenas os times vinculados à sua conta.'
+          ? 'Acesse seus times e os elencos participantes dos torneios que você organiza.'
           : 'Todas as contas podem pesquisar times, conhecer elencos e acompanhar torneios.' }}
       </p>
     </div>
@@ -18,7 +18,7 @@
     <div class="tabs" style="margin-bottom: 12px">
       <button class="tab" [class.active]="aba === 'explorar'" (click)="trocarAba('explorar')">Explorar times</button>
       @if (usuario()?.podeGerenciarTimes) {
-        <button class="tab" [class.active]="aba === 'meus'" (click)="trocarAba('meus')">Meus times</button>
+        <button class="tab" [class.active]="aba === 'meus'" (click)="trocarAba('meus')">Gerenciar times</button>
       }
     </div>
     @if (aba === 'explorar') {
@@ -54,13 +54,13 @@
           <div class="mini-row">
             <span>Perfil</span>
             <span class="status" [class.status-green]="ehMeuTime(time)" [class.status-gray]="!ehMeuTime(time)">
-              {{ ehMeuTime(time) ? 'Administrado por você' : 'Público' }}
+              {{ ehMeuTime(time) ? 'Seu time' : (aba === 'meus' ? 'Participante de seu torneio' : 'Público') }}
             </span>
           </div>
-          <div class="grid" [class.grid-2]="ehMeuTime(time) && usuario()?.podeGerenciarTimes" style="margin-top: 12px">
+          <div class="grid" [class.grid-2]="aba === 'meus'" style="margin-top: 12px">
             <a class="btn btn-outline" [routerLink]="['/time', time.id, 'detalhes']">Ver perfil</a>
-            @if (ehMeuTime(time) && usuario()?.podeGerenciarTimes) {
-              <button class="btn btn-danger" (click)="excluir(time.id)">Excluir</button>
+            @if (aba === 'meus') {
+              <a class="btn btn-primary" [routerLink]="['/time', time.id, 'vincular']">Gerenciar elenco</a>
             }
           </div>
         </article>

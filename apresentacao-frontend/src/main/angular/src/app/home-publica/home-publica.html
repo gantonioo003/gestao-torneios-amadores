@@ -43,18 +43,21 @@
         </article>
 
         <article class="card">
-          <h2 class="section-title">Palpites publicos</h2>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+            <h2 class="section-title">Palpites</h2>
+            <a class="btn btn-sm btn-outline" routerLink="/palpites">Ver todos</a>
+          </div>
           @for (p of palpites; track p.pergunta) {
             <div style="margin-bottom: 12px">
               <div class="mini-row" style="border: 0; padding: 0 0 5px">
                 <span><strong>{{ p.pergunta }}</strong> <span class="muted">- {{ p.opcao }}</span></span>
-                <button class="btn btn-sm btn-outline">Votar</button>
+                <a class="btn btn-sm btn-outline" routerLink="/palpites">Votar</a>
               </div>
               <div class="progress-track"><div class="progress-fill" [style.width]="p.pct + '%'"></div></div>
               <div class="small muted" style="text-align: right">{{ p.pct }}%</div>
             </div>
           }
-          <p class="small muted" style="margin: 0">Visitantes participam dos palpites e entram no ritmo da competicao.</p>
+          <p class="small muted" style="margin: 0">Visitantes tambem votam e entram nos percentuais da comunidade.</p>
         </article>
       </div>
 

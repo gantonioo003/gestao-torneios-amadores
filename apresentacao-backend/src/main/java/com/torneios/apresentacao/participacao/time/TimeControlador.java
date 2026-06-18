@@ -20,6 +20,7 @@ import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoId;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoRepositorio;
+import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoServico;
 import com.torneios.dominio.participacao.acesso.ContaUsuarioServico;
 import com.torneios.dominio.participacao.time.TimeServico;
 
@@ -32,13 +33,19 @@ class TimeControlador {
     @Autowired TimeServico timeServico;
     @Autowired TimeServicoAplicacao timeServicoConsulta;
     @Autowired ProfissionalEsportivoRepositorio profissionalRepositorio;
+    @Autowired ProfissionalEsportivoServico profissionalServico;
     @Autowired ContaUsuarioServico contaUsuarioServico;
 
     @RequestMapping(method = GET, path = "pesquisa")
     List<? extends TimeResumo> pesquisar(
             @RequestParam(required = false, defaultValue = "") String nome,
             @RequestParam(required = false, defaultValue = "false") boolean meus,
+            @RequestParam(required = false, defaultValue = "false") boolean gerenciaveis,
             HttpSession sessao) {
+        if (gerenciaveis) {
+            return timeServicoConsulta.pesquisarResumosGerenciaveis(
+                    SessaoUsuario.exigirUsuarioId(sessao));
+        }
         if (meus) {
             return timeServicoConsulta.pesquisarResumosPorResponsavel(SessaoUsuario.exigirUsuarioId(sessao));
         }
@@ -58,7 +65,7 @@ class TimeControlador {
     }
 
     @RequestMapping(method = GET, path = "{id}/edicao")
-    TimeFormulario edicao(@PathVariable long id) {
+    TimeFormulario edicao(@PathVariable long id, HttpSession sessao) {
         var time = timeServico.obterTime(new TimeId(id));
         var dto = new TimeFormulario.TimeDto();
         dto.id = time.getId().valor();
@@ -66,13 +73,19 @@ class TimeControlador {
         dto.responsavelId = time.getResponsavel().valor();
         dto.elenco = timeServicoConsulta.pesquisarResumoExpandido(id).getElenco().stream()
             .map(v -> {
-                String nome = profissionalRepositorio
-                    .buscarPorId(new ProfissionalEsportivoId(v.getProfissionalId()))
-                    .map(p -> p.getNome())
-                    .orElse("Profissional #" + v.getProfissionalId());
-                return new TimeFormulario.VinculoEnriquecidoDto(v, nome);
+                var profissional = profissionalRepositorio
+                    .buscarPorId(new ProfissionalEsportivoId(v.getProfissionalId()));
+                String nome = profissional.map(p -> p.getNome())
+                        .orElse("Profissional #" + v.getProfissionalId());
+                String tipo = profissional.map(p -> p.getTipo().name()).orElse(null);
+                return new TimeFormulario.VinculoEnriquecidoDto(v, nome, tipo);
             }).toList();
-        return new TimeFormulario(dto);
+        var formulario = new TimeFormulario(dto);
+        Long usuarioId = SessaoUsuario.usuarioIdOuNulo(sessao);
+        formulario.podeEditarTime = usuarioId != null && time.getResponsavel().valor() == usuarioId;
+        formulario.podeGerenciarElenco = usuarioId != null
+                && timeServico.podeGerenciarElenco(new TimeId(id), new UsuarioId(usuarioId));
+        return formulario;
     }
 
     @RequestMapping(method = POST, path = "{id}/salvar")
@@ -97,6 +110,19 @@ class TimeControlador {
         timeServico.vincularProfissional(new TimeId(id), new UsuarioId(usuarioId),
             new ProfissionalEsportivoId(dto.profissionalId), dto.funcao,
             dto.dataInicio, dto.dataLimiteContrato);
+    }
+
+    @RequestMapping(method = POST, path = "{id}/cadastrar-profissional")
+    void cadastrarProfissional(@PathVariable long id, @RequestBody TimeFormulario.NovoIntegranteDto dto,
+            HttpSession sessao) {
+        long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
+        contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
+        timeServico.validarCadastroProfissional(
+                new TimeId(id), new UsuarioId(usuarioId), dto.tipo);
+        var profissionalId = new ProfissionalEsportivoId(gerarId());
+        profissionalServico.cadastrar(profissionalId, dto.nome, dto.tipo, new UsuarioId(usuarioId));
+        timeServico.vincularProfissional(new TimeId(id), new UsuarioId(usuarioId),
+                profissionalId, dto.funcao, dto.dataInicio, dto.dataLimiteContrato);
     }
 
     @RequestMapping(method = POST, path = "{id}/editar-vinculo/{profissionalId}")

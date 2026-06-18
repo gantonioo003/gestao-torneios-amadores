@@ -1,0 +1,255 @@
+<main class="page predictions-page">
+  <div class="hero-row predictions-hero-row">
+    <div class="post-head predictions-intro">
+      <div class="crest predictions-crest"><i class="bi bi-graph-up-arrow"></i></div>
+      <div>
+        <div class="eyebrow">Engajamento da comunidade</div>
+        <h1 class="page-title">Palpites</h1>
+        <p class="page-subtitle">
+          Escolha vencedores, acompanhe os percentuais da comunidade e volte aqui para ver seus palpites em andamento e no historico.
+        </p>
+      </div>
+    </div>
+
+    @if (!usuario()) {
+      <a class="btn btn-outline" routerLink="/login"><i class="bi bi-person-check"></i> Entrar para acompanhar</a>
+    }
+  </div>
+
+  <section class="prediction-overview" aria-label="Resumo dos palpites">
+    <article class="prediction-stat">
+      <span class="prediction-stat-icon"><i class="bi bi-lightning-charge"></i></span>
+      <span>
+        <strong>{{ partidas.length }}</strong>
+        <small>jogos abertos para voto</small>
+      </span>
+    </article>
+
+    <article class="prediction-stat">
+      <span class="prediction-stat-icon"><i class="bi bi-trophy"></i></span>
+      <span>
+        <strong>{{ torneios.length }}</strong>
+        <small>torneios com disputa ativa</small>
+      </span>
+    </article>
+
+    <article class="prediction-stat">
+      <span class="prediction-stat-icon"><i class="bi bi-clock-history"></i></span>
+      <span>
+        <strong>{{ usuario() ? palpitesEmAndamento.length : 0 }}</strong>
+        <small>{{ usuario() ? 'palpites seus em andamento' : 'acompanhe isso ao entrar' }}</small>
+      </span>
+    </article>
+  </section>
+
+  <section class="card panel-strong prediction-hub">
+    <div>
+      <div class="eyebrow">Central de palpites</div>
+      <h2 class="prediction-hub-title">Escolha o que voce quer acompanhar</h2>
+      <p>As oportunidades abertas ficam aqui na frente, e os seus registros apurados ficam organizados nas outras abas.</p>
+    </div>
+
+    <div class="tabs prediction-tabs" aria-label="Areas de palpites">
+      <button class="tab" [class.active]="aba === 'disponiveis'" (click)="aba = 'disponiveis'">
+        <i class="bi bi-stars"></i> Disponiveis
+      </button>
+      @if (usuario()) {
+        <button class="tab" [class.active]="aba === 'andamento'" (click)="aba = 'andamento'">
+          <i class="bi bi-hourglass-split"></i> Em andamento
+          <span>{{ palpitesEmAndamento.length }}</span>
+        </button>
+        <button class="tab" [class.active]="aba === 'historico'" (click)="aba = 'historico'">
+          <i class="bi bi-clock-history"></i> Historico
+          <span>{{ palpitesAnteriores.length }}</span>
+        </button>
+      }
+    </div>
+  </section>
+
+  @if (carregando) {
+    <section class="empty-state prediction-empty-state">Carregando oportunidades de palpite...</section>
+  }
+
+  @if (!carregando && aba === 'disponiveis') {
+    <section class="card panel-strong prediction-panel">
+      <div class="prediction-panel-head">
+        <div>
+          <div class="eyebrow">Comecam em breve</div>
+          <h2 class="prediction-panel-title">Principais jogos</h2>
+          <p>Vote antes do inicio da partida e acompanhe o movimento da comunidade em tempo real.</p>
+        </div>
+        <span class="status status-green">Percentuais em tempo real</span>
+      </div>
+
+      @if (partidas.length) {
+        <div class="match-grid">
+          @for (partida of partidas; track partida.id) {
+            <article class="match-prediction">
+              <header>
+                <span>{{ partida.torneioNome }}</span>
+                <small>{{ partida.etapa || 'Proxima rodada' }}</small>
+              </header>
+
+              <div class="match-options">
+                <button (click)="votarPartida(partida, partida.mandante)" [disabled]="!!votando">
+                  <span class="team-shield"><i class="bi bi-shield"></i></span>
+                  <strong>{{ partida.mandante.nome }}</strong>
+                  <span class="vote-bar"><i [style.width.%]="percentual(partida.percentuais, partida.mandante.id)"></i></span>
+                  <small>{{ percentual(partida.percentuais, partida.mandante.id) }}%</small>
+                </button>
+
+                <div class="versus">x</div>
+
+                <button (click)="votarPartida(partida, partida.visitante)" [disabled]="!!votando">
+                  <span class="team-shield"><i class="bi bi-shield"></i></span>
+                  <strong>{{ partida.visitante.nome }}</strong>
+                  <span class="vote-bar"><i [style.width.%]="percentual(partida.percentuais, partida.visitante.id)"></i></span>
+                  <small>{{ percentual(partida.percentuais, partida.visitante.id) }}%</small>
+                </button>
+              </div>
+
+              <footer>
+                <span><i class="bi bi-people"></i> {{ partida.percentuais.totalPalpites }} voto(s)</span>
+                <span>Vote antes do inicio</span>
+              </footer>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-state prediction-empty-state">
+          <i class="bi bi-calendar2-x"></i>
+          <strong>Nenhuma partida aberta agora</strong>
+          <p>A janela de palpites para jogos aparece aqui assim que houver confrontos disponiveis.</p>
+        </div>
+      }
+    </section>
+
+    <section class="card prediction-panel">
+      <div class="prediction-panel-head">
+        <div>
+          <div class="eyebrow">Visao de longo prazo</div>
+          <h2 class="prediction-panel-title">Torneios disponiveis</h2>
+          <p>Escolha quem voce acredita que chega ao titulo enquanto a janela de participacao ainda estiver aberta.</p>
+        </div>
+      </div>
+
+      @if (torneios.length) {
+        <div class="tournament-grid">
+          @for (torneio of torneios; track torneio.id) {
+            <article class="tournament-prediction">
+              <div class="tournament-head">
+                <span class="trophy-mark"><i class="bi bi-trophy"></i></span>
+                <div>
+                  <strong>{{ torneio.nome }}</strong>
+                  <small>Quem sera o campeao?</small>
+                </div>
+                <span class="status status-green">Aberto</span>
+              </div>
+
+              <div class="champion-options">
+                @for (opcao of torneio.opcoes; track opcao.id) {
+                  <button (click)="votarCampeao(torneio, opcao)" [disabled]="!!votando">
+                    <span>{{ opcao.nome }}</span>
+                    <span><i [style.width.%]="percentual(torneio.percentuais, opcao.id)"></i></span>
+                    <strong>{{ percentual(torneio.percentuais, opcao.id) }}%</strong>
+                  </button>
+                }
+              </div>
+
+              <small>{{ torneio.percentuais.totalPalpites }} palpite(s) registrados</small>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-state prediction-empty-state">
+          <i class="bi bi-trophy"></i>
+          <strong>Nenhum torneio liberado para palpites</strong>
+          <p>Os torneios aparecem aqui enquanto a janela de participacao estiver aberta.</p>
+        </div>
+      }
+    </section>
+
+    @if (!usuario()) {
+      <section class="card guest-note">
+        <span class="guest-note-icon"><i class="bi bi-person-check"></i></span>
+        <div>
+          <strong>Seu voto de visitante ja conta nos percentuais.</strong>
+          <p>Entre na sua conta para acompanhar palpites em andamento, acertos e historico.</p>
+        </div>
+        <a class="btn btn-primary" routerLink="/login">Entrar</a>
+      </section>
+    }
+  }
+
+  @if (!carregando && aba === 'andamento') {
+    <section class="card panel-strong prediction-panel">
+      <div class="prediction-panel-head">
+        <div>
+          <div class="eyebrow">Aguardando resultado</div>
+          <h2 class="prediction-panel-title">Seus palpites em andamento</h2>
+          <p>Esses registros ainda dependem do resultado oficial para serem apurados.</p>
+        </div>
+      </div>
+
+      @if (palpitesEmAndamento.length) {
+        <div class="history-list">
+          @for (palpite of palpitesEmAndamento; track palpite.id) {
+            <article class="history-row">
+              <span class="history-icon pending"><i class="bi bi-hourglass-split"></i></span>
+              <span>
+                <strong>{{ nomeEvento(palpite) }}</strong>
+                <small>{{ tipoLabel(palpite.tipo) }}</small>
+              </span>
+              <span class="chosen-option">{{ nomeOpcao(palpite) }}</span>
+              <span class="status status-warn">Em andamento</span>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-state prediction-empty-state compact-empty-state">
+          <i class="bi bi-hourglass-split"></i>
+          <strong>Nenhum palpite em andamento</strong>
+          <p>Assim que voce votar em partidas ou torneios, seus palpites ativos aparecerao aqui.</p>
+        </div>
+      }
+    </section>
+  }
+
+  @if (!carregando && aba === 'historico') {
+    <section class="card panel-strong prediction-panel">
+      <div class="prediction-panel-head">
+        <div>
+          <div class="eyebrow">Resultados anteriores</div>
+          <h2 class="prediction-panel-title">Historico de palpites</h2>
+          <p>Veja o que voce acertou e acompanhe como suas leituras foram performando ao longo dos eventos.</p>
+        </div>
+      </div>
+
+      @if (palpitesAnteriores.length) {
+        <div class="history-list">
+          @for (palpite of palpitesAnteriores; track palpite.id) {
+            <article class="history-row">
+              <span class="history-icon" [class.hit]="palpite.acertou" [class.miss]="!palpite.acertou">
+                <i class="bi" [class.bi-check-lg]="palpite.acertou" [class.bi-x-lg]="!palpite.acertou"></i>
+              </span>
+              <span>
+                <strong>{{ nomeEvento(palpite) }}</strong>
+                <small>{{ tipoLabel(palpite.tipo) }}</small>
+              </span>
+              <span class="chosen-option">{{ nomeOpcao(palpite) }}</span>
+              <span class="status" [class.status-green]="palpite.acertou" [class.status-red]="!palpite.acertou">
+                {{ palpite.acertou ? 'Acertou' : 'Nao acertou' }}
+              </span>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-state prediction-empty-state compact-empty-state">
+          <i class="bi bi-clock-history"></i>
+          <strong>Seu historico ainda esta vazio</strong>
+          <p>Seus palpites apurados aparecerao aqui quando os eventos forem concluidos.</p>
+        </div>
+      }
+    </section>
+  }
+</main>

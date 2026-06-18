@@ -1,4 +1,4 @@
-Feature: Gerenciar palpites publicos sobre partidas e torneios
+Feature: Gerenciar ciclo completo de palpites sobre partidas e rankings do torneio
 
   As a visitante ou usuario autenticado
   I want registrar palpites sobre vencedores de partidas, campeao do torneio, artilheiro e lider de assistencias
@@ -31,7 +31,7 @@ Feature: Gerenciar palpites publicos sobre partidas e torneios
   Scenario: Registrar palpite de visitante nao autenticado sobre vencedor de partida
     Given que o visitante nao esta autenticado
     And que existe uma partida cadastrada com janela de votacao aberta
-    When ele registrar um palpite publico indicando o time vencedor da partida
+    When ele registrar um palpite como visitante indicando o time vencedor da partida
     Then o sistema deve armazenar o palpite do visitante para a partida
 
   Scenario: Substituir palpite anterior do mesmo usuario para o mesmo evento alvo

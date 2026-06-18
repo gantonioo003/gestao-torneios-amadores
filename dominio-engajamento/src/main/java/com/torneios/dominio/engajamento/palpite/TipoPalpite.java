@@ -6,3 +6,5 @@ public enum TipoPalpite {
     ARTILHEIRO_TORNEIO,
     LIDER_ASSISTENCIAS_TORNEIO
 }
+
+

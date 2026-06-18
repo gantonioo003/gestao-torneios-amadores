@@ -1,7 +1,7 @@
 # Funcionalidades do Sistema
 
 ## Conta, comunicacao e participacao inicial
-F1. Gerenciar ciclo completo de palpites publicos sobre partidas e rankings do torneio, com registro de votos, janela de participacao, percentuais em tempo real e apuracao automatica
+F1. Gerenciar ciclo completo de palpites sobre partidas e rankings do torneio, com registro de votos, janela de participacao, percentuais em tempo real e apuracao automatica
 
 F2. Gerenciar identidade, conta, autenticacao, perfil e permissoes, permitindo cadastro por funcao no futebol, entrada local ou externa, edicao segura, exclusao da propria conta, pagina publica, torneios organizados ou disputados, torneios salvos e historico privado de palpites
 

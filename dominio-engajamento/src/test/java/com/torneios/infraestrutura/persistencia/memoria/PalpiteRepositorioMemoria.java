@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
-import com.torneios.dominio.engajamento.palpite.EventoAlvo;
+import com.torneios.dominio.engajamento.palpite.EventoAlvoPalpite;
 import com.torneios.dominio.engajamento.palpite.Palpite;
 import com.torneios.dominio.engajamento.palpite.PalpiteRepositorio;
 
@@ -21,19 +21,26 @@ public class PalpiteRepositorioMemoria implements PalpiteRepositorio {
     }
 
     @Override
-    public Optional<Palpite> buscarPorUsuarioEEvento(UsuarioId usuarioId, EventoAlvo eventoAlvo) {
+    public Optional<Palpite> buscarPorUsuarioEEvento(UsuarioId usuarioId, EventoAlvoPalpite eventoAlvo) {
         return buscarPorVotanteEEvento("USUARIO:" + usuarioId.valor(), eventoAlvo);
     }
 
     @Override
-    public Optional<Palpite> buscarPorVotanteEEvento(String identificadorVotante, EventoAlvo eventoAlvo) {
+    public Optional<Palpite> buscarPorVotanteEEvento(String identificadorVotante, EventoAlvoPalpite eventoAlvo) {
         return Optional.ofNullable(palpites.get(chave(identificadorVotante, eventoAlvo)));
     }
 
     @Override
-    public List<Palpite> listarPorEvento(EventoAlvo eventoAlvo) {
+    public List<Palpite> listarPorEvento(EventoAlvoPalpite eventoAlvo) {
         return palpites.values().stream()
                 .filter(palpite -> palpite.getEventoAlvo().equals(eventoAlvo))
+                .toList();
+    }
+
+    @Override
+    public List<Palpite> listarPorUsuario(UsuarioId usuarioId) {
+        return palpites.values().stream()
+                .filter(palpite -> usuarioId.equals(palpite.getUsuarioId()))
                 .toList();
     }
 
@@ -41,7 +48,9 @@ public class PalpiteRepositorioMemoria implements PalpiteRepositorio {
         return new ArrayList<>(palpites.values());
     }
 
-    private String chave(String identificadorVotante, EventoAlvo eventoAlvo) {
+    private String chave(String identificadorVotante, EventoAlvoPalpite eventoAlvo) {
         return identificadorVotante + ":" + eventoAlvo.hashCode();
     }
 }
+
+

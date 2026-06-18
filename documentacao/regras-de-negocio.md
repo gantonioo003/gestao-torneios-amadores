@@ -2,7 +2,7 @@
 
 ## Conta, comunicacao e engajamento inicial
 
-RN01. Usuarios autenticados e visitantes identificados podem registrar palpites publicos sobre eventos do sistema.
+RN01. Usuarios autenticados e visitantes identificados podem registrar palpites sobre eventos do sistema.
 
 RN02. O sistema deve permitir palpites sobre vencedor de partida, campeao do torneio, artilheiro e lider de assistencias.
 

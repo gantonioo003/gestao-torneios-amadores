@@ -5,33 +5,33 @@ import java.util.Objects;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 
-public final class EventoAlvo {
+public final class EventoAlvoPalpite {
 
     private final TipoPalpite tipo;
     private final TorneioId torneioId;
     private final PartidaId partidaId;
 
-    private EventoAlvo(TipoPalpite tipo, TorneioId torneioId, PartidaId partidaId) {
+    private EventoAlvoPalpite(TipoPalpite tipo, TorneioId torneioId, PartidaId partidaId) {
         this.tipo = Objects.requireNonNull(tipo, "O tipo do palpite e obrigatorio.");
         this.torneioId = Objects.requireNonNull(torneioId, "O torneio do evento alvo e obrigatorio.");
         this.partidaId = partidaId;
     }
 
-    public static EventoAlvo paraPartida(TorneioId torneioId, PartidaId partidaId) {
+    public static EventoAlvoPalpite paraPartida(TorneioId torneioId, PartidaId partidaId) {
         Objects.requireNonNull(partidaId, "A partida do evento alvo e obrigatoria.");
-        return new EventoAlvo(TipoPalpite.VENCEDOR_PARTIDA, torneioId, partidaId);
+        return new EventoAlvoPalpite(TipoPalpite.VENCEDOR_PARTIDA, torneioId, partidaId);
     }
 
-    public static EventoAlvo paraCampeao(TorneioId torneioId) {
-        return new EventoAlvo(TipoPalpite.CAMPEAO_TORNEIO, torneioId, null);
+    public static EventoAlvoPalpite paraCampeao(TorneioId torneioId) {
+        return new EventoAlvoPalpite(TipoPalpite.CAMPEAO_TORNEIO, torneioId, null);
     }
 
-    public static EventoAlvo paraArtilheiro(TorneioId torneioId) {
-        return new EventoAlvo(TipoPalpite.ARTILHEIRO_TORNEIO, torneioId, null);
+    public static EventoAlvoPalpite paraArtilheiro(TorneioId torneioId) {
+        return new EventoAlvoPalpite(TipoPalpite.ARTILHEIRO_TORNEIO, torneioId, null);
     }
 
-    public static EventoAlvo paraLiderAssistencias(TorneioId torneioId) {
-        return new EventoAlvo(TipoPalpite.LIDER_ASSISTENCIAS_TORNEIO, torneioId, null);
+    public static EventoAlvoPalpite paraLiderAssistencias(TorneioId torneioId) {
+        return new EventoAlvoPalpite(TipoPalpite.LIDER_ASSISTENCIAS_TORNEIO, torneioId, null);
     }
 
     public TipoPalpite getTipo() {
@@ -55,10 +55,10 @@ public final class EventoAlvo {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof EventoAlvo)) {
+        if (!(o instanceof EventoAlvoPalpite)) {
             return false;
         }
-        EventoAlvo other = (EventoAlvo) o;
+        EventoAlvoPalpite other = (EventoAlvoPalpite) o;
         return tipo == other.tipo
                 && torneioId.equals(other.torneioId)
                 && Objects.equals(partidaId, other.partidaId);
@@ -69,3 +69,5 @@ public final class EventoAlvo {
         return Objects.hash(tipo, torneioId, partidaId);
     }
 }
+
+

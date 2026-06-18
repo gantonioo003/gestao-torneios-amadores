@@ -17,7 +17,7 @@ import com.torneios.dominio.engajamento.desafio.DesafioAmistosoServico;
 import com.torneios.dominio.engajamento.feed.FeedTorneioServico;
 import com.torneios.dominio.engajamento.feed.PublicacaoFeed;
 import com.torneios.dominio.engajamento.feed.PublicacaoFeedId;
-import com.torneios.dominio.engajamento.palpite.EventoAlvo;
+import com.torneios.dominio.engajamento.palpite.EventoAlvoPalpite;
 import com.torneios.dominio.engajamento.palpite.Palpite;
 import com.torneios.dominio.engajamento.palpite.PalpiteId;
 import com.torneios.dominio.engajamento.palpite.PalpiteServico;
@@ -64,7 +64,7 @@ public abstract class EngajamentoFuncionalidade {
     protected static ChatPrivadoServico chatPrivadoServico = new ChatPrivadoServico(
             conversaPrivadaRepositorio, consultaChat);
 
-    protected static EventoAlvo eventoAlvo;
+    protected static EventoAlvoPalpite eventoAlvo;
     protected static Palpite palpite;
     protected static List<Palpite> palpitesApurados;
     protected static PercentuaisPalpite percentuaisPalpite;
@@ -113,22 +113,22 @@ public abstract class EngajamentoFuncionalidade {
     }
 
     protected void configurarEventoDePartidaAberto() {
-        eventoAlvo = EventoAlvo.paraPartida(TORNEIO_ID, PARTIDA_ID);
+        eventoAlvo = EventoAlvoPalpite.paraPartida(TORNEIO_ID, PARTIDA_ID);
         consultaPalpite.registrarOpcoesValidas(eventoAlvo, TIME_A_ID, TIME_B_ID);
     }
 
     protected void configurarEventoCampeaoAberto() {
-        eventoAlvo = EventoAlvo.paraCampeao(TORNEIO_ID);
+        eventoAlvo = EventoAlvoPalpite.paraCampeao(TORNEIO_ID);
         consultaPalpite.registrarOpcoesValidas(eventoAlvo, TIME_A_ID, TIME_B_ID);
     }
 
     protected void configurarEventoArtilheiroAberto() {
-        eventoAlvo = EventoAlvo.paraArtilheiro(TORNEIO_ID);
+        eventoAlvo = EventoAlvoPalpite.paraArtilheiro(TORNEIO_ID);
         consultaPalpite.registrarOpcoesValidas(eventoAlvo, JOGADOR_A_ID, JOGADOR_B_ID);
     }
 
     protected void configurarEventoLiderAssistenciasAberto() {
-        eventoAlvo = EventoAlvo.paraLiderAssistencias(TORNEIO_ID);
+        eventoAlvo = EventoAlvoPalpite.paraLiderAssistencias(TORNEIO_ID);
         consultaPalpite.registrarOpcoesValidas(eventoAlvo, JOGADOR_A_ID, JOGADOR_B_ID);
     }
 
@@ -157,3 +157,5 @@ public abstract class EngajamentoFuncionalidade {
         return new MensagemChatId(valor);
     }
 }
+
+

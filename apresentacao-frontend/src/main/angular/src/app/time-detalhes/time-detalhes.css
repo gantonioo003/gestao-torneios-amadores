@@ -1,0 +1,19 @@
+.roster-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.roster-heading .section-title,
+.roster-heading p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .roster-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

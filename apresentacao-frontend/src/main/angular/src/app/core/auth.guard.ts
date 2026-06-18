@@ -1,6 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { map } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 import { AuthService } from './auth.service';
 
 export const authGuard: CanActivateFn = (_, state) => {
@@ -33,4 +34,19 @@ export const roleGuard: CanActivateFn = (route, state) => {
     return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url, acesso: 'restrito' } });
   }
   return permitido ? true : router.createUrlTree(['/home-logada'], { queryParams: { acessoNegado: permissao } });
+};
+
+export const timeRosterGuard: CanActivateFn = (route) => {
+  const http = inject(HttpClient);
+  const router = inject(Router);
+  const timeId = route.paramMap.get('id');
+
+  return http.get<{ podeGerenciarElenco: boolean }>(`/backend/time/${timeId}/edicao`).pipe(
+    map(recurso => recurso.podeGerenciarElenco
+      ? true
+      : router.createUrlTree(['/time', timeId, 'detalhes'], {
+          queryParams: { acessoNegado: 'elenco' }
+        })),
+    catchError(() => of(router.createUrlTree(['/time', timeId, 'detalhes'])))
+  );
 };

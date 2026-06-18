@@ -1,63 +1,147 @@
-<main class="page page-narrow">
+<main class="page roster-page">
   <div class="hero-row">
     <div>
-      <div class="eyebrow">Elenco e comissao</div>
-      <h1 class="page-title">Vincular profissional</h1>
-      <p class="page-subtitle">Escolha jogador, tecnico ou membro da comissao e defina sua funcao no time.</p>
+      <div class="eyebrow">Gestao de elenco</div>
+      <h1 class="page-title">{{ editando ? 'Editar integrante' : 'Adicionar ao ' + (time.nome || 'time') }}</h1>
+      <p class="page-subtitle">
+        {{ editando
+          ? 'Atualize a funcao e o periodo deste integrante no time.'
+          : 'Busque alguem da comunidade ou cadastre um novo jogador ou membro da comissao.' }}
+      </p>
     </div>
-    <a class="btn btn-outline" [routerLink]="['/time', timeId, 'detalhes']"><i class="bi bi-arrow-left"></i> Voltar</a>
+    <a class="btn btn-outline" [routerLink]="['/time', timeId, 'detalhes']">
+      <i class="bi bi-arrow-left"></i> Voltar ao time
+    </a>
   </div>
 
-  <section class="card panel-strong">
-    <div class="form-grid">
-      <div class="field">
-        <label>Buscar profissional</label>
+  <div class="roster-layout">
+    <section class="card panel-strong roster-form">
+      @if (!editando) {
+        <div class="roster-mode" aria-label="Forma de adicionar integrante">
+          <button [class.active]="modo === 'buscar'" (click)="trocarModo('buscar')">
+            <i class="bi bi-search"></i>
+            <span><strong>Buscar existente</strong><small>Vincular um perfil ja cadastrado</small></span>
+          </button>
+          <button [class.active]="modo === 'cadastrar'" (click)="trocarModo('cadastrar')">
+            <i class="bi bi-person-plus"></i>
+            <span><strong>Cadastrar novo</strong><small>Criar e adicionar ao elenco</small></span>
+          </button>
+        </div>
+      }
+
+      @if (modo === 'buscar' || editando) {
         @if (!selecionado) {
-          <input [(ngModel)]="termoBusca" (input)="buscar()" placeholder="Nome ou tipo">
-          @if (resultados.length > 0) {
-            <div style="margin-top: 8px">
-              @for (p of resultados; track p.id) {
-                <button class="btn btn-block" style="justify-content: flex-start; margin-bottom: 6px" (click)="selecionar(p)">
-                  <span class="avatar" style="width: 30px; height: 30px">{{ p.nome?.[0] || 'P' }}</span>
-                  <strong>{{ p.nome }}</strong>
-                  <span class="muted">{{ tipoLabel(p.tipo) }}</span>
-                </button>
-              }
+          <div class="field">
+            <label>Buscar profissional</label>
+            <div class="search-box">
+              <i class="bi bi-search"></i>
+              <input [(ngModel)]="termoBusca" (input)="buscar()" placeholder="Digite pelo menos 2 letras">
             </div>
-          }
-          @if (!termoBusca && exemplos.length > 0) {
-            <div style="margin-top: 8px">
-              @for (p of exemplos; track p.id) {
-                <button class="btn btn-block" style="justify-content: flex-start; margin-bottom: 6px" (click)="selecionar(p)">
-                  <span class="avatar" style="width: 30px; height: 30px">{{ p.nome?.[0] || 'P' }}</span>
-                  <strong>{{ p.nome }}</strong>
-                  <span class="muted">{{ tipoLabel(p.tipo) }}</span>
+          </div>
+
+          @if (resultados.length || (!termoBusca && exemplos.length)) {
+            <div class="people-results">
+              @for (profissional of (resultados.length ? resultados : exemplos); track profissional.id) {
+                <button
+                  class="person-option"
+                  [class.disabled]="profissional.tipo === 'TREINADOR' && possuiTreinador"
+                  (click)="selecionar(profissional)">
+                  <span class="avatar">{{ profissional.nome?.slice(0, 1) || 'P' }}</span>
+                  <span>
+                    <strong>{{ profissional.nome }}</strong>
+                    <small>{{ tipoLabel(profissional.tipo) }}</small>
+                  </span>
+                  <i class="bi bi-plus-circle"></i>
                 </button>
               }
             </div>
           }
         } @else {
-          <div class="mini-row card" style="box-shadow: none">
-            <span><strong>{{ selecionado.nome }}</strong></span>
-            <button class="btn btn-sm" (click)="limpar()">Trocar</button>
+          <div class="selected-person">
+            <span class="avatar">{{ selecionado.nome?.slice(0, 1) || 'P' }}</span>
+            <span><strong>{{ selecionado.nome }}</strong><small>{{ tipoLabel(selecionado.tipo) }}</small></span>
+            @if (!editando) {
+              <button class="btn btn-sm" (click)="limpar()">Trocar</button>
+            }
           </div>
         }
-      </div>
+      }
 
-      <div class="field">
-        <label>Funcao no time</label>
-        <input [(ngModel)]="funcao" placeholder="Ex.: Atacante / Treinador / Auxiliar">
-      </div>
+      @if (modo === 'cadastrar' && !editando) {
+        <div class="field">
+          <label>Nome completo</label>
+          <input [(ngModel)]="nomeNovo" placeholder="Ex.: Joao Silva">
+        </div>
 
-      <div class="grid grid-2">
-        <div class="field"><label>Data de inicio</label><input type="date" [(ngModel)]="dataInicio"></div>
-        <div class="field"><label>Data limite do contrato</label><input type="date" [(ngModel)]="dataLimite"></div>
-      </div>
+        <div class="field">
+          <label>Tipo de integrante</label>
+          <div class="type-grid">
+            @for (tipo of tiposDisponiveis; track tipo.valor) {
+              <button [class.active]="tipoNovo === tipo.valor" (click)="selecionarTipoNovo(tipo.valor)">
+                <i class="bi {{ tipo.icone }}"></i>
+                <span><strong>{{ tipo.nome }}</strong><small>{{ tipo.descricao }}</small></span>
+              </button>
+            }
+          </div>
+        </div>
+      }
 
-      <div class="grid grid-2">
+      @if (possuiTreinador && !editando) {
+        <div class="roster-note">
+          <i class="bi bi-info-circle"></i>
+          <span>Este time ja possui treinador. As demais funcoes da comissao continuam disponiveis.</span>
+        </div>
+      }
+
+      @if (selecionado || tipoNovo) {
+        <div class="contract-fields">
+          <div class="field">
+            <label>Funcao no time</label>
+            <select [(ngModel)]="funcao">
+              <option value="">Selecione a funcao</option>
+              @for (opcao of funcoesDisponiveis(selecionado?.tipo || tipoNovo); track opcao) {
+                <option [value]="opcao">{{ opcao }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label>Data de inicio</label>
+            <input type="date" [(ngModel)]="dataInicio">
+          </div>
+          <div class="field">
+            <label>Fim do vinculo <span class="muted">(opcional)</span></label>
+            <input type="date" [(ngModel)]="dataLimite">
+          </div>
+        </div>
+      }
+
+      <div class="roster-actions">
         <a class="btn" [routerLink]="['/time', timeId, 'detalhes']">Cancelar</a>
-        <button class="btn btn-primary" (click)="vincular()">Vincular</button>
+        @if ((modo === 'buscar' || editando) && selecionado) {
+          <button class="btn btn-primary" [disabled]="salvando" (click)="salvarVinculo()">
+            {{ salvando ? 'Salvando...' : (editando ? 'Salvar vinculo' : 'Adicionar ao elenco') }}
+          </button>
+        }
+        @if (modo === 'cadastrar' && tipoNovo) {
+          <button class="btn btn-primary" [disabled]="salvando" (click)="cadastrarEVincular()">
+            {{ salvando ? 'Cadastrando...' : 'Cadastrar e adicionar' }}
+          </button>
+        }
       </div>
-    </div>
-  </section>
+    </section>
+
+    <aside class="card roster-summary">
+      <div class="crest"><i class="bi bi-shield"></i></div>
+      <div>
+        <div class="eyebrow">Elenco atual</div>
+        <h2>{{ time.nome || 'Time' }}</h2>
+        <p>{{ elenco.length }} integrante(s) cadastrado(s)</p>
+      </div>
+      <div class="summary-counts">
+        <div><strong>{{ elenco.length }}</strong><span>Total</span></div>
+        <div><strong>{{ possuiTreinador ? 1 : 0 }}</strong><span>Treinador</span></div>
+      </div>
+      <p class="small muted">O cadastro feito aqui ja nasce vinculado a este time. Depois, o perfil pode acumular historico e estatisticas.</p>
+    </aside>
+  </div>
 </main>

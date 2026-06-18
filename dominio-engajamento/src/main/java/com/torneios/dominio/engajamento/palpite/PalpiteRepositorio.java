@@ -9,9 +9,13 @@ public interface PalpiteRepositorio {
 
     void salvar(Palpite palpite);
 
-    Optional<Palpite> buscarPorUsuarioEEvento(UsuarioId usuarioId, EventoAlvo eventoAlvo);
+    Optional<Palpite> buscarPorUsuarioEEvento(UsuarioId usuarioId, EventoAlvoPalpite eventoAlvo);
 
-    Optional<Palpite> buscarPorVotanteEEvento(String identificadorVotante, EventoAlvo eventoAlvo);
+    Optional<Palpite> buscarPorVotanteEEvento(String identificadorVotante, EventoAlvoPalpite eventoAlvo);
 
-    List<Palpite> listarPorEvento(EventoAlvo eventoAlvo);
+    List<Palpite> listarPorEvento(EventoAlvoPalpite eventoAlvo);
+
+    List<Palpite> listarPorUsuario(UsuarioId usuarioId);
 }
+
+

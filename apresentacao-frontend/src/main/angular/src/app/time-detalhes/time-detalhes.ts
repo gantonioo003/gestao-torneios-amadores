@@ -17,6 +17,8 @@ export class TimeDetalhes implements OnInit {
   time: any = {};
   elenco: any[] = [];
   torneios: any[] = [];
+  podeEditarTime = false;
+  podeGerenciarElenco = false;
   readonly usuario = this.auth.usuario;
 
   constructor(
@@ -31,11 +33,19 @@ export class TimeDetalhes implements OnInit {
     this.time = data.time ?? {};
     this.elenco = data.time?.elenco ?? [];
     this.torneios = data.torneios ?? [];
+    this.podeEditarTime = data.podeEditarTime === true;
+    this.podeGerenciarElenco = data.podeGerenciarElenco === true;
   }
 
-  podeGerenciar(): boolean {
-    return this.usuario()?.podeGerenciarTimes === true
-      && this.usuario()?.id === this.time.responsavelId;
+  tipoLabel(tipo: string): string {
+    const labels: Record<string, string> = {
+      JOGADOR: 'Jogador',
+      TREINADOR: 'Treinador',
+      AUXILIAR_TECNICO: 'Auxiliar tecnico',
+      PREPARADOR_FISICO: 'Preparador fisico',
+      MEDICO: 'Medico'
+    };
+    return labels[tipo] ?? tipo;
   }
 
   editarVinculo(v: any) {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.competicao.andamento.PartidaResumo;
 import com.torneios.aplicacao.competicao.andamento.PartidaServicoAplicacao;
+import com.torneios.aplicacao.engajamento.palpite.ApuracaoAutomaticaPalpiteServicoAplicacao;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
@@ -26,6 +27,7 @@ class PartidaControlador {
 
     @Autowired PartidaServico partidaServico;
     @Autowired PartidaServicoAplicacao partidaServicoConsulta;
+    @Autowired ApuracaoAutomaticaPalpiteServicoAplicacao apuracaoAutomaticaPalpiteServico;
 
     @RequestMapping(method = GET, path = "pesquisa")
     List<? extends PartidaResumo> pesquisar(@RequestParam long torneioId) {
@@ -42,6 +44,8 @@ class PartidaControlador {
                 new PartidaId(id),
                 new UsuarioId(organizadorId),
                 new ResultadoPartida(dto.golsMandante, dto.golsVisitante));
+        apuracaoAutomaticaPalpiteServico.apurarVencedorPartida(
+                torneioId, id, dto.golsMandante, dto.golsVisitante);
     }
 
     public static class ResultadoDto {
@@ -49,3 +53,5 @@ class PartidaControlador {
         public int golsVisitante;
     }
 }
+
+

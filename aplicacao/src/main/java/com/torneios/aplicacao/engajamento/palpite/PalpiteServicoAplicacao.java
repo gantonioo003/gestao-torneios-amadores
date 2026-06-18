@@ -6,10 +6,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.torneios.dominio.compartilhado.enumeracao.StatusTorneio;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
+import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
-import com.torneios.dominio.engajamento.palpite.EventoAlvo;
+import com.torneios.dominio.competicao.partida.PartidaRepositorio;
+import com.torneios.dominio.engajamento.palpite.EventoAlvoPalpite;
 import com.torneios.dominio.engajamento.palpite.OpcaoPalpite;
 import com.torneios.dominio.engajamento.palpite.Palpite;
 import com.torneios.dominio.engajamento.palpite.PalpiteId;
@@ -17,20 +20,33 @@ import com.torneios.dominio.engajamento.palpite.PalpiteRepositorio;
 import com.torneios.dominio.engajamento.palpite.PalpiteServico;
 import com.torneios.dominio.engajamento.palpite.PercentuaisPalpite;
 import com.torneios.dominio.engajamento.palpite.TipoPalpite;
+import com.torneios.dominio.participacao.time.TimeRepositorio;
+import com.torneios.dominio.torneio.torneio.TorneioRepositorio;
 
-/**
- * Casos de uso de palpites por usuario autenticado ou visitante.
- */
 public class PalpiteServicoAplicacao {
 
     private final PalpiteServico palpiteServico;
     private final PalpiteRepositorio palpiteRepositorio;
+    private final TorneioRepositorio torneioRepositorio;
+    private final PartidaRepositorio partidaRepositorio;
+    private final TimeRepositorio timeRepositorio;
 
     public PalpiteServicoAplicacao(PalpiteServico palpiteServico, PalpiteRepositorio palpiteRepositorio) {
+        this(palpiteServico, palpiteRepositorio, null, null, null);
+    }
+
+    public PalpiteServicoAplicacao(PalpiteServico palpiteServico,
+                                   PalpiteRepositorio palpiteRepositorio,
+                                   TorneioRepositorio torneioRepositorio,
+                                   PartidaRepositorio partidaRepositorio,
+                                   TimeRepositorio timeRepositorio) {
         notNull(palpiteServico, "O servico de palpite e obrigatorio.");
         notNull(palpiteRepositorio, "O repositorio de palpite e obrigatorio.");
         this.palpiteServico = palpiteServico;
         this.palpiteRepositorio = palpiteRepositorio;
+        this.torneioRepositorio = torneioRepositorio;
+        this.partidaRepositorio = partidaRepositorio;
+        this.timeRepositorio = timeRepositorio;
     }
 
     public PalpiteResumo registrarOuAtualizar(long palpiteId,
@@ -39,7 +55,7 @@ public class PalpiteServicoAplicacao {
                                               long torneioId,
                                               Long partidaId,
                                               long opcao) {
-        EventoAlvo eventoAlvo = criarEventoAlvo(tipo, torneioId, partidaId);
+        EventoAlvoPalpite eventoAlvo = criarEventoAlvo(tipo, torneioId, partidaId);
         return converter(palpiteServico.registrarOuAtualizar(
                 new PalpiteId(palpiteId),
                 new UsuarioId(usuarioId),
@@ -53,7 +69,7 @@ public class PalpiteServicoAplicacao {
                                                            long torneioId,
                                                            Long partidaId,
                                                            long opcao) {
-        EventoAlvo eventoAlvo = criarEventoAlvo(tipo, torneioId, partidaId);
+        EventoAlvoPalpite eventoAlvo = criarEventoAlvo(tipo, torneioId, partidaId);
         return converter(palpiteServico.registrarOuAtualizarComoVisitante(
                 new PalpiteId(palpiteId),
                 visitanteId,
@@ -61,7 +77,7 @@ public class PalpiteServicoAplicacao {
                 new OpcaoPalpite(opcao)));
     }
 
-    public PercentuaisResumo obterPercentuais(String tipo, long torneioId, Long partidaId) {
+    public PercentuaisPalpiteResumo obterPercentuais(String tipo, long torneioId, Long partidaId) {
         return converterPercentuais(palpiteServico.obterPercentuais(criarEventoAlvo(tipo, torneioId, partidaId)));
     }
 
@@ -77,14 +93,67 @@ public class PalpiteServicoAplicacao {
                 .toList();
     }
 
-    private EventoAlvo criarEventoAlvo(String tipo, long torneioId, Long partidaId) {
+    public List<PalpiteResumo> listarPorUsuario(long usuarioId) {
+        return palpiteRepositorio.listarPorUsuario(new UsuarioId(usuarioId)).stream()
+                .map(this::converter)
+                .toList();
+    }
+
+    public CentralPalpitesResumo listarOportunidades() {
+        notNull(torneioRepositorio, "O repositorio de torneios e obrigatorio para listar oportunidades.");
+        notNull(partidaRepositorio, "O repositorio de partidas e obrigatorio para listar oportunidades.");
+        notNull(timeRepositorio, "O repositorio de times e obrigatorio para listar oportunidades.");
+
+        var torneios = torneioRepositorio.listarTodos();
+        var torneiosDisponiveis = torneios.stream()
+                .filter(torneio -> torneio.getStatus() == StatusTorneio.CONFIGURADO
+                        || torneio.getStatus() == StatusTorneio.ESTRUTURA_GERADA)
+                .filter(torneio -> !torneio.getParticipantesAprovados().isEmpty())
+                .map(torneio -> new TorneioPalpiteResumo(
+                        torneio.getId().valor(),
+                        torneio.getNome(),
+                        torneio.getStatus().name(),
+                        torneio.getParticipantesAprovados().stream()
+                                .map(participante -> opcaoTime(participante.getTimeId().valor()))
+                                .toList(),
+                        obterPercentuais(TipoPalpite.CAMPEAO_TORNEIO.name(), torneio.getId().valor(), null)))
+                .toList();
+
+        var partidasDisponiveis = torneios.stream()
+                .flatMap(torneio -> partidaRepositorio.listarPorTorneio(torneio.getId()).stream()
+                        .filter(partida -> !partida.estaEncerrada())
+                        .map(partida -> new PartidaPalpiteResumo(
+                                partida.getId().valor(),
+                                torneio.getId().valor(),
+                                torneio.getNome(),
+                                partida.getEtapa(),
+                                opcaoTime(partida.getMandante().valor()),
+                                opcaoTime(partida.getVisitante().valor()),
+                                obterPercentuais(
+                                        TipoPalpite.VENCEDOR_PARTIDA.name(),
+                                        torneio.getId().valor(),
+                                        partida.getId().valor()))))
+                .limit(12)
+                .toList();
+
+        return new CentralPalpitesResumo(torneiosDisponiveis, partidasDisponiveis);
+    }
+
+    private EventoAlvoPalpite criarEventoAlvo(String tipo, long torneioId, Long partidaId) {
         TipoPalpite tipoPalpite = TipoPalpite.valueOf(tipo);
         return switch (tipoPalpite) {
-            case VENCEDOR_PARTIDA -> EventoAlvo.paraPartida(new TorneioId(torneioId), new PartidaId(partidaId));
-            case CAMPEAO_TORNEIO -> EventoAlvo.paraCampeao(new TorneioId(torneioId));
-            case ARTILHEIRO_TORNEIO -> EventoAlvo.paraArtilheiro(new TorneioId(torneioId));
-            case LIDER_ASSISTENCIAS_TORNEIO -> EventoAlvo.paraLiderAssistencias(new TorneioId(torneioId));
+            case VENCEDOR_PARTIDA -> EventoAlvoPalpite.paraPartida(new TorneioId(torneioId), new PartidaId(partidaId));
+            case CAMPEAO_TORNEIO -> EventoAlvoPalpite.paraCampeao(new TorneioId(torneioId));
+            case ARTILHEIRO_TORNEIO -> EventoAlvoPalpite.paraArtilheiro(new TorneioId(torneioId));
+            case LIDER_ASSISTENCIAS_TORNEIO -> EventoAlvoPalpite.paraLiderAssistencias(new TorneioId(torneioId));
         };
+    }
+
+    private OpcaoResumo opcaoTime(long timeId) {
+        String nome = timeRepositorio.buscarPorId(new TimeId(timeId))
+                .map(time -> time.getNome())
+                .orElse("Time #" + timeId);
+        return new OpcaoResumo(timeId, nome);
     }
 
     private PalpiteResumo converter(Palpite palpite) {
@@ -100,11 +169,11 @@ public class PalpiteServicoAplicacao {
                 palpite.acertou().orElse(null));
     }
 
-    private PercentuaisResumo converterPercentuais(PercentuaisPalpite percentuaisPalpite) {
+    private PercentuaisPalpiteResumo converterPercentuais(PercentuaisPalpite percentuaisPalpite) {
         Map<Long, Double> percentuais = new LinkedHashMap<>();
         percentuaisPalpite.getPercentuaisPorOpcao().forEach((opcaoPalpite, valorPercentual) ->
                 percentuais.put(opcaoPalpite.valor(), valorPercentual));
-        return new PercentuaisResumo(
+        return new PercentuaisPalpiteResumo(
                 percentuaisPalpite.getEventoAlvo().getTipo().name(),
                 percentuaisPalpite.getEventoAlvo().getTorneioId().valor(),
                 percentuaisPalpite.getEventoAlvo().getPartidaId() == null
@@ -125,10 +194,33 @@ public class PalpiteServicoAplicacao {
                                 Boolean acertou) {
     }
 
-    public record PercentuaisResumo(String tipo,
-                                    long torneioId,
-                                    Long partidaId,
-                                    long totalPalpites,
-                                    Map<Long, Double> percentuaisPorOpcao) {
+    public record PercentuaisPalpiteResumo(String tipo,
+                                           long torneioId,
+                                           Long partidaId,
+                                           long totalPalpites,
+                                           Map<Long, Double> percentuaisPorOpcao) {
+    }
+
+    public record CentralPalpitesResumo(List<TorneioPalpiteResumo> torneios,
+                                        List<PartidaPalpiteResumo> partidas) {
+    }
+
+    public record TorneioPalpiteResumo(long id,
+                                       String nome,
+                                       String status,
+                                       List<OpcaoResumo> opcoes,
+                                       PercentuaisPalpiteResumo percentuais) {
+    }
+
+    public record PartidaPalpiteResumo(long id,
+                                       long torneioId,
+                                       String torneioNome,
+                                       String etapa,
+                                       OpcaoResumo mandante,
+                                       OpcaoResumo visitante,
+                                       PercentuaisPalpiteResumo percentuais) {
+    }
+
+    public record OpcaoResumo(long id, String nome) {
     }
 }

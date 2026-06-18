@@ -8,3 +8,4 @@ public record PalpiteId(long valor) {
         }
     }
 }
+

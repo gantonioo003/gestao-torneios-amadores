@@ -17,7 +17,7 @@ import com.torneios.apresentacao.SessaoUsuario;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("backend/palpite")
+@RequestMapping("backend/palpites")
 class PalpiteControlador {
 
     @Autowired
@@ -46,9 +46,9 @@ class PalpiteControlador {
     }
 
     @RequestMapping(method = GET, path = "percentuais")
-    PalpiteServicoAplicacao.PercentuaisResumo percentuais(@RequestParam String tipo,
-                                                          @RequestParam long torneioId,
-                                                          @RequestParam(required = false) Long partidaId) {
+    PalpiteServicoAplicacao.PercentuaisPalpiteResumo percentuais(@RequestParam String tipo,
+                                                                 @RequestParam long torneioId,
+                                                                 @RequestParam(required = false) Long partidaId) {
         return palpiteServicoAplicacao.obterPercentuais(tipo, torneioId, partidaId);
     }
 
@@ -65,6 +65,16 @@ class PalpiteControlador {
                                                                 @RequestParam long torneioId,
                                                                 @RequestParam(required = false) Long partidaId) {
         return palpiteServicoAplicacao.listarPorEvento(tipo, torneioId, partidaId);
+    }
+
+    @RequestMapping(method = GET, path = "oportunidades")
+    PalpiteServicoAplicacao.CentralPalpitesResumo oportunidades() {
+        return palpiteServicoAplicacao.listarOportunidades();
+    }
+
+    @RequestMapping(method = GET, path = "meus")
+    List<PalpiteServicoAplicacao.PalpiteResumo> meus(HttpSession sessao) {
+        return palpiteServicoAplicacao.listarPorUsuario(SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     static class PalpiteDto {

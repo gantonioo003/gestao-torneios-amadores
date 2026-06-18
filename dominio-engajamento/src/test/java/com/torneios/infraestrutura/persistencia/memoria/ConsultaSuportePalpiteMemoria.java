@@ -10,7 +10,7 @@ import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.engajamento.palpite.ConsultaSuportePalpite;
-import com.torneios.dominio.engajamento.palpite.EventoAlvo;
+import com.torneios.dominio.engajamento.palpite.EventoAlvoPalpite;
 import com.torneios.dominio.engajamento.palpite.OpcaoPalpite;
 
 public class ConsultaSuportePalpiteMemoria implements ConsultaSuportePalpite {
@@ -20,7 +20,7 @@ public class ConsultaSuportePalpiteMemoria implements ConsultaSuportePalpite {
     private final Set<PartidaId> partidasEncerradas = new HashSet<>();
     private final Set<TorneioId> torneiosIniciados = new HashSet<>();
     private final Set<TorneioId> torneiosFinalizados = new HashSet<>();
-    private final Map<EventoAlvo, Set<Long>> opcoesValidasPorEvento = new HashMap<>();
+    private final Map<EventoAlvoPalpite, Set<Long>> opcoesValidasPorEvento = new HashMap<>();
 
     public void autenticar(UsuarioId usuarioId) {
         usuariosAutenticados.add(usuarioId);
@@ -42,7 +42,7 @@ public class ConsultaSuportePalpiteMemoria implements ConsultaSuportePalpite {
         torneiosFinalizados.add(torneioId);
     }
 
-    public void registrarOpcoesValidas(EventoAlvo eventoAlvo, long... opcoes) {
+    public void registrarOpcoesValidas(EventoAlvoPalpite eventoAlvo, long... opcoes) {
         Set<Long> valores = new HashSet<>();
         Arrays.stream(opcoes).forEach(valores::add);
         opcoesValidasPorEvento.put(eventoAlvo, valores);
@@ -74,7 +74,9 @@ public class ConsultaSuportePalpiteMemoria implements ConsultaSuportePalpite {
     }
 
     @Override
-    public boolean opcaoValidaParaEvento(EventoAlvo eventoAlvo, OpcaoPalpite opcao) {
+    public boolean opcaoValidaParaEvento(EventoAlvoPalpite eventoAlvo, OpcaoPalpite opcao) {
         return opcoesValidasPorEvento.getOrDefault(eventoAlvo, Set.of()).contains(opcao.valor());
     }
 }
+
+

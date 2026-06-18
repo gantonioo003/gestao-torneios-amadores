@@ -100,3 +100,5 @@ class ContaAtividadeRepositorioAplicacaoImpl implements ContaAtividadeRepositori
                 torneio.aceitaSolicitacoes);
     }
 }
+
+

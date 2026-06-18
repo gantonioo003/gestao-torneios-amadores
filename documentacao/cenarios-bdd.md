@@ -1,10 +1,10 @@
-# Cenarios BDD
+﻿# Cenarios BDD
 
 ## Funcionalidades com cenarios definidos
 
-### F1. Gerenciar ciclo completo de palpites publicos de usuarios e visitantes
+### F1. Gerenciar ciclo completo de palpites de usuarios e visitantes
 Dominio: dominio-engajamento
-Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F1-registrar-palpite.feature
+Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F1-gerenciar-ciclo-completo-de-palpites.feature
 
 Cenarios principais:
 - registrar palpite de usuario autenticado sobre vencedor de partida
@@ -262,10 +262,10 @@ Cenarios principais:
 ## Regras de negocio cobertas
 
 ### Conta, comunicacao e engajamento inicial
-- RN01. Usuarios autenticados e visitantes identificados podem registrar palpites publicos.
+- RN01. Usuarios autenticados e visitantes identificados podem registrar palpites.
 - RN02. Tipos de palpite suportados: vencedor de partida, campeao, artilheiro e lider de assistencias.
 - RN03. Cada votante identificado faz no maximo um palpite por evento alvo.
-- RN04. Palpite pode ser alterado enquanto a janela estiver aberta.
+- RN04. palpite pode ser alterado enquanto a janela estiver aberta.
 - RN05. Janela do palpite de vencedor de partida fecha no inicio da partida.
 - RN06. Janela dos demais palpites fecha no inicio do torneio.
 - RN07. Sistema exibe percentual de votos por opcao em tempo real.
@@ -369,3 +369,4 @@ Cenarios principais:
 - RN97. Eventos do scout estatistico podem ser corrigidos ou removidos pelo organizador.
 - RN98. A consolidacao das estatisticas atualiza notas, artilharia, lideres de assistencias e historico dos jogadores.
 - RN99. Substituicao pode ser registrada no scout estatistico independentemente da mesa tatica, desde que os jogadores envolvidos pertencam aos times da partida.
+

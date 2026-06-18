@@ -23,7 +23,7 @@ public class PalpiteServico {
 
     public Palpite registrarOuAtualizar(PalpiteId novoIdSeNecessario,
                                          UsuarioId usuarioId,
-                                         EventoAlvo eventoAlvo,
+                                         EventoAlvoPalpite eventoAlvo,
                                          OpcaoPalpite opcao) {
         Objects.requireNonNull(usuarioId, "O usuario do palpite e obrigatorio.");
         return registrarOuAtualizarPorIdentificador(
@@ -36,7 +36,7 @@ public class PalpiteServico {
 
     public Palpite registrarOuAtualizarComoVisitante(PalpiteId novoIdSeNecessario,
                                                      String visitanteId,
-                                                     EventoAlvo eventoAlvo,
+                                                     EventoAlvoPalpite eventoAlvo,
                                                      OpcaoPalpite opcao) {
         if (visitanteId == null || visitanteId.isBlank()) {
             throw new RegraDeNegocioException("O identificador do visitante e obrigatorio.");
@@ -53,7 +53,7 @@ public class PalpiteServico {
     private Palpite registrarOuAtualizarPorIdentificador(PalpiteId novoIdSeNecessario,
                                                          String identificadorVotante,
                                                          java.util.function.Supplier<Palpite> novoPalpite,
-                                                         EventoAlvo eventoAlvo,
+                                                         EventoAlvoPalpite eventoAlvo,
                                                          OpcaoPalpite opcao) {
         validarJanelaAberta(eventoAlvo);
         validarOpcao(eventoAlvo, opcao);
@@ -70,11 +70,11 @@ public class PalpiteServico {
         return palpite;
     }
 
-    public PercentuaisPalpite obterPercentuais(EventoAlvo eventoAlvo) {
+    public PercentuaisPalpite obterPercentuais(EventoAlvoPalpite eventoAlvo) {
         return PercentuaisPalpite.calcular(eventoAlvo, palpiteRepositorio.listarPorEvento(eventoAlvo));
     }
 
-    public List<Palpite> apurar(EventoAlvo eventoAlvo, long resultadoReal) {
+    public List<Palpite> apurar(EventoAlvoPalpite eventoAlvo, long resultadoReal) {
         garantirEventoConcluido(eventoAlvo);
         List<Palpite> palpites = palpiteRepositorio.listarPorEvento(eventoAlvo);
         for (Palpite palpite : palpites) {
@@ -86,7 +86,7 @@ public class PalpiteServico {
         return palpites;
     }
 
-    private void validarJanelaAberta(EventoAlvo eventoAlvo) {
+    private void validarJanelaAberta(EventoAlvoPalpite eventoAlvo) {
         if (eventoAlvo.ehPorPartida()) {
             if (consultaSuporte.partidaIniciada(eventoAlvo.getPartidaId())) {
                 throw new OperacaoNaoPermitidaException(
@@ -100,7 +100,7 @@ public class PalpiteServico {
         }
     }
 
-    private void validarOpcao(EventoAlvo eventoAlvo, OpcaoPalpite opcao) {
+    private void validarOpcao(EventoAlvoPalpite eventoAlvo, OpcaoPalpite opcao) {
         Objects.requireNonNull(opcao, "A opcao do palpite e obrigatoria.");
         if (!consultaSuporte.opcaoValidaParaEvento(eventoAlvo, opcao)) {
             throw new RegraDeNegocioException(
@@ -108,7 +108,7 @@ public class PalpiteServico {
         }
     }
 
-    private void garantirEventoConcluido(EventoAlvo eventoAlvo) {
+    private void garantirEventoConcluido(EventoAlvoPalpite eventoAlvo) {
         boolean concluido = eventoAlvo.ehPorPartida()
                 ? consultaSuporte.partidaEncerrada(eventoAlvo.getPartidaId())
                 : consultaSuporte.torneioFinalizado(eventoAlvo.getTorneioId());
@@ -118,3 +118,5 @@ public class PalpiteServico {
         }
     }
 }
+
+

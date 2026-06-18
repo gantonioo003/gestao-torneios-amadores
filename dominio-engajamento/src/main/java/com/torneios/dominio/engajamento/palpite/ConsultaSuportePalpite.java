@@ -16,5 +16,7 @@ public interface ConsultaSuportePalpite {
 
     boolean torneioFinalizado(TorneioId torneioId);
 
-    boolean opcaoValidaParaEvento(EventoAlvo eventoAlvo, OpcaoPalpite opcao);
+    boolean opcaoValidaParaEvento(EventoAlvoPalpite eventoAlvo, OpcaoPalpite opcao);
 }
+
+

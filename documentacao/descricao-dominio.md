@@ -1,12 +1,12 @@
-# Descricao do Dominio
+﻿# Descricao do Dominio
 
 ## Visao geral
 
-O dominio do sistema e a gestao de torneios amadores de futebol com suporte ao registro opcional de dados estatisticos de partidas e jogadores, comparativos de desempenho e engajamento por meio de palpites publicos, chat privado, comunicados, desafios opcionais e feed social da plataforma.
+O dominio do sistema e a gestao de torneios amadores de futebol com suporte ao registro opcional de dados estatisticos de partidas e jogadores, comparativos de desempenho e engajamento por meio de palpites, chat privado, comunicados, desafios opcionais e feed social da plataforma.
 
 O sistema tem como objetivo permitir que usuarios criem, gerenciem e participem de torneios de futebol amador em diferentes formatos, como mata-mata, fase de grupos com mata-mata, pontos corridos e final unica.
 
-Alem da gestao da competicao, o sistema permite a participacao de diferentes usuarios, possibilitando cadastro de conta como jogador ou organizador, login, edicao e exclusao da propria conta, gerenciamento completo de inscricoes de times em torneios abertos, acompanhamento de status, cancelamento de candidatura pendente, aprovacao ou rejeicao pelo organizador, chat privado com solicitacoes de conversa, desafios amistosos opcionais entre times, geracao opcional da escalacao de cada time em uma mesa tatica para cada partida, registro de palpites publicos por usuarios autenticados ou visitantes e publicacao de postagens, comunicados e interacoes sociais no feed.
+Alem da gestao da competicao, o sistema permite a participacao de diferentes usuarios, possibilitando cadastro de conta como jogador ou organizador, login, edicao e exclusao da propria conta, gerenciamento completo de inscricoes de times em torneios abertos, acompanhamento de status, cancelamento de candidatura pendente, aprovacao ou rejeicao pelo organizador, chat privado com solicitacoes de conversa, desafios amistosos opcionais entre times, geracao opcional da escalacao de cada time em uma mesa tatica para cada partida, registro de palpites por usuarios autenticados ou visitantes e publicacao de postagens, comunicados e interacoes sociais no feed.
 
 O sistema tambem permite o gerenciamento de um scout estatistico opcional das partidas, com registro, correcao e remocao de gols, assistencias, cartoes e substituicoes. Esses eventos sao independentes da existencia de mesa tatica e servem para detalhar o jogo quando o organizador quiser.
 
@@ -88,7 +88,7 @@ Os principais conceitos do dominio sao:
 - Nota estatistica do jogador
 - Comparativo de desempenho
 - Pontuacao comparativa
-- Palpite
+- palpite
 - Votante
 - Tipo de palpite
 - Janela de votacao
@@ -130,3 +130,4 @@ Durante a competicao, o organizador registra obrigatoriamente os resultados das 
 Quando houver eventos registrados, o sistema consolida automaticamente estatisticas e rankings do torneio, atualizando notas dos jogadores, artilharia, lideres de assistencias e historico de desempenho. A partir desses dados, usuarios tambem podem gerar comparativos temporarios entre jogadores ou times, usando estatisticas, historico de partidas e posicao relativa nos rankings. O comparativo so e salvo quando o usuario escolher guardar aquela analise para consulta posterior, podendo tambem atualizar ou excluir comparativos salvos.
 
 Ao finalizar um torneio, o organizador pode repetir a competicao como uma nova edicao. Nesse fluxo, a edicao anterior continua arquivada com participantes e estatisticas historicas, enquanto a nova edicao volta para configuracao sem participantes definidos, permitindo nova inscricao de times e nova preparacao da competicao.
+

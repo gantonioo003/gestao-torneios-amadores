@@ -11,12 +11,12 @@ public class Palpite {
     private final PalpiteId id;
     private final UsuarioId usuarioId;
     private final String identificadorVotante;
-    private final EventoAlvo eventoAlvo;
+    private final EventoAlvoPalpite eventoAlvo;
     private OpcaoPalpite opcao;
     private boolean apurado;
     private Boolean acertou;
 
-    public Palpite(PalpiteId id, UsuarioId usuarioId, EventoAlvo eventoAlvo, OpcaoPalpite opcao) {
+    public Palpite(PalpiteId id, UsuarioId usuarioId, EventoAlvoPalpite eventoAlvo, OpcaoPalpite opcao) {
         this.id = Objects.requireNonNull(id, "O id do palpite e obrigatorio.");
         this.usuarioId = Objects.requireNonNull(usuarioId, "O usuario do palpite e obrigatorio.");
         this.identificadorVotante = "USUARIO:" + usuarioId.valor();
@@ -26,7 +26,7 @@ public class Palpite {
         this.acertou = null;
     }
 
-    public Palpite(PalpiteId id, String visitanteId, EventoAlvo eventoAlvo, OpcaoPalpite opcao) {
+    public Palpite(PalpiteId id, String visitanteId, EventoAlvoPalpite eventoAlvo, OpcaoPalpite opcao) {
         this.id = Objects.requireNonNull(id, "O id do palpite e obrigatorio.");
         if (visitanteId == null || visitanteId.isBlank()) {
             throw new IllegalArgumentException("O identificador do visitante e obrigatorio.");
@@ -51,7 +51,7 @@ public class Palpite {
         return identificadorVotante;
     }
 
-    public EventoAlvo getEventoAlvo() {
+    public EventoAlvoPalpite getEventoAlvo() {
         return eventoAlvo;
     }
 
@@ -83,3 +83,5 @@ public class Palpite {
         this.acertou = opcao.correspondeA(resultadoReal);
     }
 }
+
+

@@ -94,8 +94,8 @@ public class F1Steps extends EngajamentoFuncionalidade {
         configurarEventoDePartidaAberto();
     }
 
-    @Quando("ele registrar um palpite publico indicando o time vencedor da partida")
-    public void ele_registrar_palpite_publico_vencedor_partida() {
+    @Quando("ele registrar um palpite como visitante indicando o time vencedor da partida")
+    public void ele_registrar_palpite_vencedor_partida_como_visitante() {
         try {
             palpite = palpiteServico.registrarOuAtualizarComoVisitante(
                     palpiteId(5L), VISITANTE_ID, eventoAlvo, new OpcaoPalpite(TIME_A_ID));
@@ -259,3 +259,5 @@ public class F1Steps extends EngajamentoFuncionalidade {
         assertNotNull(excecaoCapturada);
     }
 }
+
+

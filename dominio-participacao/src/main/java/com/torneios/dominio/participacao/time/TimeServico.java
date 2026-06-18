@@ -6,9 +6,11 @@ import java.util.Objects;
 
 import com.torneios.dominio.compartilhado.excecao.EntidadeNaoEncontradaException;
 import com.torneios.dominio.compartilhado.excecao.OperacaoNaoPermitidaException;
+import com.torneios.dominio.compartilhado.excecao.RegraDeNegocioException;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoRepositorio;
 import com.torneios.dominio.participacao.profissional.RegistroDeCarreira;
 import com.torneios.dominio.participacao.profissional.RegistroDeCarreiraId;
+import com.torneios.dominio.participacao.profissional.TipoProfissional;
 import com.torneios.dominio.compartilhado.jogador.Jogador;
 import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.tecnico.Tecnico;
@@ -26,6 +28,7 @@ public class TimeServico {
     private final AutenticacaoServico autenticacaoServico;
     private final ResponsavelTimeServico responsavelTimeServico;
     private final ProfissionalEsportivoRepositorio profissionalRepositorio;
+    private final PoliticaGestaoElencoTime politicaGestaoElenco;
 
     public TimeServico(TimeRepositorio timeRepositorio, AutenticacaoServico autenticacaoServico,
             ResponsavelTimeServico responsavelTimeServico) {
@@ -35,10 +38,19 @@ public class TimeServico {
     public TimeServico(TimeRepositorio timeRepositorio, AutenticacaoServico autenticacaoServico,
             ResponsavelTimeServico responsavelTimeServico,
             ProfissionalEsportivoRepositorio profissionalRepositorio) {
+        this(timeRepositorio, autenticacaoServico, responsavelTimeServico, profissionalRepositorio,
+                (time, usuarioId) -> time.getResponsavel().equals(usuarioId));
+    }
+
+    public TimeServico(TimeRepositorio timeRepositorio, AutenticacaoServico autenticacaoServico,
+            ResponsavelTimeServico responsavelTimeServico,
+            ProfissionalEsportivoRepositorio profissionalRepositorio,
+            PoliticaGestaoElencoTime politicaGestaoElenco) {
         this.timeRepositorio = Objects.requireNonNull(timeRepositorio);
         this.autenticacaoServico = Objects.requireNonNull(autenticacaoServico);
         this.responsavelTimeServico = Objects.requireNonNull(responsavelTimeServico);
         this.profissionalRepositorio = profissionalRepositorio;
+        this.politicaGestaoElenco = Objects.requireNonNull(politicaGestaoElenco);
     }
 
     public Time criarTime(TimeId timeId, String nome, UsuarioId responsavel) {
@@ -132,7 +144,12 @@ public class TimeServico {
             ProfissionalEsportivoId profissionalId, String funcao,
             LocalDate dataInicio, LocalDate dataLimiteContrato) {
         autenticacaoServico.exigirAutenticacao(usuarioId);
-        Time time = responsavelTimeServico.obterTimeSobResponsabilidade(timeId, usuarioId);
+        Time time = obterTimeSobGestaoElenco(timeId, usuarioId);
+        var profissional = profissionalRepositorio == null
+                ? null
+                : profissionalRepositorio.buscarPorId(profissionalId)
+                        .orElseThrow(() -> new EntidadeNaoEncontradaException("Profissional nao encontrado."));
+        validarComposicaoElenco(time, profissional == null ? null : profissional.getTipo());
         time.vincularProfissional(profissionalId, funcao, dataInicio, dataLimiteContrato);
         timeRepositorio.salvar(time);
         adicionarCarreiraAutomatica(profissionalId, time.getNome(), dataInicio);
@@ -142,7 +159,7 @@ public class TimeServico {
             ProfissionalEsportivoId profissionalId, String funcao,
             LocalDate dataInicio, LocalDate dataLimiteContrato) {
         autenticacaoServico.exigirAutenticacao(usuarioId);
-        Time time = responsavelTimeServico.obterTimeSobResponsabilidade(timeId, usuarioId);
+        Time time = obterTimeSobGestaoElenco(timeId, usuarioId);
         time.editarVinculoProfissional(profissionalId, funcao, dataInicio, dataLimiteContrato);
         timeRepositorio.salvar(time);
     }
@@ -150,15 +167,54 @@ public class TimeServico {
     public void removerVinculoProfissional(TimeId timeId, UsuarioId usuarioId,
             ProfissionalEsportivoId profissionalId) {
         autenticacaoServico.exigirAutenticacao(usuarioId);
-        Time time = responsavelTimeServico.obterTimeSobResponsabilidade(timeId, usuarioId);
+        Time time = obterTimeSobGestaoElenco(timeId, usuarioId);
         time.removerVinculoProfissional(profissionalId);
         timeRepositorio.salvar(time);
         fecharCarreiraAutomatica(profissionalId, time.getNome());
     }
 
+    public boolean podeGerenciarElenco(TimeId timeId, UsuarioId usuarioId) {
+        if (usuarioId == null) {
+            return false;
+        }
+        return timeRepositorio.buscarPorId(timeId)
+                .map(time -> politicaGestaoElenco.podeGerenciar(time, usuarioId))
+                .orElse(false);
+    }
+
+    public void validarCadastroProfissional(TimeId timeId, UsuarioId usuarioId,
+            TipoProfissional tipoProfissional) {
+        autenticacaoServico.exigirAutenticacao(usuarioId);
+        Time time = obterTimeSobGestaoElenco(timeId, usuarioId);
+        validarComposicaoElenco(time, tipoProfissional);
+    }
+
     public Time obterTime(TimeId timeId) {
         return timeRepositorio.buscarPorId(timeId)
             .orElseThrow(() -> new EntidadeNaoEncontradaException("Time nao encontrado."));
+    }
+
+    private Time obterTimeSobGestaoElenco(TimeId timeId, UsuarioId usuarioId) {
+        Time time = obterTime(timeId);
+        if (!politicaGestaoElenco.podeGerenciar(time, usuarioId)) {
+            throw new OperacaoNaoPermitidaException(
+                    "Apenas o responsavel do time ou o organizador de um torneio vinculado pode gerenciar o elenco.");
+        }
+        return time;
+    }
+
+    private void validarComposicaoElenco(Time time, TipoProfissional tipoProfissional) {
+        if (profissionalRepositorio == null || tipoProfissional != TipoProfissional.TREINADOR) {
+            return;
+        }
+        boolean jaPossuiTreinador = time.getElenco().stream()
+                .map(vinculo -> profissionalRepositorio.buscarPorId(vinculo.getProfissionalId()).orElse(null))
+                .filter(Objects::nonNull)
+                .anyMatch(atual -> atual.getTipo() == TipoProfissional.TREINADOR);
+        if (jaPossuiTreinador) {
+            throw new RegraDeNegocioException(
+                    "O time ja possui um treinador. Remova o atual antes de adicionar outro.");
+        }
     }
 
     private void adicionarCarreiraAutomatica(ProfissionalEsportivoId profissionalId,

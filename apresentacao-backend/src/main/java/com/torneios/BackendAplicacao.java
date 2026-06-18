@@ -15,6 +15,7 @@ import com.torneios.aplicacao.engajamento.chat.ChatPrivadoServicoAplicacao;
 import com.torneios.aplicacao.engajamento.desafio.DesafioServicoAplicacao;
 import com.torneios.aplicacao.engajamento.feed.FeedServicoAplicacao;
 import com.torneios.aplicacao.engajamento.palpite.PalpiteServicoAplicacao;
+import com.torneios.aplicacao.engajamento.palpite.ApuracaoAutomaticaPalpiteServicoAplicacao;
 import com.torneios.aplicacao.estatisticas.comparacao.ComparativoDesempenhoServicoAplicacao;
 import com.torneios.aplicacao.estatisticas.ranking.RankingServicoAplicacao;
 import com.torneios.aplicacao.estatisticas.sumula.SumulaEstatisticaServicoAplicacao;
@@ -154,8 +155,17 @@ public class BackendAplicacao {
     public TimeServico timeServico(TimeRepositorio timeRepositorio,
                                    AutenticacaoServico autenticacaoServico,
                                    ResponsavelTimeServico responsavelTimeServico,
-                                   ProfissionalEsportivoRepositorio profissionalRepositorio) {
-        return new TimeServico(timeRepositorio, autenticacaoServico, responsavelTimeServico, profissionalRepositorio);
+                                   ProfissionalEsportivoRepositorio profissionalRepositorio,
+                                   TorneioRepositorio torneioRepositorio) {
+        return new TimeServico(
+                timeRepositorio,
+                autenticacaoServico,
+                responsavelTimeServico,
+                profissionalRepositorio,
+                (time, usuarioId) -> time.getResponsavel().equals(usuarioId)
+                        || torneioRepositorio.listarPorOrganizador(usuarioId).stream()
+                                .anyMatch(torneio -> torneio.possuiParticipante(time.getId())
+                                        || time.estaVinculadoAoTorneio(torneio.getId())));
     }
 
     @Bean
@@ -369,8 +379,29 @@ public class BackendAplicacao {
 
     @Bean
     public PalpiteServicoAplicacao palpiteServicoAplicacao(PalpiteServico palpiteServico,
-                                                           PalpiteRepositorio palpiteRepositorio) {
-        return new PalpiteServicoAplicacao(palpiteServico, palpiteRepositorio);
+                                                           PalpiteRepositorio palpiteRepositorio,
+                                                           TorneioRepositorio torneioRepositorio,
+                                                           PartidaRepositorio partidaRepositorio,
+                                                           TimeRepositorio timeRepositorio) {
+        return new PalpiteServicoAplicacao(
+                palpiteServico,
+                palpiteRepositorio,
+                torneioRepositorio,
+                partidaRepositorio,
+                timeRepositorio);
+    }
+
+    @Bean
+    public ApuracaoAutomaticaPalpiteServicoAplicacao apuracaoAutomaticaPalpiteServicoAplicacao(
+            PalpiteServico palpiteServico,
+            PartidaRepositorio partidaRepositorio,
+            ResultadoCompeticaoServicoAplicacao resultadoCompeticaoServicoAplicacao,
+            RankingServicoAplicacao rankingServicoAplicacao) {
+        return new ApuracaoAutomaticaPalpiteServicoAplicacao(
+                palpiteServico,
+                partidaRepositorio,
+                resultadoCompeticaoServicoAplicacao,
+                rankingServicoAplicacao);
     }
 
     @Bean
@@ -388,3 +419,5 @@ public class BackendAplicacao {
         run(BackendAplicacao.class, args);
     }
 }
+
+

@@ -8,11 +8,11 @@ import java.util.Objects;
 
 public final class PercentuaisPalpite {
 
-    private final EventoAlvo eventoAlvo;
+    private final EventoAlvoPalpite eventoAlvo;
     private final long totalPalpites;
     private final Map<OpcaoPalpite, Double> percentuaisPorOpcao;
 
-    private PercentuaisPalpite(EventoAlvo eventoAlvo,
+    private PercentuaisPalpite(EventoAlvoPalpite eventoAlvo,
                                long totalPalpites,
                                Map<OpcaoPalpite, Double> percentuaisPorOpcao) {
         this.eventoAlvo = eventoAlvo;
@@ -20,7 +20,7 @@ public final class PercentuaisPalpite {
         this.percentuaisPorOpcao = Collections.unmodifiableMap(percentuaisPorOpcao);
     }
 
-    public static PercentuaisPalpite calcular(EventoAlvo eventoAlvo, List<Palpite> palpites) {
+    public static PercentuaisPalpite calcular(EventoAlvoPalpite eventoAlvo, List<Palpite> palpites) {
         Objects.requireNonNull(eventoAlvo, "O evento alvo e obrigatorio.");
         Objects.requireNonNull(palpites, "Os palpites sao obrigatorios.");
         long total = palpites.size();
@@ -36,7 +36,7 @@ public final class PercentuaisPalpite {
         return new PercentuaisPalpite(eventoAlvo, total, percentuais);
     }
 
-    public EventoAlvo getEventoAlvo() {
+    public EventoAlvoPalpite getEventoAlvo() {
         return eventoAlvo;
     }
 
@@ -48,3 +48,5 @@ public final class PercentuaisPalpite {
         return percentuaisPorOpcao;
     }
 }
+
+

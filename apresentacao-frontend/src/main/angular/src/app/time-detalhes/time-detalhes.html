@@ -8,7 +8,7 @@
         <p class="page-subtitle">Partidas, elenco, torneios vinculados e estatisticas do time.</p>
       </div>
     </div>
-    @if (podeGerenciar()) {
+    @if (podeEditarTime) {
       <a class="btn btn-outline" [routerLink]="['/time', time.id, 'edicao']">Editar perfil</a>
     }
   </div>
@@ -23,7 +23,19 @@
       </div>
 
       <section class="card panel-strong">
-        <h2 class="section-title">Elenco e comissao</h2>
+        <div class="roster-heading">
+          <div>
+            <h2 class="section-title">Elenco e comissao</h2>
+            @if (podeGerenciarElenco && !podeEditarTime) {
+              <p class="small muted">Voce pode administrar este elenco como organizador de um torneio vinculado.</p>
+            }
+          </div>
+          @if (podeGerenciarElenco) {
+            <a class="btn btn-sm btn-primary" [routerLink]="['/time', time.id, 'vincular']">
+              <i class="bi bi-person-plus"></i> Adicionar integrante
+            </a>
+          }
+        </div>
         @if (!elenco.length) {
           <div class="grid grid-3">
             <div class="mini-row"><span>Joao Silva</span><span class="status status-green">ATA</span></div>
@@ -33,8 +45,8 @@
         } @else {
           @for (v of elenco; track v.profissionalId) {
             <div class="mini-row">
-              <div><strong>{{ v.nomeProfissional }}</strong><div class="small muted">{{ funcaoLabel(v.funcao) }} - Desde {{ v.dataInicio }}</div></div>
-              @if (podeGerenciar()) {
+              <div><strong>{{ v.nomeProfissional }}</strong><div class="small muted">{{ tipoLabel(v.tipoProfissional) }} · {{ funcaoLabel(v.funcao) }} · Desde {{ v.dataInicio }}</div></div>
+              @if (podeGerenciarElenco) {
                 <div style="display: flex; gap: 6px">
                   <button class="btn btn-sm btn-outline" (click)="editarVinculo(v)">Editar</button>
                   <button class="btn btn-sm btn-danger" (click)="removerVinculo(v.profissionalId)">Remover</button>
@@ -42,9 +54,6 @@
               }
             </div>
           }
-        }
-        @if (podeGerenciar()) {
-          <a class="btn btn-outline btn-block" style="margin-top: 12px" [routerLink]="['/time', time.id, 'vincular']">Vincular profissional</a>
         }
       </section>
 
@@ -70,7 +79,7 @@
       </div>
       <a class="btn btn-primary btn-block" routerLink="/desafio">Propor amistoso</a>
       <a class="btn btn-outline btn-block" routerLink="/ranking">Comparar time</a>
-      @if (podeGerenciar()) {
+      @if (podeEditarTime) {
         <button class="btn btn-danger btn-block" (click)="excluir()">Excluir time</button>
       }
     </aside>

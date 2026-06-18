@@ -1,4 +1,4 @@
-# Linguagem Onipresente
+﻿# Linguagem Onipresente
 
 ## Termos principais do dominio
 
@@ -6,7 +6,7 @@
 Pessoa que utiliza o sistema com conta cadastrada. Para criar torneios, gerenciar times e participar de fluxos protegidos, o usuario precisa estar autenticado.
 
 ### Visitante
-Pessoa sem login que pode acessar areas publicas da plataforma e registrar palpites publicos identificados por sessao ou outro identificador tecnico.
+Pessoa sem login que pode acessar areas publicas da plataforma e registrar palpites identificados por sessao ou outro identificador tecnico.
 
 ### Conta de usuario
 Cadastro que identifica o usuario na plataforma, contendo nome, email, senha e tipo de conta. Pode ser criada, editada e excluida pelo proprio usuario.
@@ -171,7 +171,7 @@ Analise gerada pelo sistema para comparar dois jogadores ou dois times usando es
 ### Pontuacao comparativa
 Valor calculado para apoiar a comparacao de desempenho, considerando eventos positivos, como gols e assistencias, e eventos negativos, como cartoes.
 
-### Palpite
+### palpite
 Registro feito por um usuario autenticado ou visitante identificado expressando sua aposta sobre o desfecho de um evento do sistema. Pode ser de tipo: vencedor de partida, campeao do torneio, artilheiro do torneio ou lider de assistencias do torneio.
 
 ### Votante
@@ -219,3 +219,4 @@ Interacao textual feita por usuario autenticado em uma partida do torneio. Pode 
 
 ### Atualizacao automatica
 Publicacao criada pelo sistema no feed social quando ocorre um evento relevante da partida, como resultado registrado.
+

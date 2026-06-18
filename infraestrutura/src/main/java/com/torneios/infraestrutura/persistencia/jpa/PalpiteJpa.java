@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
-import com.torneios.dominio.engajamento.palpite.EventoAlvo;
+import com.torneios.dominio.engajamento.palpite.EventoAlvoPalpite;
 import com.torneios.dominio.engajamento.palpite.OpcaoPalpite;
 import com.torneios.dominio.engajamento.palpite.Palpite;
 import com.torneios.dominio.engajamento.palpite.PalpiteId;
@@ -72,12 +72,12 @@ class PalpiteRepositorioImpl implements PalpiteRepositorio {
     }
 
     @Override
-    public Optional<Palpite> buscarPorUsuarioEEvento(UsuarioId usuarioId, EventoAlvo eventoAlvo) {
+    public Optional<Palpite> buscarPorUsuarioEEvento(UsuarioId usuarioId, EventoAlvoPalpite eventoAlvo) {
         return buscarPorVotanteEEvento("USUARIO:" + usuarioId.valor(), eventoAlvo);
     }
 
     @Override
-    public Optional<Palpite> buscarPorVotanteEEvento(String identificadorVotante, EventoAlvo eventoAlvo) {
+    public Optional<Palpite> buscarPorVotanteEEvento(String identificadorVotante, EventoAlvoPalpite eventoAlvo) {
         return repositorio.findByIdentificadorVotanteAndTipoAndTorneioIdAndPartidaId(
                         identificadorVotante,
                         eventoAlvo.getTipo().name(),
@@ -87,7 +87,7 @@ class PalpiteRepositorioImpl implements PalpiteRepositorio {
     }
 
     @Override
-    public List<Palpite> listarPorEvento(EventoAlvo eventoAlvo) {
+    public List<Palpite> listarPorEvento(EventoAlvoPalpite eventoAlvo) {
         return repositorio.findByTipoAndTorneioIdAndPartidaId(
                         eventoAlvo.getTipo().name(),
                         eventoAlvo.getTorneioId().valor(),
@@ -96,8 +96,15 @@ class PalpiteRepositorioImpl implements PalpiteRepositorio {
                 .toList();
     }
 
+    @Override
+    public List<Palpite> listarPorUsuario(UsuarioId usuarioId) {
+        return repositorio.findByUsuarioIdOrderByIdDesc(usuarioId.valor()).stream()
+                .map(this::paraDominio)
+                .toList();
+    }
+
     private Palpite paraDominio(PalpiteJpa jpa) {
-        EventoAlvo eventoAlvo = criarEventoAlvo(jpa.tipo, jpa.torneioId, jpa.partidaId);
+        EventoAlvoPalpite eventoAlvo = criarEventoAlvo(jpa.tipo, jpa.torneioId, jpa.partidaId);
         Palpite palpite = jpa.usuarioId == null
                 ? new Palpite(new PalpiteId(jpa.id), jpa.identificadorVotante.replaceFirst("^VISITANTE:", ""), eventoAlvo,
                         new OpcaoPalpite(jpa.opcao))
@@ -107,13 +114,15 @@ class PalpiteRepositorioImpl implements PalpiteRepositorio {
         return palpite;
     }
 
-    private EventoAlvo criarEventoAlvo(String tipo, Long torneioId, Long partidaId) {
+    private EventoAlvoPalpite criarEventoAlvo(String tipo, Long torneioId, Long partidaId) {
         TipoPalpite tipoPalpite = TipoPalpite.valueOf(tipo);
         return switch (tipoPalpite) {
-            case VENCEDOR_PARTIDA -> EventoAlvo.paraPartida(new TorneioId(torneioId), new PartidaId(partidaId));
-            case CAMPEAO_TORNEIO -> EventoAlvo.paraCampeao(new TorneioId(torneioId));
-            case ARTILHEIRO_TORNEIO -> EventoAlvo.paraArtilheiro(new TorneioId(torneioId));
-            case LIDER_ASSISTENCIAS_TORNEIO -> EventoAlvo.paraLiderAssistencias(new TorneioId(torneioId));
+            case VENCEDOR_PARTIDA -> EventoAlvoPalpite.paraPartida(new TorneioId(torneioId), new PartidaId(partidaId));
+            case CAMPEAO_TORNEIO -> EventoAlvoPalpite.paraCampeao(new TorneioId(torneioId));
+            case ARTILHEIRO_TORNEIO -> EventoAlvoPalpite.paraArtilheiro(new TorneioId(torneioId));
+            case LIDER_ASSISTENCIAS_TORNEIO -> EventoAlvoPalpite.paraLiderAssistencias(new TorneioId(torneioId));
         };
     }
 }
+
+

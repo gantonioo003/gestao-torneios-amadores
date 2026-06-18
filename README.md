@@ -18,7 +18,7 @@ O sistema apoia organizadores, responsaveis por times, jogadores e visitantes em
 - registrar scout estatistico opcional independente da mesa tatica;
 - consolidar rankings, artilharia, assistencias, notas e historico;
 - publicar e consultar feed social, comunicados, comentarios e reacoes;
-- registrar palpites publicos e desafios amistosos opcionais.
+- registrar palpites e desafios amistosos opcionais.
 
 ## Funcionalidades
 
@@ -26,7 +26,7 @@ As funcionalidades completas estao descritas em [`documentacao/funcionalidades.m
 
 Resumo atual:
 
-- F1: palpites publicos;
+- F1: palpites;
 - F2: identidade, conta, autenticacao, perfil e permissoes;
 - F3: comunicacao privada entre usuarios;
 - F4: inscricoes e participantes do torneio;

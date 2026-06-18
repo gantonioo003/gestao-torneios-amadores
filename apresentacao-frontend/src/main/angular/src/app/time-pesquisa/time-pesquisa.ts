@@ -35,7 +35,7 @@ export class TimePesquisa implements OnInit {
   buscar() {
     this.carregando = true;
     const url = this.aba === 'meus'
-      ? '/backend/time/pesquisa?meus=true'
+      ? '/backend/time/pesquisa?gerenciaveis=true'
       : `/backend/time/pesquisa?nome=${encodeURIComponent(this.termo)}`;
     this.http.get<any[]>(url)
       .pipe(catchError(() => of([])))

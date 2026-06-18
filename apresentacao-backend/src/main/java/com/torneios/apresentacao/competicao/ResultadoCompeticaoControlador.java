@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.competicao.resultado.ResultadoCompeticaoServicoAplicacao;
+import com.torneios.aplicacao.engajamento.palpite.ApuracaoAutomaticaPalpiteServicoAplicacao;
 
 @RestController
 @RequestMapping("backend/resultado-competicao")
@@ -22,15 +23,24 @@ class ResultadoCompeticaoControlador {
     @Autowired
     ResultadoCompeticaoServicoAplicacao resultadoCompeticaoServicoAplicacao;
 
+    @Autowired
+    ApuracaoAutomaticaPalpiteServicoAplicacao apuracaoAutomaticaPalpiteServico;
+
     @RequestMapping(method = POST, path = "registrar-resultado")
     ResultadoCompeticaoServicoAplicacao.AtualizacaoCompeticaoResumo registrarResultado(
             @RequestBody ResultadoDto dto) {
-        return resultadoCompeticaoServicoAplicacao.registrarResultado(
+        var atualizacao = resultadoCompeticaoServicoAplicacao.registrarResultado(
                 dto.torneioId,
                 dto.partidaId,
                 dto.organizadorId,
                 dto.golsMandante,
                 dto.golsVisitante);
+        apuracaoAutomaticaPalpiteServico.apurarVencedorPartida(
+                dto.torneioId,
+                dto.partidaId,
+                dto.golsMandante,
+                dto.golsVisitante);
+        return atualizacao;
     }
 
     @RequestMapping(method = POST, path = "{torneioId}/gerenciar-andamento")
@@ -106,3 +116,5 @@ class ResultadoCompeticaoControlador {
         public LocalDateTime dataHoraDecisao;
     }
 }
+
+
