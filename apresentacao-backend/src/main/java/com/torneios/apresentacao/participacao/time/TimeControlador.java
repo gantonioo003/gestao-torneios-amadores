@@ -137,11 +137,13 @@ class TimeControlador {
 
     @RequestMapping(method = POST, path = "{id}/remover-profissional/{profissionalId}")
     void removerProfissional(@PathVariable long id, @PathVariable long profissionalId,
-            HttpSession sessao) {
+            @RequestBody(required = false) TimeFormulario.RemocaoDto dto, HttpSession sessao) {
         long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
         contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
         timeServico.removerVinculoProfissional(new TimeId(id), new UsuarioId(usuarioId),
-            new ProfissionalEsportivoId(profissionalId));
+            new ProfissionalEsportivoId(profissionalId),
+            dto == null ? null : dto.motivoDeSaida,
+            dto == null ? null : dto.descricao);
     }
 
     private long gerarId() {

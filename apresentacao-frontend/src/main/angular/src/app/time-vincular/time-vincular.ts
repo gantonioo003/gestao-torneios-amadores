@@ -44,6 +44,7 @@ export class TimeVincular implements OnInit {
   dataInicio = '';
   dataLimite = '';
   salvando = false;
+  historico: any[] = [];
 
   readonly tipos: TipoIntegrante[] = [
     { valor: 'JOGADOR', nome: 'Jogador', descricao: 'Atleta do elenco', icone: 'bi-person-running' },
@@ -76,6 +77,7 @@ export class TimeVincular implements OnInit {
       this.funcao = vinculo.funcao ?? '';
       this.dataInicio = vinculo.dataInicio ?? this.dataInicio;
       this.dataLimite = vinculo.dataLimiteContrato ?? '';
+      this.carregarHistorico(vinculo.profissionalId);
       return;
     }
 
@@ -115,11 +117,30 @@ export class TimeVincular implements OnInit {
     this.termoBusca = '';
     this.resultados = [];
     this.funcao = this.funcoesDisponiveis(profissional.tipo)[0] ?? '';
+    this.carregarHistorico(profissional.id);
+  }
+
+  private carregarHistorico(profissionalId: any) {
+    if (!profissionalId) { this.historico = []; return; }
+    this.http.get<any>(`/backend/profissional/${profissionalId}/edicao`)
+      .pipe(catchError(() => of({ historico: [] })))
+      .subscribe(r => this.historico = r?.historico ?? []);
+  }
+
+  motivoLabel(motivo: string): string {
+    const m: Record<string, string> = {
+      FIM_DE_CONTRATO: 'Fim de contrato',
+      TRANSFERENCIA: 'Transferencia',
+      LESAO: 'Lesao',
+      APOSENTADORIA: 'Aposentadoria'
+    };
+    return m[motivo] ?? motivo;
   }
 
   limpar() {
     this.selecionado = null;
     this.funcao = '';
+    this.historico = [];
   }
 
   trocarModo(modo: ModoIntegrante) {
@@ -151,7 +172,7 @@ export class TimeVincular implements OnInit {
       funcao: this.funcao,
       dataInicio: this.dataInicio,
       dataLimiteContrato: this.dataLimite || null
-    }).pipe(finalize(() => this.salvando = false)).subscribe({
+    }, { responseType: 'text' }).pipe(finalize(() => this.salvando = false)).subscribe({
       next: () => this.voltarAoTime(),
       error: erro => alert(this.mensagemErro(erro, 'Nao foi possivel atualizar o elenco.'))
     });
@@ -175,7 +196,7 @@ export class TimeVincular implements OnInit {
       funcao: this.funcao,
       dataInicio: this.dataInicio,
       dataLimiteContrato: this.dataLimite || null
-    }).pipe(finalize(() => this.salvando = false)).subscribe({
+    }, { responseType: 'text' }).pipe(finalize(() => this.salvando = false)).subscribe({
       next: () => this.voltarAoTime(),
       error: erro => alert(this.mensagemErro(erro, 'Nao foi possivel cadastrar o integrante.'))
     });
@@ -213,6 +234,9 @@ export class TimeVincular implements OnInit {
   }
 
   private mensagemErro(erro: any, padrao: string): string {
+    if (typeof erro?.error === 'string') {
+      try { return JSON.parse(erro.error)?.mensagem ?? padrao; } catch { return padrao; }
+    }
     return erro?.error?.mensagem ?? erro?.error?.message ?? padrao;
   }
 }

@@ -40,12 +40,38 @@
           <div class="empty-state">Nenhum integrante no elenco ainda.</div>
         } @else {
           @for (v of elenco; track v.profissionalId) {
-            <div class="mini-row">
-              <div><strong>{{ v.nomeProfissional }}</strong><div class="small muted">{{ tipoLabel(v.tipoProfissional) }} · {{ funcaoLabel(v.funcao) }} · Desde {{ v.dataInicio }}</div></div>
-              @if (podeGerenciarElenco) {
-                <div style="display: flex; gap: 6px">
-                  <button class="btn btn-sm btn-outline" (click)="editarVinculo(v)">Editar</button>
-                  <button class="btn btn-sm btn-danger" (click)="removerVinculo(v.profissionalId)">Remover</button>
+            <div>
+              <div class="mini-row">
+                <div><strong>{{ v.nomeProfissional }}</strong><div class="small muted">{{ tipoLabel(v.tipoProfissional) }} · {{ funcaoLabel(v.funcao) }} · Desde {{ v.dataInicio }}</div></div>
+                @if (podeGerenciarElenco) {
+                  <div style="display: flex; gap: 6px">
+                    <button class="btn btn-sm btn-outline" (click)="editarVinculo(v)">Editar</button>
+                    <button class="btn btn-sm btn-danger" (click)="iniciarRemocao(v.profissionalId)">Remover</button>
+                  </div>
+                }
+              </div>
+              @if (removendoId === v.profissionalId) {
+                <div class="card" style="box-shadow: none; background: #fafafa; margin: 8px 0 12px">
+                  <div class="form-grid">
+                    <div class="field">
+                      <label>Motivo da saida <span class="muted">(opcional)</span></label>
+                      <select [(ngModel)]="motivoSaida">
+                        <option value="">Sem motivo informado</option>
+                        <option value="FIM_DE_CONTRATO">Fim de contrato</option>
+                        <option value="TRANSFERENCIA">Transferencia</option>
+                        <option value="LESAO">Lesao</option>
+                        <option value="APOSENTADORIA">Aposentadoria</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>Observacao <span class="muted">(opcional)</span></label>
+                      <textarea [(ngModel)]="descricaoSaida" placeholder="Detalhes da saida deste integrante..."></textarea>
+                    </div>
+                    <div style="display: flex; gap: 8px; justify-content: flex-end">
+                      <button class="btn btn-sm" (click)="cancelarRemocao()">Cancelar</button>
+                      <button class="btn btn-sm btn-danger" (click)="confirmarRemocao(v.profissionalId)">Confirmar remocao</button>
+                    </div>
+                  </div>
                 </div>
               }
             </div>

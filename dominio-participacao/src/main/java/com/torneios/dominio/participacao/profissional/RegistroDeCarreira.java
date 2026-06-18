@@ -36,10 +36,11 @@ public class RegistroDeCarreira {
     public MotivoDeSaida getMotivoDeSaida() { return motivoDeSaida; }
     public String getDescricao() { return descricao; }
     public void setDescricao(String descricao) { this.descricao = descricao; }
+    public void setMotivoDeSaida(MotivoDeSaida motivoDeSaida) { this.motivoDeSaida = motivoDeSaida; }
 
     public void setDataFim(LocalDate dataFim) {
-        if (dataFim != null && !dataFim.isAfter(dataInicio)) {
-            throw new RegraDeNegocioException("A data de fim deve ser posterior a data de inicio.");
+        if (dataFim != null && dataFim.isBefore(dataInicio)) {
+            throw new RegraDeNegocioException("A data de fim nao pode ser anterior a data de inicio.");
         }
         this.dataFim = dataFim;
     }

@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveData, Router, RouterLink, RouterStateSnapshot } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { AuthService } from '../core/auth.service';
 
 @Component({
   selector: 'app-time-detalhes',
-  imports: [RouterLink],
+  imports: [RouterLink, FormsModule],
   templateUrl: './time-detalhes.html',
   styleUrl: './time-detalhes.css'
 })
@@ -52,13 +53,28 @@ export class TimeDetalhes implements OnInit {
     this.router.navigate(['/time', this.time.id, 'vincular'], { state: { vinculo: v } });
   }
 
-  removerVinculo(profissionalId: number) {
-    if (!confirm('Remover profissional do elenco?')) return;
+  removendoId: any = null;
+  motivoSaida = '';
+  descricaoSaida = '';
+
+  iniciarRemocao(profissionalId: any) {
+    this.removendoId = profissionalId;
+    this.motivoSaida = '';
+    this.descricaoSaida = '';
+  }
+
+  cancelarRemocao() {
+    this.removendoId = null;
+  }
+
+  confirmarRemocao(profissionalId: any) {
     this.http.post(
-      `/backend/time/${this.time.id}/remover-profissional/${profissionalId}`, {}
+      `/backend/time/${this.time.id}/remover-profissional/${profissionalId}`,
+      { motivoDeSaida: this.motivoSaida || null, descricao: this.descricaoSaida || null },
+      { responseType: 'text' }
     ).subscribe({
-      next: () => this.recarregar(),
-      error: (e) => alert(e.error?.message ?? 'Erro ao remover.')
+      next: () => { this.removendoId = null; this.recarregar(); },
+      error: (e) => alert(this.extrairMensagem(e) ?? 'Erro ao remover.')
     });
   }
 
@@ -68,11 +84,15 @@ export class TimeDetalhes implements OnInit {
 
   excluir() {
     if (!confirm('Excluir este time?')) return;
-    this.http.post(`/backend/time/${this.time.id}/excluir`, {})
+    this.http.post(`/backend/time/${this.time.id}/excluir`, {}, { responseType: 'text' })
       .subscribe({
         next: () => this.router.navigate(['/buscar']),
-        error: (e) => alert(e.error?.message ?? 'Erro. Verifique se o time está vinculado a torneios.')
+        error: (e) => alert(this.extrairMensagem(e) ?? 'Erro. Verifique se o time está vinculado a torneios.')
       });
+  }
+
+  private extrairMensagem(e: any): string | null {
+    try { return JSON.parse(e.error)?.mensagem ?? null; } catch { return e.error?.mensagem ?? e.error?.message ?? null; }
   }
 
   private recarregar() {

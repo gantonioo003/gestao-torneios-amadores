@@ -119,6 +119,26 @@
         </div>
       }
 
+      @if (selecionado && historico.length) {
+        <div class="career-history" style="margin-top: 16px">
+          <h3 class="section-title" style="font-size: 15px; margin-bottom: 8px">
+            <i class="bi bi-briefcase"></i> Curriculo &mdash; onde ja passou
+          </h3>
+          @for (r of historico; track r.id) {
+            <div class="mini-row">
+              <div>
+                <strong>{{ r.nomeDoClube }}</strong>
+                <div class="small muted">
+                  {{ r.dataInicio }} &mdash; {{ r.dataFim || 'atual' }}
+                  @if (r.motivoDeSaida) { &middot; {{ motivoLabel(r.motivoDeSaida) }} }
+                </div>
+                @if (r.descricao) { <div class="small muted">{{ r.descricao }}</div> }
+              </div>
+            </div>
+          }
+        </div>
+      }
+
       <div class="roster-actions">
         <a class="btn" [routerLink]="['/time', timeId, 'detalhes']">Cancelar</a>
         @if ((modo === 'buscar' || editando) && selecionado) {

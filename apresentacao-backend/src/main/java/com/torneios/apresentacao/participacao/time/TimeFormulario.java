@@ -54,4 +54,9 @@ public class TimeFormulario {
         public String nome;
         public com.torneios.dominio.participacao.profissional.TipoProfissional tipo;
     }
+
+    public static class RemocaoDto {
+        public com.torneios.dominio.participacao.profissional.MotivoDeSaida motivoDeSaida;
+        public String descricao;
+    }
 }

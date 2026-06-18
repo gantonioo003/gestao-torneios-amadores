@@ -7,6 +7,7 @@ import java.util.Objects;
 import com.torneios.dominio.compartilhado.excecao.EntidadeNaoEncontradaException;
 import com.torneios.dominio.compartilhado.excecao.OperacaoNaoPermitidaException;
 import com.torneios.dominio.compartilhado.excecao.RegraDeNegocioException;
+import com.torneios.dominio.participacao.profissional.MotivoDeSaida;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoRepositorio;
 import com.torneios.dominio.participacao.profissional.RegistroDeCarreira;
 import com.torneios.dominio.participacao.profissional.RegistroDeCarreiraId;
@@ -166,11 +167,16 @@ public class TimeServico {
 
     public void removerVinculoProfissional(TimeId timeId, UsuarioId usuarioId,
             ProfissionalEsportivoId profissionalId) {
+        removerVinculoProfissional(timeId, usuarioId, profissionalId, null, null);
+    }
+
+    public void removerVinculoProfissional(TimeId timeId, UsuarioId usuarioId,
+            ProfissionalEsportivoId profissionalId, MotivoDeSaida motivoDeSaida, String descricao) {
         autenticacaoServico.exigirAutenticacao(usuarioId);
         Time time = obterTimeSobGestaoElenco(timeId, usuarioId);
         time.removerVinculoProfissional(profissionalId);
         timeRepositorio.salvar(time);
-        fecharCarreiraAutomatica(profissionalId, time.getNome());
+        fecharCarreiraAutomatica(profissionalId, time.getNome(), motivoDeSaida, descricao);
     }
 
     public boolean podeGerenciarElenco(TimeId timeId, UsuarioId usuarioId) {
@@ -222,13 +228,20 @@ public class TimeServico {
         if (profissionalRepositorio == null) return;
         profissionalRepositorio.buscarPorId(profissionalId).ifPresent(profissional -> {
             var registroId = new RegistroDeCarreiraId(System.currentTimeMillis());
-            profissional.adicionarRegistroDeCarreira(
-                new RegistroDeCarreira(registroId, nomeDoTime, dataInicio, null, null));
+            try {
+                profissional.adicionarRegistroDeCarreira(
+                    new RegistroDeCarreira(registroId, nomeDoTime, dataInicio, null, null));
+            } catch (RegraDeNegocioException carreiraSobreposta) {
+                // O profissional ja possui carreira no periodo (ex.: vinculado a outro time).
+                // O vinculo ao time e mantido; apenas o registro automatico de carreira e ignorado.
+                return;
+            }
             profissionalRepositorio.salvar(profissional);
         });
     }
 
-    private void fecharCarreiraAutomatica(ProfissionalEsportivoId profissionalId, String nomeDoTime) {
+    private void fecharCarreiraAutomatica(ProfissionalEsportivoId profissionalId, String nomeDoTime,
+            MotivoDeSaida motivoDeSaida, String descricao) {
         if (profissionalRepositorio == null) return;
         profissionalRepositorio.buscarPorId(profissionalId).ifPresent(profissional -> {
             profissional.getHistorico().stream()
@@ -236,6 +249,8 @@ public class TimeServico {
                 .findFirst()
                 .ifPresent(r -> {
                     r.setDataFim(LocalDate.now());
+                    if (motivoDeSaida != null) r.setMotivoDeSaida(motivoDeSaida);
+                    if (descricao != null && !descricao.isBlank()) r.setDescricao(descricao.trim());
                     profissionalRepositorio.salvar(profissional);
                 });
         });
