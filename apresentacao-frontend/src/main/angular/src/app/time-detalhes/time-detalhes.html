@@ -4,7 +4,7 @@
       <div class="crest"><i class="bi bi-shield"></i></div>
       <div>
         <div class="eyebrow">Perfil do time</div>
-        <h1 class="page-title">{{ time.nome || 'Unidos do Bairro' }}</h1>
+        <h1 class="page-title">{{ time.nome }}</h1>
         <p class="page-subtitle">Partidas, elenco, torneios vinculados e estatisticas do time.</p>
       </div>
     </div>
@@ -16,10 +16,10 @@
   <div class="grid layout-2-1">
     <section class="grid">
       <div class="grid grid-4">
-        <div class="card" style="text-align: center"><strong style="font-size: 26px">23</strong><div class="small muted">Jogos</div></div>
-        <div class="card" style="text-align: center"><strong style="font-size: 26px">14</strong><div class="small muted">Vitorias</div></div>
-        <div class="card" style="text-align: center"><strong style="font-size: 26px">5</strong><div class="small muted">Empates</div></div>
-        <div class="card" style="text-align: center"><strong style="font-size: 26px">3</strong><div class="small muted">Derrotas</div></div>
+        <div class="card" style="text-align: center"><strong style="font-size: 26px">0</strong><div class="small muted">Jogos</div></div>
+        <div class="card" style="text-align: center"><strong style="font-size: 26px">0</strong><div class="small muted">Vitorias</div></div>
+        <div class="card" style="text-align: center"><strong style="font-size: 26px">0</strong><div class="small muted">Empates</div></div>
+        <div class="card" style="text-align: center"><strong style="font-size: 26px">0</strong><div class="small muted">Derrotas</div></div>
       </div>
 
       <section class="card panel-strong">
@@ -37,11 +37,7 @@
           }
         </div>
         @if (!elenco.length) {
-          <div class="grid grid-3">
-            <div class="mini-row"><span>Joao Silva</span><span class="status status-green">ATA</span></div>
-            <div class="mini-row"><span>Pedro Santos</span><span class="status status-green">MEI</span></div>
-            <div class="mini-row"><span>Carlos Lima</span><span class="status status-green">TEC</span></div>
-          </div>
+          <div class="empty-state">Nenhum integrante no elenco ainda.</div>
         } @else {
           @for (v of elenco; track v.profissionalId) {
             <div class="mini-row">
@@ -59,9 +55,7 @@
 
       <section class="card">
         <h2 class="section-title">Ultimos jogos</h2>
-        <div class="mini-row"><span>Unidos do Bairro</span><strong>2 x 1</strong><span>Real Esperanca</span></div>
-        <div class="mini-row"><span>Resenha FC</span><strong>1 x 1</strong><span>Unidos do Bairro</span></div>
-        <div class="mini-row"><span>Unidos do Bairro</span><strong>3 x 0</strong><span>Vila FC</span></div>
+        <div class="empty-state">Nenhuma partida registrada.</div>
       </section>
     </section>
 
@@ -69,11 +63,12 @@
       <div class="card">
         <h2 class="section-title">Torneios vinculados</h2>
         @if (!torneios.length) {
-          <div class="mini-row"><span>Copa Bairro 2024</span><span class="status status-green">Em andamento</span></div>
-          <div class="mini-row"><span>Liga Amigos</span><span class="status status-warn">Inscrito</span></div>
+          <div class="empty-state">Nenhum torneio vinculado.</div>
         } @else {
           @for (t of torneios; track t.id) {
-            <div class="mini-row"><span>{{ t.nome }}</span><span class="status status-green">{{ t.status }}</span></div>
+            <a class="mini-row" [routerLink]="['/torneio', t.id]" style="text-decoration: none; color: inherit; cursor: pointer">
+              <span>{{ t.nome }}</span><span class="status status-green">{{ t.status }}</span>
+            </a>
           }
         }
       </div>

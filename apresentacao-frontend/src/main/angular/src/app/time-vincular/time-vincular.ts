@@ -30,7 +30,7 @@ export class TimeVincular implements OnInit {
   static readonly ID = 'id';
   static readonly RECURSO = 'recurso';
 
-  timeId!: number;
+  timeId!: string;
   time: any = {};
   elenco: any[] = [];
   modo: ModoIntegrante = 'buscar';
@@ -60,7 +60,7 @@ export class TimeVincular implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.timeId = Number(this.rota.snapshot.params[TimeVincular.ID]);
+    this.timeId = this.rota.snapshot.params[TimeVincular.ID];
     const recurso = this.rota.snapshot.data[TimeVincular.RECURSO] ?? {};
     this.time = recurso.time ?? {};
     this.elenco = recurso.time?.elenco ?? [];

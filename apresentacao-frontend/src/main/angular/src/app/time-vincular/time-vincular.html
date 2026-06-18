@@ -97,12 +97,16 @@
         <div class="contract-fields">
           <div class="field">
             <label>Funcao no time</label>
-            <select [(ngModel)]="funcao">
-              <option value="">Selecione a funcao</option>
+            <input
+              type="text"
+              [(ngModel)]="funcao"
+              list="funcoes-sugeridas"
+              placeholder="Ex.: Atacante, Treinador, Capitao...">
+            <datalist id="funcoes-sugeridas">
               @for (opcao of funcoesDisponiveis(selecionado?.tipo || tipoNovo); track opcao) {
-                <option [value]="opcao">{{ opcao }}</option>
+                <option [value]="opcao"></option>
               }
-            </select>
+            </datalist>
           </div>
           <div class="field">
             <label>Data de inicio</label>
