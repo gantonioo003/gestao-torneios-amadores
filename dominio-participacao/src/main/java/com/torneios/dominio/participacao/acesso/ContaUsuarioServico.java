@@ -208,7 +208,7 @@ public class ContaUsuarioServico {
         ContaUsuario conta = obterConta(usuarioId);
         if (!conta.podeGerenciarTimes()) {
             throw new OperacaoNaoPermitidaException(
-                    "Sua funcao permite pesquisar times, mas nao criar ou alterar times e elencos.");
+                    "Apenas contas de treinador podem criar ou alterar times e elencos.");
         }
         return conta;
     }

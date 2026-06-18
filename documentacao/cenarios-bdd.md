@@ -38,6 +38,8 @@ Cenarios principais:
 - excluir conta de usuario
 - impedir cadastro com email ja utilizado
 - permitir criacao de torneio apenas ao organizador
+- permitir gerenciamento de times ao treinador
+- impedir organizador de gerenciar times
 - impedir jogador de gerenciar times
 - salvar torneio no perfil da conta
 - remover torneio salvo do perfil da conta
@@ -84,7 +86,7 @@ Cenarios principais:
 
 ---
 
-### F5. Gerenciar times do usuario, permitindo cadastrar, editar, excluir e consultar torneios vinculados
+### F5. Gerenciar times do treinador, permitindo cadastrar, editar, excluir e consultar torneios vinculados
 Dominio: dominio-participacao
 Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F5-gerenciar-times-do-usuario.feature
 
@@ -277,9 +279,9 @@ Cenarios principais:
 - RN13. Login exige email e senha validos.
 - RN14. Usuario pode editar os dados da propria conta.
 - RN15. Usuario pode excluir a propria conta.
-- RN16. A conta de usuario pode ser do tipo jogador ou organizador.
+- RN16. A conta de usuario pode ser do tipo jogador, organizador, treinador ou auxiliar.
 - RN17. Contas do tipo jogador podem usar a plataforma para buscar times e acompanhar oportunidades de participacao.
-- RN18. Contas do tipo organizador podem representar responsaveis por times ou organizadores de torneios.
+- RN18. Contas do tipo organizador gerenciam exclusivamente torneios; somente contas de treinador podem criar e administrar times e elencos.
 - RN19. Apenas usuarios autenticados podem solicitar conversas privadas.
 - RN20. Solicitacao de conversa fica salva na aba de solicitados do destinatario.
 - RN21. Destinatario pode aprovar ou recusar uma solicitacao de conversa.
@@ -290,7 +292,7 @@ Cenarios principais:
 
 ### Participacao no torneio
 - RN26. Apenas usuarios autenticados podem gerenciar inscricoes de participacao em torneios.
-- RN27. Usuario deve possuir time cadastrado para enviar candidatura.
+- RN27. O treinador deve possuir time cadastrado para enviar candidatura.
 - RN28. Torneio pode ser aberto ou fechado para participacao.
 - RN29. Usuario pode acompanhar o status das candidaturas enviadas por ele.
 - RN30. Usuario pode cancelar uma candidatura enquanto ela estiver pendente.

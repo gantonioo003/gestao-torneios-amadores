@@ -99,6 +99,12 @@ public class F2Steps extends ParticipacaoFuncionalidade {
                 USUARIO_AUTENTICADO_ID, "Jogador", EMAIL_USUARIO, SENHA_USUARIO, TipoContaUsuario.JOGADOR);
     }
 
+    @Dado("que existe uma conta de treinador cadastrada")
+    public void existe_conta_treinador_cadastrada() {
+        contaCapturada = contaUsuarioServico.cadastrarConta(
+                USUARIO_AUTENTICADO_ID, "Treinador", EMAIL_USUARIO, SENHA_USUARIO, TipoContaUsuario.TREINADOR);
+    }
+
     @Quando("o sistema verificar a permissao para criar torneios")
     public void verificar_permissao_criar_torneios() {
         try { contaCapturada = contaUsuarioServico.exigirPodeCriarTorneio(USUARIO_AUTENTICADO_ID); } catch (Exception e) { excecaoCapturada = e; }
@@ -153,6 +159,12 @@ public class F2Steps extends ParticipacaoFuncionalidade {
     public void conta_deve_possuir_permissao_criar_torneios() {
         assertNull(excecaoCapturada);
         assertTrue(contaCapturada.podeCriarTorneio());
+    }
+
+    @Entao("a conta deve possuir permissao para gerenciar times")
+    public void conta_deve_possuir_permissao_gerenciar_times() {
+        assertNull(excecaoCapturada);
+        assertTrue(contaCapturada.podeGerenciarTimes());
     }
 
     @Entao("o sistema deve autenticar o usuario")

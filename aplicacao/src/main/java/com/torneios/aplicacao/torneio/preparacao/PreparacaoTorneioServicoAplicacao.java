@@ -82,6 +82,14 @@ public class PreparacaoTorneioServicoAplicacao {
         return obterTorneio(torneioId);
     }
 
+    public TorneioResumoAplicacao renomearTorneio(long torneioId, long organizadorId, String novoNome) {
+        torneioServico.renomearTorneio(
+                new TorneioId(torneioId),
+                new UsuarioId(organizadorId),
+                novoNome);
+        return obterTorneio(torneioId);
+    }
+
     public EstruturaCompeticaoResumo gerarEstruturaPorSorteio(long torneioId, long organizadorId) {
         return converter(torneioServico.gerarEstruturaCompeticao(
                 new TorneioId(torneioId),

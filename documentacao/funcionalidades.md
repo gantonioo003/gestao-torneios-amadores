@@ -10,7 +10,7 @@ F3. Gerenciar comunicacao privada entre usuarios com solicitacoes de conversa, p
 F4. Gerenciar inscricoes, curadoria e composicao final dos participantes do torneio, permitindo candidatura, acompanhamento, cancelamento, avaliacao, aprovacao, rejeicao e ajuste da lista final antes do inicio
 
 ## Times, elenco e desempenho
-F5. Gerenciar times do usuario, permitindo cadastrar, editar, excluir e consultar torneios vinculados, alem de gerenciar o elenco de profissionais esportivos.
+F5. Gerenciar times do treinador, permitindo cadastrar, editar, excluir e consultar torneios vinculados, alem de gerenciar o elenco de profissionais esportivos.
 
 F6. Cadastrar profissional esportivo com historico de carreira, permitindo gerenciar perfis de jogadores e treinadores com suas passagens por times.
 

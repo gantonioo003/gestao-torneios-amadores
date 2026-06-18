@@ -111,9 +111,6 @@ class TimeRepositorioAplicacaoImpl implements TimeRepositorioAplicacao {
     @Autowired
     TimeJpaRepository repositorio;
 
-    @Autowired
-    TorneioJpaRepository torneioRepositorio;
-
     @Override
     public List<TimeResumo> pesquisarResumos(String nome) {
         return repositorio.findByNomeContainingIgnoreCaseOrderByNomeAsc(nome).stream()
@@ -130,17 +127,7 @@ class TimeRepositorioAplicacaoImpl implements TimeRepositorioAplicacao {
 
     @Override
     public List<TimeResumo> pesquisarResumosGerenciaveis(long usuarioId) {
-        var torneios = torneioRepositorio.findByOrganizadorId(usuarioId);
-        var torneiosIds = torneios.stream()
-                .map(torneio -> torneio.id)
-                .collect(java.util.stream.Collectors.toSet());
-        var participantesIds = torneios.stream()
-                .flatMap(torneio -> torneio.participantes.stream())
-                .collect(java.util.stream.Collectors.toSet());
-        return repositorio.findAll().stream()
-                .filter(time -> time.responsavelId.equals(usuarioId)
-                        || participantesIds.contains(time.id)
-                        || time.torneiosVinculados.stream().anyMatch(torneiosIds::contains))
+        return repositorio.findByResponsavelId(usuarioId).stream()
                 .map(jpa -> (TimeResumo) new TimeJpaResumo(jpa))
                 .toList();
     }

@@ -1,0 +1,171 @@
+.tournament-create-page {
+  width: min(1040px, calc(100% - 32px));
+}
+
+.create-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr);
+  align-items: start;
+  gap: 14px;
+}
+
+.create-form {
+  padding: 24px;
+}
+
+.create-section-heading {
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.create-section-heading > span {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: var(--green-dark);
+  background: var(--green-soft);
+  border-radius: 12px;
+  font-weight: 900;
+}
+
+.create-section-heading h2 {
+  margin: 2px 0 0;
+  font-size: 20px;
+}
+
+.registration-choice {
+  min-height: 72px;
+  padding: 13px;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: 11px;
+  background: #f8faf8;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  cursor: pointer;
+}
+
+.registration-choice > span:nth-child(2) {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: var(--green-dark);
+  background: var(--green-soft);
+  border-radius: 11px;
+}
+
+.registration-choice > span:last-child {
+  display: grid;
+  gap: 3px;
+}
+
+.registration-choice small {
+  color: var(--muted);
+}
+
+.create-submit {
+  margin-top: 18px;
+}
+
+.create-preview {
+  min-height: 500px;
+  padding: 22px;
+  text-align: center;
+}
+
+.create-preview .create-section-heading {
+  text-align: left;
+}
+
+.preview-emblem {
+  width: 90px;
+  height: 100px;
+  margin: 22px auto 14px;
+  display: grid;
+  place-items: center;
+  color: #f5ca55;
+  background: linear-gradient(145deg, #143b2b, #078246);
+  border-radius: 18px 18px 24px 24px;
+  box-shadow: 0 14px 36px rgba(7, 130, 70, .2);
+  font-size: 34px;
+}
+
+.create-preview h3 {
+  margin: 0;
+  font-size: 23px;
+}
+
+.create-preview > p {
+  margin: 6px 0 22px;
+  color: var(--muted);
+}
+
+.next-steps {
+  display: grid;
+  text-align: left;
+}
+
+.next-steps span {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.next-steps i {
+  color: var(--green-dark);
+  font-size: 18px;
+}
+
+.preview-note {
+  margin-top: 18px;
+  padding: 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: #37604d;
+  background: #eefaf3;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.preview-note p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.create-error {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  color: #a52d2a;
+  background: #fff0ef;
+  border-radius: 10px;
+}
+
+@media (max-width: 800px) {
+  .create-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .create-preview {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .tournament-create-page {
+    width: min(100% - 20px, 1040px);
+  }
+
+  .create-form {
+    padding: 16px;
+  }
+}
