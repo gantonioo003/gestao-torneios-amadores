@@ -46,6 +46,8 @@ interface PalpiteJpaRepository extends JpaRepository<PalpiteJpa, Long> {
             Long partidaId);
 
     List<PalpiteJpa> findByTipoAndTorneioIdAndPartidaId(String tipo, Long torneioId, Long partidaId);
+
+    List<PalpiteJpa> findByUsuarioIdOrderByIdDesc(Long usuarioId);
 }
 
 @Repository

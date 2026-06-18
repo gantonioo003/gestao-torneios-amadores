@@ -39,6 +39,10 @@ public class MensagemChat {
         if (conteudo == null || conteudo.isBlank()) {
             throw new IllegalArgumentException("O conteudo da mensagem e obrigatorio.");
         }
-        return conteudo.trim();
+        String conteudoValidado = conteudo.trim();
+        if (conteudoValidado.length() > 1000) {
+            throw new IllegalArgumentException("A mensagem deve possuir no maximo 1000 caracteres.");
+        }
+        return conteudoValidado;
     }
 }

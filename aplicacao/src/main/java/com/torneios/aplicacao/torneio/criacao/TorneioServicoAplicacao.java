@@ -17,6 +17,10 @@ public class TorneioServicoAplicacao {
         return repositorio.pesquisarResumos();
     }
 
+    public List<TorneioResumo> pesquisarResumosPorNome(String nome) {
+        return repositorio.pesquisarResumosPorNome(nome == null ? "" : nome.trim());
+    }
+
     public List<TorneioResumo> pesquisarResumosPorOrganizador(long organizadorId) {
         return repositorio.pesquisarResumosPorOrganizador(organizadorId);
     }

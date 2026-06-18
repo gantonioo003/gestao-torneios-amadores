@@ -1,13 +1,63 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { AuthService } from '../core/auth.service';
 
 @Component({
   selector: 'app-torneio-detalhes',
   imports: [RouterLink],
   templateUrl: './torneio-detalhes.html'
 })
-export class TorneioDetalhes {
+export class TorneioDetalhes implements OnInit {
   aba = 'participantes';
+  torneio: any = {};
+  salvandoTorneio = false;
+  readonly usuario = this.auth.usuario;
+
+  constructor(
+    private readonly http: HttpClient,
+    private readonly route: ActivatedRoute,
+    private readonly auth: AuthService
+  ) {}
+
+  ngOnInit() {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.http.get<any[]>('/backend/torneio/pesquisa').subscribe({
+      next: torneios => this.torneio = torneios.find(torneio => torneio.id === id) ?? {},
+      error: () => this.torneio = {}
+    });
+  }
+
+  podeGerenciar(): boolean {
+    return this.usuario()?.podeCriarTorneio === true
+      && this.usuario()?.id === this.torneio.organizadorId;
+  }
+
+  torneioEstaSalvo(): boolean {
+    return !!this.torneio.id && (this.usuario()?.torneiosSalvos ?? []).includes(this.torneio.id);
+  }
+
+  alternarTorneioSalvo() {
+    if (!this.usuario() || !this.torneio.id || this.salvandoTorneio) return;
+    this.salvandoTorneio = true;
+    const requisicao = this.torneioEstaSalvo()
+      ? this.auth.removerTorneioSalvo(this.torneio.id)
+      : this.auth.salvarTorneio(this.torneio.id);
+    requisicao.subscribe({
+      next: () => this.salvandoTorneio = false,
+      error: () => this.salvandoTorneio = false
+    });
+  }
+
+  statusLabel(): string {
+    const labels: Record<string, string> = {
+      CONFIGURADO: 'Inscrições',
+      ESTRUTURA_GERADA: 'Estrutura pronta',
+      INICIADO: 'Ao vivo',
+      FINALIZADO: 'Finalizado'
+    };
+    return labels[this.torneio.status] ?? 'Torneio';
+  }
 
   confirmados = ['Unidos do Bairro', 'Resenha FC', 'Vila FC', 'Real Esperanca', 'Os Parcas', 'Liga Amigos', 'Super Time', 'Amigos FC'];
   pendentes = ['Goleira FC', 'Bola na Rede', 'Amigos do Futebol'];

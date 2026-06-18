@@ -1,0 +1,110 @@
+<main class="page profile-page">
+  @if (carregando) {
+    <section class="card profile-loading">Carregando perfil...</section>
+  } @else if (perfil) {
+    <section class="card panel-strong profile-header">
+      <div class="profile-identity">
+        <div class="profile-monogram">{{ iniciais(perfil.nome) }}</div>
+        <div>
+          <div class="profile-username">&#64;{{ perfil.nomeUsuario }}</div>
+          <h1>{{ perfil.nome }}</h1>
+          <div class="profile-meta">
+            <span class="status status-green">{{ tipoLabel(perfil.tipo) }}</span>
+            @if (perfil.cidade || perfil.estado) {
+              <span><i class="bi bi-geo-alt"></i> {{ perfil.cidade }}{{ perfil.cidade && perfil.estado ? ', ' : '' }}{{ perfil.estado }}</span>
+            }
+          </div>
+        </div>
+      </div>
+      @if (ehProprioPerfil()) {
+        <a class="btn btn-outline" routerLink="/home-logada" [queryParams]="{ aba: 'perfil' }">
+          <i class="bi bi-pencil"></i> Gerenciar meu perfil
+        </a>
+      } @else {
+        <a class="btn btn-primary" routerLink="/chat"><i class="bi bi-chat-dots"></i> Solicitar conversa</a>
+      }
+    </section>
+
+    <div class="grid profile-layout">
+      <section class="grid">
+        <article class="card">
+          <h2 class="section-title">Sobre</h2>
+          <p class="profile-bio">{{ perfil.biografia || 'Este usuário ainda não escreveu uma apresentação.' }}</p>
+        </article>
+
+        <article class="card">
+          <h2 class="section-title">Na plataforma</h2>
+          <div class="profile-capabilities">
+            <div><i class="bi bi-search"></i><span>Pesquisar torneios, times e profissionais</span></div>
+            @if (perfil.podeCriarTorneio) {
+              <div><i class="bi bi-trophy"></i><span>Criar e gerenciar torneios</span></div>
+            }
+            @if (perfil.podeGerenciarTimes) {
+              <div><i class="bi bi-shield-check"></i><span>Criar times e administrar elencos</span></div>
+            }
+            @if (perfil.possuiPerfilProfissional) {
+              <div><i class="bi bi-person-badge"></i><span>Manter perfil e trajetória profissional</span></div>
+            }
+          </div>
+        </article>
+
+        <article class="card profile-activity">
+          <div class="profile-section-heading">
+            <div>
+              <div class="eyebrow">Vida esportiva</div>
+              <h2 class="section-title">Torneios e atividade</h2>
+            </div>
+            <span class="small muted">
+              {{ (atividade?.torneiosOrganizados?.length || 0) + (atividade?.torneiosParticipando?.length || 0) }} vínculo(s)
+            </span>
+          </div>
+
+          <h3 class="profile-subtitle">Torneios que organiza</h3>
+          @if (atividade?.torneiosOrganizados?.length) {
+            <div class="profile-tournament-grid">
+              @for (torneio of atividade?.torneiosOrganizados ?? []; track torneio.id) {
+                <a class="profile-tournament" [routerLink]="['/torneio', torneio.id]">
+                  <i class="bi bi-trophy"></i>
+                  <span><strong>{{ torneio.nome }}</strong><small>{{ statusTorneioLabel(torneio.status) }}</small></span>
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              }
+            </div>
+          } @else {
+            <p class="small muted profile-empty">Nenhum torneio organizado por esta conta.</p>
+          }
+
+          <h3 class="profile-subtitle">Torneios em que participa</h3>
+          @if (atividade?.torneiosParticipando?.length) {
+            <div class="profile-tournament-grid">
+              @for (torneio of atividade?.torneiosParticipando ?? []; track torneio.id) {
+                <a class="profile-tournament" [routerLink]="['/torneio', torneio.id]">
+                  <i class="bi bi-shield-check"></i>
+                  <span><strong>{{ torneio.nome }}</strong><small>{{ statusTorneioLabel(torneio.status) }}</small></span>
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              }
+            </div>
+          } @else {
+            <p class="small muted profile-empty">Nenhuma participação em torneio registrada.</p>
+          }
+        </article>
+      </section>
+
+      <aside class="grid">
+        <article class="card">
+          <h2 class="section-title">Descobrir mais</h2>
+          <a class="btn btn-outline btn-block" routerLink="/torneios">Explorar torneios</a>
+          <a class="btn btn-outline btn-block profile-secondary-action" routerLink="/time/pesquisa">Explorar times</a>
+          <a class="btn btn-outline btn-block profile-secondary-action" routerLink="/profissional/pesquisa">Ver jogadores</a>
+        </article>
+      </aside>
+    </div>
+  } @else {
+    <section class="empty-state">
+      <h1>Perfil não encontrado</h1>
+      <p>{{ erro }}</p>
+      <a class="btn btn-primary" routerLink="/">Voltar ao início</a>
+    </section>
+  }
+</main>

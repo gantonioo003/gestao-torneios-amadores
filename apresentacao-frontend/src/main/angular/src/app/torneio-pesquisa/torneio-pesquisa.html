@@ -1,0 +1,80 @@
+<main class="page">
+  <div class="hero-row">
+    <div>
+      <div class="eyebrow">Descobrir competições</div>
+      <h1 class="page-title">Encontre seu próximo torneio</h1>
+      <p class="page-subtitle">Pesquise pelo nome, veja o que está em alta e entre na competição certa para seu time.</p>
+    </div>
+    @if (usuario()?.podeCriarTorneio) {
+      <a class="btn btn-primary" routerLink="/torneio/criacao"><i class="bi bi-plus-circle"></i> Criar torneio</a>
+    }
+  </div>
+
+  <section class="card panel-strong tournament-search">
+    <i class="bi bi-search"></i>
+    <input [(ngModel)]="termo" (keyup.enter)="buscar()" placeholder="Pesquisar torneio por nome">
+    <button class="btn btn-primary" (click)="buscar()">Pesquisar</button>
+  </section>
+
+  @if (!termo && emAlta.length) {
+    <section class="tournament-section">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">Destaques da comunidade</div>
+          <h2>Em alta agora</h2>
+        </div>
+      </div>
+      <div class="grid grid-3">
+        @for (torneio of emAlta; track torneio.id; let posicao = $index) {
+          <a class="card panel-strong trending-card" [routerLink]="['/torneio', torneio.id]">
+            <span class="trending-position">0{{ posicao + 1 }}</span>
+            <div class="tournament-icon"><i class="bi bi-trophy"></i></div>
+            <div>
+              <h3>{{ torneio.nome }}</h3>
+              <p>{{ formatoLabel(torneio.formato) }}</p>
+            </div>
+            <span class="status" [class.status-green]="torneio.aceitaSolicitacoes" [class.status-gray]="!torneio.aceitaSolicitacoes">
+              {{ torneio.aceitaSolicitacoes ? 'Aceitando times' : statusLabel(torneio.status) }}
+            </span>
+          </a>
+        }
+      </div>
+    </section>
+  }
+
+  <section class="tournament-section">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">{{ termo ? 'Resultados da busca' : 'Explorar' }}</div>
+        <h2>{{ termo ? 'Torneios encontrados' : 'Todos os torneios' }}</h2>
+      </div>
+      <span class="muted small">{{ torneios.length }} resultado(s)</span>
+    </div>
+
+    @if (carregando) {
+      <div class="empty-state">Buscando torneios...</div>
+    } @else if (!torneios.length) {
+      <div class="empty-state">
+        <div class="tournament-icon empty-icon"><i class="bi bi-trophy"></i></div>
+        <h3>Nenhum torneio encontrado</h3>
+        <p>Tente outro nome ou limpe a pesquisa para explorar todos.</p>
+      </div>
+    } @else {
+      <div class="grid tournament-list">
+        @for (torneio of torneios; track torneio.id) {
+          <article class="card tournament-row">
+            <div class="tournament-icon"><i class="bi bi-trophy"></i></div>
+            <div class="tournament-copy">
+              <h3>{{ torneio.nome }}</h3>
+              <p>{{ formatoLabel(torneio.formato) }} · {{ torneio.formatoEquipe.replaceAll('_', ' ') }}</p>
+            </div>
+            <span class="status" [class.status-green]="torneio.status === 'INICIADO'" [class.status-warn]="torneio.status === 'CONFIGURADO'">
+              {{ statusLabel(torneio.status) }}
+            </span>
+            <a class="btn btn-outline" [routerLink]="['/torneio', torneio.id]">Abrir torneio</a>
+          </article>
+        }
+      </div>
+    }
+  </section>
+</main>

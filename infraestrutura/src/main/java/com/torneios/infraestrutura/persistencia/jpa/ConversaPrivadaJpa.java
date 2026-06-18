@@ -32,6 +32,7 @@ class ConversaPrivadaJpa {
     Long solicitanteId;
     Long destinatarioId;
     String status;
+    LocalDateTime solicitadaEm;
 
     @Lob
     String mensagensData;
@@ -40,6 +41,7 @@ class ConversaPrivadaJpa {
 interface ConversaPrivadaJpaRepository extends JpaRepository<ConversaPrivadaJpa, Long> {
     List<ConversaPrivadaJpa> findBySolicitanteIdOrDestinatarioId(Long solicitanteId, Long destinatarioId);
     List<ConversaPrivadaJpa> findByDestinatarioIdAndStatus(Long destinatarioId, String status);
+    List<ConversaPrivadaJpa> findBySolicitanteIdAndStatus(Long solicitanteId, String status);
     List<ConversaPrivadaJpa> findByStatusAndSolicitanteIdOrStatusAndDestinatarioId(
             String primeiroStatus,
             Long solicitanteId,
@@ -60,6 +62,7 @@ class ConversaPrivadaRepositorioImpl implements ConversaPrivadaRepositorio {
         jpa.solicitanteId = conversaPrivada.getSolicitanteId().valor();
         jpa.destinatarioId = conversaPrivada.getDestinatarioId().valor();
         jpa.status = conversaPrivada.getStatus().name();
+        jpa.solicitadaEm = conversaPrivada.getSolicitadaEm();
         jpa.mensagensData = PersistenciaTextoUtil.serializarLinhas(
                 conversaPrivada.getMensagens().stream()
                         .map(this::serializarMensagem)
@@ -87,6 +90,13 @@ class ConversaPrivadaRepositorioImpl implements ConversaPrivadaRepositorio {
     }
 
     @Override
+    public List<ConversaPrivada> listarSolicitadasPorUsuario(UsuarioId usuarioId) {
+        return repositorio.findBySolicitanteIdAndStatus(usuarioId.valor(), StatusConversa.SOLICITADA.name()).stream()
+                .map(this::paraDominio)
+                .toList();
+    }
+
+    @Override
     public List<ConversaPrivada> listarAprovadasPorUsuario(UsuarioId usuarioId) {
         return repositorio.findByStatusAndSolicitanteIdOrStatusAndDestinatarioId(
                         StatusConversa.APROVADA.name(),
@@ -101,7 +111,8 @@ class ConversaPrivadaRepositorioImpl implements ConversaPrivadaRepositorio {
         ConversaPrivada conversa = new ConversaPrivada(
                 new ConversaPrivadaId(jpa.id),
                 new UsuarioId(jpa.solicitanteId),
-                new UsuarioId(jpa.destinatarioId));
+                new UsuarioId(jpa.destinatarioId),
+                jpa.solicitadaEm == null ? LocalDateTime.now() : jpa.solicitadaEm);
         StatusConversa status = StatusConversa.valueOf(jpa.status);
         if (status == StatusConversa.APROVADA) {
             conversa.aprovar(new UsuarioId(jpa.destinatarioId));

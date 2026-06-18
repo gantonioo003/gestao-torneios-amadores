@@ -47,6 +47,16 @@ public class F3Steps extends EngajamentoFuncionalidade {
         ele_solicitar_conversa_privada_com_esse_usuario();
     }
 
+    @Dado("que ele solicitou uma conversa privada com esse usuario")
+    public void que_ele_solicitou_uma_conversa_privada_com_esse_usuario() {
+        ele_solicitar_conversa_privada_com_esse_usuario();
+    }
+
+    @Dado("que existe um terceiro usuario autenticado")
+    public void que_existe_um_terceiro_usuario_autenticado() {
+        consultaChat.autenticar(ORGANIZADOR_ID);
+    }
+
     @Quando("o destinatario aprovar a solicitacao de conversa")
     public void destinatario_aprovar_solicitacao_conversa() {
         try {
@@ -94,6 +104,24 @@ public class F3Steps extends EngajamentoFuncionalidade {
         }
     }
 
+    @Quando("o usuario consultar suas solicitacoes enviadas")
+    public void usuario_consultar_solicitacoes_enviadas() {
+        try {
+            conversasPrivadas = chatPrivadoServico.listarSolicitacoesEnviadas(USUARIO_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o terceiro usuario tentar consultar o historico da conversa")
+    public void terceiro_usuario_tentar_consultar_historico() {
+        try {
+            chatPrivadoServico.consultarConversa(conversaPrivada.getId(), ORGANIZADOR_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
     @Entao("o sistema deve registrar a conversa como solicitada")
     public void sistema_deve_registrar_conversa_solicitada() {
         assertNull(excecaoCapturada);
@@ -134,6 +162,14 @@ public class F3Steps extends EngajamentoFuncionalidade {
         assertNotNull(conversasPrivadas);
         assertEquals(1, conversasPrivadas.size());
         assertEquals(StatusConversa.APROVADA, conversasPrivadas.get(0).getStatus());
+    }
+
+    @Entao("o sistema deve listar a solicitacao como pendente")
+    public void sistema_deve_listar_solicitacao_pendente() {
+        assertNull(excecaoCapturada);
+        assertNotNull(conversasPrivadas);
+        assertEquals(1, conversasPrivadas.size());
+        assertEquals(StatusConversa.SOLICITADA, conversasPrivadas.get(0).getStatus());
     }
 
     @Entao("o sistema deve impedir a solicitacao de conversa")

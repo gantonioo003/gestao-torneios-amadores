@@ -52,6 +52,11 @@ record ProfissionalJpaResumo(ProfissionalEsportivoJpa jpa) implements Profission
     public String getTipo() {
         return jpa.tipo;
     }
+
+    @Override
+    public Long getCadastranteId() {
+        return jpa.cadastranteId;
+    }
 }
 
 record ProfissionalJpaResumoExpandido(ProfissionalEsportivoJpa jpa) implements ProfissionalResumoExpandido {
@@ -105,6 +110,13 @@ class TimeRepositorioAplicacaoImpl implements TimeRepositorioAplicacao {
 
     @Autowired
     TimeJpaRepository repositorio;
+
+    @Override
+    public List<TimeResumo> pesquisarResumos(String nome) {
+        return repositorio.findByNomeContainingIgnoreCaseOrderByNomeAsc(nome).stream()
+                .map(jpa -> (TimeResumo) new TimeJpaResumo(jpa))
+                .toList();
+    }
 
     @Override
     public List<TimeResumo> pesquisarResumosPorResponsavel(long responsavelId) {

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveData, Router, RouterLink, RouterStateSnapshot } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { AuthService } from '../core/auth.service';
 
 @Component({
   selector: 'app-time-detalhes',
@@ -16,12 +17,13 @@ export class TimeDetalhes implements OnInit {
   time: any = {};
   elenco: any[] = [];
   torneios: any[] = [];
-  private readonly responsavelId = 1;
+  readonly usuario = this.auth.usuario;
 
   constructor(
     private readonly http: HttpClient,
     private readonly rota: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly auth: AuthService
   ) {}
 
   ngOnInit() {
@@ -31,6 +33,11 @@ export class TimeDetalhes implements OnInit {
     this.torneios = data.torneios ?? [];
   }
 
+  podeGerenciar(): boolean {
+    return this.usuario()?.podeGerenciarTimes === true
+      && this.usuario()?.id === this.time.responsavelId;
+  }
+
   editarVinculo(v: any) {
     this.router.navigate(['/time', this.time.id, 'vincular'], { state: { vinculo: v } });
   }
@@ -38,7 +45,7 @@ export class TimeDetalhes implements OnInit {
   removerVinculo(profissionalId: number) {
     if (!confirm('Remover profissional do elenco?')) return;
     this.http.post(
-      `/backend/time/${this.time.id}/remover-profissional/${profissionalId}?responsavelId=${this.responsavelId}`, {}
+      `/backend/time/${this.time.id}/remover-profissional/${profissionalId}`, {}
     ).subscribe({
       next: () => this.recarregar(),
       error: (e) => alert(e.error?.message ?? 'Erro ao remover.')
@@ -51,7 +58,7 @@ export class TimeDetalhes implements OnInit {
 
   excluir() {
     if (!confirm('Excluir este time?')) return;
-    this.http.post(`/backend/time/${this.time.id}/excluir?responsavelId=${this.responsavelId}`, {})
+    this.http.post(`/backend/time/${this.time.id}/excluir`, {})
       .subscribe({
         next: () => this.router.navigate(['/time/pesquisa']),
         error: (e) => alert(e.error?.message ?? 'Erro. Verifique se o time está vinculado a torneios.')

@@ -4,6 +4,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,55 +14,90 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.engajamento.chat.ChatPrivadoServicoAplicacao;
+import com.torneios.apresentacao.SessaoUsuario;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("backend/chat-privado")
 class ChatPrivadoControlador {
 
+    private final AtomicLong geradorId = new AtomicLong(System.currentTimeMillis());
+
     @Autowired
     ChatPrivadoServicoAplicacao chatPrivadoServicoAplicacao;
 
     @RequestMapping(method = POST, path = "solicitar")
-    ChatPrivadoServicoAplicacao.ConversaResumo solicitar(@RequestParam long solicitanteId,
-                                                         @RequestParam long destinatarioId) {
+    ChatPrivadoServicoAplicacao.ConversaResumo solicitar(@RequestParam long destinatarioId,
+                                                         HttpSession sessao) {
         return chatPrivadoServicoAplicacao.solicitarConversa(
-                System.currentTimeMillis(),
-                solicitanteId,
+                proximoId(),
+                SessaoUsuario.exigirUsuarioId(sessao),
                 destinatarioId);
     }
 
     @RequestMapping(method = POST, path = "{id}/aprovar")
-    ChatPrivadoServicoAplicacao.ConversaResumo aprovar(@PathVariable long id, @RequestParam long destinatarioId) {
-        return chatPrivadoServicoAplicacao.aprovarSolicitacao(id, destinatarioId);
+    ChatPrivadoServicoAplicacao.ConversaResumo aprovar(@PathVariable long id, HttpSession sessao) {
+        return chatPrivadoServicoAplicacao.aprovarSolicitacao(
+                id,
+                SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = POST, path = "{id}/recusar")
-    ChatPrivadoServicoAplicacao.ConversaResumo recusar(@PathVariable long id, @RequestParam long destinatarioId) {
-        return chatPrivadoServicoAplicacao.recusarSolicitacao(id, destinatarioId);
+    ChatPrivadoServicoAplicacao.ConversaResumo recusar(@PathVariable long id, HttpSession sessao) {
+        return chatPrivadoServicoAplicacao.recusarSolicitacao(
+                id,
+                SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = POST, path = "{id}/mensagem")
     ChatPrivadoServicoAplicacao.MensagemResumo enviarMensagem(@PathVariable long id,
-                                                              @RequestBody MensagemDto dto) {
+                                                              @RequestBody MensagemDto dto,
+                                                              HttpSession sessao) {
         return chatPrivadoServicoAplicacao.enviarMensagem(
                 id,
-                System.currentTimeMillis(),
-                dto.autorId,
+                proximoId(),
+                SessaoUsuario.exigirUsuarioId(sessao),
                 dto.conteudo);
     }
 
-    @RequestMapping(method = GET, path = "solicitadas")
-    List<ChatPrivadoServicoAplicacao.ConversaResumo> solicitadas(@RequestParam long usuarioId) {
-        return chatPrivadoServicoAplicacao.listarSolicitadas(usuarioId);
+    @RequestMapping(method = GET, path = "solicitacoes/recebidas")
+    List<ChatPrivadoServicoAplicacao.ConversaResumo> solicitacoesRecebidas(HttpSession sessao) {
+        return chatPrivadoServicoAplicacao.listarSolicitadas(SessaoUsuario.exigirUsuarioId(sessao));
     }
 
-    @RequestMapping(method = GET, path = "aprovadas")
-    List<ChatPrivadoServicoAplicacao.ConversaResumo> aprovadas(@RequestParam long usuarioId) {
-        return chatPrivadoServicoAplicacao.listarConversasAprovadas(usuarioId);
+    @RequestMapping(method = GET, path = "solicitacoes/enviadas")
+    List<ChatPrivadoServicoAplicacao.ConversaResumo> solicitacoesEnviadas(HttpSession sessao) {
+        return chatPrivadoServicoAplicacao.listarSolicitacoesEnviadas(SessaoUsuario.exigirUsuarioId(sessao));
+    }
+
+    @RequestMapping(method = GET, path = "inbox")
+    List<ChatPrivadoServicoAplicacao.ConversaResumo> inbox(HttpSession sessao) {
+        return chatPrivadoServicoAplicacao.listarConversasAprovadas(SessaoUsuario.exigirUsuarioId(sessao));
+    }
+
+    @RequestMapping(method = GET, path = "{id}")
+    ChatPrivadoServicoAplicacao.ConversaResumo consultar(@PathVariable long id,
+                                                         HttpSession sessao) {
+        return chatPrivadoServicoAplicacao.consultarConversa(
+                id,
+                SessaoUsuario.exigirUsuarioId(sessao));
+    }
+
+    @RequestMapping(method = GET, path = "usuarios")
+    List<ChatPrivadoServicoAplicacao.UsuarioChatResumo> pesquisarUsuarios(
+            @RequestParam(defaultValue = "") String termo,
+            HttpSession sessao) {
+        return chatPrivadoServicoAplicacao.pesquisarUsuarios(
+                termo,
+                SessaoUsuario.exigirUsuarioId(sessao));
+    }
+
+    private long proximoId() {
+        return geradorId.incrementAndGet();
     }
 
     static class MensagemDto {
-        public long autorId;
         public String conteudo;
     }
 }

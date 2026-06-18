@@ -67,6 +67,7 @@ class TorneioJpa {
 
 interface TorneioJpaRepository extends JpaRepository<TorneioJpa, Long> {
     List<TorneioJpa> findByOrganizadorId(Long organizadorId);
+    List<TorneioJpa> findByNomeContainingIgnoreCaseOrderByNomeAsc(String nome);
 }
 
 @Repository

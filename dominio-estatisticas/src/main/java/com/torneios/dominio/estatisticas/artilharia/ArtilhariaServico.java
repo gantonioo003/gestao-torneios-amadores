@@ -29,7 +29,7 @@ public class ArtilhariaServico {
                 .getEstatisticasJogadores()
                 .stream()
                 .sorted(Comparator.comparingInt(EstatisticaJogador::getGols).reversed()
-                        .thenComparingInt(EstatisticaJogador::getAssistencias).reversed()
+                        .thenComparing(Comparator.comparingInt(EstatisticaJogador::getAssistencias).reversed())
                         .thenComparing((EstatisticaJogador estatisticaJogador) ->
                                 medias.getOrDefault(estatisticaJogador.getJogadorId(), 0.0), Comparator.reverseOrder())
                         .thenComparingInt(EstatisticaJogador::getCartoesVermelhos)

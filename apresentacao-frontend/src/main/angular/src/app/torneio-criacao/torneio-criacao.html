@@ -20,18 +20,19 @@
           <div class="field">
             <label>Formato</label>
             <select [(ngModel)]="formato">
-              <option>Grupos + mata-mata</option>
-              <option>Pontos corridos</option>
-              <option>Mata-mata</option>
-              <option>Final unica</option>
+              <option value="FASE_DE_GRUPOS_COM_MATA_MATA">Grupos + mata-mata</option>
+              <option value="PONTOS_CORRIDOS">Pontos corridos</option>
+              <option value="MATA_MATA">Mata-mata</option>
+              <option value="FINAL_UNICA">Final única</option>
             </select>
           </div>
           <div class="field">
             <label>Formato de equipe</label>
             <select [(ngModel)]="equipe">
-              <option>5 titulares + 3 reservas</option>
-              <option>7 titulares + 5 reservas</option>
-              <option>11 titulares + 7 reservas</option>
+              <option value="TRES_POR_TRES">3 por 3</option>
+              <option value="CINCO_POR_CINCO">5 por 5</option>
+              <option value="SETE_POR_SETE">7 por 7</option>
+              <option value="ONZE_POR_ONZE">11 por 11</option>
             </select>
           </div>
         </div>
@@ -39,8 +40,8 @@
           <div class="field">
             <label>Inscricao</label>
             <select [(ngModel)]="inscricao">
-              <option>Aberta</option>
-              <option>Fechada</option>
+              <option value="ABERTA">Aberta</option>
+              <option value="FECHADA">Fechada</option>
             </select>
           </div>
           <div class="field">
@@ -81,7 +82,7 @@
         <h2 class="section-title">Previa do fluxo</h2>
         <div class="mini-row"><span>Formato escolhido</span><strong>{{ formato }}</strong></div>
         <div class="mini-row"><span>Equipe</span><strong>{{ equipe }}</strong></div>
-        <div class="mini-row"><span>Entrada</span><span class="status status-green">{{ inscricao }}</span></div>
+        <div class="mini-row"><span>Entrada</span><span class="status status-green">{{ inscricao === 'ABERTA' ? 'Aberta' : 'Fechada' }}</span></div>
         <div class="mini-row"><span>Preparacao</span><strong>{{ modoPreparacao === 'sorteio' ? 'Sorteio automatico' : 'Montagem manual' }}</strong></div>
       </div>
 

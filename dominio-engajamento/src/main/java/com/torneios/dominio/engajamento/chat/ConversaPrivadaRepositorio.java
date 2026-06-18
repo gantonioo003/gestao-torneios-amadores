@@ -15,5 +15,7 @@ public interface ConversaPrivadaRepositorio {
 
     List<ConversaPrivada> listarSolicitadasParaUsuario(UsuarioId usuarioId);
 
+    List<ConversaPrivada> listarSolicitadasPorUsuario(UsuarioId usuarioId);
+
     List<ConversaPrivada> listarAprovadasPorUsuario(UsuarioId usuarioId);
 }

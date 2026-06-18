@@ -3,14 +3,20 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, ResolveData, RouterModule } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { AuthService } from '../core/auth.service';
 
 @Component({ selector: 'app-profissional-pesquisa', imports: [FormsModule, RouterModule], templateUrl: './profissional-pesquisa.html' })
 export class ProfissionalPesquisa implements OnInit {
   static readonly RECURSO = 'recurso';
   lista: any[] = [];
   termoBusca = '';
+  readonly usuario = this.auth.usuario;
 
-  constructor(private readonly rota: ActivatedRoute, private readonly http: HttpClient) {}
+  constructor(
+    private readonly rota: ActivatedRoute,
+    private readonly http: HttpClient,
+    private readonly auth: AuthService
+  ) {}
 
   ngOnInit() { this.lista = this.rota.snapshot.data[ProfissionalPesquisa.RECURSO] ?? []; }
 

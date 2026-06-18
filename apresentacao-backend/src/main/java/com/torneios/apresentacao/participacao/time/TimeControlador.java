@@ -4,6 +4,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,11 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.participacao.time.TimeResumo;
 import com.torneios.aplicacao.participacao.time.TimeServicoAplicacao;
+import com.torneios.apresentacao.SessaoUsuario;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoId;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoRepositorio;
+import com.torneios.dominio.participacao.acesso.ContaUsuarioServico;
 import com.torneios.dominio.participacao.time.TimeServico;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("backend/time")
@@ -27,10 +32,17 @@ class TimeControlador {
     @Autowired TimeServico timeServico;
     @Autowired TimeServicoAplicacao timeServicoConsulta;
     @Autowired ProfissionalEsportivoRepositorio profissionalRepositorio;
+    @Autowired ContaUsuarioServico contaUsuarioServico;
 
     @RequestMapping(method = GET, path = "pesquisa")
-    List<? extends TimeResumo> pesquisar(@RequestParam long responsavelId) {
-        return timeServicoConsulta.pesquisarResumosPorResponsavel(responsavelId);
+    List<? extends TimeResumo> pesquisar(
+            @RequestParam(required = false, defaultValue = "") String nome,
+            @RequestParam(required = false, defaultValue = "false") boolean meus,
+            HttpSession sessao) {
+        if (meus) {
+            return timeServicoConsulta.pesquisarResumosPorResponsavel(SessaoUsuario.exigirUsuarioId(sessao));
+        }
+        return timeServicoConsulta.pesquisarResumos(nome);
     }
 
     @RequestMapping(method = GET, path = "criacao")
@@ -39,8 +51,10 @@ class TimeControlador {
     }
 
     @RequestMapping(method = POST, path = "salvar")
-    void salvar(@RequestBody TimeFormulario.TimeDto dto) {
-        timeServico.criarTime(new TimeId(gerarId()), dto.nome, new UsuarioId(dto.responsavelId));
+    void salvar(@RequestBody TimeFormulario.TimeDto dto, HttpSession sessao) {
+        long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
+        contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
+        timeServico.criarTime(new TimeId(gerarId()), dto.nome, new UsuarioId(usuarioId));
     }
 
     @RequestMapping(method = GET, path = "{id}/edicao")
@@ -62,40 +76,50 @@ class TimeControlador {
     }
 
     @RequestMapping(method = POST, path = "{id}/salvar")
-    void atualizar(@PathVariable long id, @RequestParam long responsavelId,
-            @RequestBody TimeFormulario.TimeDto dto) {
-        timeServico.editarTime(new TimeId(id), new UsuarioId(responsavelId), dto.nome);
+    void atualizar(@PathVariable long id, @RequestBody TimeFormulario.TimeDto dto, HttpSession sessao) {
+        long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
+        contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
+        timeServico.editarTime(new TimeId(id), new UsuarioId(usuarioId), dto.nome);
     }
 
     @RequestMapping(method = POST, path = "{id}/excluir")
-    void excluir(@PathVariable long id, @RequestParam long responsavelId) {
-        timeServico.excluirTime(new TimeId(id), new UsuarioId(responsavelId));
+    void excluir(@PathVariable long id, HttpSession sessao) {
+        long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
+        contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
+        timeServico.excluirTime(new TimeId(id), new UsuarioId(usuarioId));
     }
 
     @RequestMapping(method = POST, path = "{id}/vincular-profissional")
-    void vincularProfissional(@PathVariable long id, @RequestParam long responsavelId,
-            @RequestBody TimeFormulario.VinculoDto dto) {
-        timeServico.vincularProfissional(new TimeId(id), new UsuarioId(responsavelId),
+    void vincularProfissional(@PathVariable long id, @RequestBody TimeFormulario.VinculoDto dto,
+            HttpSession sessao) {
+        long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
+        contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
+        timeServico.vincularProfissional(new TimeId(id), new UsuarioId(usuarioId),
             new ProfissionalEsportivoId(dto.profissionalId), dto.funcao,
             dto.dataInicio, dto.dataLimiteContrato);
     }
 
     @RequestMapping(method = POST, path = "{id}/editar-vinculo/{profissionalId}")
     void editarVinculo(@PathVariable long id, @PathVariable long profissionalId,
-            @RequestParam long responsavelId, @RequestBody TimeFormulario.VinculoDto dto) {
-        timeServico.editarVinculoProfissional(new TimeId(id), new UsuarioId(responsavelId),
+            @RequestBody TimeFormulario.VinculoDto dto, HttpSession sessao) {
+        long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
+        contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
+        timeServico.editarVinculoProfissional(new TimeId(id), new UsuarioId(usuarioId),
             new ProfissionalEsportivoId(profissionalId), dto.funcao,
             dto.dataInicio, dto.dataLimiteContrato);
     }
 
     @RequestMapping(method = POST, path = "{id}/remover-profissional/{profissionalId}")
     void removerProfissional(@PathVariable long id, @PathVariable long profissionalId,
-            @RequestParam long responsavelId) {
-        timeServico.removerVinculoProfissional(new TimeId(id), new UsuarioId(responsavelId),
+            HttpSession sessao) {
+        long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
+        contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
+        timeServico.removerVinculoProfissional(new TimeId(id), new UsuarioId(usuarioId),
             new ProfissionalEsportivoId(profissionalId));
     }
 
     private long gerarId() {
-        return System.currentTimeMillis();
+        long id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        return id == 0 ? 1L : id;
     }
 }

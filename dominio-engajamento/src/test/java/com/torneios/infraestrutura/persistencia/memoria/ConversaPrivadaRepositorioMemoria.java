@@ -40,6 +40,14 @@ public class ConversaPrivadaRepositorioMemoria implements ConversaPrivadaReposit
     }
 
     @Override
+    public List<ConversaPrivada> listarSolicitadasPorUsuario(UsuarioId usuarioId) {
+        return dados.values().stream()
+                .filter(conversa -> conversa.getSolicitanteId().equals(usuarioId))
+                .filter(ConversaPrivada::estaSolicitada)
+                .toList();
+    }
+
+    @Override
     public List<ConversaPrivada> listarAprovadasPorUsuario(UsuarioId usuarioId) {
         return dados.values().stream()
                 .filter(conversa -> conversa.envolve(usuarioId))

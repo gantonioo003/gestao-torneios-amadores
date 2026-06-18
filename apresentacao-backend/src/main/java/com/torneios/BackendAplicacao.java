@@ -22,7 +22,10 @@ import com.torneios.aplicacao.participacao.acesso.AcessoPlataformaServicoAplicac
 import com.torneios.aplicacao.participacao.candidatura.SolicitacaoRepositorioAplicacao;
 import com.torneios.aplicacao.participacao.candidatura.SolicitacaoServicoAplicacao;
 import com.torneios.aplicacao.participacao.conta.ContaRepositorioAplicacao;
+import com.torneios.aplicacao.participacao.conta.ContaAtividadeRepositorioAplicacao;
+import com.torneios.aplicacao.participacao.conta.ContaAtividadeServicoAplicacao;
 import com.torneios.aplicacao.participacao.conta.ContaServicoAplicacao;
+import com.torneios.aplicacao.participacao.conta.IdentidadeExternaVerificador;
 import com.torneios.aplicacao.participacao.inscricao.InscricaoServicoAplicacao;
 import com.torneios.aplicacao.participacao.profissional.ProfissionalRepositorioAplicacao;
 import com.torneios.aplicacao.participacao.profissional.ProfissionalServicoAplicacao;
@@ -68,8 +71,10 @@ import com.torneios.dominio.estatisticas.nota.CalculadoraNotaEstatistica;
 import com.torneios.dominio.participacao.acesso.AcessoGerenciamentoTorneioServico;
 import com.torneios.dominio.participacao.acesso.AutenticacaoServico;
 import com.torneios.dominio.participacao.acesso.CatalogoTorneiosDisponiveis;
+import com.torneios.dominio.participacao.acesso.CodificadorSenha;
 import com.torneios.dominio.participacao.acesso.ContaUsuarioRepositorio;
 import com.torneios.dominio.participacao.acesso.ContaUsuarioServico;
+import com.torneios.dominio.participacao.acesso.Pbkdf2CodificadorSenha;
 import com.torneios.dominio.participacao.acesso.VisualizacaoTorneioServico;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoRepositorio;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoServico;
@@ -95,14 +100,26 @@ public class BackendAplicacao {
     }
 
     @Bean
-    public ContaUsuarioServico contaUsuarioServico(ContaUsuarioRepositorio repositorio) {
-        return new ContaUsuarioServico(repositorio);
+    public CodificadorSenha codificadorSenha() {
+        return new Pbkdf2CodificadorSenha();
+    }
+
+    @Bean
+    public ContaUsuarioServico contaUsuarioServico(ContaUsuarioRepositorio repositorio, CodificadorSenha codificadorSenha) {
+        return new ContaUsuarioServico(repositorio, codificadorSenha);
     }
 
     @Bean
     public ContaServicoAplicacao contaServicoAplicacao(ContaRepositorioAplicacao repositorio,
-                                                       ContaUsuarioServico contaUsuarioServico) {
-        return new ContaServicoAplicacao(repositorio, contaUsuarioServico);
+                                                       ContaUsuarioServico contaUsuarioServico,
+                                                       IdentidadeExternaVerificador identidadeExternaVerificador) {
+        return new ContaServicoAplicacao(repositorio, contaUsuarioServico, identidadeExternaVerificador);
+    }
+
+    @Bean
+    public ContaAtividadeServicoAplicacao contaAtividadeServicoAplicacao(
+            ContaAtividadeRepositorioAplicacao repositorio) {
+        return new ContaAtividadeServicoAplicacao(repositorio);
     }
 
     @Bean
@@ -328,8 +345,9 @@ public class BackendAplicacao {
     }
 
     @Bean
-    public ChatPrivadoServicoAplicacao chatPrivadoServicoAplicacao(ChatPrivadoServico chatPrivadoServico) {
-        return new ChatPrivadoServicoAplicacao(chatPrivadoServico);
+    public ChatPrivadoServicoAplicacao chatPrivadoServicoAplicacao(ChatPrivadoServico chatPrivadoServico,
+                                                                   ContaRepositorioAplicacao contaRepositorio) {
+        return new ChatPrivadoServicoAplicacao(chatPrivadoServico, contaRepositorio);
     }
 
     @Bean

@@ -15,7 +15,6 @@ export class TimeEdicao {
   buscaProfissional = '';
   resultadosBusca: any[] = [];
   vinculoForm: any = {};
-  private responsavelId = 1;
 
   constructor(private readonly http: HttpClient, private readonly rota: ActivatedRoute, private readonly router: Router) {}
 
@@ -26,7 +25,7 @@ export class TimeEdicao {
 
   salvar() {
     const url = this.recurso.id
-      ? `/backend/time/${this.recurso.id}/salvar?responsavelId=${this.responsavelId}`
+      ? `/backend/time/${this.recurso.id}/salvar`
       : '/backend/time/salvar';
     const destino = this.recurso.id ? ['/time', this.recurso.id, 'detalhes'] : ['/time/pesquisa'];
     this.http.post(url, { id: this.recurso.id, nome: this.recurso.nome })
@@ -47,7 +46,7 @@ export class TimeEdicao {
   }
 
   vincularProfissional() {
-    this.http.post(`/backend/time/${this.recurso.id}/vincular-profissional?responsavelId=${this.responsavelId}`, this.vinculoForm)
+    this.http.post(`/backend/time/${this.recurso.id}/vincular-profissional`, this.vinculoForm)
       .subscribe({ next: () => this.recarregarElenco(), error: e => alert(e.error?.mensagem ?? 'Erro') });
   }
 
@@ -55,7 +54,7 @@ export class TimeEdicao {
 
   removerProfissional(profissionalId: number) {
     if (!confirm('Remover profissional do elenco?')) return;
-    this.http.post(`/backend/time/${this.recurso.id}/remover-profissional/${profissionalId}?responsavelId=${this.responsavelId}`, {})
+    this.http.post(`/backend/time/${this.recurso.id}/remover-profissional/${profissionalId}`, {})
       .subscribe({ next: () => this.recarregarElenco(), error: e => alert(e.error?.mensagem ?? 'Erro') });
   }
 

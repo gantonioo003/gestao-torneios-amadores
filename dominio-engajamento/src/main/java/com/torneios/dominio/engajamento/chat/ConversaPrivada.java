@@ -1,5 +1,6 @@
 package com.torneios.dominio.engajamento.chat;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -12,13 +13,22 @@ public class ConversaPrivada {
     private final ConversaPrivadaId id;
     private final UsuarioId solicitanteId;
     private final UsuarioId destinatarioId;
+    private final LocalDateTime solicitadaEm;
     private final List<MensagemChat> mensagens = new ArrayList<>();
     private StatusConversa status;
 
     public ConversaPrivada(ConversaPrivadaId id, UsuarioId solicitanteId, UsuarioId destinatarioId) {
+        this(id, solicitanteId, destinatarioId, LocalDateTime.now());
+    }
+
+    public ConversaPrivada(ConversaPrivadaId id,
+                           UsuarioId solicitanteId,
+                           UsuarioId destinatarioId,
+                           LocalDateTime solicitadaEm) {
         this.id = Objects.requireNonNull(id, "O id da conversa e obrigatorio.");
         this.solicitanteId = Objects.requireNonNull(solicitanteId, "O solicitante da conversa e obrigatorio.");
         this.destinatarioId = Objects.requireNonNull(destinatarioId, "O destinatario da conversa e obrigatorio.");
+        this.solicitadaEm = Objects.requireNonNull(solicitadaEm, "A data da solicitacao e obrigatoria.");
         if (solicitanteId.equals(destinatarioId)) {
             throw new OperacaoNaoPermitidaException("O usuario nao pode solicitar conversa consigo mesmo.");
         }
@@ -35,6 +45,17 @@ public class ConversaPrivada {
 
     public UsuarioId getDestinatarioId() {
         return destinatarioId;
+    }
+
+    public LocalDateTime getSolicitadaEm() {
+        return solicitadaEm;
+    }
+
+    public LocalDateTime getUltimaAtividadeEm() {
+        if (mensagens.isEmpty()) {
+            return solicitadaEm;
+        }
+        return mensagens.get(mensagens.size() - 1).getEnviadaEm();
     }
 
     public StatusConversa getStatus() {

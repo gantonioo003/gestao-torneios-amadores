@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.participacao.candidatura.SolicitacaoResumo;
 import com.torneios.aplicacao.participacao.candidatura.SolicitacaoServicoAplicacao;
+import com.torneios.apresentacao.SessaoUsuario;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoId;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoServico;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("backend/solicitacao-participacao")
@@ -27,37 +30,37 @@ class SolicitacaoControlador {
     @Autowired SolicitacaoServicoAplicacao solicitacaoServicoConsulta;
 
     @RequestMapping(method = POST, path = "solicitar")
-    void solicitar(@RequestParam long usuarioId,
-                   @RequestParam long timeId,
-                   @RequestParam long torneioId) {
+    void solicitar(@RequestParam long timeId,
+                   @RequestParam long torneioId,
+                   HttpSession sessao) {
         solicitacaoServico.solicitarParticipacao(
                 new SolicitacaoParticipacaoId(gerarId()),
-                new UsuarioId(usuarioId),
+                new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)),
                 new TimeId(timeId),
                 new TorneioId(torneioId));
     }
 
     @RequestMapping(method = POST, path = "{id}/aprovar")
-    void aprovar(@PathVariable long id, @RequestParam long organizadorId) {
+    void aprovar(@PathVariable long id, HttpSession sessao) {
         solicitacaoServico.aprovarSolicitacao(
-                new SolicitacaoParticipacaoId(id), new UsuarioId(organizadorId));
+                new SolicitacaoParticipacaoId(id), new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)));
     }
 
     @RequestMapping(method = POST, path = "{id}/rejeitar")
-    void rejeitar(@PathVariable long id, @RequestParam long organizadorId) {
+    void rejeitar(@PathVariable long id, HttpSession sessao) {
         solicitacaoServico.rejeitarSolicitacao(
-                new SolicitacaoParticipacaoId(id), new UsuarioId(organizadorId));
+                new SolicitacaoParticipacaoId(id), new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)));
     }
 
     @RequestMapping(method = POST, path = "{id}/cancelar")
-    void cancelar(@PathVariable long id, @RequestParam long usuarioId) {
+    void cancelar(@PathVariable long id, HttpSession sessao) {
         solicitacaoServico.cancelarCandidatura(
-                new SolicitacaoParticipacaoId(id), new UsuarioId(usuarioId));
+                new SolicitacaoParticipacaoId(id), new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)));
     }
 
     @RequestMapping(method = GET, path = "pesquisa-por-solicitante")
-    List<? extends SolicitacaoResumo> pesquisarPorSolicitante(@RequestParam long solicitanteId) {
-        return solicitacaoServicoConsulta.pesquisarPorSolicitante(solicitanteId);
+    List<? extends SolicitacaoResumo> pesquisarPorSolicitante(HttpSession sessao) {
+        return solicitacaoServicoConsulta.pesquisarPorSolicitante(SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = GET, path = "pesquisa-por-torneio")

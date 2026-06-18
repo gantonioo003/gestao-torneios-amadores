@@ -12,8 +12,10 @@ import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.acesso.AcessoGerenciamentoTorneioServico;
 import com.torneios.dominio.participacao.acesso.AutenticacaoServico;
+import com.torneios.dominio.participacao.acesso.CodificadorSenha;
 import com.torneios.dominio.participacao.acesso.ContaUsuario;
 import com.torneios.dominio.participacao.acesso.ContaUsuarioServico;
+import com.torneios.dominio.participacao.acesso.Pbkdf2CodificadorSenha;
 import com.torneios.dominio.participacao.acesso.TorneioDisponivel;
 import com.torneios.dominio.participacao.acesso.VisualizacaoTorneioServico;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoServico;
@@ -66,7 +68,8 @@ public class ParticipacaoFuncionalidade implements EventoBarramento {
 
     protected static final AutenticacaoServico autenticacaoServico = new AutenticacaoServico();
     protected static final ConsultaUsuario consultaUsuario = usuarioId -> usuarioId != null;
-    protected static final ContaUsuarioServico contaUsuarioServico = new ContaUsuarioServico(repositorio);
+    protected static final CodificadorSenha codificadorSenha = new Pbkdf2CodificadorSenha();
+    protected static final ContaUsuarioServico contaUsuarioServico = new ContaUsuarioServico(repositorio, codificadorSenha);
     protected static final ResponsavelTimeServico responsavelTimeServico = new ResponsavelTimeServico(repositorio, consultaUsuario);
     protected static final TimeServico timeServico = new TimeServico(repositorio, autenticacaoServico, responsavelTimeServico);
     protected static final ProfissionalEsportivoServico profissionalServico = new ProfissionalEsportivoServico(repositorio, autenticacaoServico);

@@ -6,8 +6,12 @@
       <p class="page-subtitle">Acompanhe jogos em andamento, vote nos palpites, veja rankings e entre na conversa da comunidade.</p>
     </div>
     <div style="display: flex; gap: 8px; flex-wrap: wrap">
-      <a class="btn btn-outline" routerLink="/login">Entrar</a>
-      <a class="btn btn-primary" routerLink="/login">Criar conta</a>
+      @if (usuario()) {
+        <a class="btn btn-primary" routerLink="/home-logada">Ir para meu painel</a>
+      } @else {
+        <a class="btn btn-outline" routerLink="/login">Entrar</a>
+        <a class="btn btn-primary" routerLink="/login">Criar conta</a>
+      }
     </div>
   </div>
 
@@ -35,7 +39,7 @@
               </div>
             </div>
           }
-          <a class="btn btn-outline btn-block" routerLink="/torneio/1">Ver todos os jogos ao vivo</a>
+          <a class="btn btn-outline btn-block" routerLink="/torneios">Explorar torneios</a>
         </article>
 
         <article class="card">

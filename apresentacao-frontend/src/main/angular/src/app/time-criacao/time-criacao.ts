@@ -11,13 +11,12 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class TimeCriacao {
   nome = '';
-  private readonly responsavelId = 1;
 
   constructor(private readonly http: HttpClient, private readonly router: Router) {}
 
   criar() {
     if (!this.nome.trim()) { alert('Nome do time é obrigatório.'); return; }
-    this.http.post('/backend/time/salvar', { nome: this.nome, responsavelId: this.responsavelId })
+    this.http.post('/backend/time/salvar', { nome: this.nome })
       .subscribe({
         next: () => this.router.navigate(['/time/pesquisa']),
         error: (e) => alert(e.error?.message ?? 'Erro ao criar time.')

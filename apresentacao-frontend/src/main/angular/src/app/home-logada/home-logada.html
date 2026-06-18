@@ -1,96 +1,524 @@
-<main class="page">
-  <div class="hero-row">
-    <div>
-      <div class="eyebrow">Minha conta</div>
-      <h1 class="page-title">Painel da conta</h1>
-      <p class="page-subtitle">Visao rapida dos times, torneios, candidaturas e feed de atividade do usuario.</p>
-    </div>
-    <div style="display: flex; gap: 8px; flex-wrap: wrap">
-      <a class="btn btn-primary" routerLink="/torneio/criacao"><i class="bi bi-trophy"></i> Criar torneio</a>
-      <a class="btn btn-outline" routerLink="/time/criacao"><i class="bi bi-shield-plus"></i> Meu time</a>
-    </div>
-  </div>
-
-  <div class="grid dashboard-grid">
-    <aside class="grid">
-      <section class="card">
-        <h2 class="section-title">Meus times</h2>
-        @for (time of meusTimes; track time.id) {
-          <div class="mini-row">
-            <div class="post-head">
-              <div class="shield" style="width: 32px; height: 36px"><i class="bi bi-shield"></i></div>
-              <div><strong>{{ time.nome }}</strong><div class="small muted">{{ time.papel }}</div></div>
-            </div>
-            <a class="btn btn-sm btn-outline" [routerLink]="['/time', time.id, 'detalhes']">Ver perfil</a>
+<main class="page account-space">
+  @if (usuario(); as conta) {
+    <section class="account-hero">
+      <div class="account-identity">
+        <div class="account-monogram">{{ iniciais(conta.nome) }}</div>
+        <div>
+          <div class="eyebrow">Seu espaço na Liga Amadora+</div>
+          <h1>{{ conta.nome }}</h1>
+          <div class="account-meta">
+            <strong>&#64;{{ conta.nomeUsuario }}</strong>
+            <span>{{ tipoLabel(conta.tipo) }}</span>
+            @if (conta.cidade || conta.estado) {
+              <span><i class="bi bi-geo-alt"></i> {{ conta.cidade }}{{ conta.cidade && conta.estado ? ', ' : '' }}{{ conta.estado }}</span>
+            }
           </div>
-        }
-        <a class="btn btn-soft btn-block" routerLink="/time/criacao"><i class="bi bi-plus"></i> Adicionar time</a>
-      </section>
-
-      <section class="card">
-        <h2 class="section-title">Minhas candidaturas</h2>
-        @for (c of candidaturas; track c.torneio) {
-          <div class="mini-row">
-            <span>{{ c.torneio }}</span>
-            <span class="status" [class.status-warn]="c.status === 'Pendente'" [class.status-green]="c.status === 'Aprovada'" [class.status-red]="c.status === 'Cancelada'">{{ c.status }}</span>
-          </div>
-        }
-      </section>
-    </aside>
-
-    <section class="grid">
-      <div class="card panel-strong">
-        <h2 class="section-title">Torneios que participa</h2>
-        <div class="grid grid-3">
-          @for (t of torneios; track t.id) {
-            <article class="card" style="box-shadow: none">
-              <div class="post-head">
-                <div class="avatar"><i class="bi bi-trophy"></i></div>
-                <div><strong>{{ t.nome }}</strong><div class="small muted">{{ t.status }}</div></div>
-              </div>
-              <a class="btn btn-sm btn-outline btn-block" [routerLink]="['/torneio', t.id]">Abrir torneio</a>
-            </article>
-          }
         </div>
       </div>
 
-      <div class="card">
-        <h2 class="section-title">Feed de atividade</h2>
-        @for (a of atividades; track a.texto) {
-          <div class="activity">
-            <div class="avatar"><i class="bi {{ a.icon }}"></i></div>
-            <div>{{ a.texto }}</div>
-            <span class="small muted">{{ a.tempo }}</span>
-          </div>
+      <div class="account-actions">
+        <a class="btn btn-outline" [routerLink]="['/perfil', conta.nomeUsuario]">
+          <i class="bi bi-eye"></i> Ver perfil público
+        </a>
+        @if (conta.podeCriarTorneio) {
+          <a class="btn btn-primary" routerLink="/torneio/criacao"><i class="bi bi-trophy"></i> Criar torneio</a>
         }
-      </div>
-
-      <div class="grid grid-4">
-        <a class="card" routerLink="/torneio/criacao"><i class="bi bi-trophy" style="font-size: 28px; color: var(--green)"></i><strong>Criar torneio</strong></a>
-        <a class="card" routerLink="/time/pesquisa"><i class="bi bi-shield-check" style="font-size: 28px; color: var(--green)"></i><strong>Meu time</strong></a>
-        <a class="card" routerLink="/feed"><i class="bi bi-megaphone" style="font-size: 28px; color: var(--green)"></i><strong>Feed social</strong></a>
-        <a class="card" routerLink="/profissional/pesquisa"><i class="bi bi-search" style="font-size: 28px; color: var(--green)"></i><strong>Buscar jogadores</strong></a>
+        @if (conta.podeGerenciarTimes) {
+          <a class="btn btn-primary" routerLink="/time/criacao"><i class="bi bi-shield-plus"></i> Criar time</a>
+        }
       </div>
     </section>
 
-    <aside class="card">
-      <h2 class="section-title">Perfil da conta</h2>
-      <div style="text-align: center; margin-bottom: 16px">
-        <div class="avatar" style="width: 76px; height: 76px; margin: 0 auto 10px; font-size: 28px">LL</div>
-        <strong>Lucas Lima</strong>
-        <div class="small muted">lucas&#64;email.com</div>
-      </div>
+    <nav class="account-tabs" aria-label="Área da conta">
+      <button [class.active]="secao === 'visao-geral'" (click)="abrirSecao('visao-geral')">
+        <i class="bi bi-grid"></i> Visão geral
+      </button>
+      <button [class.active]="secao === 'perfil'" (click)="abrirSecao('perfil')">
+        <i class="bi bi-person"></i> Editar perfil
+      </button>
+      <button [class.active]="secao === 'configuracoes'" (click)="abrirSecao('configuracoes')">
+        <i class="bi bi-gear"></i> Configurações
+      </button>
+    </nav>
 
-      @if (editando) {
-        <div class="form-grid">
-          <div class="field"><label>Nome</label><input [(ngModel)]="nomeEdit"></div>
-          <div class="field"><label>E-mail</label><input [(ngModel)]="emailEdit"></div>
-          <button class="btn btn-primary btn-block" (click)="editando = false">Salvar</button>
+    @if (mensagem) {
+      <div class="account-message success"><i class="bi bi-check-circle"></i> {{ mensagem }}</div>
+    }
+    @if (erro) {
+      <div class="account-message error"><i class="bi bi-exclamation-circle"></i> {{ erro }}</div>
+    }
+
+    @if (secao === 'visao-geral') {
+      <section class="account-stats" aria-label="Resumo da conta">
+        <button class="stat-card" (click)="abrirSecao('perfil')">
+          <span class="stat-icon"><i class="bi bi-person-check"></i></span>
+          <span><strong>{{ percentualPerfil }}%</strong><small>perfil preenchido</small></span>
+        </button>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="bi bi-trophy"></i></span>
+          <span><strong>{{ meusTorneios.length }}</strong><small>torneios organizados</small></span>
         </div>
-      } @else {
-        <button class="btn btn-outline btn-block" (click)="editando = true">Editar dados</button>
-        <button class="btn btn-danger btn-block" style="margin-top: 8px">Excluir conta</button>
-      }
-    </aside>
-  </div>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="bi bi-shield-check"></i></span>
+          <span><strong>{{ meusTimes.length }}</strong><small>times administrados</small></span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="bi bi-bookmark"></i></span>
+          <span><strong>{{ atividade?.torneiosSalvos?.length || 0 }}</strong><small>torneios salvos</small></span>
+        </div>
+      </section>
+
+      <div class="grid account-layout">
+        <section class="grid">
+          <article class="card panel-strong">
+            <div class="account-section-heading">
+              <div>
+                <div class="eyebrow">Descoberta</div>
+                <h2 class="section-title">Torneios em destaque</h2>
+              </div>
+              <a class="btn btn-sm btn-outline" routerLink="/torneios">Ver todos</a>
+            </div>
+            @if (destaques.length) {
+              <div class="featured-grid">
+                @for (torneio of destaques; track torneio.id) {
+                  <a class="featured-tournament" [routerLink]="['/torneio', torneio.id]">
+                    <span class="featured-icon"><i class="bi bi-trophy"></i></span>
+                    <strong>{{ torneio.nome }}</strong>
+                    <small>{{ statusTorneioLabel(torneio.status) }}</small>
+                  </a>
+                }
+              </div>
+            } @else {
+              <p class="muted account-empty">Ainda não há torneios disponíveis.</p>
+            }
+          </article>
+
+          @if (conta.podeGerenciarTimes) {
+            <article class="card">
+              <div class="account-section-heading">
+                <h2 class="section-title">Meus times</h2>
+                <a class="btn btn-sm btn-outline" routerLink="/time/pesquisa">Abrir área de times</a>
+              </div>
+              @if (meusTimes.length) {
+                @for (time of meusTimes; track time.id) {
+                  <div class="account-list-row">
+                    <div class="post-head">
+                      <div class="shield compact-shield"><i class="bi bi-shield"></i></div>
+                      <strong>{{ time.nome }}</strong>
+                    </div>
+                    <a class="btn btn-sm btn-outline" [routerLink]="['/time', time.id, 'detalhes']">Gerenciar</a>
+                  </div>
+                }
+              } @else {
+                <div class="account-empty">
+                  <i class="bi bi-shield-plus"></i>
+                  <span>Você ainda não administra nenhum time.</span>
+                  <a routerLink="/time/criacao">Criar meu primeiro time</a>
+                </div>
+              }
+            </article>
+          }
+
+          @if (conta.podeCriarTorneio) {
+            <article class="card">
+              <div class="account-section-heading">
+                <h2 class="section-title">Torneios que organizo</h2>
+                <a class="btn btn-sm btn-outline" routerLink="/torneio/criacao">Novo torneio</a>
+              </div>
+              @if (meusTorneios.length) {
+                @for (torneio of meusTorneios; track torneio.id) {
+                  <a class="account-list-row tournament-row" [routerLink]="['/torneio', torneio.id]">
+                    <span><strong>{{ torneio.nome }}</strong><small>{{ statusTorneioLabel(torneio.status) }}</small></span>
+                    <i class="bi bi-chevron-right"></i>
+                  </a>
+                }
+              } @else {
+                <p class="muted account-empty">Você ainda não criou torneios.</p>
+              }
+            </article>
+          }
+        </section>
+
+        <aside class="grid account-aside">
+          <article class="card profile-progress-card">
+            <div class="progress-ring" [style.--progress]="percentualPerfil + '%'">
+              <span>{{ percentualPerfil }}%</span>
+            </div>
+            <div>
+              <h2 class="section-title">Complete seu perfil</h2>
+              <p class="small muted">Um perfil completo ajuda times, jogadores e organizadores a reconhecerem você.</p>
+              <button class="btn btn-outline btn-block" (click)="abrirSecao('perfil')">Revisar informações</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <h2 class="section-title">Sua atividade</h2>
+            <a class="account-shortcut" routerLink="/chat">
+              <i class="bi bi-chat-dots"></i><span>Mensagens privadas</span><i class="bi bi-chevron-right"></i>
+            </a>
+            <a class="account-shortcut" routerLink="/feed">
+              <i class="bi bi-megaphone"></i><span>Feed social</span><i class="bi bi-chevron-right"></i>
+            </a>
+            <a class="account-shortcut" routerLink="/torneios">
+              <i class="bi bi-bookmark"></i>
+              <span>Torneios salvos</span>
+              <strong>{{ atividade?.torneiosSalvos?.length || 0 }}</strong>
+            </a>
+            <a class="account-shortcut" routerLink="/ranking">
+              <i class="bi bi-graph-up"></i>
+              <span>Palpites em andamento</span>
+              <strong>{{ palpitesEmAndamento }}</strong>
+            </a>
+          </article>
+
+          <article class="card">
+            <h2 class="section-title">Explorar</h2>
+            <a class="account-shortcut" routerLink="/torneios"><i class="bi bi-trophy"></i><span>Torneios</span><i class="bi bi-arrow-right"></i></a>
+            <a class="account-shortcut" routerLink="/time/pesquisa"><i class="bi bi-shield"></i><span>Times</span><i class="bi bi-arrow-right"></i></a>
+            <a class="account-shortcut" routerLink="/profissional/pesquisa"><i class="bi bi-person-badge"></i><span>Jogadores e comissão</span><i class="bi bi-arrow-right"></i></a>
+          </article>
+        </aside>
+      </div>
+    }
+
+    @if (secao === 'perfil') {
+      <div class="grid account-settings-layout">
+        <section class="card account-form-card">
+          <div class="account-section-heading">
+            <div>
+              <div class="eyebrow">Perfil</div>
+              <h2 class="section-title">Editar informações</h2>
+              <p class="small muted">Estes dados aparecem no seu perfil e ajudam a comunidade a conhecer você.</p>
+            </div>
+            <a class="btn btn-sm btn-outline" [routerLink]="['/perfil', conta.nomeUsuario]">Pré-visualizar</a>
+          </div>
+
+          <div class="form-grid">
+            <div class="grid grid-2">
+              <div class="field"><label>Nome completo</label><input [(ngModel)]="formulario.nome"></div>
+              <div class="field"><label>Nome de usuário</label><input [(ngModel)]="formulario.nomeUsuario" placeholder="@seuusuario"></div>
+            </div>
+            <div class="grid grid-2">
+              <div class="field"><label>E-mail</label><input type="email" [(ngModel)]="formulario.email"></div>
+              <div class="field"><label>Telefone</label><input [(ngModel)]="formulario.telefone" placeholder="Opcional"></div>
+            </div>
+            <div class="grid grid-3">
+              <div class="field"><label>Nascimento</label><input type="date" [(ngModel)]="formulario.dataNascimento"></div>
+              <div class="field"><label>Cidade</label><input [(ngModel)]="formulario.cidade"></div>
+              <div class="field"><label>Estado</label><input [(ngModel)]="formulario.estado"></div>
+            </div>
+            <div class="field">
+              <label>Apresentação</label>
+              <textarea maxlength="300" [(ngModel)]="formulario.biografia" placeholder="Conte um pouco sobre sua relação com o futebol amador."></textarea>
+              <span class="field-hint">{{ formulario.biografia?.length || 0 }}/300</span>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-primary" [disabled]="salvando" (click)="salvarPerfil()">
+                {{ salvando ? 'Salvando...' : 'Salvar alterações' }}
+              </button>
+              <button class="btn btn-outline" (click)="abrirSecao('visao-geral')">Cancelar</button>
+            </div>
+          </div>
+        </section>
+
+        <aside class="card profile-preview">
+          <div class="account-monogram preview-monogram">{{ iniciais(formulario.nome) }}</div>
+          <strong>{{ formulario.nome || conta.nome }}</strong>
+          <span>&#64;{{ formulario.nomeUsuario || conta.nomeUsuario }}</span>
+          <small>{{ tipoLabel(conta.tipo) }}</small>
+          <p>{{ formulario.biografia || 'Sua apresentação aparecerá aqui.' }}</p>
+        </aside>
+      </div>
+    }
+
+    @if (secao === 'configuracoes') {
+      <section class="settings-shell">
+        <div class="settings-heading">
+          <div>
+            <div class="eyebrow">Central da conta</div>
+            <h2>Configurações</h2>
+            <p>Controle sua conta, sua experiência e como você interage na Liga Amadora+.</p>
+          </div>
+          <i class="bi bi-shield-lock"></i>
+        </div>
+
+        <div class="settings-workspace">
+          <aside class="settings-menu">
+            <div class="settings-account-card">
+              <div class="settings-account-avatar">{{ iniciais(conta.nome) }}</div>
+              <span><strong>{{ conta.nome }}</strong><small>&#64;{{ conta.nomeUsuario }}</small></span>
+            </div>
+
+            <nav class="settings-menu-nav" aria-label="Categorias de configurações">
+              <button [class.active]="categoriaConfiguracao === 'conta'" (click)="abrirCategoriaConfiguracao('conta')">
+                <i class="bi bi-person-circle"></i><span>Conta e perfil</span><i class="bi bi-chevron-right"></i>
+              </button>
+              <button [class.active]="categoriaConfiguracao === 'privacidade'" (click)="abrirCategoriaConfiguracao('privacidade')">
+                <i class="bi bi-lock"></i><span>Privacidade</span><i class="bi bi-chevron-right"></i>
+              </button>
+              <button [class.active]="categoriaConfiguracao === 'notificacoes'" (click)="abrirCategoriaConfiguracao('notificacoes')">
+                <i class="bi bi-bell"></i><span>Notificações</span><i class="bi bi-chevron-right"></i>
+              </button>
+              <button [class.active]="categoriaConfiguracao === 'seguranca'" (click)="abrirCategoriaConfiguracao('seguranca')">
+                <i class="bi bi-shield-check"></i><span>Segurança</span><i class="bi bi-chevron-right"></i>
+              </button>
+              <button [class.active]="categoriaConfiguracao === 'atividade'" (click)="abrirCategoriaConfiguracao('atividade')">
+                <i class="bi bi-clock-history"></i><span>Sua atividade</span><i class="bi bi-chevron-right"></i>
+              </button>
+              <button [class.active]="categoriaConfiguracao === 'ajuda'" (click)="abrirCategoriaConfiguracao('ajuda')">
+                <i class="bi bi-question-circle"></i><span>Ajuda e sobre</span><i class="bi bi-chevron-right"></i>
+              </button>
+            </nav>
+          </aside>
+
+          <section class="settings-panel">
+            @if (categoriaConfiguracao === 'conta') {
+              <div class="settings-panel-head">
+                <span><i class="bi bi-person-vcard"></i></span>
+                <div>
+                  <h3>Conta e perfil</h3>
+                  <p>Revise seus dados pessoais e a identidade exibida para a comunidade.</p>
+                </div>
+              </div>
+
+              <article class="settings-group">
+                <div class="settings-group-title">
+                  <span><i class="bi bi-info-circle"></i></span>
+                  <div><strong>Informações da conta</strong><small>Dados privados usados para acesso e contato.</small></div>
+                </div>
+                <div class="settings-data">
+                  <div><span>E-mail</span><strong>{{ conta.email }}</strong></div>
+                  <div><span>Telefone</span><strong>{{ conta.telefone || 'Não informado' }}</strong></div>
+                  <div><span>Forma de entrada</span><strong>{{ conta.provedor === 'GOOGLE' ? 'Google' : 'E-mail e senha' }}</strong></div>
+                  <div><span>Tipo de conta</span><strong>{{ tipoLabel(conta.tipo) }}</strong></div>
+                </div>
+              </article>
+
+              <div class="settings-list">
+                <button class="settings-row" (click)="abrirSecao('perfil')">
+                  <span class="settings-row-icon"><i class="bi bi-pencil-square"></i></span>
+                  <span class="settings-row-copy"><strong>Editar perfil</strong><small>Nome, usuário, biografia, cidade e informações de contato.</small></span>
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+                <a class="settings-row" [routerLink]="['/perfil', conta.nomeUsuario]">
+                  <span class="settings-row-icon"><i class="bi bi-eye"></i></span>
+                  <span class="settings-row-copy"><strong>Visualizar perfil público</strong><small>Veja como sua conta aparece para outras pessoas.</small></span>
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              </div>
+            }
+
+            @if (categoriaConfiguracao === 'privacidade') {
+              <div class="settings-panel-head">
+                <span><i class="bi bi-lock"></i></span>
+                <div>
+                  <h3>Privacidade e interações</h3>
+                  <p>Entenda o que fica público e como novos contatos chegam até você.</p>
+                </div>
+              </div>
+
+              <div class="settings-list">
+                <a class="settings-row" [routerLink]="['/perfil', conta.nomeUsuario]">
+                  <span class="settings-row-icon"><i class="bi bi-globe2"></i></span>
+                  <span class="settings-row-copy"><strong>Perfil público</strong><small>Nome, usuário, biografia e atividade esportiva podem ser vistos pela comunidade.</small></span>
+                  <span class="settings-status">Ativo</span>
+                </a>
+                <button class="settings-row" (click)="abrirSecao('perfil')">
+                  <span class="settings-row-icon"><i class="bi bi-geo-alt"></i></span>
+                  <span class="settings-row-copy"><strong>Localização no perfil</strong><small>{{ conta.cidade || conta.estado ? 'Sua cidade ou estado aparece no perfil público.' : 'Nenhuma localização foi informada.' }}</small></span>
+                  <span class="settings-status muted-status">{{ conta.cidade || conta.estado ? 'Visível' : 'Oculta' }}</span>
+                </button>
+                <a class="settings-row" routerLink="/chat">
+                  <span class="settings-row-icon"><i class="bi bi-chat-square-dots"></i></span>
+                  <span class="settings-row-copy"><strong>Solicitações de conversa</strong><small>Novas conversas só são liberadas depois da sua aprovação.</small></span>
+                  <span class="settings-status">Protegido</span>
+                </a>
+              </div>
+
+              <div class="settings-note">
+                <i class="bi bi-shield-check"></i>
+                <p><strong>Seus dados de acesso continuam privados.</strong> E-mail, telefone, nascimento e senha não aparecem no perfil público.</p>
+              </div>
+            }
+
+            @if (categoriaConfiguracao === 'notificacoes') {
+              <div class="settings-panel-head">
+                <span><i class="bi bi-bell"></i></span>
+                <div>
+                  <h3>Notificações</h3>
+                  <p>Escolha quais movimentações da plataforma merecem sua atenção.</p>
+                </div>
+              </div>
+
+              <article class="settings-group settings-toggle-group">
+                <label class="settings-toggle-row">
+                  <span class="settings-row-icon"><i class="bi bi-chat-dots"></i></span>
+                  <span class="settings-row-copy"><strong>Mensagens privadas</strong><small>Novas mensagens e solicitações de conversa.</small></span>
+                  <span class="settings-switch"><input type="checkbox" [(ngModel)]="preferenciasNotificacao.mensagensPrivadas"><span></span></span>
+                </label>
+                <label class="settings-toggle-row">
+                  <span class="settings-row-icon"><i class="bi bi-trophy"></i></span>
+                  <span class="settings-row-copy"><strong>Torneios</strong><small>Inscrições, convites e alterações nos torneios acompanhados.</small></span>
+                  <span class="settings-switch"><input type="checkbox" [(ngModel)]="preferenciasNotificacao.torneios"><span></span></span>
+                </label>
+                <label class="settings-toggle-row">
+                  <span class="settings-row-icon"><i class="bi bi-megaphone"></i></span>
+                  <span class="settings-row-copy"><strong>Resultados e partidas</strong><small>Placar final, início de jogos e mudanças na classificação.</small></span>
+                  <span class="settings-switch"><input type="checkbox" [(ngModel)]="preferenciasNotificacao.resultados"><span></span></span>
+                </label>
+                <label class="settings-toggle-row">
+                  <span class="settings-row-icon"><i class="bi bi-people"></i></span>
+                  <span class="settings-row-copy"><strong>Feed social</strong><small>Comentários, reações e publicações da comunidade.</small></span>
+                  <span class="settings-switch"><input type="checkbox" [(ngModel)]="preferenciasNotificacao.feedSocial"><span></span></span>
+                </label>
+                <label class="settings-toggle-row">
+                  <span class="settings-row-icon"><i class="bi bi-envelope-paper"></i></span>
+                  <span class="settings-row-copy"><strong>Resumo semanal</strong><small>Um resumo das principais atividades ligadas à sua conta.</small></span>
+                  <span class="settings-switch"><input type="checkbox" [(ngModel)]="preferenciasNotificacao.resumoSemanal"><span></span></span>
+                </label>
+              </article>
+              <div class="settings-save-row">
+                <small>Estas escolhas ficam salvas neste dispositivo.</small>
+                <button class="btn btn-primary" (click)="salvarPreferenciasNotificacao()">Salvar preferências</button>
+              </div>
+            }
+
+            @if (categoriaConfiguracao === 'seguranca') {
+              <div class="settings-panel-head">
+                <span><i class="bi bi-shield-check"></i></span>
+                <div>
+                  <h3>Senha e segurança</h3>
+                  <p>Gerencie seu acesso e encerre sessões quando precisar.</p>
+                </div>
+              </div>
+
+              <article class="settings-group current-session">
+                <div class="settings-group-title">
+                  <span><i class="bi bi-laptop"></i></span>
+                  <div><strong>Sessão atual</strong><small>Este navegador está conectado à sua conta.</small></div>
+                  <span class="settings-status">Ativa agora</span>
+                </div>
+                <button class="btn btn-outline" (click)="sairConta()"><i class="bi bi-box-arrow-right"></i> Sair desta conta</button>
+              </article>
+
+              <details class="settings-disclosure">
+                <summary>
+                  <span class="settings-summary-icon"><i class="bi bi-key"></i></span>
+                  <span><strong>Alterar senha</strong><small>Use uma senha exclusiva com pelo menos 6 caracteres.</small></span>
+                  <i class="bi bi-chevron-down"></i>
+                </summary>
+                <div class="settings-disclosure-content">
+                  @if (conta.provedor !== 'GOOGLE') {
+                    <div class="security-form">
+                      <div class="field"><label>Nova senha</label><input type="password" [(ngModel)]="novaSenha" autocomplete="new-password"></div>
+                      <div class="field"><label>Confirmar nova senha</label><input type="password" [(ngModel)]="confirmarSenha" autocomplete="new-password"></div>
+                      <button class="btn btn-outline" (click)="alterarSenha()">Atualizar senha</button>
+                    </div>
+                  } @else {
+                    <p class="muted">Sua entrada é gerenciada pelo Google. A senha deve ser alterada na sua Conta Google.</p>
+                  }
+                </div>
+              </details>
+
+              <details class="settings-disclosure danger-disclosure">
+                <summary>
+                  <span class="settings-summary-icon"><i class="bi bi-exclamation-triangle"></i></span>
+                  <span><strong>Desativação e exclusão</strong><small>Opções permanentes ficam protegidas nesta seção.</small></span>
+                  <i class="bi bi-chevron-down"></i>
+                </summary>
+                <div class="settings-disclosure-content danger-content">
+                  <div>
+                    <strong>Excluir conta permanentemente</strong>
+                    <p>Seu acesso será encerrado e esta ação não poderá ser desfeita.</p>
+                  </div>
+                  <button class="btn btn-danger" (click)="excluirConta()">Excluir minha conta</button>
+                </div>
+              </details>
+            }
+
+            @if (categoriaConfiguracao === 'atividade') {
+              <div class="settings-panel-head">
+                <span><i class="bi bi-clock-history"></i></span>
+                <div>
+                  <h3>Sua atividade</h3>
+                  <p>Acesse rapidamente tudo que você acompanha ou administra.</p>
+                </div>
+              </div>
+
+              <div class="settings-metrics">
+                <div><strong>{{ meusTorneios.length }}</strong><span>Torneios organizados</span></div>
+                <div><strong>{{ meusTimes.length }}</strong><span>Times administrados</span></div>
+                <div><strong>{{ atividade?.torneiosSalvos?.length || 0 }}</strong><span>Torneios salvos</span></div>
+                <div><strong>{{ palpitesEmAndamento }}</strong><span>Palpites em andamento</span></div>
+              </div>
+
+              <div class="settings-list">
+                <a class="settings-row" routerLink="/chat">
+                  <span class="settings-row-icon"><i class="bi bi-chat-dots"></i></span>
+                  <span class="settings-row-copy"><strong>Mensagens e solicitações</strong><small>Abra seu histórico de conversas privadas.</small></span>
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+                <a class="settings-row" routerLink="/torneios">
+                  <span class="settings-row-icon"><i class="bi bi-bookmark"></i></span>
+                  <span class="settings-row-copy"><strong>Torneios salvos</strong><small>Retome os campeonatos que você decidiu acompanhar.</small></span>
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+                <a class="settings-row" routerLink="/feed">
+                  <span class="settings-row-icon"><i class="bi bi-megaphone"></i></span>
+                  <span class="settings-row-copy"><strong>Feed da comunidade</strong><small>Veja comunicados e movimentações recentes.</small></span>
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              </div>
+            }
+
+            @if (categoriaConfiguracao === 'ajuda') {
+              <div class="settings-panel-head">
+                <span><i class="bi bi-question-circle"></i></span>
+                <div>
+                  <h3>Ajuda e sobre</h3>
+                  <p>Respostas rápidas sobre conta, privacidade e convivência na plataforma.</p>
+                </div>
+              </div>
+
+              <details class="settings-disclosure help-disclosure">
+                <summary>
+                  <span class="settings-summary-icon"><i class="bi bi-chat-square-dots"></i></span>
+                  <span><strong>Como funcionam as conversas privadas?</strong><small>Solicitações, aprovação e segurança.</small></span>
+                  <i class="bi bi-chevron-down"></i>
+                </summary>
+                <div class="settings-disclosure-content help-content">
+                  Uma pessoa pode solicitar uma conversa, mas as mensagens só são liberadas depois que o destinatário aprova o contato.
+                </div>
+              </details>
+              <details class="settings-disclosure help-disclosure">
+                <summary>
+                  <span class="settings-summary-icon"><i class="bi bi-eye"></i></span>
+                  <span><strong>Quais dados aparecem no perfil?</strong><small>Diferença entre informações públicas e privadas.</small></span>
+                  <i class="bi bi-chevron-down"></i>
+                </summary>
+                <div class="settings-disclosure-content help-content">
+                  Nome, usuário, biografia, localização informada e atividade esportiva são públicos. E-mail, telefone, nascimento e senha permanecem privados.
+                </div>
+              </details>
+              <details class="settings-disclosure help-disclosure">
+                <summary>
+                  <span class="settings-summary-icon"><i class="bi bi-person-gear"></i></span>
+                  <span><strong>Permissões da minha conta</strong><small>O que cada perfil pode gerenciar.</small></span>
+                  <i class="bi bi-chevron-down"></i>
+                </summary>
+                <div class="settings-disclosure-content help-content">
+                  Organizadores podem criar torneios. Contas autorizadas a gerenciar times podem cadastrar equipes, profissionais e elencos.
+                </div>
+              </details>
+
+              <article class="settings-group settings-about">
+                <span class="brand-mark"><i class="bi bi-shield"></i></span>
+                <div><strong>Liga Amadora+</strong><small>Plataforma de gestão e comunidade para o futebol amador.</small></div>
+              </article>
+            }
+          </section>
+        </div>
+      </section>
+    }
+  }
 </main>

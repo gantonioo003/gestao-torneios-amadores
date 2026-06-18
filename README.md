@@ -27,7 +27,7 @@ As funcionalidades completas estao descritas em [`documentacao/funcionalidades.m
 Resumo atual:
 
 - F1: palpites publicos;
-- F2: conta de usuario e autenticacao;
+- F2: identidade, conta, autenticacao, perfil e permissoes;
 - F3: comunicacao privada entre usuarios;
 - F4: inscricoes e participantes do torneio;
 - F5: times do usuario;

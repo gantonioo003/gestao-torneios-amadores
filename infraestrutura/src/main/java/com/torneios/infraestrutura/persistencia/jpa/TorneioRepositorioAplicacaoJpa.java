@@ -22,6 +22,13 @@ class TorneioRepositorioAplicacaoImpl implements TorneioRepositorioAplicacao {
     }
 
     @Override
+    public List<TorneioResumo> pesquisarResumosPorNome(String nome) {
+        return repositorio.findByNomeContainingIgnoreCaseOrderByNomeAsc(nome).stream()
+                .map(jpa -> (TorneioResumo) new TorneioJpaResumo(jpa))
+                .toList();
+    }
+
+    @Override
     public List<TorneioResumo> pesquisarResumosPorOrganizador(long organizadorId) {
         return repositorio.findByOrganizadorId(organizadorId).stream()
                 .map(jpa -> (TorneioResumo) new TorneioJpaResumo(jpa))

@@ -23,19 +23,24 @@ Cenarios principais:
 
 ---
 
-### F2. Gerenciar ciclo completo da conta de usuario e autenticacao
+### F2. Gerenciar identidade, conta, autenticacao, perfil e permissoes
 Dominio: dominio-participacao
-Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F2-gerenciar-conta-de-usuario-e-autenticacao.feature
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F2-gerenciar-identidade-conta-autenticacao-e-permissoes.feature
 
 Cenarios principais:
 - cadastrar nova conta de usuario
 - cadastrar conta do tipo jogador
 - cadastrar conta do tipo organizador
+- cadastrar conta do tipo treinador
 - realizar login com email e senha validos
 - impedir login com senha incorreta
 - editar dados da conta
 - excluir conta de usuario
 - impedir cadastro com email ja utilizado
+- permitir criacao de torneio apenas ao organizador
+- impedir jogador de gerenciar times
+- salvar torneio no perfil da conta
+- remover torneio salvo do perfil da conta
 
 ---
 
@@ -50,6 +55,8 @@ Cenarios principais:
 - enviar mensagem em conversa aprovada
 - impedir mensagem antes da aprovacao da conversa
 - consultar historico de conversas aprovadas
+- consultar solicitacoes de conversa enviadas
+- impedir consulta do historico por usuario que nao participa da conversa
 - impedir solicitacao de conversa por usuario nao autenticado
 
 ---

@@ -2,10 +2,18 @@
   <div class="hero-row">
     <div>
       <div class="eyebrow">Torneio e inscricoes</div>
-      <h1 class="page-title">Copa da Amizade</h1>
+      <h1 class="page-title">{{ torneio.nome || 'Torneio' }}</h1>
       <p class="page-subtitle">Central do torneio com participantes, solicitacoes, tabela, partidas e regras de entrada.</p>
     </div>
-    <span class="status status-green">Ao vivo</span>
+    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+      @if (usuario()) {
+        <button class="btn btn-outline" [disabled]="salvandoTorneio" (click)="alternarTorneioSalvo()">
+          <i class="bi" [class.bi-bookmark-fill]="torneioEstaSalvo()" [class.bi-bookmark]="!torneioEstaSalvo()"></i>
+          {{ torneioEstaSalvo() ? 'Salvo' : 'Salvar torneio' }}
+        </button>
+      }
+      <span class="status status-green">{{ statusLabel() }}</span>
+    </div>
   </div>
 
   <div class="grid layout-2-1">
@@ -19,6 +27,7 @@
 
       @if (aba === 'participantes') {
         <div class="grid grid-2">
+          @if (podeGerenciar()) {
           <div>
             <h2 class="section-title">Participantes confirmados</h2>
             @for (time of confirmados; track time) {
@@ -28,6 +37,7 @@
               </div>
             }
           </div>
+          }
           <div>
             <h2 class="section-title">Solicitacoes pendentes</h2>
             @for (time of pendentes; track time) {
@@ -86,6 +96,7 @@
     </section>
 
     <aside class="grid">
+      @if (podeGerenciar()) {
       <div class="card">
         <h2 class="section-title">Proximo jogo</h2>
         <div class="score">
@@ -95,6 +106,7 @@
         </div>
         <a class="btn btn-outline btn-block" style="margin-top: 12px" routerLink="/partida/1">Ir para partida</a>
       </div>
+      }
       <div class="card">
         <h2 class="section-title">Acoes do organizador</h2>
         <a class="btn btn-outline btn-block" routerLink="/torneio/criacao">Editar preparacao</a>

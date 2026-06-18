@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveData, Router, RouterLink, RouterStateSnapshot } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { AuthService } from '../core/auth.service';
 
 @Component({
   selector: 'app-profissional-perfil',
@@ -19,12 +20,13 @@ export class ProfissionalPerfil implements OnInit {
   timesAtuais: any[] = [];
   mostrarFormCarreira = false;
   carreiraForm: any = {};
-  private readonly cadastranteId = 1;
+  readonly usuario = this.auth.usuario;
 
   constructor(
     private readonly http: HttpClient,
     private readonly rota: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly auth: AuthService
   ) {}
 
   ngOnInit() {
@@ -34,11 +36,15 @@ export class ProfissionalPerfil implements OnInit {
     this.timesAtuais = data.timesAtuais ?? [];
   }
 
+  podeEditar(): boolean {
+    return this.usuario()?.id === this.profissional.cadastranteId;
+  }
+
   editarPerfil() {
     const novoNome = prompt('Novo nome:', this.profissional.nome);
     if (!novoNome) return;
     this.http.post(
-      `/backend/profissional/${this.profissional.id}/salvar?cadastranteId=${this.cadastranteId}`,
+      `/backend/profissional/${this.profissional.id}/salvar`,
       { ...this.profissional, nome: novoNome }
     ).subscribe({
       next: () => { this.profissional.nome = novoNome; },
@@ -49,7 +55,7 @@ export class ProfissionalPerfil implements OnInit {
   removerPerfil() {
     if (!confirm('Remover este perfil permanentemente?')) return;
     this.http.post(
-      `/backend/profissional/${this.profissional.id}/excluir?cadastranteId=${this.cadastranteId}`, {}
+      `/backend/profissional/${this.profissional.id}/excluir`, {}
     ).subscribe({
       next: () => this.router.navigate(['/profissional/pesquisa']),
       error: (e) => alert(e.error?.message ?? 'Erro ao remover.')
@@ -60,7 +66,7 @@ export class ProfissionalPerfil implements OnInit {
     if (!this.carreiraForm.nomeDoClube) { alert('Nome do clube é obrigatório.'); return; }
     if (!this.carreiraForm.dataInicio) { alert('Data de início é obrigatória.'); return; }
     this.http.post(
-      `/backend/profissional/${this.profissional.id}/adicionar-carreira?cadastranteId=${this.cadastranteId}`,
+      `/backend/profissional/${this.profissional.id}/adicionar-carreira`,
       this.carreiraForm
     ).subscribe({
       next: () => {

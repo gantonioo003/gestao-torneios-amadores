@@ -65,9 +65,24 @@ public class ChatPrivadoServico {
         return conversaPrivadaRepositorio.listarSolicitadasParaUsuario(usuarioId);
     }
 
+    public List<ConversaPrivada> listarSolicitacoesEnviadas(UsuarioId usuarioId) {
+        validarUsuarioAutenticado(usuarioId);
+        return conversaPrivadaRepositorio.listarSolicitadasPorUsuario(usuarioId);
+    }
+
     public List<ConversaPrivada> listarConversasAprovadas(UsuarioId usuarioId) {
         validarUsuarioAutenticado(usuarioId);
         return conversaPrivadaRepositorio.listarAprovadasPorUsuario(usuarioId);
+    }
+
+    public ConversaPrivada consultarConversa(ConversaPrivadaId conversaPrivadaId, UsuarioId usuarioId) {
+        validarUsuarioAutenticado(usuarioId);
+        ConversaPrivada conversa = obterConversa(conversaPrivadaId);
+        if (!conversa.envolve(usuarioId)) {
+            throw new OperacaoNaoPermitidaException(
+                    "Apenas participantes podem consultar a conversa privada.");
+        }
+        return conversa;
     }
 
     private ConversaPrivada obterConversa(ConversaPrivadaId conversaPrivadaId) {

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../core/auth.service';
 
 @Component({
   selector: 'app-home-publica',
@@ -7,6 +8,10 @@ import { RouterLink } from '@angular/router';
   templateUrl: './home-publica.html'
 })
 export class HomePublica {
+  readonly usuario = this.auth.usuario;
+
+  constructor(private readonly auth: AuthService) {}
+
   torneiosVivos = [
     { id: 1, nome: 'Copa Bairro 2024', rodada: 'Rodada 4', casa: 'Unidos do Bairro', golsCasa: 2, golsVisitante: 1, visitante: 'Real Esperanca', minuto: 78 },
     { id: 2, nome: 'Liga Amigos', rodada: 'Rodada 2', casa: 'Vila FC', golsCasa: 0, golsVisitante: 0, visitante: 'Resenha FC', minuto: 45 }

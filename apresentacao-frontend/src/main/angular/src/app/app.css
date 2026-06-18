@@ -1,1 +1,59 @@
+.account-chip {
+  min-height: 38px;
+  padding: 4px 9px 4px 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  transition: background-color .2s ease, color .2s ease;
+}
 
+.account-chip:hover,
+.account-chip.active {
+  color: var(--green-dark);
+  background: var(--green-soft);
+}
+
+.account-name {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-avatar {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--green);
+  border-radius: 50%;
+}
+
+.icon-button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .account-chip {
+    max-width: 116px;
+    padding: 3px 6px 3px 4px;
+    gap: 5px;
+  }
+
+  .account-name {
+    max-width: 72px;
+  }
+}
+
+@media (max-width: 360px) {
+  .account-name {
+    display: none;
+  }
+}

@@ -1,0 +1,135 @@
+.login-notice,
+.login-error {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+  padding: 11px 13px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.login-notice {
+  color: var(--green-dark);
+  background: var(--green-soft);
+}
+
+.login-error {
+  color: #a52d2a;
+  background: #fff0ef;
+  border: 1px solid #ffd5d3;
+}
+
+.auth-page {
+  width: min(980px, calc(100% - 32px));
+  padding-block: 30px 54px;
+}
+
+.auth-card {
+  padding: 34px;
+  border-color: rgba(18, 184, 95, .22);
+}
+
+.auth-heading {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.auth-heading p {
+  margin: 10px 0 0;
+}
+
+.auth-form {
+  gap: 14px;
+}
+
+.username-field {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.username-field:focus-within {
+  border-color: #8edcaf;
+  box-shadow: 0 0 0 3px rgba(18, 184, 95, .12);
+}
+
+.username-field span {
+  padding-left: 12px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.username-field input {
+  border: 0;
+  box-shadow: none;
+}
+
+.optional {
+  color: #96a09d;
+  font-weight: 600;
+}
+
+.role-hint,
+.social-note {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 14px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: var(--line);
+}
+
+.google-button {
+  min-height: 42px;
+  display: flex;
+  justify-content: center;
+}
+
+.social-disabled {
+  width: 100%;
+  min-height: 42px;
+  color: var(--muted);
+  background: #f7f8f6;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font-weight: 800;
+}
+
+.auth-footer {
+  margin-top: 18px;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .auth-card {
+    padding: 20px;
+  }
+
+  .auth-card .grid-2,
+  .auth-card .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}

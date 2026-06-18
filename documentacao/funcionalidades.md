@@ -3,7 +3,7 @@
 ## Conta, comunicacao e participacao inicial
 F1. Gerenciar ciclo completo de palpites publicos sobre partidas e rankings do torneio, com registro de votos, janela de participacao, percentuais em tempo real e apuracao automatica
 
-F2. Gerenciar ciclo completo da conta de usuario e autenticacao, permitindo cadastro como jogador ou organizador, login, edicao segura de dados e exclusao da propria conta
+F2. Gerenciar identidade, conta, autenticacao, perfil e permissoes, permitindo cadastro por funcao no futebol, entrada local ou externa, edicao segura, exclusao da propria conta, pagina publica, torneios organizados ou disputados, torneios salvos e historico privado de palpites
 
 F3. Gerenciar comunicacao privada entre usuarios com solicitacoes de conversa, permitindo solicitar contato, aprovar ou recusar pedidos, liberar mensagens apos aprovacao e consultar historico das conversas
 

@@ -4,4 +4,5 @@ public interface ProfissionalResumo {
     Long getId();
     String getNome();
     String getTipo();
+    Long getCadastranteId();
 }

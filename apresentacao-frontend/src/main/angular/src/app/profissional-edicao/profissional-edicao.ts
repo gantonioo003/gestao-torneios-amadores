@@ -13,7 +13,6 @@ export class ProfissionalEdicao {
   historico: any[] = [];
   mostrarFormCarreira = false;
   carreiraForm: any = {};
-  private cadastranteId = 1;
 
   constructor(private readonly http: HttpClient, private readonly rota: ActivatedRoute, private readonly router: Router) {}
 
@@ -24,26 +23,26 @@ export class ProfissionalEdicao {
 
   salvar() {
     const url = this.recurso.id
-      ? `/backend/profissional/${this.recurso.id}/salvar?cadastranteId=${this.cadastranteId}`
+      ? `/backend/profissional/${this.recurso.id}/salvar`
       : '/backend/profissional/salvar';
-    this.http.post(url, { ...this.recurso, cadastranteId: this.cadastranteId })
+    this.http.post(url, { ...this.recurso })
       .subscribe({ next: () => this.router.navigate(['/profissional/pesquisa']), error: e => alert(e.error?.mensagem ?? 'Erro') });
   }
 
   excluir() {
     if (!confirm('Remover este perfil?')) return;
-    this.http.post(`/backend/profissional/${this.recurso.id}/excluir?cadastranteId=${this.cadastranteId}`, {})
+    this.http.post(`/backend/profissional/${this.recurso.id}/excluir`, {})
       .subscribe({ next: () => this.router.navigate(['/profissional/pesquisa']), error: e => alert(e.error?.mensagem ?? 'Erro') });
   }
 
   adicionarCarreira() {
-    this.http.post(`/backend/profissional/${this.recurso.id}/adicionar-carreira?cadastranteId=${this.cadastranteId}`, this.carreiraForm)
+    this.http.post(`/backend/profissional/${this.recurso.id}/adicionar-carreira`, this.carreiraForm)
       .subscribe({ next: () => { this.mostrarFormCarreira = false; this.carreiraForm = {}; this.recarregarHistorico(); }, error: e => alert(e.error?.mensagem ?? 'Erro') });
   }
 
   removerCarreira(registroId: number) {
     if (!confirm('Remover este registro?')) return;
-    this.http.post(`/backend/profissional/${this.recurso.id}/remover-carreira/${registroId}?cadastranteId=${this.cadastranteId}`, {})
+    this.http.post(`/backend/profissional/${this.recurso.id}/remover-carreira/${registroId}`, {})
       .subscribe({ next: () => this.recarregarHistorico(), error: e => alert(e.error?.mensagem ?? 'Erro') });
   }
 

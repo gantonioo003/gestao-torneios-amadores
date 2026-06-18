@@ -13,7 +13,6 @@ export class ProfissionalCadastro {
   nome = '';
   tipo = '';
   tipoSelecionado = '';
-  private readonly cadastranteId = 1;
 
   constructor(private readonly http: HttpClient, private readonly router: Router) {}
 
@@ -22,8 +21,7 @@ export class ProfissionalCadastro {
     if (!this.tipoSelecionado) { alert('Tipo é obrigatório.'); return; }
     this.http.post('/backend/profissional/salvar', {
       nome: this.nome,
-      tipo: this.tipoSelecionado,
-      cadastranteId: this.cadastranteId
+      tipo: this.tipoSelecionado
     }).subscribe({
       next: () => this.router.navigate(['/profissional/pesquisa']),
       error: (e) => alert(e.error?.message ?? 'Erro ao cadastrar.')

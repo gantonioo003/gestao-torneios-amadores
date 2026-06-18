@@ -126,6 +126,17 @@ public class Repositorio implements TimeRepositorio, SolicitacaoParticipacaoRepo
     }
 
     @Override
+    public Optional<ContaUsuario> buscarPorNomeUsuario(String nomeUsuario) {
+        if (nomeUsuario == null) {
+            return Optional.empty();
+        }
+        String normalizado = nomeUsuario.trim().toLowerCase();
+        return contas.values().stream()
+                .filter(c -> c.getNomeUsuario().equals(normalizado))
+                .findFirst();
+    }
+
+    @Override
     public void remover(UsuarioId usuarioId) {
         notNull(usuarioId, "O id do usuario nao pode ser nulo.");
         contas.remove(usuarioId);

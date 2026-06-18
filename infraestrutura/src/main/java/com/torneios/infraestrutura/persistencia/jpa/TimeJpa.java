@@ -62,6 +62,7 @@ class VinculoProfissionalJpa {
 
 interface TimeJpaRepository extends JpaRepository<TimeJpa, Long> {
     List<TimeJpa> findByResponsavelId(Long responsavelId);
+    List<TimeJpa> findByNomeContainingIgnoreCaseOrderByNomeAsc(String nome);
 }
 
 @Repository

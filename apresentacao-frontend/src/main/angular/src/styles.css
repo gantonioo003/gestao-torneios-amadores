@@ -141,6 +141,11 @@ textarea {
   gap: 4px;
   flex: 1;
   overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.main-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .main-nav a,
@@ -907,6 +912,40 @@ textarea {
 }
 
 @media (max-width: 640px) {
+  .topbar-inner {
+    min-height: 108px;
+    padding: 10px 12px 8px;
+  }
+
+  .brand {
+    padding-right: 82px;
+    font-size: 18px;
+  }
+
+  .brand-mark {
+    width: 30px;
+    height: 34px;
+  }
+
+  .top-actions {
+    top: 10px;
+    right: 10px;
+  }
+
+  .top-actions > .btn {
+    display: none;
+  }
+
+  .main-nav {
+    padding-bottom: 2px;
+  }
+
+  .main-nav a {
+    min-height: 32px;
+    padding: 6px 9px;
+    font-size: 11px;
+  }
+
   .page {
     width: min(100% - 20px, 1360px);
     padding-top: 14px;

@@ -1,20 +1,31 @@
-<main class="page page-narrow">
-  <section class="card panel-strong" style="padding: 28px">
-    <div style="text-align: center; margin-bottom: 22px">
+<main class="page auth-page">
+  <section class="card panel-strong auth-card">
+    <div class="auth-heading">
       <div class="brand" style="justify-content: center">
         <span class="brand-mark"><i class="bi bi-shield"></i></span>
         <span>Liga Amadora<span class="brand-plus">+</span></span>
       </div>
-      <p class="muted" style="margin: 10px 0 0">Entre para gerenciar times, torneios, chats e estatisticas.</p>
+      <p class="muted">Sua identidade no futebol amador, dentro e fora de campo.</p>
     </div>
 
+    @if (avisoChat) {
+      <div class="login-notice">
+        <i class="bi bi-lock"></i>
+        Entre ou crie uma conta para acessar suas mensagens privadas.
+      </div>
+    }
+
+    @if (erro) {
+      <div class="login-error">{{ erro }}</div>
+    }
+
     <div class="tabs" style="margin-bottom: 18px">
-      <button class="tab" [class.active]="aba === 'entrar'" (click)="aba = 'entrar'">Entrar</button>
-      <button class="tab" [class.active]="aba === 'criar'" (click)="aba = 'criar'">Criar conta</button>
+      <button class="tab" [class.active]="aba === 'entrar'" (click)="trocarAba('entrar')">Entrar</button>
+      <button class="tab" [class.active]="aba === 'criar'" (click)="trocarAba('criar')">Criar conta</button>
     </div>
 
     @if (aba === 'entrar') {
-      <div class="form-grid">
+      <div class="form-grid auth-form">
         <div class="field">
           <label>E-mail</label>
           <input type="email" [(ngModel)]="email" placeholder="seu&#64;email.com">
@@ -23,40 +34,86 @@
           <label>Senha</label>
           <input type="password" [(ngModel)]="senha" placeholder="********">
         </div>
-        <button class="btn btn-primary btn-block" (click)="entrar()">Entrar</button>
+        <button class="btn btn-primary btn-block" [disabled]="carregando" (click)="entrar()">
+          {{ carregando ? 'Entrando...' : 'Entrar' }}
+        </button>
       </div>
     } @else {
-      <div class="form-grid">
-        <div class="field">
-          <label>Nome completo</label>
-          <input [(ngModel)]="nome" placeholder="Lucas Lima">
+      <div class="form-grid auth-form">
+        <div class="grid grid-2">
+          <div class="field">
+            <label>Nome completo</label>
+            <input [(ngModel)]="nome" placeholder="Lucas Lima">
+          </div>
+          <div class="field">
+            <label>Nome de usuário</label>
+            <div class="username-field"><span>&#64;</span><input [(ngModel)]="nomeUsuario" placeholder="lucaslima"></div>
+          </div>
+        </div>
+        <div class="grid grid-2">
+          <div class="field">
+            <label>E-mail</label>
+            <input type="email" [(ngModel)]="email" placeholder="lucas&#64;email.com">
+          </div>
+          <div class="field">
+            <label>Telefone <span class="optional">opcional</span></label>
+            <input [(ngModel)]="telefone" placeholder="(85) 99999-9999">
+          </div>
         </div>
         <div class="field">
-          <label>E-mail</label>
-          <input type="email" [(ngModel)]="email" placeholder="lucas&#64;email.com">
-        </div>
-        <div class="field">
-          <label>Tipo de conta</label>
+          <label>Como você participa do futebol?</label>
           <select [(ngModel)]="tipo">
-            <option>Jogador</option>
-            <option>Organizador</option>
-            <option>Responsavel por time</option>
+            @for (tipoConta of tiposConta; track tipoConta.valor) {
+              <option [value]="tipoConta.valor">{{ tipoConta.nome }}</option>
+            }
           </select>
+          <small class="role-hint">{{ descricaoTipoSelecionado }}</small>
+        </div>
+        <div class="grid grid-3">
+          <div class="field">
+            <label>Nascimento <span class="optional">opcional</span></label>
+            <input type="date" [(ngModel)]="dataNascimento">
+          </div>
+          <div class="field">
+            <label>Cidade <span class="optional">opcional</span></label>
+            <input [(ngModel)]="cidade" placeholder="Fortaleza">
+          </div>
+          <div class="field">
+            <label>Estado <span class="optional">opcional</span></label>
+            <input [(ngModel)]="estado" placeholder="CE">
+          </div>
         </div>
         <div class="field">
-          <label>Senha</label>
-          <input type="password" [(ngModel)]="senha" placeholder="********">
+          <label>Apresentação <span class="optional">opcional</span></label>
+          <textarea [(ngModel)]="biografia" maxlength="300" placeholder="Conte rapidamente sua experiência e seus objetivos na plataforma."></textarea>
         </div>
-        <button class="btn btn-primary btn-block" (click)="criar()">Criar conta</button>
+        <div class="grid grid-2">
+          <div class="field">
+            <label>Senha</label>
+            <input type="password" [(ngModel)]="senha" placeholder="Mínimo de 6 caracteres">
+          </div>
+          <div class="field">
+            <label>Confirmar senha</label>
+            <input type="password" [(ngModel)]="confirmarSenha" placeholder="Repita a senha">
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" [disabled]="carregando" (click)="criar()">
+          {{ carregando ? 'Criando...' : 'Criar conta' }}
+        </button>
       </div>
     }
 
-    <div class="grid grid-2" style="margin-top: 16px">
-      <button class="btn"><i class="bi bi-google"></i> Google</button>
-      <button class="btn"><i class="bi bi-facebook"></i> Facebook</button>
-    </div>
+    <div class="auth-divider"><span>ou continue com</span></div>
+    @if (googleHabilitado) {
+      <div id="google-signin" class="google-button"></div>
+      @if (aba === 'criar') {
+        <p class="social-note">No cadastro com Google, escolha o tipo e o nome de usuário acima. Os outros dados podem ser completados depois.</p>
+      }
+    } @else if (configuracaoCarregada) {
+      <button class="social-disabled" disabled><i class="bi bi-google"></i> Google ainda não configurado</button>
+    }
 
-    <div style="text-align: center; margin-top: 16px">
+    <div class="auth-footer">
       <a class="small muted" routerLink="/">Voltar para home publica</a>
     </div>
   </section>

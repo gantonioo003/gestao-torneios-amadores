@@ -1,19 +1,44 @@
 <main class="page">
   <div class="hero-row">
     <div>
-      <div class="eyebrow">Times vinculados</div>
-      <h1 class="page-title">Meus times</h1>
-      <p class="page-subtitle">Crie, edite e acompanhe os times vinculados ao usuario responsavel.</p>
+      <div class="eyebrow">Comunidade de times</div>
+      <h1 class="page-title">{{ aba === 'meus' ? 'Meus times' : 'Encontre um time' }}</h1>
+      <p class="page-subtitle">
+        {{ aba === 'meus'
+          ? 'Administre apenas os times vinculados à sua conta.'
+          : 'Todas as contas podem pesquisar times, conhecer elencos e acompanhar torneios.' }}
+      </p>
     </div>
-    <a class="btn btn-primary" routerLink="/time/criacao"><i class="bi bi-plus-circle"></i> Criar time</a>
+    @if (usuario()?.podeGerenciarTimes) {
+      <a class="btn btn-primary" routerLink="/time/criacao"><i class="bi bi-plus-circle"></i> Criar time</a>
+    }
   </div>
 
-  @if (recurso.length === 0) {
+  <section class="card panel-strong" style="margin-bottom: 14px">
+    <div class="tabs" style="margin-bottom: 12px">
+      <button class="tab" [class.active]="aba === 'explorar'" (click)="trocarAba('explorar')">Explorar times</button>
+      @if (usuario()?.podeGerenciarTimes) {
+        <button class="tab" [class.active]="aba === 'meus'" (click)="trocarAba('meus')">Meus times</button>
+      }
+    </div>
+    @if (aba === 'explorar') {
+      <div class="field" style="display: flex; gap: 8px">
+        <input [(ngModel)]="termo" placeholder="Buscar time por nome" (keyup.enter)="buscar()">
+        <button class="btn btn-outline" (click)="buscar()"><i class="bi bi-search"></i> Buscar</button>
+      </div>
+    }
+  </section>
+
+  @if (carregando) {
+    <section class="empty-state">Buscando times...</section>
+  } @else if (recurso.length === 0) {
     <section class="empty-state">
       <div class="crest" style="margin: 0 auto 14px"><i class="bi bi-shield"></i></div>
-      <h2>Nenhum time retornado pelo backend</h2>
-      <p>Cadastre seu primeiro time para montar elenco, entrar em torneios e acompanhar o historico de jogos.</p>
-      <a class="btn btn-primary" routerLink="/time/criacao">Cadastrar primeiro time</a>
+      <h2>{{ aba === 'meus' ? 'Você ainda não administra times' : 'Nenhum time encontrado' }}</h2>
+      <p>{{ aba === 'meus' ? 'Crie seu primeiro time para montar elenco e entrar em torneios.' : 'Tente pesquisar com outro nome.' }}</p>
+      @if (aba === 'meus' && usuario()?.podeGerenciarTimes) {
+        <a class="btn btn-primary" routerLink="/time/criacao">Cadastrar primeiro time</a>
+      }
     </section>
   } @else {
     <section class="grid grid-3">
@@ -23,13 +48,20 @@
             <div class="crest"><i class="bi bi-shield"></i></div>
             <div>
               <h2 style="margin: 0">{{ time.nome }}</h2>
-              <span class="small muted">ID #{{ time.id }}</span>
+              <span class="small muted">Time #{{ time.id }}</span>
             </div>
           </div>
-          <div class="mini-row"><span>Vinculo</span><span class="status status-green">Responsavel</span></div>
-          <div class="grid grid-2" style="margin-top: 12px">
-            <a class="btn btn-outline" [routerLink]="['/time', time.id, 'detalhes']">Gerenciar</a>
-            <button class="btn btn-danger" (click)="excluir(time.id)">Excluir</button>
+          <div class="mini-row">
+            <span>Perfil</span>
+            <span class="status" [class.status-green]="ehMeuTime(time)" [class.status-gray]="!ehMeuTime(time)">
+              {{ ehMeuTime(time) ? 'Administrado por você' : 'Público' }}
+            </span>
+          </div>
+          <div class="grid" [class.grid-2]="ehMeuTime(time) && usuario()?.podeGerenciarTimes" style="margin-top: 12px">
+            <a class="btn btn-outline" [routerLink]="['/time', time.id, 'detalhes']">Ver perfil</a>
+            @if (ehMeuTime(time) && usuario()?.podeGerenciarTimes) {
+              <button class="btn btn-danger" (click)="excluir(time.id)">Excluir</button>
+            }
           </div>
         </article>
       }

@@ -36,6 +36,19 @@ Feature: Gerenciar chat privado com solicitacoes de conversa
     When o usuario consultar suas conversas aprovadas
     Then o sistema deve listar a conversa no historico do usuario
 
+  Scenario: Consultar solicitacoes de conversa enviadas
+    Given que o usuario esta autenticado
+    And que existe outro usuario cadastrado na plataforma
+    And que ele solicitou uma conversa privada com esse usuario
+    When o usuario consultar suas solicitacoes enviadas
+    Then o sistema deve listar a solicitacao como pendente
+
+  Scenario: Impedir consulta do historico por usuario que nao participa da conversa
+    Given que existe uma conversa aprovada entre dois usuarios
+    And que existe um terceiro usuario autenticado
+    When o terceiro usuario tentar consultar o historico da conversa
+    Then o sistema deve impedir a operacao
+
   Scenario: Impedir solicitacao de conversa por usuario nao autenticado
     Given que o usuario nao esta autenticado
     And que existe outro usuario cadastrado na plataforma

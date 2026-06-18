@@ -10,8 +10,8 @@
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <i class="bi bi-house"></i> Inicio
         </a>
-        <a routerLink="/torneio/1" routerLinkActive="active">
-          <i class="bi bi-trophy"></i> Torneio
+        <a routerLink="/torneios" routerLinkActive="active">
+          <i class="bi bi-trophy"></i> Torneios
         </a>
         <a routerLink="/time/pesquisa" routerLinkActive="active">
           <i class="bi bi-shield-check"></i> Times
@@ -31,10 +31,27 @@
       </nav>
 
       <div class="top-actions">
-        <a class="icon-action" routerLink="/login" title="Entrar">
-          <i class="bi bi-person-circle"></i>
-        </a>
-        <a class="btn btn-primary btn-sm" routerLink="/torneio/criacao">Criar torneio</a>
+        @if (usuario(); as conta) {
+          <a
+            class="account-chip"
+            routerLink="/home-logada"
+            routerLinkActive="active"
+            [title]="conta.nome"
+            [attr.aria-label]="'Abrir minha área: @' + conta.nomeUsuario">
+            <span class="account-avatar">{{ conta.nome.slice(0, 1).toUpperCase() }}</span>
+            <span class="account-name">&#64;{{ conta.nomeUsuario }}</span>
+          </a>
+          <button class="icon-action icon-button" title="Sair" aria-label="Sair da conta" (click)="sair()">
+            <i class="bi bi-box-arrow-right"></i>
+          </button>
+        } @else {
+          <a class="icon-action" routerLink="/login" title="Entrar">
+            <i class="bi bi-person-circle"></i>
+          </a>
+        }
+        @if (usuario()?.podeCriarTorneio) {
+          <a class="btn btn-primary btn-sm" routerLink="/torneio/criacao">Criar torneio</a>
+        }
       </div>
     </div>
   </header>

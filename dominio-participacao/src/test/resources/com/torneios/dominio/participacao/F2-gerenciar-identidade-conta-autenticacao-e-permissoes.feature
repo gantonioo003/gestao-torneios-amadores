@@ -1,8 +1,8 @@
-Feature: Gerenciar conta de usuario e autenticacao
+Feature: Gerenciar identidade, conta, autenticacao, perfil e permissoes
 
   As a usuario da plataforma
-  I want cadastrar, acessar, editar e excluir minha conta
-  So that eu possa controlar meu acesso e meus dados no sistema
+  I want cadastrar, acessar e manter minha identidade conforme minha funcao no futebol
+  So that eu possa controlar meus dados e acessar apenas as funcoes permitidas ao meu perfil
 
   Scenario: Cadastrar nova conta de usuario
     Given que nao existe conta cadastrada para o email informado
@@ -18,6 +18,11 @@ Feature: Gerenciar conta de usuario e autenticacao
     Given que nao existe conta cadastrada para o email informado
     When o usuario cadastrar uma nova conta do tipo organizador
     Then o sistema deve criar a conta como organizador
+
+  Scenario: Cadastrar conta do tipo treinador
+    Given que nao existe conta cadastrada para o email informado
+    When o usuario cadastrar uma nova conta do tipo treinador
+    Then o sistema deve criar a conta como treinador
 
   Scenario: Realizar login com email e senha validos
     Given que existe uma conta cadastrada para o usuario
@@ -43,3 +48,24 @@ Feature: Gerenciar conta de usuario e autenticacao
     Given que existe uma conta cadastrada para o usuario
     When outro usuario tentar cadastrar conta com o mesmo email
     Then o sistema deve impedir o cadastro da conta
+
+  Scenario: Permitir criacao de torneio apenas ao organizador
+    Given que existe uma conta organizadora cadastrada
+    When o sistema verificar a permissao para criar torneios
+    Then a conta deve possuir permissao para criar torneios
+
+  Scenario: Impedir jogador de gerenciar times
+    Given que existe uma conta de jogador cadastrada
+    When o sistema verificar a permissao para gerenciar times
+    Then o sistema deve impedir a operacao
+
+  Scenario: Salvar torneio no perfil da conta
+    Given que existe uma conta cadastrada para o usuario
+    When o usuario salvar um torneio para acompanhar depois
+    Then o torneio deve aparecer entre os torneios salvos da conta
+
+  Scenario: Remover torneio salvo do perfil da conta
+    Given que existe uma conta cadastrada para o usuario
+    And que a conta possui um torneio salvo
+    When o usuario remover o torneio dos salvos
+    Then o torneio nao deve permanecer entre os torneios salvos da conta

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.participacao.inscricao.InscricaoServicoAplicacao;
+import com.torneios.apresentacao.SessaoUsuario;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("backend/inscricao")
@@ -21,47 +24,49 @@ class InscricaoControlador {
     InscricaoServicoAplicacao inscricaoServicoAplicacao;
 
     @RequestMapping(method = POST, path = "solicitar")
-    InscricaoServicoAplicacao.InscricaoResumo solicitar(@RequestParam long usuarioId,
-                                                        @RequestParam long timeId,
-                                                        @RequestParam long torneioId) {
+    InscricaoServicoAplicacao.InscricaoResumo solicitar(@RequestParam long timeId,
+                                                        @RequestParam long torneioId,
+                                                        HttpSession sessao) {
         return inscricaoServicoAplicacao.solicitarParticipacao(
                 System.currentTimeMillis(),
-                usuarioId,
+                SessaoUsuario.exigirUsuarioId(sessao),
                 timeId,
                 torneioId);
     }
 
     @RequestMapping(method = POST, path = "{id}/aprovar")
-    InscricaoServicoAplicacao.InscricaoResumo aprovar(@PathVariable long id, @RequestParam long organizadorId) {
-        return inscricaoServicoAplicacao.aprovarSolicitacao(id, organizadorId);
+    InscricaoServicoAplicacao.InscricaoResumo aprovar(@PathVariable long id, HttpSession sessao) {
+        return inscricaoServicoAplicacao.aprovarSolicitacao(id, SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = POST, path = "{id}/rejeitar")
-    InscricaoServicoAplicacao.InscricaoResumo rejeitar(@PathVariable long id, @RequestParam long organizadorId) {
-        return inscricaoServicoAplicacao.rejeitarSolicitacao(id, organizadorId);
+    InscricaoServicoAplicacao.InscricaoResumo rejeitar(@PathVariable long id, HttpSession sessao) {
+        return inscricaoServicoAplicacao.rejeitarSolicitacao(id, SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = POST, path = "{id}/cancelar")
-    void cancelar(@PathVariable long id, @RequestParam long usuarioId) {
-        inscricaoServicoAplicacao.cancelarCandidatura(id, usuarioId);
+    void cancelar(@PathVariable long id, HttpSession sessao) {
+        inscricaoServicoAplicacao.cancelarCandidatura(id, SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = POST, path = "remover-participante")
     void removerParticipante(@RequestParam long torneioId,
                              @RequestParam long timeId,
-                             @RequestParam long organizadorId) {
-        inscricaoServicoAplicacao.removerParticipanteAprovado(torneioId, timeId, organizadorId);
+                             HttpSession sessao) {
+        inscricaoServicoAplicacao.removerParticipanteAprovado(
+                torneioId, timeId, SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = GET, path = "candidaturas")
-    List<InscricaoServicoAplicacao.InscricaoResumo> acompanhar(@RequestParam long usuarioId) {
-        return inscricaoServicoAplicacao.acompanharCandidaturas(usuarioId);
+    List<InscricaoServicoAplicacao.InscricaoResumo> acompanhar(HttpSession sessao) {
+        return inscricaoServicoAplicacao.acompanharCandidaturas(SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = GET, path = "pendentes")
     List<InscricaoServicoAplicacao.InscricaoResumo> pendentes(@RequestParam long torneioId,
-                                                              @RequestParam long organizadorId) {
-        return inscricaoServicoAplicacao.listarPendentesParaAvaliacao(torneioId, organizadorId);
+                                                              HttpSession sessao) {
+        return inscricaoServicoAplicacao.listarPendentesParaAvaliacao(
+                torneioId, SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = GET, path = "{id}")

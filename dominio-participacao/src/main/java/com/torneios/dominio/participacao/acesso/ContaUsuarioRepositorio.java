@@ -12,5 +12,7 @@ public interface ContaUsuarioRepositorio {
 
     Optional<ContaUsuario> buscarPorEmail(String email);
 
+    Optional<ContaUsuario> buscarPorNomeUsuario(String nomeUsuario);
+
     void remover(UsuarioId usuarioId);
 }

@@ -12,35 +12,40 @@ import { PROFISSIONAL_EDICAO_RESOLVEDORES, ProfissionalEdicao } from './profissi
 import { Ranking } from './ranking/ranking';
 import { TIME_DETALHES_RESOLVEDORES, TimeDetalhes } from './time-detalhes/time-detalhes';
 import { TIME_EDICAO_RESOLVEDORES, TimeEdicao } from './time-edicao/time-edicao';
-import { TIME_PESQUISA_RESOLVEDORES, TimePesquisa } from './time-pesquisa/time-pesquisa';
+import { TimePesquisa } from './time-pesquisa/time-pesquisa';
 import { TIME_VINCULAR_RESOLVEDORES, TimeVincular } from './time-vincular/time-vincular';
 import { TimeCriacao } from './time-criacao/time-criacao';
 import { TorneioCriacao } from './torneio-criacao/torneio-criacao';
 import { TorneioDetalhes } from './torneio-detalhes/torneio-detalhes';
 import { ChatPrivado } from './chat-privado/chat-privado';
 import { SumulaEstatistica } from './sumula-estatistica/sumula-estatistica';
+import { authGuard, roleGuard } from './core/auth.guard';
+import { ContaPerfil } from './conta-perfil/conta-perfil';
+import { TorneioPesquisa } from './torneio-pesquisa/torneio-pesquisa';
 
 export const routes: Routes = [
   { path: '', component: HomePublica },
   { path: 'login', component: Login },
-  { path: 'home-logada', component: HomeLogada },
-  { path: 'torneio', redirectTo: 'torneio/1', pathMatch: 'full' },
-  { path: 'torneio/criacao', component: TorneioCriacao },
+  { path: 'home-logada', component: HomeLogada, canActivate: [authGuard] },
+  { path: 'perfil/:nomeUsuario', component: ContaPerfil },
+  { path: 'torneio', redirectTo: 'torneios', pathMatch: 'full' },
+  { path: 'torneios', component: TorneioPesquisa },
+  { path: 'torneio/criacao', component: TorneioCriacao, canActivate: [authGuard, roleGuard], data: { permissao: 'criarTorneio' } },
   { path: 'torneio/:id', component: TorneioDetalhes },
   { path: 'partida/:id', component: PartidaDetalhes },
   { path: 'sumula', component: SumulaEstatistica },
   { path: 'ranking', component: Ranking },
   { path: 'feed', component: FeedSocial },
   { path: 'desafio', component: Desafio },
-  { path: 'chat', component: ChatPrivado },
-  { path: 'time/pesquisa', component: TimePesquisa, resolve: TIME_PESQUISA_RESOLVEDORES },
-  { path: 'time/criacao', component: TimeCriacao },
+  { path: 'chat', component: ChatPrivado, canActivate: [authGuard] },
+  { path: 'time/pesquisa', component: TimePesquisa },
+  { path: 'time/criacao', component: TimeCriacao, canActivate: [authGuard, roleGuard], data: { permissao: 'gerenciarTimes' } },
   { path: 'time/:id/detalhes', component: TimeDetalhes, resolve: TIME_DETALHES_RESOLVEDORES },
-  { path: 'time/:id/edicao', component: TimeEdicao, resolve: TIME_EDICAO_RESOLVEDORES },
-  { path: 'time/:id/vincular', component: TimeVincular, resolve: TIME_VINCULAR_RESOLVEDORES },
+  { path: 'time/:id/edicao', component: TimeEdicao, resolve: TIME_EDICAO_RESOLVEDORES, canActivate: [authGuard, roleGuard], data: { permissao: 'gerenciarTimes' } },
+  { path: 'time/:id/vincular', component: TimeVincular, resolve: TIME_VINCULAR_RESOLVEDORES, canActivate: [authGuard, roleGuard], data: { permissao: 'gerenciarTimes' } },
   { path: 'profissional/pesquisa', component: ProfissionalPesquisa, resolve: PROFISSIONAL_PESQUISA_RESOLVEDORES },
-  { path: 'profissional/criacao', component: ProfissionalCadastro },
-  { path: 'profissional/:id/edicao', component: ProfissionalEdicao, resolve: PROFISSIONAL_EDICAO_RESOLVEDORES },
+  { path: 'profissional/criacao', component: ProfissionalCadastro, canActivate: [authGuard, roleGuard], data: { permissao: 'gerenciarTimes' } },
+  { path: 'profissional/:id/edicao', component: ProfissionalEdicao, resolve: PROFISSIONAL_EDICAO_RESOLVEDORES, canActivate: [authGuard] },
   { path: 'profissional/:id/perfil', component: ProfissionalPerfil, resolve: PROFISSIONAL_PERFIL_RESOLVEDORES },
   { path: '**', redirectTo: '' }
 ];

@@ -4,6 +4,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,11 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.participacao.profissional.ProfissionalResumo;
 import com.torneios.aplicacao.participacao.profissional.ProfissionalServicoAplicacao;
+import com.torneios.apresentacao.SessaoUsuario;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoId;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoServico;
+import com.torneios.dominio.participacao.acesso.ContaUsuarioServico;
 import com.torneios.dominio.participacao.profissional.RegistroDeCarreira;
 import com.torneios.dominio.participacao.profissional.RegistroDeCarreiraId;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("backend/profissional")
@@ -26,6 +31,7 @@ class ProfissionalControlador {
 
     @Autowired ProfissionalEsportivoServico profissionalServico;
     @Autowired ProfissionalServicoAplicacao profissionalServicoConsulta;
+    @Autowired ContaUsuarioServico contaUsuarioServico;
 
     @RequestMapping(method = GET, path = "pesquisa")
     List<? extends ProfissionalResumo> pesquisar(
@@ -39,9 +45,11 @@ class ProfissionalControlador {
     }
 
     @RequestMapping(method = POST, path = "salvar")
-    void salvar(@RequestBody ProfissionalFormulario.ProfissionalDto dto) {
+    void salvar(@RequestBody ProfissionalFormulario.ProfissionalDto dto, HttpSession sessao) {
+        long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
+        contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
         profissionalServico.cadastrar(new ProfissionalEsportivoId(gerarId()),
-            dto.nome, dto.tipo, new UsuarioId(dto.cadastranteId));
+            dto.nome, dto.tipo, new UsuarioId(usuarioId));
     }
 
     @RequestMapping(method = GET, path = "{id}/edicao")
@@ -58,35 +66,35 @@ class ProfissionalControlador {
     }
 
     @RequestMapping(method = POST, path = "{id}/salvar")
-    void atualizar(@PathVariable long id, @RequestParam long cadastranteId,
-            @RequestBody ProfissionalFormulario.ProfissionalDto dto) {
+    void atualizar(@PathVariable long id, @RequestBody ProfissionalFormulario.ProfissionalDto dto,
+            HttpSession sessao) {
         profissionalServico.editar(new ProfissionalEsportivoId(id),
-            new UsuarioId(cadastranteId), dto.nome);
+            new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)), dto.nome);
     }
 
     @RequestMapping(method = POST, path = "{id}/excluir")
-    void excluir(@PathVariable long id, @RequestParam long cadastranteId) {
+    void excluir(@PathVariable long id, HttpSession sessao) {
         profissionalServico.remover(new ProfissionalEsportivoId(id),
-            new UsuarioId(cadastranteId));
+            new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)));
     }
 
     @RequestMapping(method = POST, path = "{id}/adicionar-carreira")
-    void adicionarCarreira(@PathVariable long id, @RequestParam long cadastranteId,
-            @RequestBody ProfissionalFormulario.RegistroDto dto) {
+    void adicionarCarreira(@PathVariable long id, @RequestBody ProfissionalFormulario.RegistroDto dto,
+            HttpSession sessao) {
         var registroId = new RegistroDeCarreiraId(gerarId());
         profissionalServico.adicionarRegistroDeCarreira(new ProfissionalEsportivoId(id),
-            new UsuarioId(cadastranteId), registroId, dto.nomeDoClube,
+            new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)), registroId, dto.nomeDoClube,
             dto.dataInicio, dto.dataFim, dto.motivoDeSaida, dto.descricao);
     }
 
     @RequestMapping(method = POST, path = "{id}/remover-carreira/{registroId}")
-    void removerCarreira(@PathVariable long id, @PathVariable long registroId,
-            @RequestParam long cadastranteId) {
+    void removerCarreira(@PathVariable long id, @PathVariable long registroId, HttpSession sessao) {
         profissionalServico.removerRegistroDeCarreira(new ProfissionalEsportivoId(id),
-            new UsuarioId(cadastranteId), new RegistroDeCarreiraId(registroId));
+            new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)), new RegistroDeCarreiraId(registroId));
     }
 
     private long gerarId() {
-        return System.currentTimeMillis();
+        long id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        return id == 0 ? 1L : id;
     }
 }

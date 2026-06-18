@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.engajamento.palpite.PalpiteServicoAplicacao;
+import com.torneios.apresentacao.SessaoUsuario;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("backend/palpite")
@@ -21,10 +24,10 @@ class PalpiteControlador {
     PalpiteServicoAplicacao palpiteServicoAplicacao;
 
     @RequestMapping(method = POST, path = "salvar")
-    PalpiteServicoAplicacao.PalpiteResumo salvar(@RequestBody PalpiteDto dto) {
+    PalpiteServicoAplicacao.PalpiteResumo salvar(@RequestBody PalpiteDto dto, HttpSession sessao) {
         return palpiteServicoAplicacao.registrarOuAtualizar(
                 System.currentTimeMillis(),
-                dto.usuarioId,
+                SessaoUsuario.exigirUsuarioId(sessao),
                 dto.tipo,
                 dto.torneioId,
                 dto.partidaId,
@@ -65,7 +68,6 @@ class PalpiteControlador {
     }
 
     static class PalpiteDto {
-        public long usuarioId;
         public String tipo;
         public long torneioId;
         public Long partidaId;

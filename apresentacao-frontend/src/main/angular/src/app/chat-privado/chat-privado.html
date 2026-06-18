@@ -1,123 +1,286 @@
-<main class="page">
-  <div class="hero-row">
-    <div>
-      <div class="eyebrow">Mensagens privadas</div>
-      <h1 class="page-title">Chat com solicitacao de conversa</h1>
-      <p class="page-subtitle">O contato privado so libera mensagens depois que a outra pessoa aprova o pedido.</p>
-    </div>
-    <div class="tabs" style="min-width: 420px">
-      <button class="tab" [class.active]="aba === 'descobrir'" (click)="aba = 'descobrir'">Descobrir</button>
-      <button class="tab" [class.active]="aba === 'solicitacoes'" (click)="aba = 'solicitacoes'">Solicitacoes</button>
-      <button class="tab" [class.active]="aba === 'inbox'" (click)="aba = 'inbox'">Inbox</button>
-      <button class="tab" [class.active]="aba === 'conversa'" (click)="aba = 'conversa'">Conversa</button>
-    </div>
-  </div>
+<main class="chat-page">
+  <section class="messenger-shell" [class.conversation-open]="visao === 'conversa'">
+    <aside class="messenger-sidebar">
+      <header class="inbox-header">
+        <div>
+          <span class="inbox-kicker">Conectado como</span>
+          <h1>{{ usuario.nome }}</h1>
+        </div>
+        <button
+          class="round-action request-action"
+          title="Solicitacoes de conversa"
+          aria-label="Abrir solicitacoes de conversa"
+          (click)="mostrarSolicitacoes()">
+          <i class="bi bi-person-plus"></i>
+          @if (totalSolicitacoes > 0) {
+            <span class="request-count">{{ totalSolicitacoes }}</span>
+          }
+        </button>
+      </header>
 
-  <div class="grid layout-1-2">
-    <section class="phone-frame">
-      <div class="phone-screen">
-        @if (aba === 'descobrir') {
-          <div class="eyebrow">Rede social esportiva</div>
-          <h2 class="page-title" style="font-size: 34px">Descobrir</h2>
-          <div class="field" style="margin: 18px 0">
-            <input placeholder="Buscar perfis, times ou organizadores">
+      <button class="explore-trigger" (click)="mostrarExplorar()">
+        <i class="bi bi-search"></i>
+        <span>Explorar pessoas</span>
+        <i class="bi bi-arrow-up-right"></i>
+      </button>
+
+      <div class="inbox-search">
+        <i class="bi bi-search"></i>
+        <input [(ngModel)]="filtroInbox" placeholder="Pesquisar no inbox" aria-label="Pesquisar conversas">
+      </div>
+
+      <div class="conversation-label">
+        <span>Mensagens</span>
+        <span>{{ inbox.length }}</span>
+      </div>
+
+      <div class="conversation-list">
+        @if (carregando) {
+          @for (item of [1, 2, 3]; track item) {
+            <div class="conversation-skeleton"><span></span><div></div></div>
+          }
+        } @else if (inboxFiltrado.length === 0) {
+          <div class="inbox-empty">
+            <i class="bi bi-chat-square-heart"></i>
+            <strong>Seu inbox esta tranquilo</strong>
+            <span>Explore contas e envie uma solicitacao para iniciar uma conversa.</span>
           </div>
-          <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 18px">
-            @for (p of perfis; track p.nome) {
-              <div class="card" style="text-align: center; padding: 14px">
-                <div class="avatar photo" style="margin: 0 auto 8px">{{ p.iniciais }}</div>
-                <strong>{{ p.nome.split(' ')[0] }}</strong>
+        } @else {
+          @for (conversa of inboxFiltrado; track conversa.id) {
+            <button
+              class="conversation-item"
+              [class.active]="conversaAtiva?.id === conversa.id"
+              (click)="abrirConversa(conversa)">
+              <span class="chat-avatar">{{ iniciais(conversa.outroUsuarioNome) }}</span>
+              <span class="conversation-copy">
+                <span class="conversation-name">{{ conversa.outroUsuarioNome }}</span>
+                <span class="conversation-preview">{{ ultimaMensagem(conversa) }}</span>
+              </span>
+              <span class="conversation-time">{{ formatarHora(conversa.ultimaAtividadeEm) }}</span>
+            </button>
+          }
+        }
+      </div>
+    </aside>
+
+    <section class="messenger-content">
+      @if (erro || sucesso) {
+        <div class="chat-toast" [class.error]="erro">
+          <i class="bi" [class.bi-exclamation-circle]="erro" [class.bi-check-circle]="sucesso"></i>
+          {{ erro || sucesso }}
+          <button (click)="erro = ''; sucesso = ''"><i class="bi bi-x"></i></button>
+        </div>
+      }
+
+      @if (visao === 'inicio') {
+        <div class="chat-welcome">
+          <div class="welcome-art">
+            <span class="orbit orbit-one"></span>
+            <span class="orbit orbit-two"></span>
+            <i class="bi bi-chat-heart"></i>
+          </div>
+          <span class="eyebrow">Inbox privado</span>
+          <h2>Conversa boa comeca com permissao.</h2>
+          <p>Escolha uma conversa no inbox ou encontre outra pessoa da comunidade para enviar uma solicitacao.</p>
+          <button class="btn btn-primary" (click)="mostrarExplorar()">
+            <i class="bi bi-search"></i> Explorar pessoas
+          </button>
+        </div>
+      }
+
+      @if (visao === 'explorar') {
+        <header class="content-header">
+          <button class="mobile-back" aria-label="Voltar ao inbox" (click)="mostrarInicio()">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <div>
+            <span class="eyebrow">Comunidade Liga Amadora+</span>
+            <h2>Explorar pessoas</h2>
+            <p>Pesquise jogadores e organizadores cadastrados na plataforma.</p>
+          </div>
+        </header>
+
+        <div class="people-search">
+          <i class="bi bi-search"></i>
+          <input
+            [(ngModel)]="termoBusca"
+            (ngModelChange)="agendarBusca()"
+            placeholder="Buscar por nome ou e-mail"
+            autofocus>
+          @if (buscando) {
+            <span class="spinner"></span>
+          }
+        </div>
+
+        <div class="people-grid">
+          @for (pessoa of usuariosEncontrados; track pessoa.id) {
+            <article class="person-card">
+              <div class="person-avatar">{{ iniciais(pessoa.nome) }}</div>
+              <div class="person-info">
+                <strong>{{ pessoa.nome }}</strong>
+                <span>{{ pessoa.tipo === 'JOGADOR' ? 'Jogador' : 'Organizador' }}</span>
+                <small>{{ pessoa.email }}</small>
+              </div>
+              @if (jaPossuiContato(pessoa.id)) {
+                <button class="person-action connected" disabled>
+                  <i class="bi bi-check2"></i> No inbox
+                </button>
+              } @else if (solicitacaoPendente(pessoa.id)) {
+                <button class="person-action pending" disabled>
+                  <i class="bi bi-clock"></i> Pendente
+                </button>
+              } @else {
+                <button class="person-action" (click)="solicitarConversa(pessoa)">
+                  Solicitar conversa
+                </button>
+              }
+            </article>
+          } @empty {
+            @if (!buscando) {
+              <div class="content-empty">
+                <i class="bi bi-people"></i>
+                <strong>Nenhuma conta encontrada</strong>
+                <span>Tente pesquisar usando outro nome ou e-mail.</span>
               </div>
             }
+          }
+        </div>
+      }
+
+      @if (visao === 'solicitacoes') {
+        <header class="content-header request-header">
+          <button class="mobile-back" aria-label="Voltar ao inbox" (click)="mostrarInicio()">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <div>
+            <span class="eyebrow">Controle de privacidade</span>
+            <h2>Solicitacoes</h2>
+            <p>Voce decide quem pode conversar diretamente com voce.</p>
           </div>
-          @for (p of perfis; track p.nome) {
-            <article class="card" style="margin-bottom: 12px">
-              <div class="post-head">
-                <div class="avatar">{{ p.iniciais }}</div>
-                <div>
-                  <strong>{{ p.nome }}</strong>
-                  <div class="small muted">{{ p.papel }}</div>
+        </header>
+
+        <div class="request-tabs">
+          <button [class.active]="abaSolicitacao === 'recebidas'" (click)="abaSolicitacao = 'recebidas'">
+            Recebidas <span>{{ solicitacoesRecebidas.length }}</span>
+          </button>
+          <button [class.active]="abaSolicitacao === 'enviadas'" (click)="abaSolicitacao = 'enviadas'">
+            Enviadas <span>{{ solicitacoesEnviadas.length }}</span>
+          </button>
+        </div>
+
+        <div class="request-list">
+          @if (abaSolicitacao === 'recebidas') {
+            @for (solicitacao of solicitacoesRecebidas; track solicitacao.id) {
+              <article class="request-card">
+                <span class="person-avatar">{{ iniciais(solicitacao.outroUsuarioNome) }}</span>
+                <div class="request-copy">
+                  <strong>{{ solicitacao.outroUsuarioNome }}</strong>
+                  <span>{{ solicitacao.outroUsuarioTipo === 'JOGADOR' ? 'Jogador' : 'Organizador' }}</span>
+                  <small>Enviada em {{ formatarHora(solicitacao.solicitadaEm) }}</small>
                 </div>
+                <div class="request-buttons">
+                  <button class="accept-button" (click)="aprovar(solicitacao)">Aceitar</button>
+                  <button class="decline-button" (click)="recusar(solicitacao)">Excluir</button>
+                </div>
+              </article>
+            } @empty {
+              <div class="content-empty">
+                <i class="bi bi-person-check"></i>
+                <strong>Nenhuma solicitacao recebida</strong>
+                <span>Novos pedidos de conversa aparecerao aqui.</span>
               </div>
-              <p class="muted" style="font-size: 18px; margin: 12px 0">Centralizo conversas oficiais e evito misturar tudo no WhatsApp.</p>
-              <button class="btn" [class.btn-primary]="p.destaque" [class.btn-soft]="!p.destaque">{{ p.status }}</button>
-            </article>
+            }
+          } @else {
+            @for (solicitacao of solicitacoesEnviadas; track solicitacao.id) {
+              <article class="request-card">
+                <span class="person-avatar muted-avatar">{{ iniciais(solicitacao.outroUsuarioNome) }}</span>
+                <div class="request-copy">
+                  <strong>{{ solicitacao.outroUsuarioNome }}</strong>
+                  <span>Aguardando aprovacao</span>
+                  <small>Enviada em {{ formatarHora(solicitacao.solicitadaEm) }}</small>
+                </div>
+                <span class="sent-status"><i class="bi bi-clock"></i> Pendente</span>
+              </article>
+            } @empty {
+              <div class="content-empty">
+                <i class="bi bi-send"></i>
+                <strong>Nenhuma solicitacao enviada</strong>
+                <span>Use Explorar pessoas para encontrar alguem.</span>
+              </div>
+            }
           }
-        }
+        </div>
+      }
 
-        @if (aba === 'solicitacoes') {
-          <div class="eyebrow">Controle de acesso</div>
-          <h2 class="page-title" style="font-size: 34px">Solicitacoes</h2>
-          <div class="card" style="margin: 18px 0">
-            <strong>Recebidas</strong>
-            <p class="muted" style="font-size: 18px">O destinatario decide quem pode iniciar conversa privada.</p>
+      @if (visao === 'conversa' && conversaAtiva) {
+        <header class="conversation-header">
+          <button class="mobile-back" aria-label="Voltar ao inbox" (click)="mostrarInicio()">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <span class="chat-avatar">{{ iniciais(conversaAtiva.outroUsuarioNome) }}</span>
+          <div>
+            <strong>{{ conversaAtiva.outroUsuarioNome }}</strong>
+            <span><i></i> Conversa privada aprovada</span>
           </div>
-          <div class="card">
-            <div class="post-head">
-              <div class="avatar">JN</div>
-              <div>
-                <strong>Julia Nunes</strong>
-                <div class="small muted">Recebido hoje, 09:10</div>
+        </header>
+
+        <div class="message-history" #mensagensArea>
+          <div class="conversation-intro">
+            <span class="person-avatar large">{{ iniciais(conversaAtiva.outroUsuarioNome) }}</span>
+            <strong>{{ conversaAtiva.outroUsuarioNome }}</strong>
+            <span>{{ conversaAtiva.outroUsuarioEmail }}</span>
+            <small>Conversa iniciada apos aprovacao da solicitacao.</small>
+          </div>
+
+          @for (mensagem of conversaAtiva.mensagens; track mensagem.id) {
+            <div class="message-row" [class.mine]="mensagem.autorId === usuario.id">
+              <div class="message-bubble">
+                <span>{{ mensagem.conteudo }}</span>
+                <time>{{ formatarHora(mensagem.enviadaEm) }}</time>
               </div>
             </div>
-            <div class="grid grid-2" style="margin-top: 16px">
-              <button class="btn btn-primary">Aprovar</button>
-              <button class="btn">Recusar</button>
-            </div>
-          </div>
-        }
-
-        @if (aba === 'inbox') {
-          <div class="eyebrow">Mensagens liberadas</div>
-          <h2 class="page-title" style="font-size: 34px">Inbox privado</h2>
-          <div class="card panel-strong" style="margin-top: 18px">
-            <strong>Conversa em destaque</strong>
-            <p class="muted">Marina Costa - ultima mensagem: "Perfeito. Quero acompanhar o processo por aqui."</p>
-            <button class="btn btn-primary" (click)="aba = 'conversa'">Abrir conversa</button>
-          </div>
-          <div class="mini-row card" style="margin-top: 18px">
-            <div class="post-head">
-              <div class="avatar">MC</div>
-              <div><strong>Marina Costa</strong><div class="small muted">Ontem, 18:42</div></div>
-            </div>
-            <span class="status status-green">Liberada</span>
-          </div>
-        }
-
-        @if (aba === 'conversa') {
-          <div style="text-align: center">
-            <div class="eyebrow">Conversa privada aprovada</div>
-            <h2 class="page-title" style="font-size: 30px">Marina Costa</h2>
-          </div>
-          <div class="card" style="margin: 18px 0; text-align: center">
-            <div class="avatar photo" style="width: 86px; height: 86px; margin: 0 auto 12px; font-size: 26px">MC</div>
-            <strong>Organizadora da Copa Bairro</strong>
-            <p class="muted">Canal privado liberado apos aprovacao.</p>
-          </div>
-          @for (m of mensagens; track m.texto) {
-            <div class="card" [style.margin-left]="m.minha ? '70px' : '0'" [style.background]="m.minha ? '#e9eddd' : '#fff'" style="margin-bottom: 10px">
-              <strong class="small">{{ m.autor }} - {{ m.hora }}</strong>
-              <div>{{ m.texto }}</div>
+          } @empty {
+            <div class="first-message">
+              <i class="bi bi-stars"></i>
+              <span>A conversa foi aprovada. Envie a primeira mensagem.</span>
             </div>
           }
-          <div class="field" style="display: flex; gap: 8px">
-            <input [(ngModel)]="novaMensagem" placeholder="Escrever mensagem">
-            <button class="btn btn-primary" (click)="enviar()"><i class="bi bi-send"></i></button>
-          </div>
-        }
-      </div>
+        </div>
+
+        <div class="message-composer">
+          <textarea
+            [(ngModel)]="novaMensagem"
+            (keydown.enter)="aoPressionarEnter($event)"
+            rows="1"
+            maxlength="1000"
+            placeholder="Mensagem..."></textarea>
+          <button
+            class="send-button"
+            aria-label="Enviar mensagem"
+            [disabled]="!novaMensagem.trim() || enviando"
+            (click)="enviarMensagem()">
+            <i class="bi bi-send-fill"></i>
+          </button>
+        </div>
+      }
     </section>
 
-    <section class="grid">
-      <div class="card panel-strong">
-        <h2 style="margin: 0 0 8px">Conversas com controle</h2>
-        <p class="muted">Mensagens privadas ficam bloqueadas ate o destinatario aprovar o contato. Depois disso, o historico da conversa fica disponivel no inbox.</p>
-      </div>
-      <div class="grid grid-3">
-        <div class="card"><strong>1. Solicitar</strong><p class="muted small">Usuario pede contato privado.</p></div>
-        <div class="card"><strong>2. Aprovar</strong><p class="muted small">Destinatario libera ou recusa.</p></div>
-        <div class="card"><strong>3. Conversar</strong><p class="muted small">Historico fica consultavel.</p></div>
-      </div>
-    </section>
-  </div>
+    @if (visao === 'conversa' && conversaAtiva) {
+      <aside class="conversation-profile">
+        <span class="person-avatar profile-avatar">{{ iniciais(conversaAtiva.outroUsuarioNome) }}</span>
+        <h3>{{ conversaAtiva.outroUsuarioNome }}</h3>
+        <p>{{ conversaAtiva.outroUsuarioTipo === 'JOGADOR' ? 'Jogador' : 'Organizador' }} na Liga Amadora+</p>
+        <div class="privacy-note">
+          <i class="bi bi-shield-lock"></i>
+          <div>
+            <strong>Conversa privada</strong>
+            <span>Somente voces dois podem acessar este historico.</span>
+          </div>
+        </div>
+        <button class="profile-button" (click)="mostrarExplorar()">
+          <i class="bi bi-person-plus"></i> Nova conversa
+        </button>
+      </aside>
+    }
+  </section>
 </main>

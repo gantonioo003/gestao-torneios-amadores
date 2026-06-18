@@ -22,7 +22,6 @@ export class TimeVincular implements OnInit {
   dataInicio = '';
   dataLimite = '';
   exemplos: any[] = [];
-  private readonly responsavelId = 1;
 
   constructor(
     private readonly http: HttpClient,
@@ -63,7 +62,7 @@ export class TimeVincular implements OnInit {
     if (!this.funcao) { alert('Informe a função no time.'); return; }
     if (!this.dataInicio) { alert('Informe a data de início.'); return; }
     this.http.post(
-      `/backend/time/${this.timeId}/vincular-profissional?responsavelId=${this.responsavelId}`,
+      `/backend/time/${this.timeId}/vincular-profissional`,
       { profissionalId: this.selecionado.id, funcao: this.funcao, dataInicio: this.dataInicio, dataLimiteContrato: this.dataLimite || null }
     ).subscribe({
       next: () => this.router.navigate(['/time', this.timeId, 'detalhes']),

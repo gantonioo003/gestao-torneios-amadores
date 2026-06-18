@@ -3,6 +3,7 @@ package com.torneios.dominio.participacao.steps;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.torneios.dominio.participacao.ParticipacaoFuncionalidade;
+import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.participacao.acesso.TipoContaUsuario;
 
 import io.cucumber.java.pt.Dado;
@@ -56,6 +57,11 @@ public class F2Steps extends ParticipacaoFuncionalidade {
         try { contaCapturada = contaUsuarioServico.cadastrarConta(USUARIO_AUTENTICADO_ID, "Organizador", EMAIL_USUARIO, SENHA_USUARIO, TipoContaUsuario.ORGANIZADOR); } catch (Exception e) { excecaoCapturada = e; }
     }
 
+    @Quando("o usuario cadastrar uma nova conta do tipo treinador")
+    public void usuario_cadastrar_nova_conta_tipo_treinador() {
+        try { contaCapturada = contaUsuarioServico.cadastrarConta(USUARIO_AUTENTICADO_ID, "Treinador", EMAIL_USUARIO, SENHA_USUARIO, TipoContaUsuario.TREINADOR); } catch (Exception e) { excecaoCapturada = e; }
+    }
+
     @Quando("ele informar email e senha validos")
     public void ele_informar_email_e_senha_validos() {
         try { contaCapturada = contaUsuarioServico.autenticar(EMAIL_USUARIO, SENHA_USUARIO); usuarioAtual = contaCapturada.getId(); } catch (Exception e) { excecaoCapturada = e; }
@@ -81,6 +87,43 @@ public class F2Steps extends ParticipacaoFuncionalidade {
         try { contaCapturada = contaUsuarioServico.cadastrarConta(new com.torneios.dominio.compartilhado.usuario.UsuarioId(101L), "Outro Usuario", EMAIL_USUARIO, SENHA_USUARIO); } catch (Exception e) { excecaoCapturada = e; }
     }
 
+    @Dado("que existe uma conta organizadora cadastrada")
+    public void existe_conta_organizadora_cadastrada() {
+        contaCapturada = contaUsuarioServico.cadastrarConta(
+                USUARIO_AUTENTICADO_ID, "Organizador", EMAIL_USUARIO, SENHA_USUARIO, TipoContaUsuario.ORGANIZADOR);
+    }
+
+    @Dado("que existe uma conta de jogador cadastrada")
+    public void existe_conta_jogador_cadastrada() {
+        contaCapturada = contaUsuarioServico.cadastrarConta(
+                USUARIO_AUTENTICADO_ID, "Jogador", EMAIL_USUARIO, SENHA_USUARIO, TipoContaUsuario.JOGADOR);
+    }
+
+    @Quando("o sistema verificar a permissao para criar torneios")
+    public void verificar_permissao_criar_torneios() {
+        try { contaCapturada = contaUsuarioServico.exigirPodeCriarTorneio(USUARIO_AUTENTICADO_ID); } catch (Exception e) { excecaoCapturada = e; }
+    }
+
+    @Quando("o sistema verificar a permissao para gerenciar times")
+    public void verificar_permissao_gerenciar_times() {
+        try { contaCapturada = contaUsuarioServico.exigirPodeGerenciarTimes(USUARIO_AUTENTICADO_ID); } catch (Exception e) { excecaoCapturada = e; }
+    }
+
+    @Quando("o usuario salvar um torneio para acompanhar depois")
+    public void usuario_salvar_torneio() {
+        try { contaCapturada = contaUsuarioServico.salvarTorneio(USUARIO_AUTENTICADO_ID, TORNEIO_ID); } catch (Exception e) { excecaoCapturada = e; }
+    }
+
+    @Dado("que a conta possui um torneio salvo")
+    public void conta_possui_torneio_salvo() {
+        contaCapturada = contaUsuarioServico.salvarTorneio(USUARIO_AUTENTICADO_ID, TORNEIO_ID);
+    }
+
+    @Quando("o usuario remover o torneio dos salvos")
+    public void usuario_remover_torneio_salvo() {
+        try { contaCapturada = contaUsuarioServico.removerTorneioSalvo(USUARIO_AUTENTICADO_ID, TORNEIO_ID); } catch (Exception e) { excecaoCapturada = e; }
+    }
+
     @Entao("o sistema deve criar a conta do usuario")
     public void sistema_deve_criar_conta_usuario() {
         assertNull(excecaoCapturada);
@@ -98,6 +141,18 @@ public class F2Steps extends ParticipacaoFuncionalidade {
     public void sistema_deve_criar_conta_como_organizador() {
         sistema_deve_criar_conta_usuario();
         assertEquals(TipoContaUsuario.ORGANIZADOR, contaCapturada.getTipo());
+    }
+
+    @Entao("o sistema deve criar a conta como treinador")
+    public void sistema_deve_criar_conta_como_treinador() {
+        sistema_deve_criar_conta_usuario();
+        assertEquals(TipoContaUsuario.TREINADOR, contaCapturada.getTipo());
+    }
+
+    @Entao("a conta deve possuir permissao para criar torneios")
+    public void conta_deve_possuir_permissao_criar_torneios() {
+        assertNull(excecaoCapturada);
+        assertTrue(contaCapturada.podeCriarTorneio());
     }
 
     @Entao("o sistema deve autenticar o usuario")
@@ -133,6 +188,18 @@ public class F2Steps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve impedir a operacao")
     public void impedir_operacao() {
         assertNotNull(excecaoCapturada);
+    }
+
+    @Entao("o torneio deve aparecer entre os torneios salvos da conta")
+    public void torneio_deve_aparecer_nos_salvos() {
+        assertNull(excecaoCapturada);
+        assertTrue(contaCapturada.salvouTorneio(new TorneioId(TORNEIO_ID.valor())));
+    }
+
+    @Entao("o torneio nao deve permanecer entre os torneios salvos da conta")
+    public void torneio_nao_deve_permanecer_nos_salvos() {
+        assertNull(excecaoCapturada);
+        assertFalse(contaCapturada.salvouTorneio(new TorneioId(TORNEIO_ID.valor())));
     }
 
     @Entao("o sistema deve exigir autenticação")

@@ -8,7 +8,9 @@
         <p class="page-subtitle">Partidas, elenco, torneios vinculados e estatisticas do time.</p>
       </div>
     </div>
-    <a class="btn btn-outline" [routerLink]="['/time', time.id || 1, 'edicao']">Editar perfil</a>
+    @if (podeGerenciar()) {
+      <a class="btn btn-outline" [routerLink]="['/time', time.id, 'edicao']">Editar perfil</a>
+    }
   </div>
 
   <div class="grid layout-2-1">
@@ -32,14 +34,18 @@
           @for (v of elenco; track v.profissionalId) {
             <div class="mini-row">
               <div><strong>{{ v.nomeProfissional }}</strong><div class="small muted">{{ funcaoLabel(v.funcao) }} - Desde {{ v.dataInicio }}</div></div>
-              <div style="display: flex; gap: 6px">
-                <button class="btn btn-sm btn-outline" (click)="editarVinculo(v)">Editar</button>
-                <button class="btn btn-sm btn-danger" (click)="removerVinculo(v.profissionalId)">Remover</button>
-              </div>
+              @if (podeGerenciar()) {
+                <div style="display: flex; gap: 6px">
+                  <button class="btn btn-sm btn-outline" (click)="editarVinculo(v)">Editar</button>
+                  <button class="btn btn-sm btn-danger" (click)="removerVinculo(v.profissionalId)">Remover</button>
+                </div>
+              }
             </div>
           }
         }
-        <a class="btn btn-outline btn-block" style="margin-top: 12px" [routerLink]="['/time', time.id || 1, 'vincular']">Vincular profissional</a>
+        @if (podeGerenciar()) {
+          <a class="btn btn-outline btn-block" style="margin-top: 12px" [routerLink]="['/time', time.id, 'vincular']">Vincular profissional</a>
+        }
       </section>
 
       <section class="card">
@@ -64,7 +70,9 @@
       </div>
       <a class="btn btn-primary btn-block" routerLink="/desafio">Propor amistoso</a>
       <a class="btn btn-outline btn-block" routerLink="/ranking">Comparar time</a>
-      <button class="btn btn-danger btn-block" (click)="excluir()">Excluir time</button>
+      @if (podeGerenciar()) {
+        <button class="btn btn-danger btn-block" (click)="excluir()">Excluir time</button>
+      }
     </aside>
   </div>
 </main>

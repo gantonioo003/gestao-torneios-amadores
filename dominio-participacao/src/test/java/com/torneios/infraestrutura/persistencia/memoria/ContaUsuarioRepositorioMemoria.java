@@ -34,6 +34,16 @@ public class ContaUsuarioRepositorioMemoria implements ContaUsuarioRepositorio {
     }
 
     @Override
+    public Optional<ContaUsuario> buscarPorNomeUsuario(String nomeUsuario) {
+        if (nomeUsuario == null) {
+            return Optional.empty();
+        }
+        return dados.values().stream()
+                .filter(conta -> conta.getNomeUsuario().equals(nomeUsuario.trim().toLowerCase()))
+                .findFirst();
+    }
+
+    @Override
     public void remover(UsuarioId usuarioId) {
         dados.remove(usuarioId);
     }

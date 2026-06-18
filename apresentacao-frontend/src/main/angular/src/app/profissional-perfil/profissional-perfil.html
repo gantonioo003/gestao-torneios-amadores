@@ -8,7 +8,9 @@
         <p class="page-subtitle">{{ tipoLabel(profissional.tipo || 'JOGADOR') }} com historico, vinculos e estatisticas acumuladas.</p>
       </div>
     </div>
-    <button class="btn btn-outline" (click)="editarPerfil()">Editar perfil</button>
+    @if (podeEditar()) {
+      <button class="btn btn-outline" (click)="editarPerfil()">Editar perfil</button>
+    }
   </div>
 
   <div class="grid layout-2-1">
@@ -34,7 +36,9 @@
       <section class="card">
         <div class="mini-row" style="border: 0; padding-top: 0">
           <h2 class="section-title" style="margin: 0">Historico de carreira</h2>
-          <button class="btn btn-sm btn-primary" (click)="mostrarFormCarreira = !mostrarFormCarreira">Adicionar registro</button>
+          @if (podeEditar()) {
+            <button class="btn btn-sm btn-primary" (click)="mostrarFormCarreira = !mostrarFormCarreira">Adicionar registro</button>
+          }
         </div>
 
         @if (mostrarFormCarreira) {
@@ -71,7 +75,9 @@
         <div class="mini-row"><span>Cartoes</span><strong>2</strong></div>
       </div>
       <a class="btn btn-primary btn-block" routerLink="/ranking">Comparar com outro jogador</a>
-      <button class="btn btn-danger btn-block" (click)="removerPerfil()">Remover perfil</button>
+      @if (podeEditar()) {
+        <button class="btn btn-danger btn-block" (click)="removerPerfil()">Remover perfil</button>
+      }
     </aside>
   </div>
 </main>
