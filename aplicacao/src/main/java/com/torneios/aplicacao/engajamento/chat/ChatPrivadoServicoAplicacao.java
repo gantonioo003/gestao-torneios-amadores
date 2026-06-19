@@ -86,10 +86,11 @@ public class ChatPrivadoServicoAplicacao {
     public List<UsuarioChatResumo> pesquisarUsuarios(String termo, long usuarioIdAtual) {
         return contaRepositorio.pesquisarUsuarios(termo, usuarioIdAtual).stream()
                 .map(conta -> new UsuarioChatResumo(
-                        conta.getId(),
+                        String.valueOf(conta.getId()),
                         conta.getNome(),
                         conta.getEmail(),
-                        conta.getTipo()))
+                        conta.getTipo(),
+                        conta.getFotoPerfilUrl()))
                 .toList();
     }
 
@@ -107,6 +108,7 @@ public class ChatPrivadoServicoAplicacao {
                 outroUsuario.getNome(),
                 outroUsuario.getEmail(),
                 outroUsuario.getTipo(),
+                outroUsuario.getFotoPerfilUrl(),
                 conversaPrivada.getStatus().name(),
                 conversaPrivada.getSolicitadaEm(),
                 conversaPrivada.getUltimaAtividadeEm(),
@@ -128,13 +130,15 @@ public class ChatPrivadoServicoAplicacao {
                                  String outroUsuarioNome,
                                  String outroUsuarioEmail,
                                  String outroUsuarioTipo,
+                                 String outroUsuarioFotoPerfilUrl,
                                  String status,
                                  LocalDateTime solicitadaEm,
                                  LocalDateTime ultimaAtividadeEm,
                                  List<MensagemResumo> mensagens) {
     }
 
-    public record UsuarioChatResumo(long id, String nome, String email, String tipo) {
+    public record UsuarioChatResumo(String id, String nome, String email, String tipo,
+                                    String fotoPerfilUrl) {
     }
 
     public record MensagemResumo(long id,

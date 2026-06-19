@@ -14,6 +14,12 @@
         <label>Nome completo</label>
         <input [(ngModel)]="nome" placeholder="Ex.: Joao Silva">
       </div>
+      <app-identity-editor
+        kind="pessoa"
+        [required]="false"
+        [entityName]="nome"
+        [(value)]="fotoUrl">
+      </app-identity-editor>
       <div class="field">
         <label>Tipo</label>
         <select [(ngModel)]="tipoSelecionado">

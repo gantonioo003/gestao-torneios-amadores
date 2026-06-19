@@ -8,6 +8,7 @@ public class TorneioFormulario {
     public static class TorneioDto {
         public Long id;
         public String nome;
+        public String imagemUrl;
         public FormatoTorneio formato;
         public FormatoEquipe formatoEquipe;
         public Long organizadorId;

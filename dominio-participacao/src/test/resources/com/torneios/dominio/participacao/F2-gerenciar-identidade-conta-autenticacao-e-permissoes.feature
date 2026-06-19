@@ -39,6 +39,16 @@ Feature: Gerenciar identidade, conta, autenticacao, perfil e permissoes
     When ele informar senha incorreta
     Then o sistema deve impedir a autenticacao
 
+  Scenario: Alterar senha confirmando a senha atual
+    Given que existe uma conta cadastrada para o usuario
+    When ele alterar a senha informando a senha atual correta
+    Then o sistema deve autenticar o usuario com a nova senha
+
+  Scenario: Impedir alteracao de senha com a senha atual incorreta
+    Given que existe uma conta cadastrada para o usuario
+    When ele tentar alterar a senha informando a senha atual incorreta
+    Then o sistema deve impedir a alteracao da senha
+
   Scenario: Editar dados da conta
     Given que existe uma conta cadastrada para o usuario
     When ele editar nome e email da conta

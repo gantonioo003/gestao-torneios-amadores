@@ -42,7 +42,13 @@ select {
   font-size: 27px;
 }
 
-.feed-titlebar > a {
+.feed-title-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.feed-title-actions > a {
   width: 40px;
   height: 40px;
   display: grid;
@@ -51,6 +57,22 @@ select {
   background: var(--green-soft);
   border-radius: 50%;
   font-size: 18px;
+}
+
+.open-composer {
+  min-height: 38px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #fff;
+  background: var(--green);
+  border: 0;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(18, 184, 95, .2);
 }
 
 .feed-tabs {
@@ -91,6 +113,12 @@ select {
   grid-template-columns: auto minmax(0, 1fr);
   gap: 12px;
   border-bottom: 8px solid #eef1ed;
+  animation: composer-open .2s ease-out;
+}
+
+@keyframes composer-open {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .feed-avatar,
@@ -852,6 +880,17 @@ select {
 
   .feed-tabs button {
     font-size: 11px;
+  }
+
+  .open-composer {
+    width: 38px;
+    padding: 0;
+    justify-content: center;
+    font-size: 0;
+  }
+
+  .open-composer i {
+    font-size: 14px;
   }
 
   .composer-actions span {

@@ -11,6 +11,9 @@ Pessoa sem login que pode acessar areas publicas da plataforma e registrar palpi
 ### Conta de usuario
 Cadastro que identifica o usuario na plataforma, contendo nome, email, senha e tipo de conta. Pode ser criada, editada e excluida pelo proprio usuario.
 
+### Perfil publico
+Visao compartilhavel da identidade da conta. Exibe nome, foto opcional, funcao, apresentacao e postagens pessoais, sem revelar credenciais ou dados privados de contato.
+
 ### Tipo de conta
 Classificacao principal da conta dentro da plataforma. Pode ser uma conta comum sem funcao esportiva, jogador, organizador, treinador ou membro de comissao.
 
@@ -25,6 +28,9 @@ Conta responsavel por criar e administrar times, seus elencos e candidaturas em 
 
 ### Login
 Processo de autenticacao realizado com email e senha validos para liberar o acesso do usuario as funcionalidades protegidas.
+
+### Alteracao de senha
+Troca protegida da credencial da conta, permitida somente apos confirmar corretamente a senha atual.
 
 ### Usuario organizador
 Usuario responsavel por criar e gerenciar um torneio.
@@ -197,7 +203,10 @@ Processo automatico que ocorre apos a conclusao do evento alvo, quando o sistema
 Distribuicao agregada e anonima dos palpites registrados por opcao, exibida em tempo real enquanto a janela de votacao estiver aberta.
 
 ### Progresso de palpites
-Registro persistente de pontos, nivel, sequencia diaria, acertos e selos conquistados por uma conta autenticada.
+Registro persistente de pontos por acertos apurados, nivel, sequencia diaria, acertos e selos conquistados por uma conta autenticada.
+
+### Sequencia de palpites
+Quantidade de dias consecutivos com pelo menos um palpite registrado. Expira quando o usuario deixa passar um dia completo sem participar.
 
 ### Grupo de chat
 Conversa coletiva com criador, participantes aceitos, convites pendentes e historico acessivel somente aos membros liberados.

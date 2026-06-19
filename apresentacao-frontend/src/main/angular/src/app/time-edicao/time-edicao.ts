@@ -3,10 +3,11 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveData, Router, RouterModule, RouterStateSnapshot } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { IdentityEditor } from '../shared/identity-editor/identity-editor';
 
 @Component({
   selector: 'app-time-edicao',
-  imports: [FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule, IdentityEditor],
   templateUrl: './time-edicao.html',
   styleUrl: './time-edicao.css'
 })
@@ -33,7 +34,11 @@ export class TimeEdicao {
       ? `/backend/time/${this.recurso.id}/salvar`
       : '/backend/time/salvar';
     const destino = this.recurso.id ? ['/time', this.recurso.id, 'detalhes'] : ['/buscar'];
-    this.http.post(url, { id: this.recurso.id, nome: this.recurso.nome })
+    this.http.post(url, {
+      id: this.recurso.id,
+      nome: this.recurso.nome,
+      imagemUrl: this.recurso.imagemUrl
+    })
       .subscribe({ next: () => this.router.navigate(destino), error: e => alert(e.error?.mensagem ?? 'Erro') });
   }
 

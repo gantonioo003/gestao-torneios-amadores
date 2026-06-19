@@ -14,14 +14,21 @@ public class ProfissionalEsportivo {
 
     private final ProfissionalEsportivoId id;
     private String nome;
+    private String fotoUrl;
     private final TipoProfissional tipo;
     private final UsuarioId cadastranteId;
     private final List<RegistroDeCarreira> historico;
 
     public ProfissionalEsportivo(ProfissionalEsportivoId id, String nome, TipoProfissional tipo,
             UsuarioId cadastranteId) {
+        this(id, nome, tipo, cadastranteId, null);
+    }
+
+    public ProfissionalEsportivo(ProfissionalEsportivoId id, String nome, TipoProfissional tipo,
+            UsuarioId cadastranteId, String fotoUrl) {
         this.id = Objects.requireNonNull(id, "O id do profissional e obrigatorio.");
         this.nome = validarNome(nome);
+        this.fotoUrl = normalizarFoto(fotoUrl);
         this.tipo = Objects.requireNonNull(tipo, "O tipo do profissional e obrigatorio.");
         this.cadastranteId = Objects.requireNonNull(cadastranteId, "O cadastrante e obrigatorio.");
         this.historico = new ArrayList<>();
@@ -29,12 +36,17 @@ public class ProfissionalEsportivo {
 
     public ProfissionalEsportivoId getId() { return id; }
     public String getNome() { return nome; }
+    public String getFotoUrl() { return fotoUrl; }
     public TipoProfissional getTipo() { return tipo; }
     public UsuarioId getCadastranteId() { return cadastranteId; }
     public List<RegistroDeCarreira> getHistorico() { return Collections.unmodifiableList(historico); }
 
     public void renomear(String novoNome) {
         this.nome = validarNome(novoNome);
+    }
+
+    public void alterarFoto(String novaFotoUrl) {
+        this.fotoUrl = normalizarFoto(novaFotoUrl);
     }
 
     public void adicionarRegistroDeCarreira(RegistroDeCarreira registro) {
@@ -61,5 +73,9 @@ public class ProfissionalEsportivo {
             throw new IllegalArgumentException("O nome do profissional e obrigatorio.");
         }
         return valor.trim();
+    }
+
+    private String normalizarFoto(String valor) {
+        return valor == null || valor.isBlank() ? null : valor.trim();
     }
 }

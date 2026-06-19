@@ -48,6 +48,11 @@ record TorneioJpaResumo(TorneioJpa jpa) implements TorneioResumo {
     }
 
     @Override
+    public String getImagemUrl() {
+        return jpa.imagemUrl;
+    }
+
+    @Override
     public String getFormato() {
         return jpa.formato != null ? jpa.formato.name() : null;
     }

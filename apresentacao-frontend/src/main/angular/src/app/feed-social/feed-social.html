@@ -5,7 +5,13 @@
         <span class="eyebrow">Comunidade Liga Amadora+</span>
         <h1>Feed</h1>
       </div>
-      <a routerLink="/chat" aria-label="Abrir chat"><i class="bi bi-chat-dots"></i></a>
+      <div class="feed-title-actions">
+        <button class="open-composer" (click)="compositorAberto = !compositorAberto">
+          <i class="bi" [class.bi-plus-lg]="!compositorAberto" [class.bi-x-lg]="compositorAberto"></i>
+          {{ compositorAberto ? 'Fechar' : 'Publicar' }}
+        </button>
+        <a routerLink="/chat" aria-label="Abrir chat"><i class="bi bi-chat-dots"></i></a>
+      </div>
     </header>
 
     <nav class="feed-tabs" aria-label="Filtros do feed">
@@ -15,6 +21,7 @@
       <button [class.active]="aba === 'times'" (click)="aba = 'times'">Times</button>
     </nav>
 
+    @if (compositorAberto) {
     <section class="post-composer">
       <span class="feed-avatar" [class.has-photo]="usuario()?.fotoPerfilUrl">
         @if (usuario()?.fotoPerfilUrl) {
@@ -59,6 +66,7 @@
         </div>
       </div>
     </section>
+    }
 
     @if (mensagem) {
       <div class="feed-message">{{ mensagem }} <button (click)="mensagem = ''"><i class="bi bi-x"></i></button></div>
@@ -210,7 +218,7 @@
   <aside class="feed-sidebar">
     <div class="feed-search">
       <i class="bi bi-search"></i>
-      <input [(ngModel)]="busca" placeholder="Buscar no feed">
+      <input [(ngModel)]="busca" (change)="registrarBusca(busca)" placeholder="Buscar no feed">
     </div>
 
     <section class="trend-card">

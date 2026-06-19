@@ -39,6 +39,8 @@ class TimeJpa {
     @Id
     Long id;
     String nome;
+    @jakarta.persistence.Lob
+    String imagemUrl;
     Long responsavelId;
 
     @ElementCollection
@@ -82,6 +84,7 @@ class TimeRepositorioImpl implements TimeRepositorio {
         var jpa = repositorio.findById(time.getId().valor()).orElse(new TimeJpa());
         jpa.id = time.getId().valor();
         jpa.nome = time.getNome();
+        jpa.imagemUrl = time.getImagemUrl();
         jpa.responsavelId = time.getResponsavel().valor();
 
         jpa.torneiosVinculados.clear();
@@ -148,7 +151,8 @@ class TimeRepositorioImpl implements TimeRepositorio {
         var time = new Time(
             new TimeId(jpa.id),
             jpa.nome,
-            new UsuarioId(jpa.responsavelId)
+            new UsuarioId(jpa.responsavelId),
+            jpa.imagemUrl
         );
         for (var torneioId : jpa.torneiosVinculados) {
             time.vincularAoTorneio(new TorneioId(torneioId));

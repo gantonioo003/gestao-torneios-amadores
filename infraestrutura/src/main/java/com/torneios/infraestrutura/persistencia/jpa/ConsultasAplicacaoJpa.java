@@ -49,6 +49,11 @@ record ProfissionalJpaResumo(ProfissionalEsportivoJpa jpa) implements Profission
     }
 
     @Override
+    public String getFotoUrl() {
+        return jpa.fotoUrl;
+    }
+
+    @Override
     public String getTipo() {
         return jpa.tipo;
     }
@@ -150,6 +155,11 @@ record TimeJpaResumo(TimeJpa jpa) implements TimeResumo {
     @Override
     public String getNome() {
         return jpa.nome;
+    }
+
+    @Override
+    public String getImagemUrl() {
+        return jpa.imagemUrl;
     }
 
     @Override

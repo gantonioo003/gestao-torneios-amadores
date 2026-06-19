@@ -2,10 +2,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 export interface UsuarioChat {
-  id: number;
+  id: string;
   nome: string;
   email: string;
   tipo: string;
+  fotoPerfilUrl?: string;
 }
 
 export interface MensagemChat {
@@ -23,6 +24,7 @@ export interface ConversaChat {
   outroUsuarioNome: string;
   outroUsuarioEmail: string;
   outroUsuarioTipo: string;
+  outroUsuarioFotoPerfilUrl?: string;
   status: 'SOLICITADA' | 'APROVADA' | 'RECUSADA';
   solicitadaEm: string;
   ultimaAtividadeEm: string;
@@ -33,6 +35,7 @@ export interface ParticipanteGrupoChat {
   id: number;
   nome: string;
   email: string;
+  fotoPerfilUrl?: string;
 }
 
 export interface GrupoChat {
@@ -66,7 +69,7 @@ export class ChatApiService {
     return this.http.get<UsuarioChat[]>(`${this.baseUrl}/usuarios`, { params });
   }
 
-  solicitarConversa(destinatarioId: number) {
+  solicitarConversa(destinatarioId: string) {
     const params = new HttpParams().set('destinatarioId', destinatarioId);
     return this.http.post<ConversaChat>(`${this.baseUrl}/solicitar`, null, { params });
   }
@@ -101,7 +104,7 @@ export class ChatApiService {
     });
   }
 
-  criarGrupo(nome: string, participantes: number[]) {
+  criarGrupo(nome: string, participantes: string[]) {
     return this.http.post<GrupoChat>(`${this.baseUrl}/grupos`, { nome, participantes });
   }
 

@@ -61,13 +61,15 @@ public class GrupoChatServicoAplicacao {
     private GrupoResumo converter(GrupoChat grupo) {
         List<ParticipanteResumo> participantes = grupo.getParticipantes().stream()
                 .map(id -> contas.pesquisarPorId(id.valor())
-                        .map(conta -> new ParticipanteResumo(id.valor(), conta.getNome(), conta.getEmail()))
-                        .orElse(new ParticipanteResumo(id.valor(), "Usuario", "")))
+                        .map(conta -> new ParticipanteResumo(
+                                id.valor(), conta.getNome(), conta.getEmail(), conta.getFotoPerfilUrl()))
+                        .orElse(new ParticipanteResumo(id.valor(), "Usuario", "", null)))
                 .toList();
         List<ParticipanteResumo> pendentes = grupo.getConvitesPendentes().stream()
                 .map(id -> contas.pesquisarPorId(id.valor())
-                        .map(conta -> new ParticipanteResumo(id.valor(), conta.getNome(), conta.getEmail()))
-                        .orElse(new ParticipanteResumo(id.valor(), "Usuario", "")))
+                        .map(conta -> new ParticipanteResumo(
+                                id.valor(), conta.getNome(), conta.getEmail(), conta.getFotoPerfilUrl()))
+                        .orElse(new ParticipanteResumo(id.valor(), "Usuario", "", null)))
                 .toList();
         return new GrupoResumo(
                 grupo.getId().valor(),
@@ -92,6 +94,6 @@ public class GrupoChatServicoAplicacao {
                               LocalDateTime ultimaAtividadeEm, List<ParticipanteResumo> participantes,
                               List<ParticipanteResumo> convitesPendentes,
                               List<MensagemResumo> mensagens) {}
-    public record ParticipanteResumo(long id, String nome, String email) {}
+    public record ParticipanteResumo(long id, String nome, String email, String fotoPerfilUrl) {}
     public record MensagemResumo(long id, long autorId, String conteudo, LocalDateTime enviadaEm) {}
 }

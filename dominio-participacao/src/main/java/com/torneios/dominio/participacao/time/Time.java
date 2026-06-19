@@ -26,6 +26,7 @@ public class Time {
 
     private final TimeId id;
     private String nome;
+    private String imagemUrl;
     private UsuarioId responsavel;
     private final Map<JogadorId, Jogador> jogadores;
     private final Set<TorneioId> torneiosVinculados;
@@ -33,8 +34,13 @@ public class Time {
     private final List<VinculoProfissional> elenco;
 
     public Time(TimeId id, String nome, UsuarioId responsavel) {
+        this(id, nome, responsavel, imagemPadrao());
+    }
+
+    public Time(TimeId id, String nome, UsuarioId responsavel, String imagemUrl) {
         this.id = Objects.requireNonNull(id, "O id do time e obrigatorio.");
         this.nome = validarNome(nome);
+        this.imagemUrl = validarImagem(imagemUrl);
         this.responsavel = Objects.requireNonNull(responsavel, "O responsavel do time e obrigatorio.");
         this.jogadores = new LinkedHashMap<>();
         this.torneiosVinculados = new LinkedHashSet<>();
@@ -43,12 +49,17 @@ public class Time {
 
     public TimeId getId() { return id; }
     public String getNome() { return nome; }
+    public String getImagemUrl() { return imagemUrl; }
     public UsuarioId getResponsavel() { return responsavel; }
     public Collection<Jogador> getJogadores() { return List.copyOf(jogadores.values()); }
     public Tecnico getTecnico() { return tecnico; }
     public List<VinculoProfissional> getElenco() { return Collections.unmodifiableList(elenco); }
 
     public void renomear(String novoNome) { this.nome = validarNome(novoNome); }
+
+    public void alterarImagem(String novaImagemUrl) {
+        this.imagemUrl = validarImagem(novaImagemUrl);
+    }
 
     public void alterarResponsavel(UsuarioId novoResponsavel) {
         this.responsavel = Objects.requireNonNull(novoResponsavel, "O novo responsavel e obrigatorio.");
@@ -136,6 +147,19 @@ public class Time {
         if (valor == null || valor.isBlank())
             throw new IllegalArgumentException("O nome do time e obrigatorio.");
         return valor.trim();
+    }
+
+    private String validarImagem(String valor) {
+        if (valor == null || valor.isBlank())
+            throw new IllegalArgumentException("O escudo do time e obrigatorio.");
+        return valor.trim();
+    }
+
+    private static String imagemPadrao() {
+        return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 140'%3E"
+                + "%3Cpath fill='%23078246' d='M60 4 110 22v45c0 33-20 56-50 69C30 123 10 100 10 67V22Z'/%3E"
+                + "%3Cpath fill='%23fff' d='M60 20 94 32v34c0 23-12 40-34 51C38 106 26 89 26 66V32Z'/%3E"
+                + "%3Ccircle cx='60' cy='65' r='20' fill='%2312b85f'/%3E%3C/svg%3E";
     }
 
     private Jogador obterJogador(JogadorId jogadorId) {

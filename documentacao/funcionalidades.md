@@ -1,35 +1,35 @@
 # Funcionalidades do Sistema
 
-## Conta, comunicacao e participacao inicial
-F1. Gerenciar palpites publicos em torneios e partidas, permitindo votos de visitantes e usuarios em vencedor ou empate, campeao, artilheiro e lider de assistencias, com janelas de participacao, percentuais em tempo real, apuracao automatica, historico privado e progressao por pontos, sequencia diaria, niveis, selos e ranking para contas autenticadas.
+## Conta, comunidade e participacao
+F1. Palpites publicos e liga de palpiteiros - permite votar em partidas e torneios, inclusive como visitante, acompanhar percentuais, apuracao automatica, historico, XP por acerto, niveis, sequencias, selos e ranking.
 
-F2. Gerenciar identidade, autenticacao, perfil e permissoes, permitindo conta comum para interacao social e palpites sem gestao esportiva, mantendo torneios sob responsabilidade do organizador, times e elencos sob responsabilidade do treinador e paginas publicas de jogadores, times, usuarios e torneios.
+F2. Contas, perfis publicos e permissoes - gerencia cadastro, autenticacao, identidade visual opcional, conta comum e os diferentes acessos de organizadores, treinadores, jogadores e comissao.
 
-F3. Gerenciar conversas autenticadas entre usuarios, com solicitacao e aprovacao de chat privado e criacao de grupos com duas ou mais pessoas, entrada imediata de contatos ja aprovados e profissionais comandados pelo treinador, convite para os demais usuarios e consulta segura do historico apenas pelos participantes aceitos.
+F3. Chat privado e grupos da comunidade - gerencia solicitacoes de conversa, mensagens, grupos com duas ou mais pessoas, entrada direta de contatos liberados e profissionais comandados e convites para os demais.
 
-F4. Gerenciar candidaturas, convites e composicao final dos participantes do torneio, exibindo publicamente a disponibilidade de vagas, permitindo ao treinador solicitar participacao e acompanhar ou cancelar pelo perfil do time, permitindo ao organizador convidar times e avaliar candidaturas na edicao do torneio, consolidando a entrada somente apos aceite e notificando automaticamente a outra parte.
+F4. Inscricoes, convites e participantes do torneio - conecta organizador e treinador em candidaturas, convites, cancelamentos, aprovacoes, recusas, notificacoes e composicao final dos times participantes.
 
-## Times, elenco e desempenho
-F5. Gerenciar times do treinador, permitindo cadastrar, editar, excluir e consultar torneios vinculados, alem de gerenciar o elenco de profissionais esportivos.
+## Times, profissionais e desempenho
+F5. Gestao de times, escudos e elenco - permite ao treinador criar e editar times com identidade visual obrigatoria, excluir quando permitido, consultar competicoes e administrar jogadores e comissao.
 
-F6. Cadastrar profissional esportivo com historico de carreira, permitindo gerenciar perfis de jogadores e treinadores com suas passagens por times.
+F6. Perfis de profissionais e historico de carreira - permite cadastrar jogadores e membros da comissao, com foto opcional, vinculos esportivos e passagens por times.
 
-F7. Gerenciar analises comparativas gerais de desempenho entre times e jogadores, permitindo confrontar estatisticas, historico e rankings sem escolher torneio, salvar comparativos, consultar e atualizar analises, exportar os dados em CSV e compartilhar um link que reabre a comparacao escolhida.
+F7. Comparativos gerais de desempenho - compara times com times e jogadores com jogadores por dados acumulados, permite salvar, atualizar, exportar em CSV e compartilhar a comparacao.
 
-F8. Gerenciar a preparacao e visualizacao opcional da escalacao para partidas, permitindo ao tecnico consultar proximos jogos, informar titulares e reservas em lista ou mesa tatica compativel com 3x3, 5x5, 7x7 ou 11x11, manter os dados privados ate o inicio e divulga-los automaticamente conforme o formato escolhido pelos dois times.
+F8. Escalacoes e mesa tatica das partidas - permite ao treinador preparar titulares e reservas em lista ou campo tatico para 3x3, 5x5, 7x7 e 11x11, mantendo a escalacao privada ate o inicio.
 
-## Organizacao e comunicacao
-F9. Gerenciar torneios pela conta organizadora, permitindo criar a competicao com formato e quantidade por equipe imutaveis, editar dados internos e participantes antes do inicio, preparar estrutura, rodadas e partidas por sorteio automatico ou ordem manual e repetir novas edicoes com o historico preservado.
+## Torneios e comunidade
+F9. Criacao, configuracao e preparacao de torneios - permite ao organizador criar competicoes com identidade visual, formato imutavel, participantes, estrutura, rodadas e partidas por sorteio ou ordem manual, alem de repetir edicoes preservando o historico.
 
-F10. Gerenciar confrontos amistosos opcionais entre times por contas de treinador, permitindo propor desafios pela busca ou perfil do adversario, acompanhar solicitacoes recebidas, enviadas, aceitas e encerradas no proprio time, aceitar, recusar, cancelar ou reagendar propostas, registrar resultados no historico dos dois times e notificar os responsaveis quando o jogo for proposto ou confirmado.
+F10. Desafios e amistosos entre times - permite propor, aceitar, recusar, cancelar e reagendar confrontos, registrar resultados no historico e notificar os treinadores envolvidos.
 
-F11. Gerenciar o ecossistema de feed social da plataforma e dos torneios, permitindo publicacoes pessoais ou representando times e torneios autorizados, texto, emojis, conjuntos de fotos ou videos opcionais, hashtags, comentarios com texto ou foto, uma curtida alternavel por conta, reacoes, comunicados oficiais, atualizacoes automaticas de partidas, filtros por identidade, radar da comunidade, assuntos do momento, encaminhamento de publicacoes para conversas e grupos liberados e historicos separados de postagens nos perfis pessoais, times e torneios.
+F11. Feed social personalizado - permite publicacoes pessoais ou representando times e torneios, texto, fotos, videos, hashtags, comentarios, curtidas, reacoes, filtros, assuntos do momento, recomendacoes e encaminhamento para o chat.
 
-## Partidas, andamento e estatisticas
-F12. Gerenciar o registro do placar oficial da partida e a atualizacao automatica do andamento da competicao, permitindo salvar resultado mesmo sem eventos estatisticos e refletindo classificacao, chaveamento e status das partidas apos cada resultado
+## Partidas, scout e estatisticas
+F12. Placar oficial e andamento automatico da competicao - registra o resultado mesmo sem scout e atualiza classificacao, chaveamento e status das partidas.
 
-F13. Gerenciar o scout estatístico opcional e detalhado da partida, registrando, corrigindo e removendo eventos individuais dos jogadores, incluindo substituições com controle de paradas de jogo, expulsão automática por segundo cartão amarelo, suspensão automática por acúmulo de cartões entre partidas e reversibilidade em cascata ao corrigir qualquer evento.
+F13. Scout estatistico detalhado e reversivel - registra, corrige e remove eventos individuais, substituicoes, paradas, cartoes, expulsoes e suspensoes com reversibilidade em cascata.
 
-F14. Gerenciar a consolidação histórica das estatísticas e rankings do torneio, atualizando artilharia com desempate em cascata, líderes de assistências, melhor nota com elegibilidade mínima de participação, estatísticas de carreira acumuladas por jogador, recálculo retroativo completo da edição quando um resultado é corrigido após fechamento, e arquivamento imutável na galeria histórica.
+F14. Estatisticas, rankings e memoria historica - consolida artilharia, assistencias, notas, carreira dos jogadores, recalculo retroativo e arquivamento imutavel das edicoes.
 
-F15. Gerenciar a central de notificacoes do usuario, persistindo avisos de torneios, times, amistosos, interacoes sociais e sistema, permitindo consultar historico, filtrar categorias, marcar uma ou todas como lidas, arquivar avisos e salvar preferencias sobre as categorias que deseja receber.
+F15. Central de notificacoes e preferencias - persiste avisos de torneios, times, amistosos, interacoes sociais e sistema, com filtros, leitura, arquivamento e categorias configuraveis.

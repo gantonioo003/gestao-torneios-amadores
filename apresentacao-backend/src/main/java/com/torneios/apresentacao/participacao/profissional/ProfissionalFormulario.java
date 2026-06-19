@@ -19,6 +19,7 @@ public class ProfissionalFormulario {
     public static class ProfissionalDto {
         public Long id;
         public String nome;
+        public String fotoUrl;
         public TipoProfissional tipo;
         public Long cadastranteId;
     }

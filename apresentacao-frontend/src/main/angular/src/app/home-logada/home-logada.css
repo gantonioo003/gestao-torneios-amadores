@@ -1087,3 +1087,29 @@ button.settings-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+.account-tournament-identity {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+}
+
+.account-tournament-identity > img {
+  width: 36px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.account-tournament-identity > span {
+  display: grid;
+}
+
+.preview-monogram.has-photo {
+  overflow: hidden;
+  background: #fff;
+}
+
+.preview-monogram.has-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

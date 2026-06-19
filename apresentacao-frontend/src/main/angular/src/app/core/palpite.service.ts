@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 export interface OpcaoPalpite {
   id: string;
   nome: string;
+  imagemUrl?: string;
 }
 
 export interface PercentuaisPalpite {
@@ -16,6 +17,7 @@ export interface PercentuaisPalpite {
 export interface TorneioPalpite {
   id: string;
   nome: string;
+  imagemUrl?: string;
   status: string;
   opcoes: OpcaoPalpite[];
   percentuais: PercentuaisPalpite;

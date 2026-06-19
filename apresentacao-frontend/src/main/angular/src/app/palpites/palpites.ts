@@ -1,5 +1,6 @@
 ﻿import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { AuthService } from '../core/auth.service';
@@ -66,7 +67,7 @@ interface RankingPalpite {
 
 @Component({
   selector: 'app-palpites',
-  imports: [RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './palpites.html',
   styleUrl: './palpites.css'
 })
@@ -80,6 +81,10 @@ export class Palpites implements OnInit {
   carregando = true;
   votando = '';
   aba: 'disponiveis' | 'andamento' | 'historico' = 'disponiveis';
+  buscaPartidas = '';
+  buscaTorneios = '';
+  buscaAndamento = '';
+  buscaHistorico = '';
 
   constructor(
     private readonly http: HttpClient,
@@ -96,6 +101,36 @@ export class Palpites implements OnInit {
 
   get palpitesAnteriores(): PalpiteUsuario[] {
     return this.meusPalpites.filter(palpite => palpite.apurado);
+  }
+
+  get partidasFiltradas(): PartidaDisponivel[] {
+    const busca = this.normalizarBusca(this.buscaPartidas);
+    if (!busca) return this.partidas;
+    return this.partidas.filter(partida => this.correspondeBusca(busca,
+      partida.torneioNome,
+      partida.etapa,
+      partida.mandante.nome,
+      partida.visitante.nome,
+      `${partida.mandante.nome} x ${partida.visitante.nome}`
+    ));
+  }
+
+  get torneiosFiltrados(): TorneioDisponivel[] {
+    const busca = this.normalizarBusca(this.buscaTorneios);
+    if (!busca) return this.torneios;
+    return this.torneios.filter(torneio => this.correspondeBusca(
+      busca,
+      torneio.nome,
+      ...torneio.opcoes.map(opcao => opcao.nome)
+    ));
+  }
+
+  get palpitesEmAndamentoFiltrados(): PalpiteUsuario[] {
+    return this.filtrarPalpites(this.palpitesEmAndamento, this.buscaAndamento);
+  }
+
+  get palpitesAnterioresFiltrados(): PalpiteUsuario[] {
+    return this.filtrarPalpites(this.palpitesAnteriores, this.buscaHistorico);
   }
 
   get percentualNivel(): number {
@@ -261,6 +296,28 @@ export class Palpites implements OnInit {
       this.progresso = progresso;
       this.ranking = ranking;
     });
+  }
+
+  private filtrarPalpites(palpites: PalpiteUsuario[], termo: string): PalpiteUsuario[] {
+    const busca = this.normalizarBusca(termo);
+    if (!busca) return palpites;
+    return palpites.filter(palpite => this.correspondeBusca(
+      busca,
+      this.nomeEvento(palpite),
+      this.nomeOpcao(palpite),
+      this.tipoLabel(palpite.tipo),
+      palpite.apurado ? (palpite.acertou ? 'acertou' : 'nao acertou') : 'em andamento'
+    ));
+  }
+
+  private correspondeBusca(busca: string, ...valores: Array<string | undefined>): boolean {
+    return valores.some(valor => this.normalizarBusca(valor ?? '').includes(busca));
+  }
+
+  private normalizarBusca(valor: string): string {
+    return valor.trim().toLocaleLowerCase('pt-BR')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
   }
 }
 

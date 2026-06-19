@@ -21,6 +21,7 @@ public class Torneio {
 
     private final TorneioId id;
     private String nome;
+    private String imagemUrl;
     private final FormatoTorneio formato;
     private final FormatoEquipe formatoEquipe;
     private final UsuarioId organizadorId;
@@ -36,8 +37,19 @@ public class Torneio {
                    FormatoEquipe formatoEquipe,
                    UsuarioId organizadorId,
                    boolean aceitaSolicitacoes) {
+        this(id, nome, formato, formatoEquipe, organizadorId, aceitaSolicitacoes, imagemPadrao());
+    }
+
+    public Torneio(TorneioId id,
+                   String nome,
+                   FormatoTorneio formato,
+                   FormatoEquipe formatoEquipe,
+                   UsuarioId organizadorId,
+                   boolean aceitaSolicitacoes,
+                   String imagemUrl) {
         this.id = Objects.requireNonNull(id, "O id do torneio e obrigatorio.");
         this.nome = validarNome(nome);
+        this.imagemUrl = validarImagem(imagemUrl);
         this.formato = Objects.requireNonNull(formato, "O formato do torneio e obrigatorio.");
         this.formatoEquipe = Objects.requireNonNull(formatoEquipe, "O formato de equipe e obrigatorio.");
         this.organizadorId = Objects.requireNonNull(organizadorId, "O organizador do torneio e obrigatorio.");
@@ -54,6 +66,10 @@ public class Torneio {
 
     public String getNome() {
         return nome;
+    }
+
+    public String getImagemUrl() {
+        return imagemUrl;
     }
 
     public FormatoTorneio getFormato() {
@@ -91,6 +107,11 @@ public class Torneio {
     public void renomear(String nome) {
         validarNaoIniciado();
         this.nome = validarNome(nome);
+    }
+
+    public void alterarImagem(String novaImagemUrl) {
+        validarNaoIniciado();
+        this.imagemUrl = validarImagem(novaImagemUrl);
     }
 
     public void atualizarConfiguracao(String nome, boolean aceitaSolicitacoes) {
@@ -194,6 +215,20 @@ public class Torneio {
             throw new IllegalArgumentException("O nome do torneio e obrigatorio.");
         }
         return nome.trim();
+    }
+
+    private static String validarImagem(String valor) {
+        if (valor == null || valor.isBlank()) {
+            throw new IllegalArgumentException("A identidade visual do torneio e obrigatoria.");
+        }
+        return valor.trim();
+    }
+
+    private static String imagemPadrao() {
+        return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E"
+                + "%3Crect width='140' height='140' rx='34' fill='%2318211f'/%3E"
+                + "%3Cpath fill='%2312b85f' d='M42 28h56v18c0 19-10 34-28 42-18-8-28-23-28-42Z'/%3E"
+                + "%3Cpath fill='%23fff' d='M55 96h30v10H55zM48 108h44v8H48z'/%3E%3C/svg%3E";
     }
 
     private void validarNaoIniciado() {

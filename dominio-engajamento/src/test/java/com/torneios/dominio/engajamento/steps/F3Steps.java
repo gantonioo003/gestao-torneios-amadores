@@ -198,6 +198,21 @@ public class F3Steps extends EngajamentoFuncionalidade {
         assertFalse(grupoChat.possuiParticipante(ORGANIZADOR_ID));
     }
 
+    @Quando("ele tentar criar um grupo sem selecionar outra pessoa")
+    public void tentarCriarGrupoSemOutraPessoa() {
+        try {
+            grupoChat = grupoChatServico.criar(
+                    grupoId(4L), "Grupo vazio", USUARIO_ID, List.of());
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve impedir a criacao do grupo")
+    public void sistemaDeveImpedirCriacaoGrupo() {
+        assertNotNull(excecaoCapturada);
+    }
+
     @Dado("que existe um grupo com convite pendente para o usuario")
     public void grupoComConvitePendente() {
         consultaChat.autenticar(USUARIO_ID);

@@ -49,7 +49,7 @@ class ProfissionalControlador {
         long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
         contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
         profissionalServico.cadastrar(new ProfissionalEsportivoId(gerarId()),
-            dto.nome, dto.tipo, new UsuarioId(usuarioId));
+            dto.nome, dto.tipo, new UsuarioId(usuarioId), dto.fotoUrl);
     }
 
     @RequestMapping(method = GET, path = "{id}/edicao")
@@ -58,6 +58,8 @@ class ProfissionalControlador {
         var dto = new ProfissionalFormulario.ProfissionalDto();
         dto.id = expandido.getProfissional().getId();
         dto.nome = expandido.getProfissional().getNome();
+        dto.fotoUrl = expandido.getProfissional().getFotoUrl();
+        dto.cadastranteId = expandido.getProfissional().getCadastranteId();
         dto.tipo = com.torneios.dominio.participacao.profissional.TipoProfissional
             .valueOf(expandido.getProfissional().getTipo());
         var formulario = new ProfissionalFormulario(dto);
@@ -69,7 +71,7 @@ class ProfissionalControlador {
     void atualizar(@PathVariable long id, @RequestBody ProfissionalFormulario.ProfissionalDto dto,
             HttpSession sessao) {
         profissionalServico.editar(new ProfissionalEsportivoId(id),
-            new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)), dto.nome);
+            new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)), dto.nome, dto.fotoUrl);
     }
 
     @RequestMapping(method = POST, path = "{id}/excluir")

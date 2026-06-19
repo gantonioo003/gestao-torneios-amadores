@@ -103,7 +103,9 @@ class ChatPrivadoControlador {
                 proximoId(),
                 dto.nome,
                 SessaoUsuario.exigirUsuarioId(sessao),
-                dto.participantes);
+                dto.participantes == null
+                        ? List.of()
+                        : dto.participantes.stream().map(Long::parseLong).toList());
     }
 
     @RequestMapping(method = GET, path = "grupos")
@@ -143,6 +145,6 @@ class ChatPrivadoControlador {
 
     static class GrupoDto {
         public String nome;
-        public List<Long> participantes;
+        public List<String> participantes;
     }
 }

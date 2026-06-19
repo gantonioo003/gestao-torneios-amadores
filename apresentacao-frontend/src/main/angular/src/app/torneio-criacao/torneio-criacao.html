@@ -25,6 +25,13 @@
           <input [(ngModel)]="nome" placeholder="Ex.: Copa do Bairro 2026">
         </div>
 
+        <app-identity-editor
+          kind="torneio"
+          [required]="true"
+          [entityName]="nome"
+          [(value)]="imagemUrl">
+        </app-identity-editor>
+
         <div class="grid grid-2">
           <div class="field">
             <label>Formato da competicao</label>
@@ -64,7 +71,7 @@
         <div><div class="eyebrow">Proxima etapa</div><h2>Como o fluxo continua</h2></div>
       </div>
 
-      <div class="preview-emblem"><i class="bi bi-trophy"></i></div>
+      <div class="preview-emblem generated-preview"><img [src]="imagemUrl" alt=""></div>
       <h3>{{ nome || 'Seu novo torneio' }}</h3>
       <p>{{ formatoLabel() }} · minimo de {{ minimoParticipantes }} times</p>
 

@@ -39,6 +39,9 @@ class TorneioJpa {
 
     String nome;
 
+    @Lob
+    String imagemUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "FORMATO")
     FormatoTorneio formato;
@@ -82,6 +85,7 @@ class TorneioRepositorioImpl implements TorneioRepositorio {
         var jpa = repositorio.findById(torneio.getId().valor()).orElse(new TorneioJpa());
         jpa.id = torneio.getId().valor();
         jpa.nome = torneio.getNome();
+        jpa.imagemUrl = torneio.getImagemUrl();
         jpa.formato = torneio.getFormato();
         jpa.formatoEquipe = torneio.getFormatoEquipe();
         jpa.organizadorId = torneio.getOrganizadorId().valor();
@@ -133,7 +137,8 @@ class TorneioRepositorioImpl implements TorneioRepositorio {
                 jpa.formato,
                 jpa.formatoEquipe,
                 new UsuarioId(jpa.organizadorId),
-                jpa.aceitaSolicitacoes);
+                jpa.aceitaSolicitacoes,
+                jpa.imagemUrl);
 
         if (jpa.status == StatusTorneio.ESTRUTURA_GERADA || jpa.status == StatusTorneio.INICIADO
                 || jpa.status == StatusTorneio.FINALIZADO) {

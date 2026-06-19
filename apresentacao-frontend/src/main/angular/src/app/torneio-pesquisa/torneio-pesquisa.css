@@ -110,3 +110,13 @@
     justify-self: start;
   }
 }
+.tournament-photo {
+  overflow: hidden;
+  background: #fff !important;
+}
+
+.tournament-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

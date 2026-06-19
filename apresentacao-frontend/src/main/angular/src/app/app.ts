@@ -13,17 +13,26 @@ export class App {
   readonly usuario = this.auth.usuario;
   notificacoes: any[] = [];
   notificacoesAbertas = false;
+  temaEscuro = false;
 
   constructor(
     private readonly auth: AuthService,
     private readonly router: Router,
     private readonly http: HttpClient
   ) {
+    this.temaEscuro = localStorage.getItem('liga-amadora.tema') === 'dark';
+    this.aplicarTema();
     if (this.auth.estaAutenticado()) {
       this.auth.validarSessao().subscribe(usuario => {
         if (usuario) this.carregarNotificacoes();
       });
     }
+  }
+
+  alternarTema() {
+    this.temaEscuro = !this.temaEscuro;
+    localStorage.setItem('liga-amadora.tema', this.temaEscuro ? 'dark' : 'light');
+    this.aplicarTema();
   }
 
   get notificacoesNaoLidas(): number {
@@ -68,5 +77,9 @@ export class App {
       next: notificacoes => this.notificacoes = notificacoes,
       error: () => this.notificacoes = []
     });
+  }
+
+  private aplicarTema() {
+    document.documentElement.dataset['theme'] = this.temaEscuro ? 'dark' : 'light';
   }
 }

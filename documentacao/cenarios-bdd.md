@@ -19,6 +19,8 @@ Cenarios principais:
 - exibir percentual atualizado por opcao enquanto a janela estiver aberta
 - apurar palpite como acertado quando a opcao escolhida coincide com o resultado real
 - apurar palpite como nao acertado quando a opcao escolhida diverge do resultado real
+- conceder XP somente depois da apuracao de um acerto, com peso conforme a dificuldade
+- expirar a sequencia atual quando o usuario perde um dia completo
 - impedir alteracao de um palpite apos a apuracao
 
 ---
@@ -35,6 +37,8 @@ Cenarios principais:
 - cadastrar conta comum sem funcao esportiva
 - realizar login com email e senha validos
 - impedir login com senha incorreta
+- alterar senha confirmando a senha atual
+- impedir alteracao de senha com a senha atual incorreta
 - editar dados da conta
 - excluir conta de usuario
 - impedir cadastro com email ja utilizado
@@ -62,6 +66,10 @@ Cenarios principais:
 - consultar solicitacoes de conversa enviadas
 - impedir consulta do historico por usuario que nao participa da conversa
 - impedir solicitacao de conversa por usuario nao autenticado
+- criar grupo com entrada direta de contatos aprovados e convite para os demais
+- impedir grupo sem outra pessoa
+- aceitar convite para participar de grupo
+- permitir que treinador inclua diretamente profissional comandado
 
 ---
 

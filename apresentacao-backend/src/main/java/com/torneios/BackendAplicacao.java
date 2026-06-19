@@ -451,9 +451,17 @@ public class BackendAplicacao {
     public FeedServicoAplicacao feedServicoAplicacao(FeedTorneioServico feedTorneioServico,
                                                      ContaRepositorioAplicacao contaRepositorio,
                                                      TimeRepositorioAplicacao timeRepositorio,
-                                                     TorneioRepositorioAplicacao torneioRepositorio) {
+                                                     TorneioRepositorioAplicacao torneioRepositorio,
+                                                     com.torneios.aplicacao.participacao.profissional.ProfissionalRepositorioAplicacao
+                                                             profissionalRepositorio,
+                                                     ConversaPrivadaRepositorio conversaPrivadaRepositorio) {
         return new FeedServicoAplicacao(
-                feedTorneioServico, contaRepositorio, timeRepositorio, torneioRepositorio);
+                feedTorneioServico,
+                contaRepositorio,
+                timeRepositorio,
+                torneioRepositorio,
+                profissionalRepositorio,
+                conversaPrivadaRepositorio);
     }
 
     @Bean

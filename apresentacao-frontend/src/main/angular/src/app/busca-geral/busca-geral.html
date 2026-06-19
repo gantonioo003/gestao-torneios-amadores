@@ -14,14 +14,34 @@
     }
   </div>
 
-  <section class="card panel-strong global-search">
-    <i class="bi bi-search"></i>
-    <input
-      [(ngModel)]="termo"
-      (keyup.enter)="buscar()"
-      placeholder="Digite o nome de um torneio, time ou pessoa"
-      aria-label="Buscar torneios, times e pessoas">
-    <button class="btn btn-primary" (click)="buscar()">Buscar</button>
+  <section class="search-shell">
+    <div class="card panel-strong global-search">
+      <i class="bi bi-search"></i>
+      <input
+        [(ngModel)]="termo"
+        (focus)="buscaFocada = true"
+        (click)="buscaFocada = true"
+        (keyup.enter)="buscar()"
+        placeholder="Digite o nome de um torneio, time ou pessoa"
+        aria-label="Buscar torneios, times e pessoas">
+      <button class="btn btn-primary" (click)="buscar()">Buscar</button>
+    </div>
+    @if (buscaFocada && !termo.trim() && buscasRecentes.length) {
+      <div class="recent-searches">
+        <header>
+          <strong>Buscas recentes</strong>
+          <button (click)="limparBuscasRecentes()">Limpar</button>
+        </header>
+        @for (busca of buscasRecentes; track busca) {
+          <button class="recent-search-row" (click)="usarBuscaRecente(busca)">
+            <i class="bi bi-clock-history"></i>
+            <span>{{ busca }}</span>
+            <i class="bi bi-arrow-up-left"></i>
+            <i class="bi bi-x" title="Remover" (click)="removerBuscaRecente(busca, $event)"></i>
+          </button>
+        }
+      </div>
+    }
   </section>
 
   @if (carregando) {
@@ -40,7 +60,7 @@
         @for (torneio of torneiosDestaque; track torneio.id; let posicao = $index) {
           <a class="featured-tournament" [routerLink]="['/torneio', torneio.id]">
             <span class="featured-rank">0{{ posicao + 1 }}</span>
-            <span class="featured-icon"><i class="bi bi-trophy"></i></span>
+            <span class="featured-icon entity-image"><img [src]="torneio.imagemUrl" alt=""></span>
             <span class="featured-copy">
               <strong>{{ torneio.nome }}</strong>
               <small>{{ statusTorneio(torneio.status) }}</small>
@@ -66,7 +86,7 @@
         @for (torneio of torneios; track torneio.id; let posicao = $index) {
           <a class="explore-tournament" [routerLink]="['/torneio', torneio.id]">
             <span class="explore-pattern" [class.pattern-alt]="posicao % 3 === 1" [class.pattern-dark]="posicao % 3 === 2">
-              <i class="bi bi-trophy"></i>
+              <img [src]="torneio.imagemUrl" alt="">
             </span>
             <span class="explore-copy">
               <strong>{{ torneio.nome }}</strong>
@@ -104,7 +124,7 @@
 
           @for (torneio of torneios; track torneio.id) {
             <a class="result-row" [routerLink]="['/torneio', torneio.id]">
-              <span class="result-icon"><i class="bi bi-trophy"></i></span>
+              <span class="result-icon entity-image"><img [src]="torneio.imagemUrl" alt=""></span>
               <span class="result-copy">
                 <strong>{{ torneio.nome }}</strong>
                 <small>{{ statusTorneio(torneio.status) }}</small>
@@ -131,7 +151,7 @@
 
           @for (time of times; track time.id) {
             <div class="result-row">
-              <span class="result-icon"><i class="bi bi-shield"></i></span>
+              <span class="result-icon entity-image"><img [src]="time.imagemUrl" alt=""></span>
               <a class="result-copy" [routerLink]="['/time', time.id, 'detalhes']">
                 <strong>{{ time.nome }}</strong>
                 <small>Perfil do time</small>
@@ -164,7 +184,13 @@
 
           @for (profissional of profissionais; track profissional.id) {
             <a class="result-row" [routerLink]="['/profissional', profissional.id, 'perfil']">
-              <span class="result-icon person-icon"><i class="bi bi-person"></i></span>
+              <span class="result-icon person-icon entity-image">
+                @if (profissional.fotoUrl) {
+                  <img [src]="profissional.fotoUrl" alt="">
+                } @else {
+                  <i class="bi bi-person"></i>
+                }
+              </span>
               <span class="result-copy">
                 <strong>{{ profissional.nome }}</strong>
                 <small>{{ tipoProfissional(profissional.tipo) }}</small>

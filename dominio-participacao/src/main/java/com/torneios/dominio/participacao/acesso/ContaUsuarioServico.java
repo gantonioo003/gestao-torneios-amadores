@@ -165,8 +165,11 @@ public class ContaUsuarioServico {
         return contaUsuario;
     }
 
-    public void alterarSenha(UsuarioId usuarioId, String novaSenha) {
+    public void alterarSenha(UsuarioId usuarioId, String senhaAtual, String novaSenha) {
         ContaUsuario contaUsuario = obterConta(usuarioId);
+        if (!codificadorSenha.confere(senhaAtual, contaUsuario.getSenhaArmazenada())) {
+            throw new OperacaoNaoPermitidaException("A senha atual informada esta incorreta.");
+        }
         validarSenhaInformada(novaSenha);
         contaUsuario.alterarSenha(codificadorSenha.codificar(novaSenha));
         contaUsuarioRepositorio.salvar(contaUsuario);

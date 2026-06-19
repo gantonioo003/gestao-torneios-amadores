@@ -54,10 +54,31 @@ public class TorneioServico {
                                 FormatoEquipe formatoEquipe,
                                 UsuarioId organizadorId,
                                 boolean aceitaSolicitacoes) {
-        Torneio torneio = new Torneio(id, nome, formato, formatoEquipe, organizadorId, aceitaSolicitacoes);
+        return criarTorneio(id, nome, formato, formatoEquipe, organizadorId,
+                aceitaSolicitacoes, null);
+    }
+
+    public Torneio criarTorneio(TorneioId id,
+                                String nome,
+                                FormatoTorneio formato,
+                                FormatoEquipe formatoEquipe,
+                                UsuarioId organizadorId,
+                                boolean aceitaSolicitacoes,
+                                String imagemUrl) {
+        Torneio torneio = imagemUrl == null || imagemUrl.isBlank()
+                ? new Torneio(id, nome, formato, formatoEquipe, organizadorId, aceitaSolicitacoes)
+                : new Torneio(id, nome, formato, formatoEquipe, organizadorId,
+                        aceitaSolicitacoes, imagemUrl);
         torneioRepositorio.salvar(torneio);
         barramento.postar(new TorneioCriadoEvento(id));
         return torneio;
+    }
+
+    public void alterarImagem(TorneioId torneioId, UsuarioId organizadorId, String imagemUrl) {
+        Torneio torneio = obterTorneio(torneioId);
+        organizadorTorneioServico.validarPermissao(torneio, organizadorId);
+        torneio.alterarImagem(imagemUrl);
+        torneioRepositorio.salvar(torneio);
     }
 
     public void definirParticipantesIniciais(TorneioId torneioId, UsuarioId organizadorId, Collection<TimeId> timesIds) {

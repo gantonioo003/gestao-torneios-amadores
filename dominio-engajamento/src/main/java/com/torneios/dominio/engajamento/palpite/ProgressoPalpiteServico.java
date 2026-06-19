@@ -20,9 +20,9 @@ public class ProgressoPalpiteServico {
         return progresso;
     }
 
-    public ProgressoPalpite registrarApuracao(UsuarioId usuarioId, boolean acertou) {
+    public ProgressoPalpite registrarApuracao(UsuarioId usuarioId, boolean acertou, TipoPalpite tipo) {
         ProgressoPalpite progresso = obterOuCriar(usuarioId);
-        progresso.registrarApuracao(acertou);
+        progresso.registrarApuracao(acertou, tipo.getXpPorAcerto());
         repositorio.salvar(progresso);
         return progresso;
     }

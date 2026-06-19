@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { catchError, finalize, forkJoin, map, of } from 'rxjs';
 import { AuthService } from '../core/auth.service';
+import { IdentityEditor } from '../shared/identity-editor/identity-editor';
 import {
   CentralPalpites,
   EventoTorneioPalpite,
@@ -27,7 +28,7 @@ interface FaseChaveamento {
 
 @Component({
   selector: 'app-torneio-detalhes',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, IdentityEditor],
   templateUrl: './torneio-detalhes.html',
   styleUrl: './torneio-detalhes.css'
 })
@@ -298,10 +299,15 @@ export class TorneioDetalhes implements OnInit {
       'configuracao',
       this.http.post(`/backend/preparacao-torneio/${this.torneioId}/configuracao`, {
         nome: this.nomeEdicao.trim(),
-        aceitaSolicitacoes: this.aceitaSolicitacoesEdicao
+        aceitaSolicitacoes: this.aceitaSolicitacoesEdicao,
+        imagemUrl: this.torneio.imagemUrl
       }),
       'Configuracao interna atualizada.'
     );
+  }
+
+  imagemTime(timeId: number): string {
+    return this.times.find(time => String(time.id) === String(timeId))?.imagemUrl ?? '';
   }
 
   timeVencedor(partida: any, lado: 'mandante' | 'visitante'): boolean {

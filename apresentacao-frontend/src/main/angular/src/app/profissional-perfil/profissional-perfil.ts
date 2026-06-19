@@ -57,7 +57,7 @@ export class ProfissionalPerfil implements OnInit {
     if (!novoNome) return;
     this.http.post(
       `/backend/profissional/${this.profissional.id}/salvar`,
-      { ...this.profissional, nome: novoNome }
+      { ...this.profissional, nome: novoNome, fotoUrl: this.profissional.fotoUrl }
     ).subscribe({
       next: () => { this.profissional.nome = novoNome; },
       error: (e) => alert(e.error?.message ?? 'Erro ao editar.')
@@ -104,6 +104,30 @@ export class ProfissionalPerfil implements OnInit {
   motivoLabel(motivo: string): string {
     const m: any = { FIM_DE_CONTRATO: 'Fim de contrato', TRANSFERENCIA: 'Transferência', LESAO: 'Lesão', APOSENTADORIA: 'Aposentadoria' };
     return m[motivo] ?? motivo;
+  }
+
+  async selecionarFoto(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const arquivo = input.files?.[0];
+    input.value = '';
+    if (!arquivo) return;
+    if (arquivo.type !== 'image/png' || arquivo.size > 1_500_000) {
+      alert('Escolha uma imagem PNG de ate 1,5 MB.');
+      return;
+    }
+    const fotoUrl = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result ?? ''));
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(arquivo);
+    });
+    this.http.post(`/backend/profissional/${this.profissional.id}/salvar`, {
+      ...this.profissional,
+      fotoUrl
+    }).subscribe({
+      next: () => this.profissional.fotoUrl = fotoUrl,
+      error: () => alert('Nao foi possivel atualizar a foto.')
+    });
   }
 
   iniciais(nome: string): string {

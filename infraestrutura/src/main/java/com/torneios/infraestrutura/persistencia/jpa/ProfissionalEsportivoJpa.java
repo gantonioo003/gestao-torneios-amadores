@@ -32,6 +32,8 @@ class ProfissionalEsportivoJpa {
     @Id
     Long id;
     String nome;
+    @jakarta.persistence.Lob
+    String fotoUrl;
     String tipo;
     Long cadastranteId;
 
@@ -71,6 +73,7 @@ class ProfissionalEsportivoRepositorioImpl implements ProfissionalEsportivoRepos
         var jpa = repositorio.findById(p.getId().valor()).orElse(new ProfissionalEsportivoJpa());
         jpa.id = p.getId().valor();
         jpa.nome = p.getNome();
+        jpa.fotoUrl = p.getFotoUrl();
         jpa.tipo = p.getTipo().name();
         jpa.cadastranteId = p.getCadastranteId().valor();
 
@@ -110,7 +113,8 @@ class ProfissionalEsportivoRepositorioImpl implements ProfissionalEsportivoRepos
             new ProfissionalEsportivoId(jpa.id),
             jpa.nome,
             TipoProfissional.valueOf(jpa.tipo),
-            new UsuarioId(jpa.cadastranteId)
+            new UsuarioId(jpa.cadastranteId),
+            jpa.fotoUrl
         );
         for (var r : jpa.historico) {
             var motivo = r.motivoDeSaida != null ? MotivoDeSaida.valueOf(r.motivoDeSaida) : null;

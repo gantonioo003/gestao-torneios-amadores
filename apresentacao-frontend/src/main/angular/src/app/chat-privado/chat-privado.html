@@ -80,7 +80,13 @@
               class="conversation-item"
               [class.active]="conversaAtiva?.id === conversa.id"
               (click)="abrirConversa(conversa)">
-              <span class="chat-avatar">{{ iniciais(conversa.outroUsuarioNome) }}</span>
+              <span class="chat-avatar">
+                @if (conversa.outroUsuarioFotoPerfilUrl) {
+                  <img [src]="conversa.outroUsuarioFotoPerfilUrl" [alt]="conversa.outroUsuarioNome">
+                } @else {
+                  {{ iniciais(conversa.outroUsuarioNome) }}
+                }
+              </span>
               <span class="conversation-copy">
                 <span class="conversation-name">{{ conversa.outroUsuarioNome }}</span>
                 <span class="conversation-preview">{{ ultimaMensagem(conversa) }}</span>
@@ -144,17 +150,23 @@
         <div class="people-grid">
           @for (pessoa of usuariosEncontrados; track pessoa.id) {
             <article class="person-card">
-              <div class="person-avatar">{{ iniciais(pessoa.nome) }}</div>
+              <div class="person-avatar">
+                @if (pessoa.fotoPerfilUrl) {
+                  <img [src]="pessoa.fotoPerfilUrl" [alt]="pessoa.nome">
+                } @else {
+                  {{ iniciais(pessoa.nome) }}
+                }
+              </div>
               <div class="person-info">
                 <strong>{{ pessoa.nome }}</strong>
                 <span>{{ tipoContaLabel(pessoa.tipo) }}</span>
                 <small>{{ pessoa.email }}</small>
               </div>
-              @if (jaPossuiContato(pessoa.id)) {
+              @if (jaPossuiContato(pessoa)) {
                 <button class="person-action connected" disabled>
                   <i class="bi bi-check2"></i> No inbox
                 </button>
-              } @else if (solicitacaoPendente(pessoa.id)) {
+              } @else if (solicitacaoPendente(pessoa)) {
                 <button class="person-action pending" disabled>
                   <i class="bi bi-clock"></i> Pendente
                 </button>
@@ -215,7 +227,13 @@
           @if (abaSolicitacao === 'recebidas') {
             @for (solicitacao of solicitacoesRecebidas; track solicitacao.id) {
               <article class="request-card">
-                <span class="person-avatar">{{ iniciais(solicitacao.outroUsuarioNome) }}</span>
+                <span class="person-avatar">
+                  @if (solicitacao.outroUsuarioFotoPerfilUrl) {
+                    <img [src]="solicitacao.outroUsuarioFotoPerfilUrl" [alt]="solicitacao.outroUsuarioNome">
+                  } @else {
+                    {{ iniciais(solicitacao.outroUsuarioNome) }}
+                  }
+                </span>
                 <div class="request-copy">
                   <strong>{{ solicitacao.outroUsuarioNome }}</strong>
                   <span>{{ tipoContaLabel(solicitacao.outroUsuarioTipo) }}</span>
@@ -236,7 +254,13 @@
           } @else {
             @for (solicitacao of solicitacoesEnviadas; track solicitacao.id) {
               <article class="request-card">
-                <span class="person-avatar muted-avatar">{{ iniciais(solicitacao.outroUsuarioNome) }}</span>
+                <span class="person-avatar muted-avatar">
+                  @if (solicitacao.outroUsuarioFotoPerfilUrl) {
+                    <img [src]="solicitacao.outroUsuarioFotoPerfilUrl" [alt]="solicitacao.outroUsuarioNome">
+                  } @else {
+                    {{ iniciais(solicitacao.outroUsuarioNome) }}
+                  }
+                </span>
                 <div class="request-copy">
                   <strong>{{ solicitacao.outroUsuarioNome }}</strong>
                   <span>Aguardando aprovacao</span>
@@ -276,30 +300,40 @@
             <i class="bi bi-search"></i>
             <input [(ngModel)]="termoBusca" (ngModelChange)="agendarBusca()" placeholder="Buscar pessoas">
           </div>
-          <div class="selected-count">
-            <strong>{{ participantesNovoGrupo.length }}</strong> pessoa(s) selecionada(s)
-          </div>
           <div class="people-grid group-people-grid">
             @for (pessoa of usuariosEncontrados; track pessoa.id) {
               <button class="person-card selectable-person"
                 [class.selected]="participantesNovoGrupo.includes(pessoa.id)"
                 (click)="alternarParticipante(pessoa.id)">
-                <span class="person-avatar">{{ iniciais(pessoa.nome) }}</span>
+                <span class="person-avatar">
+                  @if (pessoa.fotoPerfilUrl) {
+                    <img [src]="pessoa.fotoPerfilUrl" [alt]="pessoa.nome">
+                  } @else {
+                    {{ iniciais(pessoa.nome) }}
+                  }
+                </span>
                 <span class="person-info">
                   <strong>{{ pessoa.nome }}</strong>
                   <span>{{ tipoContaLabel(pessoa.tipo) }}</span>
-                  <small>{{ jaPossuiContato(pessoa.id) ? 'Entra imediatamente' : 'Pode receber convite' }}</small>
+                  <small>{{ jaPossuiContato(pessoa) ? 'Entra imediatamente' : 'Pode receber convite' }}</small>
                 </span>
                 <i class="bi" [class.bi-check-circle-fill]="participantesNovoGrupo.includes(pessoa.id)"
                   [class.bi-circle]="!participantesNovoGrupo.includes(pessoa.id)"></i>
               </button>
             }
           </div>
-          <button class="btn btn-primary create-group-button"
-            [disabled]="!nomeNovoGrupo.trim() || !participantesNovoGrupo.length || enviando"
-            (click)="criarGrupo()">
-            <i class="bi bi-people-fill"></i> Criar grupo
-          </button>
+          <footer class="group-builder-footer">
+            <div class="selected-count">
+              <strong>{{ participantesNovoGrupo.length }}</strong>
+              <span>{{ participantesNovoGrupo.length === 1 ? 'pessoa selecionada' : 'pessoas selecionadas' }}</span>
+            </div>
+            <button class="btn btn-primary create-group-button"
+              [disabled]="!nomeNovoGrupo.trim() || !participantesNovoGrupo.length || enviando"
+              (click)="criarGrupo()">
+              <i class="bi bi-people-fill"></i>
+              {{ enviando ? 'Criando...' : 'Criar grupo' }}
+            </button>
+          </footer>
         </div>
       }
 
@@ -308,7 +342,13 @@
           <button class="mobile-back" aria-label="Voltar ao inbox" (click)="mostrarInicio()">
             <i class="bi bi-arrow-left"></i>
           </button>
-          <span class="chat-avatar">{{ iniciais(conversaAtiva.outroUsuarioNome) }}</span>
+          <span class="chat-avatar">
+            @if (conversaAtiva.outroUsuarioFotoPerfilUrl) {
+              <img [src]="conversaAtiva.outroUsuarioFotoPerfilUrl" [alt]="conversaAtiva.outroUsuarioNome">
+            } @else {
+              {{ iniciais(conversaAtiva.outroUsuarioNome) }}
+            }
+          </span>
           <div>
             <strong>{{ conversaAtiva.outroUsuarioNome }}</strong>
             <span><i></i> Conversa privada aprovada</span>
@@ -317,7 +357,13 @@
 
         <div class="message-history" #mensagensArea>
           <div class="conversation-intro">
-            <span class="person-avatar large">{{ iniciais(conversaAtiva.outroUsuarioNome) }}</span>
+            <span class="person-avatar large">
+              @if (conversaAtiva.outroUsuarioFotoPerfilUrl) {
+                <img [src]="conversaAtiva.outroUsuarioFotoPerfilUrl" [alt]="conversaAtiva.outroUsuarioNome">
+              } @else {
+                {{ iniciais(conversaAtiva.outroUsuarioNome) }}
+              }
+            </span>
             <strong>{{ conversaAtiva.outroUsuarioNome }}</strong>
             <span>{{ conversaAtiva.outroUsuarioEmail }}</span>
             <small>Conversa iniciada apos aprovacao da solicitacao.</small>
@@ -399,6 +445,9 @@
           @for (mensagem of grupoAtivo.mensagens; track mensagem.id) {
             <div class="message-row" [class.mine]="mensagem.autorId === usuario.id">
               <div class="message-bubble">
+                @if (mensagem.autorId !== usuario.id) {
+                  <strong class="group-message-author">{{ nomeAutorGrupo(mensagem) }}</strong>
+                }
                 @if (publicacaoDaMensagem(mensagem); as publicacao) {
                   <a class="shared-post-card" routerLink="/feed"
                     [queryParams]="{ publicacao: publicacao.id }">
@@ -442,7 +491,13 @@
 
     @if (visao === 'conversa' && conversaAtiva) {
       <aside class="conversation-profile">
-        <span class="person-avatar profile-avatar">{{ iniciais(conversaAtiva.outroUsuarioNome) }}</span>
+        <span class="person-avatar profile-avatar">
+          @if (conversaAtiva.outroUsuarioFotoPerfilUrl) {
+            <img [src]="conversaAtiva.outroUsuarioFotoPerfilUrl" [alt]="conversaAtiva.outroUsuarioNome">
+          } @else {
+            {{ iniciais(conversaAtiva.outroUsuarioNome) }}
+          }
+        </span>
         <h3>{{ conversaAtiva.outroUsuarioNome }}</h3>
         <p>{{ tipoContaLabel(conversaAtiva.outroUsuarioTipo) }} na Liga Amadora+</p>
         <div class="privacy-note">

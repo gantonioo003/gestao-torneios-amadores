@@ -74,12 +74,15 @@ export class AuthService {
     }).pipe(tap(contaAtualizada => this.salvarSessao(contaAtualizada)));
   }
 
-  alterarSenha(novaSenha: string) {
+  alterarSenha(senhaAtual: string, novaSenha: string) {
     const usuario = this.usuarioSignal();
     if (!usuario) {
       throw new Error('Nenhum usuario autenticado.');
     }
-    return this.http.post<void>(`/backend/conta-usuario/${usuario.id}/alterar-senha`, { novaSenha });
+    return this.http.post<void>(`/backend/conta-usuario/${usuario.id}/alterar-senha`, {
+      senhaAtual,
+      novaSenha
+    });
   }
 
   salvarTorneio(torneioId: number) {

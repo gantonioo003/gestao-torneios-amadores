@@ -1,6 +1,7 @@
 package com.torneios.aplicacao.engajamento.palpite;
 
 import java.util.List;
+import java.util.Set;
 
 import com.torneios.aplicacao.competicao.resultado.ResultadoCompeticaoServicoAplicacao;
 import com.torneios.aplicacao.estatisticas.ranking.RankingServicoAplicacao;
@@ -99,8 +100,16 @@ public class ApuracaoAutomaticaPalpiteServicoAplicacao {
                 .toList();
         List<Palpite> apurados = palpiteServico.apurar(evento, resultadoReal);
         if (progressoServico != null) {
-            pendentes.forEach(palpite -> progressoServico.registrarApuracao(
-                    palpite.getUsuarioId(), palpite.acertou().orElse(false)));
+            Set<Long> idsPendentes = pendentes.stream()
+                    .map(palpite -> palpite.getId().valor())
+                    .collect(java.util.stream.Collectors.toSet());
+            apurados.stream()
+                    .filter(palpite -> idsPendentes.contains(palpite.getId().valor()))
+                    .filter(palpite -> palpite.getUsuarioId() != null)
+                    .forEach(palpite -> progressoServico.registrarApuracao(
+                            palpite.getUsuarioId(),
+                            palpite.acertou().orElse(false),
+                            palpite.getEventoAlvo().getTipo()));
         }
         return apurados;
     }

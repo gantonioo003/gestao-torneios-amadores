@@ -110,7 +110,7 @@
                 @for (time of meusTimes; track time.id) {
                   <div class="account-list-row">
                     <div class="post-head">
-                      <div class="shield compact-shield"><i class="bi bi-shield"></i></div>
+                      <div class="shield compact-shield identity-crest"><img [src]="time.imagemUrl" alt=""></div>
                       <strong>{{ time.nome }}</strong>
                     </div>
                     <a class="btn btn-sm btn-outline" [routerLink]="['/time', time.id, 'detalhes']">Gerenciar</a>
@@ -135,7 +135,10 @@
               @if (meusTorneios.length) {
                 @for (torneio of meusTorneios; track torneio.id) {
                   <a class="account-list-row tournament-row" [routerLink]="['/torneio', torneio.id]">
-                    <span><strong>{{ torneio.nome }}</strong><small>{{ statusTorneioLabel(torneio.status) }}</small></span>
+                    <span class="account-tournament-identity">
+                      <img [src]="torneio.imagemUrl" alt="">
+                      <span><strong>{{ torneio.nome }}</strong><small>{{ statusTorneioLabel(torneio.status) }}</small></span>
+                    </span>
                     <i class="bi bi-chevron-right"></i>
                   </a>
                 }
@@ -199,6 +202,12 @@
           </div>
 
           <div class="form-grid">
+            <app-identity-editor
+              kind="pessoa"
+              [required]="false"
+              [entityName]="formulario.nome"
+              [(value)]="formulario.fotoPerfilUrl">
+            </app-identity-editor>
             <div class="grid grid-2">
               <div class="field"><label>Nome completo</label><input [(ngModel)]="formulario.nome"></div>
               <div class="field"><label>Nome de usuário</label><input [(ngModel)]="formulario.nomeUsuario" placeholder="@seuusuario"></div>
@@ -227,7 +236,13 @@
         </section>
 
         <aside class="card profile-preview">
-          <div class="account-monogram preview-monogram">{{ iniciais(formulario.nome) }}</div>
+          <div class="account-monogram preview-monogram" [class.has-photo]="formulario.fotoPerfilUrl">
+            @if (formulario.fotoPerfilUrl) {
+              <img [src]="formulario.fotoPerfilUrl" alt="">
+            } @else {
+              {{ iniciais(formulario.nome) }}
+            }
+          </div>
           <strong>{{ formulario.nome || conta.nome }}</strong>
           <span>&#64;{{ formulario.nomeUsuario || conta.nomeUsuario }}</span>
           <small>{{ tipoLabel(conta.tipo) }}</small>
@@ -392,6 +407,7 @@
                 <div class="settings-disclosure-content">
                   @if (conta.provedor !== 'GOOGLE') {
                     <div class="security-form">
+                      <div class="field"><label>Senha atual</label><input type="password" [(ngModel)]="senhaAtual" autocomplete="current-password"></div>
                       <div class="field"><label>Nova senha</label><input type="password" [(ngModel)]="novaSenha" autocomplete="new-password"></div>
                       <div class="field"><label>Confirmar nova senha</label><input type="password" [(ngModel)]="confirmarSenha" autocomplete="new-password"></div>
                       <button class="btn btn-outline" (click)="alterarSenha()">Atualizar senha</button>

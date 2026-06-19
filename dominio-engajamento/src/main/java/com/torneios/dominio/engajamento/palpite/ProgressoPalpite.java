@@ -34,17 +34,18 @@ public class ProgressoPalpite {
                     ? sequenciaAtual + 1
                     : 1;
             maiorSequencia = Math.max(maiorSequencia, sequenciaAtual);
-            pontos += 5;
             ultimaParticipacao = data;
         }
         totalPalpites++;
-        pontos += 10;
         atualizarSelos();
     }
 
-    public void registrarApuracao(boolean acertou) {
-        pontos += acertou ? 25 : 2;
+    public void registrarApuracao(boolean acertou, int xpPorAcerto) {
+        if (xpPorAcerto < 0) {
+            throw new IllegalArgumentException("O XP por acerto nao pode ser negativo.");
+        }
         if (acertou) {
+            pontos += xpPorAcerto;
             totalAcertos++;
         }
         atualizarSelos();
@@ -61,6 +62,15 @@ public class ProgressoPalpite {
     public UsuarioId getUsuarioId() { return usuarioId; }
     public int getPontos() { return pontos; }
     public int getSequenciaAtual() { return sequenciaAtual; }
+    public int getSequenciaAtualEm(LocalDate dataReferencia) {
+        if (dataReferencia == null) {
+            throw new IllegalArgumentException("A data de referencia e obrigatoria.");
+        }
+        if (ultimaParticipacao == null || dataReferencia.isAfter(ultimaParticipacao.plusDays(1))) {
+            return 0;
+        }
+        return sequenciaAtual;
+    }
     public int getMaiorSequencia() { return maiorSequencia; }
     public int getTotalPalpites() { return totalPalpites; }
     public int getTotalAcertos() { return totalAcertos; }

@@ -28,7 +28,7 @@
         @for (torneio of emAlta; track torneio.id; let posicao = $index) {
           <a class="card panel-strong trending-card" [routerLink]="['/torneio', torneio.id]">
             <span class="trending-position">0{{ posicao + 1 }}</span>
-            <div class="tournament-icon"><i class="bi bi-trophy"></i></div>
+            <div class="tournament-icon tournament-photo"><img [src]="torneio.imagemUrl" alt=""></div>
             <div>
               <h3>{{ torneio.nome }}</h3>
               <p>{{ formatoLabel(torneio.formato) }}</p>
@@ -63,7 +63,7 @@
       <div class="grid tournament-list">
         @for (torneio of torneios; track torneio.id) {
           <article class="card tournament-row">
-            <div class="tournament-icon"><i class="bi bi-trophy"></i></div>
+            <div class="tournament-icon tournament-photo"><img [src]="torneio.imagemUrl" alt=""></div>
             <div class="tournament-copy">
               <h3>{{ torneio.nome }}</h3>
               <p>{{ formatoLabel(torneio.formato) }} · {{ torneio.formatoEquipe.replaceAll('_', ' ') }}</p>

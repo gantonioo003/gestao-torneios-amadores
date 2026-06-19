@@ -23,17 +23,29 @@ public class ProfissionalEsportivoServico {
 
     public ProfissionalEsportivo cadastrar(ProfissionalEsportivoId id, String nome,
             TipoProfissional tipo, UsuarioId cadastranteId) {
+        return cadastrar(id, nome, tipo, cadastranteId, null);
+    }
+
+    public ProfissionalEsportivo cadastrar(ProfissionalEsportivoId id, String nome,
+            TipoProfissional tipo, UsuarioId cadastranteId, String fotoUrl) {
         autenticacaoServico.exigirAutenticacao(cadastranteId);
-        ProfissionalEsportivo profissional = new ProfissionalEsportivo(id, nome, tipo, cadastranteId);
+        ProfissionalEsportivo profissional = new ProfissionalEsportivo(
+                id, nome, tipo, cadastranteId, fotoUrl);
         repositorio.salvar(profissional);
         return profissional;
     }
 
     public void editar(ProfissionalEsportivoId id, UsuarioId solicitanteId, String novoNome) {
+        editar(id, solicitanteId, novoNome, null);
+    }
+
+    public void editar(ProfissionalEsportivoId id, UsuarioId solicitanteId,
+            String novoNome, String fotoUrl) {
         autenticacaoServico.exigirAutenticacao(solicitanteId);
         ProfissionalEsportivo profissional = obter(id);
         validarCadastrante(profissional, solicitanteId);
         profissional.renomear(novoNome);
+        profissional.alterarFoto(fotoUrl);
         repositorio.salvar(profissional);
     }
 

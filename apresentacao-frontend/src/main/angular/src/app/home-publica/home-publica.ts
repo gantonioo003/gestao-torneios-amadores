@@ -83,8 +83,15 @@ export class HomePublica implements OnInit {
   }
 
   torneiosVivos = [
-    { id: 1, nome: 'Copa Bairro 2024', rodada: 'Rodada 4', casa: 'Unidos do Bairro', golsCasa: 2, golsVisitante: 1, visitante: 'Real Esperanca' },
-    { id: 2, nome: 'Liga Amigos', rodada: 'Rodada 2', casa: 'Vila FC', golsCasa: 0, golsVisitante: 0, visitante: 'Resenha FC' }
+    { id: 1, nome: 'Copa Bairro 2024', rodada: 'Rodada 4', casa: 'Unidos do Bairro', golsCasa: 2, golsVisitante: 1, visitante: 'Real Esperanca', logoCasa: this.escudoDemo('UB', '#087d45', '#f4cf52'), logoVisitante: this.escudoDemo('RE', '#b63832', '#f5f0e8') },
+    { id: 2, nome: 'Liga Amigos', rodada: 'Rodada 2', casa: 'Vila FC', golsCasa: 0, golsVisitante: 0, visitante: 'Resenha FC', logoCasa: this.escudoDemo('VF', '#194f89', '#ffffff'), logoVisitante: this.escudoDemo('RF', '#18211f', '#12b85f') }
+  ];
+
+  agendaHoje = [
+    { id: 1, horario: 'Agora', status: 'AO_VIVO', casa: 'Unidos', visitante: 'Real Esperanca', logoCasa: this.escudoDemo('UB', '#087d45', '#f4cf52'), logoVisitante: this.escudoDemo('RE', '#b63832', '#f5f0e8') },
+    { id: 2, horario: '18:30', status: 'AGENDADO', casa: 'Vila FC', visitante: 'Resenha', logoCasa: this.escudoDemo('VF', '#194f89', '#ffffff'), logoVisitante: this.escudoDemo('RF', '#18211f', '#12b85f') },
+    { id: 3, horario: '20:00', status: 'AGENDADO', casa: 'Aurora FC', visitante: 'Litoral SC', logoCasa: this.escudoDemo('AF', '#0b8c4b', '#ffffff'), logoVisitante: this.escudoDemo('LS', '#1d6d88', '#f2cc4d') },
+    { id: 4, horario: '21:30', status: 'AGENDADO', casa: 'Norte FC', visitante: 'Sertao', logoCasa: this.escudoDemo('NF', '#222f57', '#ffffff'), logoVisitante: this.escudoDemo('ST', '#a65b23', '#ffe081') }
   ];
 
   posts = [
@@ -98,4 +105,9 @@ export class HomePublica implements OnInit {
     { icone: 'bi-bar-chart', titulo: 'Ranking por torneio', texto: 'Classificacao e destaques dentro de cada competicao.' },
     { icone: 'bi-lightning-charge', titulo: 'Palpites publicos', texto: 'Vote em jogos e acompanhe os percentuais da comunidade.' }
   ];
+
+  private escudoDemo(iniciais: string, principal: string, apoio: string): string {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 118"><path fill="${principal}" d="M50 3 94 18v39c0 29-17 48-44 58C23 105 6 86 6 57V18Z"/><path fill="none" stroke="${apoio}" stroke-width="5" d="M50 15 82 26v30c0 20-11 34-32 43-21-9-32-23-32-43V26Z"/><text x="50" y="68" text-anchor="middle" fill="${apoio}" font-family="Arial" font-size="25" font-weight="900">${iniciais}</text></svg>`;
+    return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+  }
 }

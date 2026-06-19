@@ -63,6 +63,7 @@ export class FeedSocial implements OnInit {
   aba: AbaFeed = 'todos';
   busca = '';
   novoPost = '';
+  compositorAberto = false;
   midiasPreview: string[] = [];
   identidadeSelecionada = '';
   identidades: IdentidadeFeed[] = [];
@@ -93,7 +94,7 @@ export class FeedSocial implements OnInit {
     const publicacao = Number(this.route.snapshot.queryParamMap.get('publicacao'));
     this.publicacaoSelecionadaId = Number.isFinite(publicacao) && publicacao > 0 ? publicacao : undefined;
     forkJoin({
-      posts: this.http.get<PublicacaoFeed[]>('/backend/feed/geral').pipe(catchError(() => of([]))),
+      posts: this.http.get<PublicacaoFeed[]>(this.urlFeedPersonalizado()).pipe(catchError(() => of([]))),
       identidades: this.http.get<IdentidadeFeed[]>('/backend/feed/identidades').pipe(catchError(() => of([]))),
       assuntos: this.http.get<AssuntoMomento[]>('/backend/feed/assuntos').pipe(catchError(() => of([])))
     }).subscribe(({ posts, identidades, assuntos }) => {
@@ -148,6 +149,7 @@ export class FeedSocial implements OnInit {
         this.posts = [post, ...this.posts];
         this.novoPost = '';
         this.midiasPreview = [];
+        this.compositorAberto = false;
         this.publicando = false;
         this.atualizarAssuntos();
       },
@@ -302,11 +304,21 @@ export class FeedSocial implements OnInit {
   }
 
   filtrarHashtag(hashtag: string) {
+    this.registrarInteresse(hashtag);
     this.aba = 'todos';
     this.busca = `#${hashtag}`;
+    this.recarregarFeedPersonalizado();
+  }
+
+  registrarBusca(termo: string) {
+    const limpo = termo.trim().replace(/^#/, '');
+    if (limpo.length >= 3) {
+      this.registrarInteresse(limpo);
+    }
   }
 
   abrirNoRadar(post: PublicacaoFeed) {
+    post.hashtags.forEach(tag => this.registrarInteresse(tag));
     this.aba = post.tipoIdentidade === 'TIME'
       ? 'times'
       : post.tipoIdentidade === 'TORNEIO' ? 'torneios' : 'partidas';
@@ -363,6 +375,38 @@ export class FeedSocial implements OnInit {
   private atualizarAssuntos() {
     this.http.get<AssuntoMomento[]>('/backend/feed/assuntos')
       .subscribe(assuntos => this.assuntos = assuntos);
+  }
+
+  private recarregarFeedPersonalizado() {
+    this.http.get<PublicacaoFeed[]>(this.urlFeedPersonalizado())
+      .pipe(catchError(() => of(this.posts)))
+      .subscribe(posts => {
+        this.posts = posts;
+        this.destacarPublicacaoSelecionada();
+      });
+  }
+
+  private urlFeedPersonalizado(): string {
+    const interesses = this.interessesSalvos();
+    const query = interesses.map(item => `interesses=${encodeURIComponent(item)}`).join('&');
+    return `/backend/feed/geral${query ? `?${query}` : ''}`;
+  }
+
+  private registrarInteresse(termo: string) {
+    const normalizado = termo.replace('#', '').trim().toLowerCase();
+    if (!normalizado) return;
+    const interesses = [normalizado, ...this.interessesSalvos().filter(item => item !== normalizado)]
+      .slice(0, 20);
+    localStorage.setItem('feed-interesses', JSON.stringify(interesses));
+  }
+
+  private interessesSalvos(): string[] {
+    try {
+      const valor = JSON.parse(localStorage.getItem('feed-interesses') ?? '[]');
+      return Array.isArray(valor) ? valor.filter(item => typeof item === 'string').slice(0, 20) : [];
+    } catch {
+      return [];
+    }
   }
 
   private enviarDenuncia(tipoAlvo: string, alvoId: number, motivo: string) {

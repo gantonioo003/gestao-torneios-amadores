@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
 import { AuthService } from '../core/auth.service';
+import { IdentityEditor } from '../shared/identity-editor/identity-editor';
 
 type SecaoConta = 'visao-geral' | 'perfil' | 'configuracoes';
 type CategoriaConfiguracao = 'conta' | 'privacidade' | 'notificacoes' | 'seguranca' | 'atividade' | 'ajuda';
@@ -17,7 +18,7 @@ interface ContaAtividade {
 
 @Component({
   selector: 'app-home-logada',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, IdentityEditor],
   templateUrl: './home-logada.html',
   styleUrl: './home-logada.css'
 })
@@ -30,6 +31,7 @@ export class HomeLogada implements OnInit {
   destaques: any[] = [];
   atividade?: ContaAtividade;
   formulario: any = {};
+  senhaAtual = '';
   novaSenha = '';
   confirmarSenha = '';
   salvando = false;
@@ -144,15 +146,16 @@ export class HomeLogada implements OnInit {
   }
 
   alterarSenha() {
-    if (this.novaSenha.length < 6 || this.novaSenha !== this.confirmarSenha) {
+    if (!this.senhaAtual || this.novaSenha.length < 6 || this.novaSenha !== this.confirmarSenha) {
       this.erro = 'A senha deve ter pelo menos 6 caracteres e a confirmação precisa ser igual.';
       return;
     }
 
     this.erro = '';
     this.mensagem = '';
-    this.auth.alterarSenha(this.novaSenha).subscribe({
+    this.auth.alterarSenha(this.senhaAtual, this.novaSenha).subscribe({
       next: () => {
+        this.senhaAtual = '';
         this.novaSenha = '';
         this.confirmarSenha = '';
         this.mensagem = 'Senha atualizada com sucesso.';

@@ -1,0 +1,54 @@
+<section class="identity-editor" [class.person-editor]="kind === 'pessoa'">
+  <div class="identity-preview" [class.round-preview]="kind === 'pessoa'">
+    @if (value) {
+      <img [src]="value" alt="">
+    } @else {
+      <i class="bi bi-person"></i>
+    }
+  </div>
+
+  <div class="identity-controls">
+    <div>
+      <strong>{{ kind === 'pessoa' ? 'Foto do perfil' : kind === 'torneio' ? 'Marca do torneio' : 'Escudo do time' }}</strong>
+      <small>{{ required ? 'Escolha um PNG ou monte uma identidade rapida.' : 'Opcional. Use uma imagem PNG se quiser.' }}</small>
+    </div>
+
+    <div class="identity-actions">
+      <label class="btn btn-sm btn-outline">
+        <i class="bi bi-upload"></i> Enviar PNG
+        <input type="file" accept="image/png" (change)="chooseFile($event)">
+      </label>
+      @if (kind !== 'pessoa') {
+        <button type="button" class="btn btn-sm btn-outline" (click)="generate()">
+          <i class="bi bi-stars"></i> Nao tenho logo: criar simples
+        </button>
+      }
+      @if (!required && value) {
+        <button type="button" class="identity-remove" (click)="remove()">Remover</button>
+      }
+    </div>
+
+    @if (kind !== 'pessoa') {
+      <div class="identity-maker">
+        <label>Cor principal <input type="color" [(ngModel)]="primary" (change)="generate()"></label>
+        <label>Cor de apoio <input type="color" [(ngModel)]="secondary" (change)="generate()"></label>
+        <label>Formato
+          <select [(ngModel)]="shape" (change)="generate()">
+            <option value="shield">Escudo</option>
+            <option value="round">Circular</option>
+            <option value="hex">Hexagonal</option>
+          </select>
+        </label>
+        <label>Simbolo
+          <select [(ngModel)]="symbol" (change)="generate()">
+            <option value="initials">Iniciais</option>
+            <option value="ball">Bola</option>
+            <option value="star">Estrela</option>
+            <option value="cup">Taca</option>
+          </select>
+        </label>
+      </div>
+    }
+    @if (error) { <small class="identity-error">{{ error }}</small> }
+  </div>
+</section>

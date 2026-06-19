@@ -95,6 +95,17 @@
   font-size: 34px;
 }
 
+.preview-emblem.generated-preview {
+  overflow: hidden;
+  background: #fff;
+}
+
+.preview-emblem.generated-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .create-preview h3 {
   margin: 0;
   font-size: 23px;

@@ -1,0 +1,118 @@
+.identity-editor {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(18, 184, 95, .07), rgba(255, 255, 255, .8));
+  border: 1px solid rgba(18, 184, 95, .2);
+  border-radius: 18px;
+}
+
+.identity-preview {
+  width: 104px;
+  height: 112px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: 0 12px 28px rgba(24, 33, 31, .12);
+}
+
+.identity-preview.round-preview {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+}
+
+.identity-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.round-preview img {
+  object-fit: cover;
+}
+
+.identity-preview i {
+  color: var(--muted);
+  font-size: 2rem;
+}
+
+.identity-controls,
+.identity-controls > div:first-child {
+  display: grid;
+  gap: 5px;
+}
+
+.identity-controls small {
+  color: var(--muted);
+}
+
+.identity-actions {
+  margin-top: 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.identity-actions input[type="file"] {
+  display: none;
+}
+
+.identity-maker {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(100px, 1fr));
+  gap: 8px;
+}
+
+.identity-maker label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.identity-maker input,
+.identity-maker select {
+  min-height: 36px;
+  padding: 5px 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+
+.identity-maker input[type="color"] {
+  width: 100%;
+  padding: 3px;
+}
+
+.identity-remove {
+  padding: 5px;
+  color: var(--danger);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.identity-error {
+  color: var(--danger) !important;
+}
+
+@media (max-width: 660px) {
+  .identity-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .identity-maker {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

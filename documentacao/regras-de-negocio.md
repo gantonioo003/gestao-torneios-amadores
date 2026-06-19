@@ -18,9 +18,11 @@ RN07. O sistema deve exibir o percentual de votos por opcao para todo palpite co
 
 RN08. Apos o evento alvo ser concluido, o sistema deve apurar automaticamente o resultado real e marcar cada palpite como acertado ou nao acertado.
 
-RN08A. Um novo palpite autenticado concede pontos de participacao, com bonus apenas na primeira participacao do dia; alterar a opcao de um palpite existente nao concede novos pontos.
+RN08A. Registrar ou alterar um palpite nao concede XP. Apos o resultado oficial, o acerto concede 25 XP para vencedor de partida, 75 XP para artilheiro ou lider de assistencias e 100 XP para campeao do torneio; palpites incorretos nao concedem pontos.
 
 RN08B. A apuracao concede pontos uma unica vez, com recompensa maior para acerto, e atualiza automaticamente nivel, sequencia, selos e ranking do usuario.
+
+RN08C. A sequencia diaria considera no maximo uma participacao por dia, permanece ativa ate o dia seguinte ao ultimo palpite e volta a zero quando o usuario deixa passar um dia completo.
 
 RN09. Palpites apurados nao podem ser alterados nem removidos.
 
@@ -33,6 +35,10 @@ RN12. O email da conta de usuario deve ser unico na plataforma.
 RN13. O login deve autenticar o usuario apenas quando email e senha forem validos.
 
 RN14. O usuario pode editar os dados cadastrais da propria conta.
+
+RN14A. A alteracao de senha exige a confirmacao da senha atual e deve invalidar tentativas que informem uma credencial incorreta.
+
+RN14B. O perfil publico exibe apenas identidade, funcao, apresentacao e conteudo social destinado ao publico; email, telefone, data de nascimento e demais dados privados ficam restritos ao dono da conta.
 
 RN15. O usuario pode excluir a propria conta, removendo seu acesso ao sistema.
 
@@ -83,6 +89,8 @@ RN21. O destinatario pode aprovar ou recusar uma solicitacao de conversa recebid
 RN22. Mensagens privadas so podem ser enviadas depois que a conversa for aprovada.
 
 RN23. Apenas participantes da conversa podem enviar mensagens e consultar a conversa aprovada.
+
+RN23A. A busca, a caixa de entrada e os grupos do chat reutilizam nome e foto publica da conta, mantendo iniciais como identificacao alternativa quando nao houver foto.
 
 RN24. Usuarios nao autenticados nao podem solicitar conversa, aprovar pedidos nem enviar mensagens.
 

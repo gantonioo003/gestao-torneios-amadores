@@ -2,8 +2,8 @@
   <div class="hero-row">
     <div class="post-head">
       <div class="professional-photo">
-        @if (conta.fotoPerfilUrl) {
-          <img [src]="conta.fotoPerfilUrl" alt="">
+        @if (profissional.fotoUrl || conta.fotoPerfilUrl) {
+          <img [src]="profissional.fotoUrl || conta.fotoPerfilUrl" alt="">
         } @else {
           {{ iniciais(profissional.nome || 'Jogador') }}
         }
@@ -21,6 +21,10 @@
         </a>
       }
       @if (podeEditar()) {
+        <label class="btn btn-outline">
+          <i class="bi bi-camera"></i> Foto
+          <input type="file" accept="image/png" hidden (change)="selecionarFoto($event)">
+        </label>
         <button class="btn btn-outline" (click)="editarPerfil()">Editar perfil</button>
       }
     </div>

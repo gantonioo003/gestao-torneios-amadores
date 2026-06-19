@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.time.LocalDate;
 
 import com.torneios.dominio.compartilhado.enumeracao.StatusTorneio;
@@ -119,7 +120,7 @@ public class PalpiteServicoAplicacao {
                 .filter(palpite -> !palpite.estaApurado() && palpite.getUsuarioId() != null)
                 .toList();
         List<Palpite> apurados = palpiteServico.apurar(evento, resultadoReal);
-        premiarApuracao(pendentes);
+        premiarApuracao(apurados, pendentes);
         return apurados.stream()
                 .map(this::converter)
                 .toList();
@@ -151,16 +152,23 @@ public class PalpiteServicoAplicacao {
                                 .orElse("Palpiteiro"),
                         progresso.getPontos(),
                         progresso.getTotalAcertos(),
-                        progresso.getSequenciaAtual(),
+                        progresso.getSequenciaAtualEm(LocalDate.now()),
                         progresso.getSelos().stream().map(Enum::name).toList()))
                 .toList();
     }
 
-    private void premiarApuracao(List<Palpite> pendentes) {
+    private void premiarApuracao(List<Palpite> apurados, List<Palpite> pendentes) {
         if (progressoServico == null) return;
-        pendentes.forEach(palpite -> progressoServico.registrarApuracao(
-                palpite.getUsuarioId(),
-                palpite.acertou().orElse(false)));
+        Set<Long> idsPendentes = pendentes.stream()
+                .map(palpite -> palpite.getId().valor())
+                .collect(java.util.stream.Collectors.toSet());
+        apurados.stream()
+                .filter(palpite -> idsPendentes.contains(palpite.getId().valor()))
+                .filter(palpite -> palpite.getUsuarioId() != null)
+                .forEach(palpite -> progressoServico.registrarApuracao(
+                        palpite.getUsuarioId(),
+                        palpite.acertou().orElse(false),
+                        palpite.getEventoAlvo().getTipo()));
     }
 
     private ProgressoResumo converterProgresso(ProgressoPalpite progresso, int posicao) {
@@ -169,7 +177,7 @@ public class PalpiteServicoAplicacao {
                 progresso.getPontos(),
                 nivel,
                 nivel * 100,
-                progresso.getSequenciaAtual(),
+                progresso.getSequenciaAtualEm(LocalDate.now()),
                 progresso.getMaiorSequencia(),
                 progresso.getTotalPalpites(),
                 progresso.getTotalAcertos(),
@@ -225,6 +233,7 @@ public class PalpiteServicoAplicacao {
                     return new TorneioPalpiteResumo(
                             torneioId,
                             torneio.getNome(),
+                            torneio.getImagemUrl(),
                             torneio.getStatus().name(),
                             times,
                             campeao.percentuais(),
@@ -241,7 +250,7 @@ public class PalpiteServicoAplicacao {
                                 torneio.getNome(),
                                 partida.getEtapa(),
                                 opcaoTime(partida.getMandante().valor()),
-                                new OpcaoResumo(OpcaoPalpite.EMPATE, "Empate"),
+                                new OpcaoResumo(OpcaoPalpite.EMPATE, "Empate", null),
                                 opcaoTime(partida.getVisitante().valor()),
                                 obterPercentuais(
                                         TipoPalpite.VENCEDOR_PARTIDA.name(),
@@ -264,17 +273,16 @@ public class PalpiteServicoAplicacao {
     }
 
     private OpcaoResumo opcaoTime(long timeId) {
-        String nome = timeRepositorio.buscarPorId(new TimeId(timeId))
-                .map(time -> time.getNome())
-                .orElse("Time #" + timeId);
-        return new OpcaoResumo(timeId, nome);
+        return timeRepositorio.buscarPorId(new TimeId(timeId))
+                .map(time -> new OpcaoResumo(timeId, time.getNome(), time.getImagemUrl()))
+                .orElse(new OpcaoResumo(timeId, "Time #" + timeId, null));
     }
 
     private OpcaoResumo opcaoJogador(long jogadorId) {
-        String nome = profissionalRepositorio.buscarPorId(new ProfissionalEsportivoId(jogadorId))
-                .map(profissional -> profissional.getNome())
-                .orElse("Jogador #" + jogadorId);
-        return new OpcaoResumo(jogadorId, nome);
+        return profissionalRepositorio.buscarPorId(new ProfissionalEsportivoId(jogadorId))
+                .map(profissional -> new OpcaoResumo(
+                        jogadorId, profissional.getNome(), profissional.getFotoUrl()))
+                .orElse(new OpcaoResumo(jogadorId, "Jogador #" + jogadorId, null));
     }
 
     private EventoTorneioPalpiteResumo eventoTorneio(TipoPalpite tipo,
@@ -339,6 +347,7 @@ public class PalpiteServicoAplicacao {
 
     public record TorneioPalpiteResumo(Long id,
                                        String nome,
+                                       String imagemUrl,
                                        String status,
                                        List<OpcaoResumo> opcoes,
                                        PercentuaisPalpiteResumo percentuais,
@@ -361,7 +370,7 @@ public class PalpiteServicoAplicacao {
                                        PercentuaisPalpiteResumo percentuais) {
     }
 
-    public record OpcaoResumo(Long id, String nome) {
+    public record OpcaoResumo(Long id, String nome, String imagemUrl) {
     }
 
     public record ProgressoResumo(int pontos,

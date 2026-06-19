@@ -11,6 +11,7 @@ import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
 
 public class F2Steps extends ParticipacaoFuncionalidade {
+    private static final String NOVA_SENHA = "novaSenha456";
 
     @Dado("que o usuario esta autenticado")
     public void que_o_usuario_esta_autenticado() {
@@ -75,6 +76,24 @@ public class F2Steps extends ParticipacaoFuncionalidade {
     @Quando("ele informar senha incorreta")
     public void ele_informar_senha_incorreta() {
         try { contaCapturada = contaUsuarioServico.autenticar(EMAIL_USUARIO, "senha-errada"); } catch (Exception e) { excecaoCapturada = e; }
+    }
+
+    @Quando("ele alterar a senha informando a senha atual correta")
+    public void ele_alterar_senha_com_senha_atual_correta() {
+        try {
+            contaUsuarioServico.alterarSenha(USUARIO_AUTENTICADO_ID, SENHA_USUARIO, NOVA_SENHA);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("ele tentar alterar a senha informando a senha atual incorreta")
+    public void ele_tentar_alterar_senha_com_senha_atual_incorreta() {
+        try {
+            contaUsuarioServico.alterarSenha(USUARIO_AUTENTICADO_ID, "senha-incorreta", NOVA_SENHA);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
     }
 
     @Quando("ele editar nome e email da conta")
@@ -196,6 +215,22 @@ public class F2Steps extends ParticipacaoFuncionalidade {
     @Entao("o sistema deve impedir a autenticacao")
     public void sistema_deve_impedir_autenticacao() {
         assertNotNull(excecaoCapturada);
+    }
+
+    @Entao("o sistema deve autenticar o usuario com a nova senha")
+    public void sistema_deve_autenticar_com_nova_senha() {
+        assertNull(excecaoCapturada);
+        assertEquals(
+                USUARIO_AUTENTICADO_ID,
+                contaUsuarioServico.autenticar(EMAIL_USUARIO, NOVA_SENHA).getId());
+    }
+
+    @Entao("o sistema deve impedir a alteracao da senha")
+    public void sistema_deve_impedir_alteracao_senha() {
+        assertNotNull(excecaoCapturada);
+        assertEquals(
+                USUARIO_AUTENTICADO_ID,
+                contaUsuarioServico.autenticar(EMAIL_USUARIO, SENHA_USUARIO).getId());
     }
 
     @Entao("o sistema deve atualizar os dados da conta")

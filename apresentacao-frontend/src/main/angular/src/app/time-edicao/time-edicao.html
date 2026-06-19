@@ -16,6 +16,12 @@
           <label>Nome do time</label>
           <input [(ngModel)]="recurso.nome" placeholder="Ex.: Unidos do Bairro">
         </div>
+        <app-identity-editor
+          kind="time"
+          [required]="true"
+          [entityName]="recurso.nome"
+          [(value)]="recurso.imagemUrl">
+        </app-identity-editor>
         <div class="grid grid-2">
           <button class="btn" onclick="history.back()">Cancelar</button>
           <button class="btn btn-primary" (click)="salvar()">Salvar alteracoes</button>

@@ -8,6 +8,11 @@ import java.util.Map;
 import java.util.Comparator;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
@@ -19,7 +24,10 @@ import com.torneios.dominio.engajamento.feed.TipoReacaoFeed;
 import com.torneios.dominio.engajamento.feed.TipoIdentidadeFeed;
 import com.torneios.aplicacao.participacao.conta.ContaRepositorioAplicacao;
 import com.torneios.aplicacao.participacao.time.TimeRepositorioAplicacao;
+import com.torneios.aplicacao.participacao.profissional.ProfissionalRepositorioAplicacao;
 import com.torneios.aplicacao.torneio.criacao.TorneioRepositorioAplicacao;
+import com.torneios.dominio.engajamento.chat.ConversaPrivada;
+import com.torneios.dominio.engajamento.chat.ConversaPrivadaRepositorio;
 
 /**
  * Casos de uso do feed social e oficial da plataforma.
@@ -30,20 +38,33 @@ public class FeedServicoAplicacao {
     private final ContaRepositorioAplicacao contaRepositorio;
     private final TimeRepositorioAplicacao timeRepositorio;
     private final TorneioRepositorioAplicacao torneioRepositorio;
+    private final ProfissionalRepositorioAplicacao profissionalRepositorio;
+    private final ConversaPrivadaRepositorio conversaRepositorio;
 
     public FeedServicoAplicacao(FeedTorneioServico feedTorneioServico) {
-        this(feedTorneioServico, null, null, null);
+        this(feedTorneioServico, null, null, null, null, null);
     }
 
     public FeedServicoAplicacao(FeedTorneioServico feedTorneioServico,
                                 ContaRepositorioAplicacao contaRepositorio,
                                 TimeRepositorioAplicacao timeRepositorio,
                                 TorneioRepositorioAplicacao torneioRepositorio) {
+        this(feedTorneioServico, contaRepositorio, timeRepositorio, torneioRepositorio, null, null);
+    }
+
+    public FeedServicoAplicacao(FeedTorneioServico feedTorneioServico,
+                                ContaRepositorioAplicacao contaRepositorio,
+                                TimeRepositorioAplicacao timeRepositorio,
+                                TorneioRepositorioAplicacao torneioRepositorio,
+                                ProfissionalRepositorioAplicacao profissionalRepositorio,
+                                ConversaPrivadaRepositorio conversaRepositorio) {
         notNull(feedTorneioServico, "O servico de feed e obrigatorio.");
         this.feedTorneioServico = feedTorneioServico;
         this.contaRepositorio = contaRepositorio;
         this.timeRepositorio = timeRepositorio;
         this.torneioRepositorio = torneioRepositorio;
+        this.profissionalRepositorio = profissionalRepositorio;
+        this.conversaRepositorio = conversaRepositorio;
     }
 
     public PublicacaoResumo publicarComunicado(long publicacaoId, long torneioId, long organizadorId, String conteudo) {
@@ -161,10 +182,163 @@ public class FeedServicoAplicacao {
     }
 
     public List<PublicacaoResumo> listarFeedGeral(Long usuarioAtualId) {
-        return feedTorneioServico.listarFeedGeral().stream()
-                .sorted(Comparator.comparing(PublicacaoFeed::getCriadaEm).reversed())
+        return listarFeedGeral(usuarioAtualId, List.of());
+    }
+
+    public List<PublicacaoResumo> listarFeedGeral(Long usuarioAtualId, List<String> interessesInformados) {
+        List<PublicacaoFeed> publicacoes = feedTorneioServico.listarFeedGeral().stream()
+                .filter(publicacao -> publicacao.getPublicacaoPaiId().isEmpty())
+                .toList();
+        Map<String, Integer> interesses = construirPerfilDeInteresses(
+                publicacoes, usuarioAtualId, interessesInformados);
+        Map<Long, Integer> proximidades = construirProximidades(usuarioAtualId);
+        List<PublicacaoPontuada> ordenadas = publicacoes.stream()
+                .map(publicacao -> pontuar(publicacao, interesses, proximidades))
+                .sorted(Comparator.comparingDouble(PublicacaoPontuada::pontuacao).reversed()
+                        .thenComparing(item -> item.publicacao().getCriadaEm(), Comparator.reverseOrder()))
+                .toList();
+
+        List<PublicacaoPontuada> recomendadas = ordenadas.stream()
+                .filter(PublicacaoPontuada::elegivel)
+                .limit(60)
+                .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
+        Set<PublicacaoFeedId> ids = recomendadas.stream()
+                .map(item -> item.publicacao().getId())
+                .collect(java.util.stream.Collectors.toCollection(HashSet::new));
+        if (recomendadas.size() < Math.min(12, ordenadas.size())) {
+            ordenadas.stream()
+                    .filter(item -> !ids.contains(item.publicacao().getId()))
+                    .limit(12 - recomendadas.size())
+                    .forEach(recomendadas::add);
+        }
+        return recomendadas.stream()
+                .map(PublicacaoPontuada::publicacao)
                 .map(publicacao -> converter(publicacao, usuarioAtualId, true))
                 .toList();
+    }
+
+    private Map<String, Integer> construirPerfilDeInteresses(List<PublicacaoFeed> publicacoes,
+                                                             Long usuarioAtualId,
+                                                             List<String> interessesInformados) {
+        Map<String, Integer> interesses = new HashMap<>();
+        if (interessesInformados != null) {
+            interessesInformados.stream()
+                    .map(this::normalizarTermo)
+                    .filter(termo -> !termo.isBlank())
+                    .forEach(termo -> interesses.merge(termo, 3, Integer::sum));
+        }
+        if (usuarioAtualId == null) {
+            return interesses;
+        }
+
+        UsuarioId usuarioId = new UsuarioId(usuarioAtualId);
+        publicacoes.forEach(publicacao -> {
+            boolean interagiu = publicacao.foiCurtidaPor(usuarioId)
+                    || publicacao.getReacoes().containsKey(usuarioId)
+                    || feedTorneioServico.listarComentarios(publicacao.getId()).stream()
+                            .anyMatch(comentario -> comentario.getAutorId()
+                                    .map(usuarioId::equals).orElse(false));
+            if (!interagiu) return;
+            publicacao.getHashtags().forEach(hashtag ->
+                    interesses.merge(normalizarTermo(hashtag), 5, Integer::sum));
+            interesses.merge(publicacao.getTipoIdentidade().name().toLowerCase(Locale.ROOT), 2, Integer::sum);
+            if (publicacao.getIdentidadeId() != null) {
+                interesses.merge("identidade:" + publicacao.getIdentidadeId(), 4, Integer::sum);
+            }
+        });
+        return interesses;
+    }
+
+    private Map<Long, Integer> construirProximidades(Long usuarioAtualId) {
+        Map<Long, Integer> proximidades = new HashMap<>();
+        if (usuarioAtualId == null) {
+            return proximidades;
+        }
+        UsuarioId usuarioAtual = new UsuarioId(usuarioAtualId);
+
+        if (conversaRepositorio != null) {
+            conversaRepositorio.listarAprovadasPorUsuario(usuarioAtual).forEach(conversa -> {
+                long outroUsuarioId = outroUsuario(conversa, usuarioAtual).valor();
+                int pesoConversa = 3 + Math.min(9, conversa.getMensagens().size() / 3);
+                proximidades.merge(outroUsuarioId, pesoConversa, Math::max);
+            });
+        }
+
+        if (timeRepositorio != null && profissionalRepositorio != null) {
+            timeRepositorio.pesquisarResumos("").forEach(time -> {
+                Set<Long> membros = new HashSet<>();
+                membros.add(time.getResponsavelId());
+                try {
+                    timeRepositorio.pesquisarResumoExpandido(time.getId()).getElenco().forEach(vinculo -> {
+                        try {
+                            membros.add(profissionalRepositorio
+                                    .pesquisarResumoExpandido(vinculo.getProfissionalId())
+                                    .getProfissional()
+                                    .getCadastranteId());
+                        } catch (RuntimeException ignored) {
+                            // Vinculos legados sem perfil consultavel nao bloqueiam a recomendacao.
+                        }
+                    });
+                } catch (RuntimeException ignored) {
+                    return;
+                }
+                if (membros.contains(usuarioAtualId)) {
+                    membros.stream()
+                            .filter(membroId -> !membroId.equals(usuarioAtualId))
+                            .forEach(membroId -> proximidades.merge(membroId, 9, Math::max));
+                }
+            });
+        }
+        return proximidades;
+    }
+
+    private UsuarioId outroUsuario(ConversaPrivada conversa, UsuarioId usuarioAtual) {
+        return conversa.getSolicitanteId().equals(usuarioAtual)
+                ? conversa.getDestinatarioId()
+                : conversa.getSolicitanteId();
+    }
+
+    private PublicacaoPontuada pontuar(PublicacaoFeed publicacao,
+                                       Map<String, Integer> interesses,
+                                       Map<Long, Integer> proximidades) {
+        int comentarios = feedTorneioServico.listarComentarios(publicacao.getId()).size();
+        int engajamento = publicacao.getQuantidadeCurtidas() * 3
+                + publicacao.getReacoes().size() * 2
+                + comentarios * 4;
+        int afinidade = 0;
+        String conteudo = normalizarTermo(publicacao.getConteudo());
+        String identidade = normalizarTermo(nomeIdentidade(publicacao));
+        for (Map.Entry<String, Integer> interesse : interesses.entrySet()) {
+            String termo = interesse.getKey();
+            boolean corresponde = publicacao.getHashtags().stream()
+                    .map(this::normalizarTermo)
+                    .anyMatch(termo::equals)
+                    || conteudo.contains(termo)
+                    || identidade.contains(termo)
+                    || termo.equals(publicacao.getTipoIdentidade().name().toLowerCase(Locale.ROOT))
+                    || termo.equals("identidade:" + publicacao.getIdentidadeId());
+            if (corresponde) {
+                afinidade += interesse.getValue();
+            }
+        }
+
+        long horas = Math.max(0, Duration.between(publicacao.getCriadaEm(), LocalDateTime.now()).toHours());
+        double recencia = Math.max(0, 36 - horas) * 0.45;
+        int proximidade = publicacao.getAutorId()
+                .map(UsuarioId::valor)
+                .map(autorId -> proximidades.getOrDefault(autorId, 0))
+                .orElse(0);
+        double pontuacao = afinidade * 8.0 + engajamento * 5.0 + proximidade * 4.0 + recencia;
+        boolean recente = horas <= 6;
+        boolean elegivel = afinidade > 0 || engajamento > 0 || proximidade > 0 || recente;
+        if (!elegivel) {
+            pontuacao -= 35;
+        }
+        return new PublicacaoPontuada(publicacao, pontuacao, elegivel);
+    }
+
+    private String normalizarTermo(String termo) {
+        return termo == null ? "" : termo.replace("#", "").trim().toLowerCase(Locale.ROOT);
     }
 
     public List<PublicacaoResumo> buscarPorHashtag(String hashtag) {
@@ -330,5 +504,10 @@ public class FeedServicoAplicacao {
     }
 
     public record AssuntoResumo(String hashtag, int pontuacao) {
+    }
+
+    private record PublicacaoPontuada(PublicacaoFeed publicacao,
+                                      double pontuacao,
+                                      boolean elegivel) {
     }
 }

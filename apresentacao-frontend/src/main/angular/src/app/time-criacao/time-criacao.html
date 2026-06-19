@@ -9,20 +9,17 @@
   </div>
 
   <section class="card panel-strong">
-    <div class="post-head" style="margin-bottom: 18px">
-      <div class="crest"><i class="bi bi-shield"></i></div>
-      <div>
-        <strong>Escudo do time</strong>
-        <div class="small muted">Imagem pode ser alterada depois.</div>
-      </div>
-      <button class="btn btn-outline" style="margin-left: auto">Alterar imagem</button>
-    </div>
-
     <div class="form-grid">
       <div class="field">
         <label>Nome do time</label>
         <input [(ngModel)]="nome" placeholder="Ex.: Unidos do Bairro">
       </div>
+      <app-identity-editor
+        kind="time"
+        [required]="true"
+        [entityName]="nome"
+        [(value)]="imagemUrl">
+      </app-identity-editor>
       <div class="grid grid-2">
         <a class="btn" routerLink="/buscar">Cancelar</a>
         <button class="btn btn-primary" (click)="criar()">Criar time</button>

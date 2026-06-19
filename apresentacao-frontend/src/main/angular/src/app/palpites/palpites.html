@@ -77,7 +77,7 @@
       <div>
         <div class="eyebrow">Temporada da comunidade</div>
         <h2>Ranking de palpiteiros</h2>
-        <p>Ganhe 10 XP por novo palpite, bonus diario e 25 XP por acerto.</p>
+        <p>Acertos valem 25 XP em jogos, 75 XP em rankings e 100 XP no campeao.</p>
       </div>
       <div class="ranking-strip">
         @for (item of ranking.slice(0, 5); track item.usuarioId; let posicao = $index) {
@@ -127,12 +127,19 @@
           <h2 class="prediction-panel-title">Principais jogos</h2>
           <p>Vote antes do inicio da partida e acompanhe o movimento da comunidade em tempo real.</p>
         </div>
-        <span class="status status-green">Percentuais em tempo real</span>
+        <div class="prediction-panel-tools">
+          <label class="prediction-search">
+            <i class="bi bi-search"></i>
+            <input [(ngModel)]="buscaPartidas" placeholder="Buscar jogo ou torneio"
+              aria-label="Buscar nos principais jogos">
+          </label>
+          <span class="status status-green">Percentuais em tempo real</span>
+        </div>
       </div>
 
-      @if (partidas.length) {
+      @if (partidasFiltradas.length) {
         <div class="match-grid">
-          @for (partida of partidas; track partida.id) {
+          @for (partida of partidasFiltradas; track partida.id) {
             <article class="match-prediction">
               <header>
                 <span>{{ partida.torneioNome }}</span>
@@ -169,6 +176,12 @@
             </article>
           }
         </div>
+      } @else if (partidas.length) {
+        <div class="empty-state prediction-empty-state compact-empty-state search-empty-state">
+          <i class="bi bi-search"></i>
+          <strong>Nenhum jogo encontrado</strong>
+          <p>Tente buscar pelo torneio, etapa ou nome de um dos times.</p>
+        </div>
       } @else {
         <div class="empty-state prediction-empty-state">
           <i class="bi bi-calendar2-x"></i>
@@ -185,11 +198,16 @@
           <h2 class="prediction-panel-title">Torneios disponiveis</h2>
           <p>Escolha quem voce acredita que chega ao titulo enquanto a janela de participacao ainda estiver aberta.</p>
         </div>
+        <label class="prediction-search">
+          <i class="bi bi-search"></i>
+          <input [(ngModel)]="buscaTorneios" placeholder="Buscar torneio"
+            aria-label="Buscar nos torneios disponiveis">
+        </label>
       </div>
 
-      @if (torneios.length) {
+      @if (torneiosFiltrados.length) {
         <div class="tournament-grid">
-          @for (torneio of torneios; track torneio.id) {
+          @for (torneio of torneiosFiltrados; track torneio.id) {
             <article class="tournament-prediction">
               <div class="tournament-head">
                 <span class="trophy-mark"><i class="bi bi-trophy"></i></span>
@@ -213,6 +231,12 @@
               <small>{{ torneio.percentuais.totalPalpites }} palpite(s) registrados</small>
             </article>
           }
+        </div>
+      } @else if (torneios.length) {
+        <div class="empty-state prediction-empty-state compact-empty-state search-empty-state">
+          <i class="bi bi-search"></i>
+          <strong>Nenhum torneio encontrado</strong>
+          <p>Tente outro nome de torneio ou de time participante.</p>
         </div>
       } @else {
         <div class="empty-state prediction-empty-state">
@@ -243,11 +267,16 @@
           <h2 class="prediction-panel-title">Seus palpites em andamento</h2>
           <p>Esses registros ainda dependem do resultado oficial para serem apurados.</p>
         </div>
+        <label class="prediction-search">
+          <i class="bi bi-search"></i>
+          <input [(ngModel)]="buscaAndamento" placeholder="Buscar palpite"
+            aria-label="Buscar nos palpites em andamento">
+        </label>
       </div>
 
-      @if (palpitesEmAndamento.length) {
+      @if (palpitesEmAndamentoFiltrados.length) {
         <div class="history-list">
-          @for (palpite of palpitesEmAndamento; track palpite.id) {
+          @for (palpite of palpitesEmAndamentoFiltrados; track palpite.id) {
             <article class="history-row">
               <span class="history-icon pending"><i class="bi bi-hourglass-split"></i></span>
               <span>
@@ -258,6 +287,12 @@
               <span class="status status-warn">Em andamento</span>
             </article>
           }
+        </div>
+      } @else if (palpitesEmAndamento.length) {
+        <div class="empty-state prediction-empty-state compact-empty-state search-empty-state">
+          <i class="bi bi-search"></i>
+          <strong>Nenhum palpite encontrado</strong>
+          <p>Tente buscar pelo evento, torneio, time ou opcao escolhida.</p>
         </div>
       } @else {
         <div class="empty-state prediction-empty-state compact-empty-state">
@@ -277,11 +312,16 @@
           <h2 class="prediction-panel-title">Historico de palpites</h2>
           <p>Veja o que voce acertou e acompanhe como suas leituras foram performando ao longo dos eventos.</p>
         </div>
+        <label class="prediction-search">
+          <i class="bi bi-search"></i>
+          <input [(ngModel)]="buscaHistorico" placeholder="Buscar no historico"
+            aria-label="Buscar no historico de palpites">
+        </label>
       </div>
 
-      @if (palpitesAnteriores.length) {
+      @if (palpitesAnterioresFiltrados.length) {
         <div class="history-list">
-          @for (palpite of palpitesAnteriores; track palpite.id) {
+          @for (palpite of palpitesAnterioresFiltrados; track palpite.id) {
             <article class="history-row">
               <span class="history-icon" [class.hit]="palpite.acertou" [class.miss]="!palpite.acertou">
                 <i class="bi" [class.bi-check-lg]="palpite.acertou" [class.bi-x-lg]="!palpite.acertou"></i>
@@ -296,6 +336,12 @@
               </span>
             </article>
           }
+        </div>
+      } @else if (palpitesAnteriores.length) {
+        <div class="empty-state prediction-empty-state compact-empty-state search-empty-state">
+          <i class="bi bi-search"></i>
+          <strong>Nenhum resultado encontrado</strong>
+          <p>Tente buscar pelo evento, torneio, time ou opcao escolhida.</p>
         </div>
       } @else {
         <div class="empty-state prediction-empty-state compact-empty-state">

@@ -8,6 +8,7 @@ import { AuthService } from '../core/auth.service';
 interface TorneioResumo {
   id: number;
   nome: string;
+  imagemUrl?: string;
   formato: string;
   formatoEquipe: string;
   organizadorId: number;

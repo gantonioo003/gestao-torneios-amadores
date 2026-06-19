@@ -30,11 +30,12 @@ import com.torneios.dominio.engajamento.palpite.ProgressoPalpite;
 import com.torneios.dominio.engajamento.palpite.ProgressoPalpiteRepositorio;
 import com.torneios.dominio.engajamento.palpite.ProgressoPalpiteServico;
 import com.torneios.dominio.engajamento.palpite.SeloPalpite;
+import com.torneios.dominio.engajamento.palpite.TipoPalpite;
 
 class NovosRecursosEngajamentoTest {
 
     @Test
-    void devePontuarParticipacaoSequenciaEAcerto() {
+    void devePontuarSomenteAcertoEManterMetricasDeParticipacao() {
         ProgressoMemoria repositorio = new ProgressoMemoria();
         ProgressoPalpiteServico servico = new ProgressoPalpiteServico(repositorio);
         UsuarioId usuario = new UsuarioId(1L);
@@ -42,13 +43,29 @@ class NovosRecursosEngajamentoTest {
         servico.registrarNovoPalpite(usuario, LocalDate.of(2026, 6, 18));
         servico.registrarNovoPalpite(usuario, LocalDate.of(2026, 6, 18));
         servico.registrarNovoPalpite(usuario, LocalDate.of(2026, 6, 19));
-        ProgressoPalpite progresso = servico.registrarApuracao(usuario, true);
+        ProgressoPalpite antesDaApuracao = servico.consultar(usuario);
+        assertEquals(0, antesDaApuracao.getPontos());
 
-        assertEquals(65, progresso.getPontos());
+        servico.registrarApuracao(usuario, false, TipoPalpite.VENCEDOR_PARTIDA);
+        ProgressoPalpite progresso = servico.registrarApuracao(
+                usuario, true, TipoPalpite.CAMPEAO_TORNEIO);
+
+        assertEquals(100, progresso.getPontos());
         assertEquals(2, progresso.getSequenciaAtual());
         assertEquals(3, progresso.getTotalPalpites());
         assertEquals(1, progresso.getTotalAcertos());
         assertTrue(progresso.getSelos().contains(SeloPalpite.PRIMEIRO_PALPITE));
+    }
+
+    @Test
+    void deveExpirarSequenciaQuandoUsuarioPerdeUmDiaCompleto() {
+        ProgressoPalpite progresso = new ProgressoPalpite(new UsuarioId(1L));
+        progresso.registrarNovoPalpite(LocalDate.of(2026, 6, 17));
+        progresso.registrarNovoPalpite(LocalDate.of(2026, 6, 18));
+
+        assertEquals(2, progresso.getSequenciaAtualEm(LocalDate.of(2026, 6, 19)));
+        assertEquals(0, progresso.getSequenciaAtualEm(LocalDate.of(2026, 6, 20)));
+        assertEquals(2, progresso.getMaiorSequencia());
     }
 
     @Test

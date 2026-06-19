@@ -3,7 +3,7 @@
     <section class="empty-state">Carregando torneio...</section>
   } @else {
     <header class="tournament-hero">
-      <div class="tournament-emblem"><i class="bi bi-trophy"></i></div>
+      <div class="tournament-emblem has-identity"><img [src]="torneio.imagemUrl" alt=""></div>
       <div class="tournament-identity">
         <div class="eyebrow">Competicao · Edicao {{ torneio.edicaoAtual || 1 }}</div>
         <h1>{{ torneio.nome || 'Torneio' }}</h1>
@@ -76,9 +76,9 @@
             @if (partidaDestaque; as destaque) {
               <div class="featured-stage">{{ destaque.etapa || 'Proxima rodada' }}</div>
               <div class="featured-versus">
-                <span><i class="bi bi-shield"></i><strong>{{ nomeTime(destaque.mandanteId) }}</strong></span>
+                <span><img class="match-team-crest" [src]="imagemTime(destaque.mandanteId)" alt=""><strong>{{ nomeTime(destaque.mandanteId) }}</strong></span>
                 <b>{{ placarPartida(destaque) }}</b>
-                <span><i class="bi bi-shield"></i><strong>{{ nomeTime(destaque.visitanteId) }}</strong></span>
+                <span><img class="match-team-crest" [src]="imagemTime(destaque.visitanteId)" alt=""><strong>{{ nomeTime(destaque.visitanteId) }}</strong></span>
               </div>
               <a class="btn btn-outline btn-block" [routerLink]="['/partida', destaque.id]">Abrir partida</a>
             } @else {
@@ -473,6 +473,14 @@
           <section class="config-card">
             <div class="config-card-head"><span>1</span><div><h3>Dados internos</h3><p>O organizador pode ajustar estes dados antes do inicio.</p></div></div>
             <div class="field"><label>Nome do torneio</label><input [(ngModel)]="nomeEdicao" [disabled]="!podeConfigurarAntesDoInicio()"></div>
+            @if (podeConfigurarAntesDoInicio()) {
+              <app-identity-editor
+                kind="torneio"
+                [required]="true"
+                [entityName]="nomeEdicao"
+                [(value)]="torneio.imagemUrl">
+              </app-identity-editor>
+            }
             <label class="registration-choice config-registration-choice">
               <input type="checkbox" [(ngModel)]="aceitaSolicitacoesEdicao" [disabled]="!podeConfigurarAntesDoInicio()">
               <span><i class="bi bi-people"></i></span>

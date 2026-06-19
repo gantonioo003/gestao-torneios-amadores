@@ -42,14 +42,16 @@ public class PreparacaoTorneioServicoAplicacao {
                                                String formato,
                                                String formatoEquipe,
                                                long organizadorId,
-                                               boolean aceitaSolicitacoes) {
+                                               boolean aceitaSolicitacoes,
+                                               String imagemUrl) {
         return converter(torneioServico.criarTorneio(
                 new TorneioId(torneioId),
                 nome,
                 FormatoTorneio.valueOf(formato),
                 FormatoEquipe.valueOf(formatoEquipe),
                 new UsuarioId(organizadorId),
-                aceitaSolicitacoes));
+                aceitaSolicitacoes,
+                imagemUrl));
     }
 
     public TorneioResumoAplicacao definirParticipantesIniciais(long torneioId,
@@ -93,12 +95,19 @@ public class PreparacaoTorneioServicoAplicacao {
     public TorneioResumoAplicacao atualizarConfiguracao(long torneioId,
                                                         long organizadorId,
                                                         String nome,
-                                                        boolean aceitaSolicitacoes) {
+                                                        boolean aceitaSolicitacoes,
+                                                        String imagemUrl) {
         torneioServico.atualizarConfiguracao(
                 new TorneioId(torneioId),
                 new UsuarioId(organizadorId),
                 nome,
                 aceitaSolicitacoes);
+        if (imagemUrl != null && !imagemUrl.isBlank()) {
+            torneioServico.alterarImagem(
+                    new TorneioId(torneioId),
+                    new UsuarioId(organizadorId),
+                    imagemUrl);
+        }
         return obterTorneio(torneioId);
     }
 
@@ -168,6 +177,7 @@ public class PreparacaoTorneioServicoAplicacao {
         return new TorneioResumoAplicacao(
                 torneio.getId().valor(),
                 torneio.getNome(),
+                torneio.getImagemUrl(),
                 torneio.getFormato().name(),
                 torneio.getFormatoEquipe().name(),
                 String.valueOf(torneio.getOrganizadorId().valor()),
@@ -233,6 +243,7 @@ public class PreparacaoTorneioServicoAplicacao {
 
     public record TorneioResumoAplicacao(long id,
                                          String nome,
+                                         String imagemUrl,
                                          String formato,
                                          String formatoEquipe,
                                          String organizadorId,

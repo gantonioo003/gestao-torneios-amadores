@@ -1,3 +1,8 @@
+@import "@fontsource/barlow/400.css";
+@import "@fontsource/barlow/600.css";
+@import "@fontsource/barlow/700.css";
+@import "@fontsource/barlow-condensed/700.css";
+
 :root {
   --green: #12b85f;
   --green-dark: #078246;
@@ -16,6 +21,23 @@
   --ease-snap: cubic-bezier(.34, 1.56, .64, 1);
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --green: #20cf78;
+  --green-dark: #4be092;
+  --green-soft: #183a2b;
+  --ink: #f0f5f2;
+  --muted: #9aa9a2;
+  --line: #2b3632;
+  --paper: #161c1a;
+  --wash: #090d0c;
+  --danger: #ff6b67;
+  --warn: #e3ad39;
+  --info: #72a4ff;
+  --shadow: 0 18px 48px rgba(0, 0, 0, .3);
+  --shadow-hover: 0 24px 70px rgba(0, 0, 0, .42);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -25,6 +47,255 @@ body {
   min-height: 100%;
 }
 
+:root[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 14% -10%, rgba(32, 207, 120, .13), transparent 34rem),
+    radial-gradient(circle at 88% 18%, rgba(243, 202, 75, .055), transparent 28rem),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, .012) 0 1px, transparent 1px 18px),
+    linear-gradient(180deg, #0b100e 0%, #070a09 100%);
+}
+
+:root[data-theme="dark"] .hero-row {
+  background:
+    radial-gradient(circle at 88% 20%, rgba(243, 202, 75, .07), transparent 12rem),
+    radial-gradient(circle at 8% 110%, rgba(32, 207, 120, .11), transparent 18rem),
+    rgba(19, 25, 22, .72);
+  border-color: rgba(89, 112, 101, .34);
+}
+
+:root[data-theme="dark"] .topbar {
+  background: rgba(13, 18, 16, .9);
+  border-bottom-color: #26302c;
+}
+
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .panel,
+:root[data-theme="dark"] .phone-card,
+:root[data-theme="dark"] .notification-panel,
+:root[data-theme="dark"] .featured-tournament,
+:root[data-theme="dark"] .explore-tournament,
+:root[data-theme="dark"] .live-game,
+:root[data-theme="dark"] .feed-post,
+:root[data-theme="dark"] .home-prediction-card,
+:root[data-theme="dark"] .identity-editor,
+:root[data-theme="dark"] .config-card {
+  color: var(--ink);
+  background: rgba(22, 28, 26, .96);
+  border-color: var(--line);
+}
+
+:root[data-theme="dark"] .panel-strong {
+  background:
+    radial-gradient(circle at 100% 0, rgba(32, 207, 120, .07), transparent 18rem),
+    rgba(22, 28, 26, .97);
+}
+
+:root[data-theme="dark"] .tabs,
+:root[data-theme="dark"] .result-heading,
+:root[data-theme="dark"] .home-prediction-card header,
+:root[data-theme="dark"] .home-prediction-card footer,
+:root[data-theme="dark"] .registration-choice {
+  background: #111715;
+  border-color: var(--line);
+}
+
+:root[data-theme="dark"] .tab.active,
+:root[data-theme="dark"] .tab.a {
+  background: #25312c;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] .form-control,
+:root[data-theme="dark"] .form-select {
+  color: var(--ink);
+  background: #101513;
+  border-color: #34413c;
+}
+
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: #748079;
+}
+
+:root[data-theme="dark"] .btn {
+  color: var(--ink);
+  background: #242d29;
+}
+
+:root[data-theme="dark"] .btn-primary {
+  color: #07120c;
+  background: linear-gradient(135deg, #1cab65, #42df91);
+  border-color: #35d586;
+}
+
+:root[data-theme="dark"] .btn-outline {
+  color: #75e5a8;
+  background: #111715;
+  border-color: #326a4c;
+}
+
+:root[data-theme="dark"] .status-gray {
+  color: #bcc7c1;
+  background: #2a322f;
+}
+
+:root[data-theme="dark"] .empty-state {
+  color: var(--muted);
+  background: rgba(18, 24, 21, .72);
+  border-color: #34413c;
+}
+
+:root[data-theme="dark"] .identity-preview,
+:root[data-theme="dark"] .entity-image,
+:root[data-theme="dark"] .home-tournament-logo,
+:root[data-theme="dark"] .tournament-photo,
+:root[data-theme="dark"] .preview-emblem.generated-preview,
+:root[data-theme="dark"] .identity-crest,
+:root[data-theme="dark"] .tournament-emblem.has-identity {
+  background: #0f1412 !important;
+  border-color: #34413c;
+}
+
+:root[data-theme="dark"] .icon-action:hover,
+:root[data-theme="dark"] .account-chip:hover,
+:root[data-theme="dark"] .account-chip.active {
+  background: #183a2b;
+}
+
+:root[data-theme="dark"] .main-nav a.active,
+:root[data-theme="dark"] .main-nav a:hover {
+  background: transparent;
+}
+
+:root[data-theme="dark"] img {
+  color-scheme: normal;
+}
+
+/* Components created before theme support still use literal light colors. */
+:root[data-theme="dark"] :is(
+  .home-prediction-card > div, .home-prediction-card button, .prediction-stat,
+  .ranking-strip article, .match-prediction, .tournament-prediction,
+  .match-options button, .champion-options button, .prediction-search, .history-row
+) {
+  color: var(--ink);
+  background: #151c19 !important;
+  border-color: var(--line);
+}
+
+:root[data-theme="dark"] .home-prediction-card :is(header, footer) {
+  color: var(--muted);
+  background: #151c19 !important;
+  border-color: var(--line);
+}
+
+:root[data-theme="dark"] :is(
+  .home-prediction-card button.selected, .match-options button.selected,
+  .champion-options button.selected, .ranking-strip article.current-user
+) {
+  background: #183a2b !important;
+  border-color: #2c8c5b;
+}
+
+:root[data-theme="dark"] :is(
+  .home-prediction-card button > span, .vote-bar,
+  .champion-options button > span:nth-child(2), .xp-track
+) {
+  background: #35403b;
+}
+
+:root[data-theme="dark"] :is(
+  .messenger-shell, .messenger-sidebar, .messenger-content, .content-header,
+  .conversation-header, .conversation-profile, .people-card, .request-card,
+  .group-person, .message-composer
+) {
+  color: var(--ink);
+  background: #121816 !important;
+  border-color: var(--line);
+}
+
+:root[data-theme="dark"] .messenger-content {
+  background:
+    radial-gradient(circle at 80% 0, rgba(32, 207, 120, .07), transparent 28rem),
+    #0f1512 !important;
+}
+
+:root[data-theme="dark"] :is(
+  .inbox-search, .people-search, .round-action, .mobile-back, .composer-action,
+  .conversation-item:hover, .conversation-skeleton span, .conversation-skeleton div
+) {
+  color: var(--ink);
+  background: #202925 !important;
+}
+
+:root[data-theme="dark"] :is(.conversation-item.active, .group-trigger) {
+  background: #183a2b !important;
+}
+
+:root[data-theme="dark"] :is(
+  .social-feed-page, .feed-main, .feed-sidebar, .feed-titlebar, .feed-tabs,
+  .post-composer, .social-post, .feed-side-card, .trend-card, .radar-card, .share-dialog
+) {
+  color: var(--ink);
+  background: #121816 !important;
+  border-color: var(--line);
+}
+
+:root[data-theme="dark"] :is(.social-post:hover, .radar-row:hover, .share-targets > button:hover) {
+  background: #18211e !important;
+}
+
+:root[data-theme="dark"] .feed-main {
+  background: rgba(18, 24, 22, .96) !important;
+}
+
+:root[data-theme="dark"] .social-feed-page {
+  background: #0c110f !important;
+}
+
+:root[data-theme="dark"] app-feed-social {
+  display: block;
+  min-height: calc(100vh - 66px);
+  background: #080c0a !important;
+}
+
+:root[data-theme="dark"] .feed-sidebar {
+  background: #0c110f !important;
+}
+
+:root[data-theme="dark"] .feed-search {
+  color: var(--muted);
+  background: #1a221f !important;
+  border: 1px solid var(--line);
+}
+
+:root[data-theme="dark"] .feed-search input {
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .post-composer {
+  border-bottom-color: #252f2b;
+}
+
+:root[data-theme="dark"] :is(.chat-page, .social-feed-page, .predictions-page) {
+  --component-surface: #121816;
+}
+
+:root[data-theme="dark"] :is(.chat-page, .social-feed-page, .predictions-page)
+  :is(h1, h2, h3, strong) {
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] :is(.chat-page, .social-feed-page, .predictions-page)
+  :is(small, p, .inbox-kicker) {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .prediction-game :is(h2, strong) {
+  color: #fff;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -32,10 +303,19 @@ html {
 body {
   margin: 0;
   color: var(--ink);
-  font-family: "Aptos", "Segoe UI", sans-serif;
+  font-family: "Barlow", "Segoe UI", sans-serif;
   background:
     radial-gradient(circle at 18% 0%, rgba(18, 184, 95, .10), transparent 32rem),
+    radial-gradient(circle at 88% 12%, rgba(241, 200, 75, .08), transparent 24rem),
+    repeating-linear-gradient(135deg, rgba(24, 33, 31, .016) 0 1px, transparent 1px 18px),
     linear-gradient(180deg, #fbfaf6 0%, var(--wash) 100%);
+}
+
+h1,
+h2,
+h3,
+.brand {
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
 }
 
 a {
@@ -87,26 +367,27 @@ textarea {
 
 .topbar-inner {
   max-width: 1380px;
-  min-height: 62px;
+  min-height: 66px;
   margin: 0 auto;
   padding: 0 28px;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 28px;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 22px;
-  font-weight: 800;
+  gap: 9px;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -.035em;
   white-space: nowrap;
-  transition: transform .28s var(--ease-snap);
+  transition: opacity .2s ease;
 }
 
 .brand:hover {
-  transform: translateY(-1px);
+  opacity: .78;
 }
 
 .brand-mark,
@@ -125,10 +406,67 @@ textarea {
     border-color .35s var(--ease-fluid);
 }
 
+.league-mark {
+  width: 36px;
+  height: 36px;
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.league-mark svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 5px 10px rgba(7, 130, 70, .18));
+}
+
+.league-mark rect {
+  fill: var(--green-dark);
+}
+
+.league-mark .mark-l,
+.league-mark .mark-field,
+.league-mark .mark-plus {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.league-mark .mark-l {
+  stroke: #fff;
+  stroke-width: 5;
+}
+
+.league-mark .mark-field {
+  stroke: rgba(255, 255, 255, .48);
+  stroke-width: 2;
+}
+
+.league-mark .mark-plus {
+  stroke: #f4d15c;
+  stroke-width: 3.5;
+}
+
+.identity-crest,
+.tournament-emblem.has-identity {
+  overflow: hidden;
+  background: #fff;
+}
+
+.identity-crest img,
+.tournament-emblem.has-identity img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .brand:hover .brand-mark,
 .shield:hover {
-  transform: rotate(-3deg) translateY(-1px);
-  box-shadow: 0 10px 28px rgba(24, 33, 31, .12);
+  transform: none;
+  box-shadow: none;
 }
 
 .brand-plus {
@@ -150,13 +488,13 @@ textarea {
 
 .main-nav a,
 .icon-action {
-  min-height: 36px;
-  padding: 8px 12px;
+  min-height: 40px;
+  padding: 9px 10px;
   display: inline-flex;
   align-items: center;
   gap: 7px;
   color: var(--muted);
-  border-radius: 8px;
+  border-radius: 0;
   font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
@@ -171,8 +509,28 @@ textarea {
 .main-nav a:hover,
 .icon-action:hover {
   color: var(--green-dark);
-  background: var(--green-soft);
-  transform: translateY(-1px);
+  background: transparent;
+  transform: none;
+}
+
+.main-nav a::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  bottom: 2px;
+  left: 10px;
+  height: 2px;
+  background: var(--green);
+  border-radius: 999px;
+  opacity: 0;
+  transform: scaleX(.5);
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.main-nav a.active::after,
+.main-nav a:hover::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 .top-actions {
@@ -186,6 +544,7 @@ textarea {
   margin: 0 auto;
   padding: 22px 0 36px;
   animation: page-rise .55s var(--ease-fluid) both;
+  position: relative;
 }
 
 .page-narrow {
@@ -197,31 +556,57 @@ textarea {
   align-items: flex-end;
   justify-content: space-between;
   gap: 18px;
-  margin-bottom: 16px;
+  margin-bottom: 22px;
+  padding: 18px 20px;
+  background:
+    radial-gradient(circle at 90% 12%, rgba(241, 200, 75, .12), transparent 12rem),
+    radial-gradient(circle at 6% 120%, rgba(18, 184, 95, .12), transparent 18rem),
+    rgba(255, 255, 255, .58);
+  border: 1px solid rgba(18, 112, 70, .1);
+  border-radius: 18px;
   animation: section-rise .5s var(--ease-fluid) both;
+  position: relative;
+}
+
+.hero-row::before {
+  display: none;
 }
 
 .eyebrow {
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: .04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  color: #4d5d57;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .075em;
   text-transform: uppercase;
 }
 
+.eyebrow::before {
+  display: none;
+}
+
 .page-title {
-  margin: 4px 0 0;
-  font-size: clamp(28px, 4vw, 44px);
+  margin: 7px 0 0;
+  font-size: clamp(30px, 4.2vw, 48px);
   font-weight: 900;
-  line-height: 1;
+  line-height: .98;
   text-wrap: balance;
+  letter-spacing: -.04em;
+  position: relative;
+}
+
+.page-title::after {
+  display: none;
 }
 
 .page-subtitle {
   max-width: 680px;
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 14px;
+  line-height: 1.55;
   text-wrap: pretty;
 }
 
@@ -264,10 +649,12 @@ textarea {
 .card,
 .panel,
 .phone-card {
-  background: rgba(255, 255, 255, .94);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: 0 1px 0 rgba(24, 33, 31, .03);
+  background:
+    radial-gradient(circle at 100% 0, rgba(18, 184, 95, .025), transparent 12rem),
+    rgba(255, 255, 255, .95);
+  border: 1px solid rgba(101, 118, 110, .18);
+  border-radius: 14px;
+  box-shadow: 0 5px 18px rgba(24, 33, 31, .045);
   transition:
     transform .32s var(--ease-fluid),
     box-shadow .32s var(--ease-fluid),
@@ -289,6 +676,12 @@ textarea {
 
 .panel-strong {
   box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-strong::before {
+  display: none;
 }
 
 .panel-strong:hover {
@@ -297,9 +690,9 @@ textarea {
 
 .section-title {
   margin: 0 0 12px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 900;
-  text-transform: uppercase;
+  letter-spacing: -.01em;
   color: var(--ink);
 }
 
@@ -319,7 +712,7 @@ textarea {
   justify-content: center;
   gap: 8px;
   border: 1px solid transparent;
-  border-radius: 7px;
+  border-radius: 10px;
   background: #f3f5f2;
   color: var(--ink);
   font-weight: 800;
@@ -366,7 +759,7 @@ textarea {
 
 .btn-primary {
   color: #fff;
-  background: var(--green);
+  background: linear-gradient(135deg, var(--green-dark), var(--green));
   border-color: var(--green);
 }
 
@@ -408,14 +801,15 @@ textarea {
   padding: 4px;
   background: #f4f6f3;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .75);
 }
 
 .tab {
   flex: 1;
   min-height: 34px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 9px;
   background: transparent;
   color: var(--muted);
   font-weight: 800;
@@ -436,7 +830,7 @@ textarea {
 .tab.a {
   color: var(--green-dark);
   background: #fff;
-  box-shadow: 0 1px 0 rgba(24, 33, 31, .05);
+  box-shadow: 0 5px 14px rgba(24, 33, 31, .08);
 }
 
 .form-grid {
@@ -467,7 +861,7 @@ textarea {
   color: var(--ink);
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 7px;
+  border-radius: 10px;
   outline: none;
   transition:
     border-color .24s var(--ease-fluid),
@@ -980,6 +1374,7 @@ textarea {
     transition-duration: .01ms !important;
   }
 }
+
 
 .entity-posts-shell {
   padding: 24px;

@@ -159,8 +159,8 @@ public class ContaServicoAplicacao {
                 novaFotoPerfilUrl));
     }
 
-    public void alterarSenha(long usuarioId, String novaSenha) {
-        exigirServicoDominio().alterarSenha(new UsuarioId(usuarioId), novaSenha);
+    public void alterarSenha(long usuarioId, String senhaAtual, String novaSenha) {
+        exigirServicoDominio().alterarSenha(new UsuarioId(usuarioId), senhaAtual, novaSenha);
     }
 
     public ContaUsuarioResumo salvarTorneio(long usuarioId, long torneioId) {

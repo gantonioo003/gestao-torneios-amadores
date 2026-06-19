@@ -60,6 +60,11 @@ Feature: Gerenciar conversas privadas e grupos
     When ele criar um grupo com os dois usuarios
     Then o contato aprovado deve entrar e o outro usuario deve receber convite
 
+  Scenario: Impedir grupo sem outra pessoa
+    Given que o usuario esta autenticado
+    When ele tentar criar um grupo sem selecionar outra pessoa
+    Then o sistema deve impedir a criacao do grupo
+
   Scenario: Aceitar convite para participar de grupo
     Given que existe um grupo com convite pendente para o usuario
     When o usuario aceitar o convite do grupo

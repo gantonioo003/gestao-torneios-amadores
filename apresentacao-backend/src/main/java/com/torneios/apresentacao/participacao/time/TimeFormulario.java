@@ -20,6 +20,7 @@ public class TimeFormulario {
     public static class TimeDto {
         public Long id;
         public String nome;
+        public String imagemUrl;
         public Long responsavelId;
         public List<VinculoEnriquecidoDto> elenco;
     }
@@ -52,6 +53,7 @@ public class TimeFormulario {
 
     public static class NovoIntegranteDto extends VinculoDto {
         public String nome;
+        public String fotoUrl;
         public com.torneios.dominio.participacao.profissional.TipoProfissional tipo;
     }
 

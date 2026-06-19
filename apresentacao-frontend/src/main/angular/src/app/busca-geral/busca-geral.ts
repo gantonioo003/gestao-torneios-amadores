@@ -8,6 +8,7 @@ import { AuthService } from '../core/auth.service';
 interface TorneioBusca {
   id: number;
   nome: string;
+  imagemUrl?: string;
   formato: string;
   status: string;
   aceitaSolicitacoes: boolean;
@@ -16,12 +17,14 @@ interface TorneioBusca {
 interface TimeBusca {
   id: number;
   nome: string;
+  imagemUrl?: string;
   responsavelId: number;
 }
 
 interface ProfissionalBusca {
   id: number;
   nome: string;
+  fotoUrl?: string;
   tipo: string;
 }
 
@@ -32,7 +35,10 @@ interface ProfissionalBusca {
   styleUrl: './busca-geral.css'
 })
 export class BuscaGeral implements OnInit {
+  private readonly chaveBuscasRecentes = 'liga-amadora.buscas-recentes';
   termo = '';
+  buscasRecentes: string[] = [];
+  buscaFocada = false;
   torneios: TorneioBusca[] = [];
   times: TimeBusca[] = [];
   profissionais: ProfissionalBusca[] = [];
@@ -46,16 +52,22 @@ export class BuscaGeral implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.buscasRecentes = this.lerBuscasRecentes();
     if (this.usuario()?.tipo === 'TREINADOR') {
       this.http.get<TimeBusca[]>('/backend/time/pesquisa?meus=true')
         .pipe(catchError(() => of([])))
         .subscribe(times => this.meusTimesIds = new Set(times.map(time => String(time.id))));
     }
-    this.buscar();
+    this.buscar(false);
   }
 
-  buscar() {
-    const termo = encodeURIComponent(this.termo.trim());
+  buscar(registrarHistorico = true) {
+    const termoLimpo = this.termo.trim();
+    if (registrarHistorico && termoLimpo) {
+      this.registrarBuscaRecente(termoLimpo);
+    }
+    const termo = encodeURIComponent(termoLimpo);
+    this.buscaFocada = false;
     this.carregando = true;
 
     forkJoin({
@@ -71,6 +83,22 @@ export class BuscaGeral implements OnInit {
       this.profissionais = profissionais;
       this.carregando = false;
     });
+  }
+
+  usarBuscaRecente(termo: string) {
+    this.termo = termo;
+    this.buscar();
+  }
+
+  removerBuscaRecente(termo: string, evento: Event) {
+    evento.stopPropagation();
+    this.buscasRecentes = this.buscasRecentes.filter(item => item !== termo);
+    this.salvarBuscasRecentes();
+  }
+
+  limparBuscasRecentes() {
+    this.buscasRecentes = [];
+    this.salvarBuscasRecentes();
   }
 
   get totalResultados(): number {
@@ -119,5 +147,29 @@ export class BuscaGeral implements OnInit {
     return (torneio.status === 'INICIADO' ? 5 : 0)
       + (torneio.aceitaSolicitacoes ? 3 : 0)
       + (torneio.status === 'CONFIGURADO' ? 2 : 0);
+  }
+
+  private registrarBuscaRecente(termo: string) {
+    const normalizado = termo.toLocaleLowerCase('pt-BR');
+    this.buscasRecentes = [
+      termo,
+      ...this.buscasRecentes.filter(item => item.toLocaleLowerCase('pt-BR') !== normalizado)
+    ].slice(0, 6);
+    this.salvarBuscasRecentes();
+  }
+
+  private lerBuscasRecentes(): string[] {
+    try {
+      const valor = JSON.parse(localStorage.getItem(this.chaveBuscasRecentes) ?? '[]');
+      return Array.isArray(valor)
+        ? valor.filter(item => typeof item === 'string' && item.trim()).slice(0, 6)
+        : [];
+    } catch {
+      return [];
+    }
+  }
+
+  private salvarBuscasRecentes() {
+    localStorage.setItem(this.chaveBuscasRecentes, JSON.stringify(this.buscasRecentes));
   }
 }

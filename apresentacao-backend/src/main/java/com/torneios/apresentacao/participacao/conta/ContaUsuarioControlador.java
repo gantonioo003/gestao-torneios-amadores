@@ -26,6 +26,7 @@ import jakarta.servlet.http.HttpSession;
 @RestController
 @RequestMapping("backend/conta-usuario")
 class ContaUsuarioControlador {
+    private static final long MAXIMO_ID_SEGURO_JAVASCRIPT = 9_007_199_254_740_991L;
 
     @Autowired
     ContaServicoAplicacao contaServicoConsulta;
@@ -34,10 +35,11 @@ class ContaUsuarioControlador {
     ContaAtividadeServicoAplicacao contaAtividadeServicoAplicacao;
 
     @RequestMapping(method = GET, path = "{id}")
-    ContaUsuarioResumo buscarPorId(@PathVariable long id) {
-        return contaServicoConsulta.pesquisarPorId(id)
+    PerfilPublicoDto buscarPorId(@PathVariable long id) {
+        ContaUsuarioResumo conta = contaServicoConsulta.pesquisarPorId(id)
                 .orElseThrow(() -> new com.torneios.dominio.compartilhado.excecao.EntidadeNaoEncontradaException(
                         "Conta de usuario nao encontrada."));
+        return perfilPublico(conta);
     }
 
     @RequestMapping(method = GET, path = "perfil/{nomeUsuario}")
@@ -45,18 +47,7 @@ class ContaUsuarioControlador {
         ContaUsuarioResumo conta = contaServicoConsulta.pesquisarPorNomeUsuario(nomeUsuario)
                 .orElseThrow(() -> new com.torneios.dominio.compartilhado.excecao.EntidadeNaoEncontradaException(
                         "Perfil de usuario nao encontrado."));
-        return new PerfilPublicoDto(
-                conta.getId(),
-                conta.getNome(),
-                conta.getNomeUsuario(),
-                conta.getCidade(),
-                conta.getEstado(),
-                conta.getBiografia(),
-                conta.getFotoPerfilUrl(),
-                conta.getTipo(),
-                conta.isPodeCriarTorneio(),
-                conta.isPodeGerenciarTimes(),
-                conta.isPossuiPerfilProfissional());
+        return perfilPublico(conta);
     }
 
     @RequestMapping(method = GET, path = "perfil/{nomeUsuario}/atividade")
@@ -154,7 +145,7 @@ class ContaUsuarioControlador {
     @RequestMapping(method = POST, path = "{id}/alterar-senha")
     void alterarSenha(@PathVariable long id, @RequestBody SenhaDto dto, HttpSession sessao) {
         SessaoUsuario.exigirMesmoUsuario(sessao, id);
-        contaServicoConsulta.alterarSenha(id, dto.novaSenha);
+        contaServicoConsulta.alterarSenha(id, dto.senhaAtual, dto.novaSenha);
     }
 
     @RequestMapping(method = POST, path = "torneios-salvos/{torneioId}/salvar")
@@ -179,8 +170,24 @@ class ContaUsuarioControlador {
     }
 
     private long gerarId() {
-        long id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        long id = (UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE)
+                % MAXIMO_ID_SEGURO_JAVASCRIPT;
         return id == 0 ? 1L : id;
+    }
+
+    private PerfilPublicoDto perfilPublico(ContaUsuarioResumo conta) {
+        return new PerfilPublicoDto(
+                conta.getId(),
+                conta.getNome(),
+                conta.getNomeUsuario(),
+                conta.getCidade(),
+                conta.getEstado(),
+                conta.getBiografia(),
+                conta.getFotoPerfilUrl(),
+                conta.getTipo(),
+                conta.isPodeCriarTorneio(),
+                conta.isPodeGerenciarTimes(),
+                conta.isPossuiPerfilProfissional());
     }
 
     static class ContaDto {
@@ -214,6 +221,7 @@ class ContaUsuarioControlador {
     }
 
     static class SenhaDto {
+        public String senhaAtual;
         public String novaSenha;
     }
 

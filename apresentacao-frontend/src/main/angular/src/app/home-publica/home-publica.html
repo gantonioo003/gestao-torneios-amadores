@@ -1,4 +1,34 @@
 <main class="page home-page">
+  <section class="match-ticker" aria-label="Principais jogos do dia">
+    <div class="ticker-label"><i class="bi bi-broadcast"></i><span>Hoje</span></div>
+    <div class="ticker-window">
+      <div class="ticker-track">
+        @for (jogo of agendaHoje; track 'a-' + jogo.id) {
+          <span class="ticker-match" [class.live]="jogo.status === 'AO_VIVO'">
+            <b>{{ jogo.horario }}</b>
+            <img [src]="jogo.logoCasa" alt="">
+            <span>{{ jogo.casa }}</span>
+            <i>×</i>
+            <span>{{ jogo.visitante }}</span>
+            <img [src]="jogo.logoVisitante" alt="">
+            @if (jogo.status === 'AO_VIVO') { <em>Ao vivo</em> }
+          </span>
+        }
+        @for (jogo of agendaHoje; track 'b-' + jogo.id) {
+          <span class="ticker-match" [class.live]="jogo.status === 'AO_VIVO'" aria-hidden="true">
+            <b>{{ jogo.horario }}</b>
+            <img [src]="jogo.logoCasa" alt="">
+            <span>{{ jogo.casa }}</span>
+            <i>×</i>
+            <span>{{ jogo.visitante }}</span>
+            <img [src]="jogo.logoVisitante" alt="">
+            @if (jogo.status === 'AO_VIVO') { <em>Ao vivo</em> }
+          </span>
+        }
+      </div>
+    </div>
+  </section>
+
   <div class="hero-row home-hero">
     <div>
       <div class="eyebrow">Torneios de futebol amador</div>
@@ -34,11 +64,11 @@
             <small>{{ jogo.rodada }} · Ao vivo</small>
           </div>
           <div class="live-score">
-            <span>{{ jogo.casa }}</span>
+            <span class="live-team"><img [src]="jogo.logoCasa" alt=""><b>{{ jogo.casa }}</b></span>
             <strong>{{ jogo.golsCasa }}</strong>
             <small>x</small>
             <strong>{{ jogo.golsVisitante }}</strong>
-            <span>{{ jogo.visitante }}</span>
+            <span class="live-team away"><img [src]="jogo.logoVisitante" alt=""><b>{{ jogo.visitante }}</b></span>
           </div>
           <a routerLink="/buscar">Ver competicao <i class="bi bi-arrow-right"></i></a>
         </article>
@@ -82,6 +112,7 @@
                       [class.selected]="escolhaPartida(partida) === '' + opcao.id"
                       [disabled]="!!votando"
                       (click)="votarPartida(partida, opcao)">
+                      @if (opcao.imagemUrl) { <img class="prediction-team-logo" [src]="opcao.imagemUrl" alt=""> }
                       <strong>{{ opcao.nome }}</strong>
                       <span><i [style.width.%]="palpitesService.percentual(partida.percentuais, opcao.id)"></i></span>
                       <b>{{ palpitesService.percentual(partida.percentuais, opcao.id) }}%</b>
@@ -138,7 +169,7 @@
 
         @for (torneio of torneiosDestaque; track torneio.id) {
           <a class="home-tournament-row" [routerLink]="['/torneio', torneio.id]">
-            <span><i class="bi bi-trophy"></i></span>
+            <span class="home-tournament-logo"><img [src]="torneio.imagemUrl" alt=""></span>
             <span>
               <strong>{{ torneio.nome }}</strong>
               <small>{{ statusTorneio(torneio.status) }}</small>

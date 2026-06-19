@@ -6,7 +6,7 @@ O dominio do sistema e a gestao de torneios amadores de futebol com suporte ao r
 
 O sistema tem como objetivo permitir que usuarios criem, gerenciem e participem de torneios de futebol amador em diferentes formatos, como mata-mata, fase de grupos com mata-mata, pontos corridos e final unica.
 
-Alem da gestao da competicao, o sistema permite a participacao de diferentes usuarios, possibilitando cadastro de conta como jogador ou organizador, login, edicao e exclusao da propria conta, gerenciamento completo de inscricoes de times em torneios abertos, acompanhamento de status, cancelamento de candidatura pendente, aprovacao ou rejeicao pelo organizador, chat privado com solicitacoes de conversa, desafios amistosos opcionais entre times, preparacao opcional da escalacao de cada time em lista ou mesa tatica para cada partida, registro de palpites por usuarios autenticados ou visitantes e publicacao de postagens, comunicados e interacoes sociais no feed.
+Alem da gestao da competicao, o sistema permite contas comuns, de jogadores, treinadores, membros de comissao e organizadores, com autenticacao, perfil publico, dados privados protegidos e permissoes especificas. Tambem cobre inscricoes de times em torneios abertos, chat privado e em grupo, desafios amistosos opcionais, preparacao de escalacoes, palpites por usuarios autenticados ou visitantes e interacoes sociais no feed.
 
 O sistema tambem permite o gerenciamento de um scout estatistico opcional das partidas, com registro, correcao e remocao de gols, assistencias, cartoes e substituicoes. Esses eventos sao independentes da existencia de mesa tatica e servem para detalhar o jogo quando o organizador quiser.
 

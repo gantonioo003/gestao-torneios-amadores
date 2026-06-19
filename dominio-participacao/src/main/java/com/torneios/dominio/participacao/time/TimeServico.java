@@ -55,16 +55,29 @@ public class TimeServico {
     }
 
     public Time criarTime(TimeId timeId, String nome, UsuarioId responsavel) {
+        return criarTime(timeId, nome, responsavel, null);
+    }
+
+    public Time criarTime(TimeId timeId, String nome, UsuarioId responsavel, String imagemUrl) {
         autenticacaoServico.exigirAutenticacao(responsavel);
-        Time time = new Time(timeId, nome, responsavel);
+        Time time = imagemUrl == null || imagemUrl.isBlank()
+                ? new Time(timeId, nome, responsavel)
+                : new Time(timeId, nome, responsavel, imagemUrl);
         timeRepositorio.salvar(time);
         return time;
     }
 
     public void editarTime(TimeId timeId, UsuarioId usuarioId, String novoNome) {
+        editarTime(timeId, usuarioId, novoNome, null);
+    }
+
+    public void editarTime(TimeId timeId, UsuarioId usuarioId, String novoNome, String imagemUrl) {
         autenticacaoServico.exigirAutenticacao(usuarioId);
         Time time = responsavelTimeServico.obterTimeSobResponsabilidade(timeId, usuarioId);
         time.renomear(novoNome);
+        if (imagemUrl != null && !imagemUrl.isBlank()) {
+            time.alterarImagem(imagemUrl);
+        }
         timeRepositorio.salvar(time);
     }
 

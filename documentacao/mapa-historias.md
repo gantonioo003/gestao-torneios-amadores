@@ -6,12 +6,16 @@
 - Como organizador, quero criar uma conta de organizador para configurar e conduzir torneios.
 - Como treinador, quero criar e administrar meus times e elencos.
 - Como usuario cadastrado, quero fazer login com email e senha para entrar no sistema.
+- Como usuario autenticado, quero alterar minha senha confirmando a credencial atual para proteger minha conta.
 - Como usuario autenticado, quero editar meus dados cadastrais para manter minha conta atualizada.
+- Como usuario, quero possuir um perfil publico sem expor meus dados privados de contato.
 - Como usuario autenticado, quero excluir minha conta caso nao queira mais utilizar a plataforma.
 - Como usuario autenticado, quero solicitar conversa privada com outro usuario para iniciar contato dentro da plataforma.
 - Como usuario autenticado, quero aprovar ou recusar solicitacoes de conversa para controlar quem pode falar comigo.
 - Como usuario autenticado, quero enviar mensagens apenas em conversas aprovadas para manter a comunicacao privada organizada.
 - Como usuario autenticado, quero consultar minhas conversas aprovadas para retomar contatos ja liberados.
+- Como usuario autenticado, quero criar grupos com duas ou mais pessoas para organizar conversas coletivas.
+- Como treinador, quero adicionar diretamente jogadores e membros da comissao vinculados ao meu time em grupos internos.
 - Como visitante ou usuario autenticado, quero registrar um palpite sobre o vencedor de uma partida para participar ativamente da competicao.
 - Como visitante ou usuario autenticado, quero registrar um palpite sobre o campeao do torneio para acompanhar minhas previsoes ao longo da competicao.
 - Como visitante ou usuario autenticado, quero registrar um palpite sobre o artilheiro do torneio para apostar no jogador mais decisivo no ataque.
@@ -19,6 +23,7 @@
 - Como visitante ou usuario autenticado, quero alterar meu palpite enquanto a janela de votacao estiver aberta para corrigir minha previsao se eu mudar de ideia.
 - Como visitante ou usuario autenticado, quero visualizar o percentual de votos por opcao para entender a tendencia geral dos demais usuarios.
 - Como usuario autenticado, quero ver se meu palpite foi acertado apos o evento ser concluido para acompanhar minha taxa de acerto.
+- Como usuario autenticado, quero ganhar XP apenas por acertos apurados e manter sequencias e selos para acompanhar minha evolucao.
 - Como organizador, quero publicar comunicados oficiais no feed do torneio para manter participantes e torcedores informados.
 - Como usuario autenticado, quero comentar em partidas do torneio para interagir com outros usuarios.
 - Como usuario autenticado, quero acompanhar atualizacoes automaticas sobre jogos no feed para ver rapidamente o que aconteceu na competicao.

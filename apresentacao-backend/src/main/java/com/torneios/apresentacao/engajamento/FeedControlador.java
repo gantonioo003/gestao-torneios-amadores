@@ -109,8 +109,12 @@ class FeedControlador {
     }
 
     @RequestMapping(method = GET, path = "geral")
-    List<FeedServicoAplicacao.PublicacaoResumo> listarFeedGeral(HttpSession sessao) {
-        return feedServicoAplicacao.listarFeedGeral(SessaoUsuario.usuarioIdOuNulo(sessao));
+    List<FeedServicoAplicacao.PublicacaoResumo> listarFeedGeral(
+            @RequestParam(required = false) List<String> interesses,
+            HttpSession sessao) {
+        return feedServicoAplicacao.listarFeedGeral(
+                SessaoUsuario.usuarioIdOuNulo(sessao),
+                interesses == null ? List.of() : interesses);
     }
 
     @RequestMapping(method = GET, path = "autor/{autorId}")

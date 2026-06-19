@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.torneio.preparacao.PreparacaoTorneioServicoAplicacao;
+import com.torneios.aplicacao.engajamento.palpite.ApuracaoAutomaticaPalpiteServicoAplicacao;
 import com.torneios.apresentacao.SessaoUsuario;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.acesso.ContaUsuarioServico;
@@ -27,6 +28,8 @@ class PreparacaoTorneioControlador {
 
     @Autowired
     PreparacaoTorneioServicoAplicacao preparacaoTorneioServicoAplicacao;
+    @Autowired
+    ApuracaoAutomaticaPalpiteServicoAplicacao apuracaoAutomaticaPalpiteServico;
 
     @Autowired
     ContaUsuarioServico contaUsuarioServico;
@@ -41,7 +44,8 @@ class PreparacaoTorneioControlador {
                 dto.formato,
                 dto.formatoEquipe,
                 organizadorId,
-                dto.aceitaSolicitacoes);
+                dto.aceitaSolicitacoes,
+                dto.imagemUrl);
     }
 
     @RequestMapping(method = GET, path = "{id}")
@@ -101,7 +105,7 @@ class PreparacaoTorneioControlador {
             @RequestBody ConfiguracaoTorneioDto dto,
             HttpSession sessao) {
         return preparacaoTorneioServicoAplicacao.atualizarConfiguracao(
-                id, exigirOrganizador(sessao), dto.nome, dto.aceitaSolicitacoes);
+                id, exigirOrganizador(sessao), dto.nome, dto.aceitaSolicitacoes, dto.imagemUrl);
     }
 
     @RequestMapping(method = POST, path = "{id}/gerar-estrutura-sorteio")
@@ -147,7 +151,9 @@ class PreparacaoTorneioControlador {
     PreparacaoTorneioServicoAplicacao.TorneioResumoAplicacao finalizar(@PathVariable long id,
                                                                        @RequestParam long organizadorId,
                                                                        HttpSession sessao) {
-        return preparacaoTorneioServicoAplicacao.finalizarTorneio(id, exigirOrganizador(sessao));
+        var torneio = preparacaoTorneioServicoAplicacao.finalizarTorneio(id, exigirOrganizador(sessao));
+        apuracaoAutomaticaPalpiteServico.apurarRankingsDoTorneio(id);
+        return torneio;
     }
 
     @RequestMapping(method = POST, path = "{id}/repetir")
@@ -171,6 +177,7 @@ class PreparacaoTorneioControlador {
         public String formatoEquipe;
         public long organizadorId;
         public boolean aceitaSolicitacoes;
+        public String imagemUrl;
     }
 
     static class RenomearTorneioDto {
@@ -180,5 +187,6 @@ class PreparacaoTorneioControlador {
     static class ConfiguracaoTorneioDto {
         public String nome;
         public boolean aceitaSolicitacoes;
+        public String imagemUrl;
     }
 }

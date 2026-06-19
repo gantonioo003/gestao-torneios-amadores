@@ -58,7 +58,8 @@ class TorneioControlador {
                 dto.formato,
                 dto.formatoEquipe,
                 new UsuarioId(usuarioId),
-                dto.aceitaSolicitacoes);
+                dto.aceitaSolicitacoes,
+                dto.imagemUrl);
     }
 
     @RequestMapping(method = POST, path = "{id}/iniciar")

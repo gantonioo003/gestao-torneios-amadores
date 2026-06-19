@@ -3,10 +3,11 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
+import { IdentityEditor } from '../shared/identity-editor/identity-editor';
 
 @Component({
   selector: 'app-torneio-criacao',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, IdentityEditor],
   templateUrl: './torneio-criacao.html',
   styleUrl: './torneio-criacao.css'
 })
@@ -15,6 +16,7 @@ export class TorneioCriacao {
   formato = 'FASE_DE_GRUPOS_COM_MATA_MATA';
   equipe = 'ONZE_POR_ONZE';
   aceitaSolicitacoes = true;
+  imagemUrl = '';
   criando = false;
   erro = '';
 
@@ -35,7 +37,8 @@ export class TorneioCriacao {
       nome: this.nome.trim(),
       formato: this.formato,
       formatoEquipe: this.equipe,
-      aceitaSolicitacoes: this.aceitaSolicitacoes
+      aceitaSolicitacoes: this.aceitaSolicitacoes,
+      imagemUrl: this.imagemUrl
     }).pipe(finalize(() => this.criando = false)).subscribe({
       next: torneio => this.router.navigate(['/torneio', torneio.id], {
         queryParams: { configurar: true }

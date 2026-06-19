@@ -44,7 +44,7 @@ export class ChatPrivado implements OnInit {
   publicacoesIndisponiveis = new Set<number>();
   private publicacoesCarregando = new Set<number>();
   nomeNovoGrupo = '';
-  participantesNovoGrupo: number[] = [];
+  participantesNovoGrupo: string[] = [];
 
   filtroInbox = '';
   termoBusca = '';
@@ -129,7 +129,7 @@ export class ChatPrivado implements OnInit {
     if (!this.usuariosEncontrados.length) this.buscarUsuarios();
   }
 
-  alternarParticipante(usuarioId: number): void {
+  alternarParticipante(usuarioId: string): void {
     this.participantesNovoGrupo = this.participantesNovoGrupo.includes(usuarioId)
       ? this.participantesNovoGrupo.filter(id => id !== usuarioId)
       : [...this.participantesNovoGrupo, usuarioId];
@@ -299,13 +299,18 @@ export class ChatPrivado implements OnInit {
     this.enviarMensagem();
   }
 
-  jaPossuiContato(usuarioId: number): boolean {
-    return this.inbox.some(item => item.outroUsuarioId === usuarioId);
+  jaPossuiContato(usuario: UsuarioChat): boolean {
+    return this.inbox.some(item => item.outroUsuarioEmail === usuario.email);
   }
 
-  solicitacaoPendente(usuarioId: number): boolean {
-    return this.solicitacoesEnviadas.some(item => item.outroUsuarioId === usuarioId)
-      || this.solicitacoesRecebidas.some(item => item.outroUsuarioId === usuarioId);
+  solicitacaoPendente(usuario: UsuarioChat): boolean {
+    return this.solicitacoesEnviadas.some(item => item.outroUsuarioEmail === usuario.email)
+      || this.solicitacoesRecebidas.some(item => item.outroUsuarioEmail === usuario.email);
+  }
+
+  nomeAutorGrupo(mensagem: MensagemChat): string {
+    return this.grupoAtivo?.participantes.find(pessoa => pessoa.id === mensagem.autorId)?.nome
+      ?? 'Participante';
   }
 
   iniciais(nome: string): string {

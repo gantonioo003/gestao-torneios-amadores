@@ -2,7 +2,14 @@
   <header class="topbar">
     <div class="topbar-inner">
       <a class="brand" routerLink="/">
-        <span class="brand-mark"><i class="bi bi-shield"></i></span>
+        <span class="brand-mark league-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" role="img">
+            <rect x="2" y="2" width="36" height="36" rx="11"></rect>
+            <path class="mark-l" d="M11 9v20h16"></path>
+            <path class="mark-field" d="M11 20h10"></path>
+            <path class="mark-plus" d="M28 9v9M23.5 13.5h9"></path>
+          </svg>
+        </span>
         <span>Liga Amadora<span class="brand-plus">+</span></span>
       </a>
 
@@ -25,6 +32,13 @@
       </nav>
 
       <div class="top-actions">
+        <button
+          class="icon-action icon-button theme-toggle"
+          [title]="temaEscuro ? 'Usar tema claro' : 'Usar tema escuro'"
+          [attr.aria-label]="temaEscuro ? 'Usar tema claro' : 'Usar tema escuro'"
+          (click)="alternarTema()">
+          <i class="bi" [class.bi-sun-fill]="temaEscuro" [class.bi-moon-stars-fill]="!temaEscuro"></i>
+        </button>
         @if (usuario(); as conta) {
           <div class="notification-shell">
             <button class="icon-action icon-button notification-button" title="Notificacoes" aria-label="Abrir notificacoes" (click)="alternarNotificacoes()">
@@ -58,7 +72,13 @@
             routerLinkActive="active"
             [title]="conta.nome"
             [attr.aria-label]="'Abrir minha área: @' + conta.nomeUsuario">
-            <span class="account-avatar">{{ conta.nome.slice(0, 1).toUpperCase() }}</span>
+            <span class="account-avatar" [class.has-photo]="conta.fotoPerfilUrl">
+              @if (conta.fotoPerfilUrl) {
+                <img [src]="conta.fotoPerfilUrl" alt="">
+              } @else {
+                {{ conta.nome.slice(0, 1).toUpperCase() }}
+              }
+            </span>
             <span class="account-name">&#64;{{ conta.nomeUsuario }}</span>
           </a>
           <button class="icon-action icon-button" title="Sair" aria-label="Sair da conta" (click)="sair()">

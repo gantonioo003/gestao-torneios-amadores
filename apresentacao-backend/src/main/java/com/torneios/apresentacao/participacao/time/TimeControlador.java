@@ -61,7 +61,8 @@ class TimeControlador {
     void salvar(@RequestBody TimeFormulario.TimeDto dto, HttpSession sessao) {
         long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
         contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
-        timeServico.criarTime(new TimeId(gerarId()), dto.nome, new UsuarioId(usuarioId));
+        timeServico.criarTime(new TimeId(gerarId()), dto.nome,
+                new UsuarioId(usuarioId), dto.imagemUrl);
     }
 
     @RequestMapping(method = GET, path = "{id}/edicao")
@@ -70,6 +71,7 @@ class TimeControlador {
         var dto = new TimeFormulario.TimeDto();
         dto.id = time.getId().valor();
         dto.nome = time.getNome();
+        dto.imagemUrl = time.getImagemUrl();
         dto.responsavelId = time.getResponsavel().valor();
         dto.elenco = timeServicoConsulta.pesquisarResumoExpandido(id).getElenco().stream()
             .map(v -> {
@@ -92,7 +94,7 @@ class TimeControlador {
     void atualizar(@PathVariable long id, @RequestBody TimeFormulario.TimeDto dto, HttpSession sessao) {
         long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
         contaUsuarioServico.exigirPodeGerenciarTimes(new UsuarioId(usuarioId));
-        timeServico.editarTime(new TimeId(id), new UsuarioId(usuarioId), dto.nome);
+        timeServico.editarTime(new TimeId(id), new UsuarioId(usuarioId), dto.nome, dto.imagemUrl);
     }
 
     @RequestMapping(method = POST, path = "{id}/excluir")
@@ -120,7 +122,8 @@ class TimeControlador {
         timeServico.validarCadastroProfissional(
                 new TimeId(id), new UsuarioId(usuarioId), dto.tipo);
         var profissionalId = new ProfissionalEsportivoId(gerarId());
-        profissionalServico.cadastrar(profissionalId, dto.nome, dto.tipo, new UsuarioId(usuarioId));
+        profissionalServico.cadastrar(profissionalId, dto.nome, dto.tipo,
+                new UsuarioId(usuarioId), dto.fotoUrl);
         timeServico.vincularProfissional(new TimeId(id), new UsuarioId(usuarioId),
                 profissionalId, dto.funcao, dto.dataInicio, dto.dataLimiteContrato);
     }
