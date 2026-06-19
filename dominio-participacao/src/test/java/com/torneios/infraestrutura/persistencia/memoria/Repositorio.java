@@ -126,6 +126,16 @@ public class Repositorio implements TimeRepositorio, SolicitacaoParticipacaoRepo
     }
 
     @Override
+    public List<SolicitacaoParticipacao> listarPorTorneio(TorneioId torneioId) {
+        return solicitacoes.stream().filter(s -> s.getTorneioId().equals(torneioId)).toList();
+    }
+
+    @Override
+    public List<SolicitacaoParticipacao> listarPorTime(TimeId timeId) {
+        return solicitacoes.stream().filter(s -> s.getTimeId().equals(timeId)).toList();
+    }
+
+    @Override
     public Optional<ContaUsuario> buscarPorNomeUsuario(String nomeUsuario) {
         if (nomeUsuario == null) {
             return Optional.empty();

@@ -2,14 +2,20 @@ package com.torneios.infraestrutura.persistencia.jpa;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.torneios.dominio.compartilhado.time.TimeId;
+import com.torneios.dominio.compartilhado.tecnico.Tecnico;
+import com.torneios.dominio.compartilhado.tecnico.TecnicoId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoId;
@@ -83,18 +89,36 @@ class TimeRepositorioImpl implements TimeRepositorio {
             jpa.torneiosVinculados.add(torneioId.valor());
         }
 
-        jpa.elenco.clear();
+        Map<Long, VinculoProfissionalJpa> vinculosExistentes = new HashMap<>();
+        Set<Long> idsEmUso = new HashSet<>();
+        for (var vinculo : jpa.elenco) {
+            vinculosExistentes.put(vinculo.profissionalId, vinculo);
+            idsEmUso.add(vinculo.id);
+        }
+
+        Set<Long> profissionaisMantidos = new HashSet<>();
         long seq = 1L;
         for (var v : time.getElenco()) {
-            var vJpa = new VinculoProfissionalJpa();
-            vJpa.id = (jpa.id * 10000) + seq++;
+            long profissionalId = v.getProfissionalId().valor();
+            profissionaisMantidos.add(profissionalId);
+            var vJpa = vinculosExistentes.get(profissionalId);
+            if (vJpa == null) {
+                vJpa = new VinculoProfissionalJpa();
+                long novoId;
+                do {
+                    novoId = (jpa.id * 10000) + seq++;
+                } while (idsEmUso.contains(novoId));
+                vJpa.id = novoId;
+                idsEmUso.add(novoId);
+                jpa.elenco.add(vJpa);
+            }
             vJpa.time = jpa;
-            vJpa.profissionalId = v.getProfissionalId().valor();
+            vJpa.profissionalId = profissionalId;
             vJpa.funcao = v.getFuncao();
             vJpa.dataInicio = v.getDataInicio();
             vJpa.dataLimiteContrato = v.getDataLimiteContrato();
-            jpa.elenco.add(vJpa);
         }
+        jpa.elenco.removeIf(vinculo -> !profissionaisMantidos.contains(vinculo.profissionalId));
 
         repositorio.save(jpa);
     }
@@ -134,6 +158,12 @@ class TimeRepositorioImpl implements TimeRepositorio {
                 new ProfissionalEsportivoId(v.profissionalId),
                 v.funcao, v.dataInicio, v.dataLimiteContrato
             );
+            if ("TREINADOR".equals(v.funcao) && time.getTecnico() == null) {
+                time.associarTecnico(new Tecnico(
+                        new TecnicoId(v.profissionalId),
+                        "Treinador do " + jpa.nome,
+                        new TimeId(jpa.id)));
+            }
         }
         return time;
     }

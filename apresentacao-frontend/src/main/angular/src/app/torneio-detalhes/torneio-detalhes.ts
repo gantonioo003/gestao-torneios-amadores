@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
+import { catchError, finalize, forkJoin, map, of } from 'rxjs';
 import { AuthService } from '../core/auth.service';
 import {
   CentralPalpites,
@@ -113,7 +113,22 @@ export class TorneioDetalhes implements OnInit {
   }
 
   get timesDisponiveisParaAdicionar(): any[] {
-    return this.times.filter(time => !this.participantes.includes(time.id));
+    const negociando = this.solicitacoesPendentes
+      .filter(solicitacao => solicitacao.status === 'PENDENTE')
+      .map(solicitacao => String(solicitacao.timeId));
+    return this.times.filter(time =>
+      !this.participantes.some(id => String(id) === String(time.id))
+      && !negociando.includes(String(time.id)));
+  }
+
+  get candidaturasPendentes(): any[] {
+    return this.solicitacoesPendentes.filter(item =>
+      item.tipo === 'CANDIDATURA' && item.status === 'PENDENTE');
+  }
+
+  get convitesPendentes(): any[] {
+    return this.solicitacoesPendentes.filter(item =>
+      item.tipo === 'CONVITE' && item.status === 'PENDENTE');
   }
 
   podeGerenciar(): boolean {
@@ -275,8 +290,11 @@ export class TorneioDetalhes implements OnInit {
     }
     this.executar(
       'adicionar-time',
-      this.http.post(this.urlPreparacao(`aprovar-participante`, { timeId: this.timeSelecionado }), {}),
-      'Time adicionado ao torneio.'
+      this.http.post(
+        `/backend/solicitacao-participacao/convidar?timeId=${this.timeSelecionado}&torneioId=${this.torneioId}`,
+        {}
+      ),
+      'Convite enviado ao treinador do time.'
     );
   }
 
@@ -289,16 +307,10 @@ export class TorneioDetalhes implements OnInit {
   }
 
   aprovarSolicitacao(solicitacao: any) {
-    const adicionar = this.http.post(
-      this.urlPreparacao('aprovar-participante', { timeId: solicitacao.timeId }),
-      {}
-    );
     this.executar(
       `aprovar-${solicitacao.id}`,
-      adicionar.pipe(switchMap(() =>
-        this.http.post(`/backend/solicitacao-participacao/${solicitacao.id}/aprovar`, {})
-      )),
-      'Solicitacao aprovada e time adicionado.'
+      this.http.post(`/backend/solicitacao-participacao/${solicitacao.id}/aprovar`, {}),
+      'Candidatura aprovada e treinador notificado.'
     );
   }
 
@@ -307,6 +319,14 @@ export class TorneioDetalhes implements OnInit {
       `rejeitar-${solicitacaoId}`,
       this.http.post(`/backend/solicitacao-participacao/${solicitacaoId}/rejeitar`, {}),
       'Solicitacao rejeitada.'
+    );
+  }
+
+  cancelarSolicitacao(solicitacaoId: number) {
+    this.executar(
+      `cancelar-${solicitacaoId}`,
+      this.http.post(`/backend/solicitacao-participacao/${solicitacaoId}/cancelar`, {}),
+      'Convite cancelado.'
     );
   }
 
@@ -405,7 +425,7 @@ export class TorneioDetalhes implements OnInit {
   private carregarDadosDaConta() {
     if (this.podeGerenciar()) {
       this.http.get<any[]>(
-        `/backend/solicitacao-participacao/pesquisa-por-torneio?torneioId=${this.torneioId}`
+        `/backend/solicitacao-participacao/torneio?torneioId=${this.torneioId}`
       ).pipe(catchError(() => of([])))
         .subscribe(solicitacoes => this.solicitacoesPendentes = solicitacoes);
     }

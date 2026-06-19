@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveData, Router, RouterLink, RouterStateSnapshot } from '@angular/router';
-import { catchError, of } from 'rxjs';
+import { catchError, finalize, of } from 'rxjs';
 import { AuthService } from '../core/auth.service';
 
 @Component({
@@ -18,6 +18,9 @@ export class TimeDetalhes implements OnInit {
   time: any = {};
   elenco: any[] = [];
   torneios: any[] = [];
+  participacoes: any[] = [];
+  processando = '';
+  mensagem = '';
   podeEditarTime = false;
   podeGerenciarElenco = false;
   readonly usuario = this.auth.usuario;
@@ -36,6 +39,9 @@ export class TimeDetalhes implements OnInit {
     this.torneios = data.torneios ?? [];
     this.podeEditarTime = data.podeEditarTime === true;
     this.podeGerenciarElenco = data.podeGerenciarElenco === true;
+    if (this.podeEditarTime) {
+      this.carregarParticipacoes();
+    }
   }
 
   tipoLabel(tipo: string): string {
@@ -89,6 +95,38 @@ export class TimeDetalhes implements OnInit {
         next: () => this.router.navigate(['/buscar']),
         error: (e) => alert(this.extrairMensagem(e) ?? 'Erro. Verifique se o time está vinculado a torneios.')
       });
+  }
+
+  aceitarConvite(item: any) {
+    this.executarParticipacao(item.id, 'aprovar', 'Convite aceito. O organizador foi notificado.');
+  }
+
+  recusarConvite(item: any) {
+    this.executarParticipacao(item.id, 'rejeitar', 'Convite recusado.');
+  }
+
+  cancelarCandidatura(item: any) {
+    this.executarParticipacao(item.id, 'cancelar', 'Solicitacao cancelada.');
+  }
+
+  private executarParticipacao(id: any, acao: string, mensagem: string) {
+    if (this.processando) return;
+    this.processando = String(id);
+    this.http.post(`/backend/solicitacao-participacao/${id}/${acao}`, {})
+      .pipe(finalize(() => this.processando = ''))
+      .subscribe({
+        next: () => {
+          this.mensagem = mensagem;
+          this.carregarParticipacoes();
+        },
+        error: erro => alert(this.extrairMensagem(erro) ?? 'Nao foi possivel concluir a acao.')
+      });
+  }
+
+  private carregarParticipacoes() {
+    this.http.get<any[]>(`/backend/solicitacao-participacao/time?timeId=${this.time.id}`)
+      .pipe(catchError(() => of([])))
+      .subscribe(itens => this.participacoes = itens);
   }
 
   private extrairMensagem(e: any): string | null {

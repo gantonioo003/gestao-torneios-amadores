@@ -64,6 +64,10 @@ public class ParticipacaoFuncionalidade implements EventoBarramento {
             return usuarioEhOrganizador && usuarioId != null && usuarioId.equals(ORGANIZADOR_ID);
         }
         @Override public boolean torneioIniciado(TorneioId torneioId) { return torneioIniciado; }
+        @Override public UsuarioId organizadorDoTorneio(TorneioId torneioId) { return ORGANIZADOR_ID; }
+        @Override public void adicionarParticipante(TorneioId torneioId, TimeId timeId) { }
+        @Override public void removerParticipante(TorneioId torneioId, TimeId timeId) { }
+        @Override public boolean possuiParticipante(TorneioId torneioId, TimeId timeId) { return false; }
     };
 
     protected static final AutenticacaoServico autenticacaoServico = new AutenticacaoServico();

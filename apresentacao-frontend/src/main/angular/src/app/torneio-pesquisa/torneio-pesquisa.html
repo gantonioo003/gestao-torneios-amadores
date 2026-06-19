@@ -68,8 +68,8 @@
               <h3>{{ torneio.nome }}</h3>
               <p>{{ formatoLabel(torneio.formato) }} · {{ torneio.formatoEquipe.replaceAll('_', ' ') }}</p>
             </div>
-            <span class="status" [class.status-green]="torneio.status === 'INICIADO'" [class.status-warn]="torneio.status === 'CONFIGURADO'">
-              {{ statusLabel(torneio.status) }}
+            <span class="status" [class.status-green]="torneio.aceitaSolicitacoes" [class.status-gray]="!torneio.aceitaSolicitacoes">
+              {{ torneio.aceitaSolicitacoes ? 'Aceitando participantes' : 'Sem novas vagas' }}
             </span>
             <a class="btn btn-outline" [routerLink]="['/torneio', torneio.id]">Abrir torneio</a>
           </article>

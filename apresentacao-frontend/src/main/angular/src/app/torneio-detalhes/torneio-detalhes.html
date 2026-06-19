@@ -404,12 +404,12 @@
             @if (podeConfigurarAntesDoInicio() && timesDisponiveisParaAdicionar.length) {
               <div class="inline-control">
                 <select [(ngModel)]="timeSelecionado">
-                  <option [ngValue]="undefined">Adicionar time existente</option>
+                  <option [ngValue]="undefined">Convidar time existente</option>
                   @for (time of timesDisponiveisParaAdicionar; track time.id) {
                     <option [ngValue]="time.id">{{ time.nome }}</option>
                   }
                 </select>
-                <button class="btn btn-primary" [disabled]="!!processando" (click)="adicionarParticipante()">Adicionar</button>
+                <button class="btn btn-primary" [disabled]="!!processando" (click)="adicionarParticipante()">Enviar convite</button>
               </div>
             }
 
@@ -426,14 +426,26 @@
               }
             </div>
 
-            @if (solicitacoesPendentes.length) {
+            @if (candidaturasPendentes.length) {
               <div class="pending-requests">
-                <div class="eyebrow">Solicitacoes pendentes</div>
-                @for (solicitacao of solicitacoesPendentes; track solicitacao.id) {
+                <div class="eyebrow">Times que pediram participacao</div>
+                @for (solicitacao of candidaturasPendentes; track solicitacao.id) {
                   <div>
                     <span><strong>{{ nomeTime(solicitacao.timeId) }}</strong><small>Aguardando avaliacao</small></span>
                     <button class="btn btn-sm btn-primary" [disabled]="!!processando" (click)="aprovarSolicitacao(solicitacao)">Aprovar</button>
                     <button class="btn btn-sm btn-danger" [disabled]="!!processando" (click)="rejeitarSolicitacao(solicitacao.id)">Recusar</button>
+                  </div>
+                }
+              </div>
+            }
+
+            @if (convitesPendentes.length) {
+              <div class="pending-requests">
+                <div class="eyebrow">Convites aguardando resposta</div>
+                @for (convite of convitesPendentes; track convite.id) {
+                  <div>
+                    <span><strong>{{ nomeTime(convite.timeId) }}</strong><small>Convite enviado ao treinador</small></span>
+                    <button class="btn btn-sm btn-danger" [disabled]="!!processando" (click)="cancelarSolicitacao(convite.id)">Cancelar convite</button>
                   </div>
                 }
               </div>

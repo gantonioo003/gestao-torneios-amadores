@@ -1,4 +1,4 @@
-Feature: Gerenciar inscricoes e participantes do torneio
+Feature: Gerenciar candidaturas, convites e composicao final dos participantes do torneio
 
   As a usuario responsavel por time ou organizador de torneio
   I want gerenciar o fluxo completo de entrada dos times em torneios abertos
@@ -104,3 +104,26 @@ Feature: Gerenciar inscricoes e participantes do torneio
     And que o usuario autenticado e o organizador do torneio
     When ele tentar avaliar uma solicitacao
     Then o sistema deve informar que nao ha solicitacao pendente para avaliacao
+
+  Scenario: Organizador convidar um time existente
+    Given que o usuario autenticado e o organizador do torneio
+    And que existe um time cadastrado para outro treinador
+    When o organizador convidar o time para participar
+    Then o sistema deve registrar um convite pendente
+
+  Scenario: Treinador aceitar convite do torneio
+    Given que existe um convite pendente para o time
+    And que o usuario autenticado e o treinador responsavel pelo time
+    When o treinador aceitar o convite
+    Then o sistema deve aprovar o convite e vincular o time ao torneio
+
+  Scenario: Treinador recusar convite do torneio
+    Given que existe um convite pendente para o time
+    And que o usuario autenticado e o treinador responsavel pelo time
+    When o treinador recusar o convite
+    Then o sistema deve registrar o convite como rejeitado
+
+  Scenario: Organizador cancelar convite pendente
+    Given que existe um convite pendente iniciado pelo organizador
+    When o organizador cancelar o convite
+    Then o sistema deve marcar o convite como cancelado

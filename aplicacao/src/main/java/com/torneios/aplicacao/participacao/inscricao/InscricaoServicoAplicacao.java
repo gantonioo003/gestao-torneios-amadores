@@ -10,6 +10,8 @@ import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacao;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoId;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoServico;
+import com.torneios.aplicacao.participacao.notificacao.NotificacaoParticipacaoServicoAplicacao;
+import com.torneios.dominio.participacao.solicitacao.TipoSolicitacaoParticipacao;
 
 /**
  * Casos de uso de inscricao e acompanhamento de candidaturas.
@@ -17,10 +19,21 @@ import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoServ
 public class InscricaoServicoAplicacao {
 
     private final SolicitacaoParticipacaoServico solicitacaoParticipacaoServico;
+    private final NotificacaoParticipacaoServicoAplicacao notificacaoServicoAplicacao;
 
-    public InscricaoServicoAplicacao(SolicitacaoParticipacaoServico solicitacaoParticipacaoServico) {
+    public InscricaoServicoAplicacao(SolicitacaoParticipacaoServico solicitacaoParticipacaoServico,
+                                     NotificacaoParticipacaoServicoAplicacao notificacaoServicoAplicacao) {
         notNull(solicitacaoParticipacaoServico, "O servico de solicitacao e obrigatorio.");
         this.solicitacaoParticipacaoServico = solicitacaoParticipacaoServico;
+        this.notificacaoServicoAplicacao = notificacaoServicoAplicacao;
+    }
+
+    public InscricaoResumo convidarTime(long solicitacaoId, long organizadorId, long timeId, long torneioId) {
+        return converter(solicitacaoParticipacaoServico.convidarTime(
+                new SolicitacaoParticipacaoId(solicitacaoId),
+                new UsuarioId(organizadorId),
+                new TimeId(timeId),
+                new TorneioId(torneioId)));
     }
 
     public InscricaoResumo solicitarParticipacao(long solicitacaoId,
@@ -34,10 +47,21 @@ public class InscricaoServicoAplicacao {
                 new TorneioId(torneioId)));
     }
 
-    public InscricaoResumo aprovarSolicitacao(long solicitacaoId, long organizadorId) {
-        solicitacaoParticipacaoServico.aprovarSolicitacao(
+    public InscricaoResumo aprovarSolicitacao(long solicitacaoId, long usuarioId) {
+        SolicitacaoParticipacao solicitacao = solicitacaoParticipacaoServico.aprovarSolicitacao(
                 new SolicitacaoParticipacaoId(solicitacaoId),
-                new UsuarioId(organizadorId));
+                new UsuarioId(usuarioId));
+        long organizador = solicitacaoParticipacaoServico.organizadorDoTorneio(solicitacao.getTorneioId()).valor();
+        long treinador = solicitacaoParticipacaoServico.responsavelDoTime(solicitacao.getTimeId()).valor();
+        if (solicitacao.getTipo() == TipoSolicitacaoParticipacao.CANDIDATURA) {
+            notificacaoServicoAplicacao.notificarTimeAceito(
+                    System.currentTimeMillis(), treinador,
+                    solicitacao.getTimeId().valor(), solicitacao.getTorneioId().valor());
+        } else {
+            notificacaoServicoAplicacao.notificarConviteAceito(
+                    System.currentTimeMillis(), organizador,
+                    solicitacao.getTimeId().valor(), solicitacao.getTorneioId().valor());
+        }
         return obterSolicitacao(solicitacaoId);
     }
 
@@ -75,6 +99,16 @@ public class InscricaoServicoAplicacao {
                 .toList();
     }
 
+    public List<InscricaoResumo> acompanharTorneio(long torneioId, long organizadorId) {
+        return solicitacaoParticipacaoServico.acompanharTorneio(
+                new TorneioId(torneioId), new UsuarioId(organizadorId)).stream().map(this::converter).toList();
+    }
+
+    public List<InscricaoResumo> acompanharTime(long timeId, long usuarioId) {
+        return solicitacaoParticipacaoServico.acompanharTime(
+                new TimeId(timeId), new UsuarioId(usuarioId)).stream().map(this::converter).toList();
+    }
+
     public InscricaoResumo obterSolicitacao(long solicitacaoId) {
         return converter(solicitacaoParticipacaoServico.obterSolicitacao(new SolicitacaoParticipacaoId(solicitacaoId)));
     }
@@ -85,13 +119,15 @@ public class InscricaoServicoAplicacao {
                 solicitacaoParticipacao.getSolicitante().valor(),
                 solicitacaoParticipacao.getTimeId().valor(),
                 solicitacaoParticipacao.getTorneioId().valor(),
-                solicitacaoParticipacao.getStatus().name());
+                solicitacaoParticipacao.getStatus().name(),
+                solicitacaoParticipacao.getTipo().name());
     }
 
     public record InscricaoResumo(long id,
                                   long solicitanteId,
                                   long timeId,
                                   long torneioId,
-                                  String status) {
+                                  String status,
+                                  String tipo) {
     }
 }

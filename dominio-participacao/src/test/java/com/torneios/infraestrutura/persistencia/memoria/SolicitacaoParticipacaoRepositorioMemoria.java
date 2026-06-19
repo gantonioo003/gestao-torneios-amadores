@@ -44,6 +44,16 @@ public class SolicitacaoParticipacaoRepositorioMemoria implements SolicitacaoPar
     }
 
     @Override
+    public List<SolicitacaoParticipacao> listarPorTorneio(TorneioId torneioId) {
+        return dados.stream().filter(s -> s.getTorneioId().equals(torneioId)).toList();
+    }
+
+    @Override
+    public List<SolicitacaoParticipacao> listarPorTime(TimeId timeId) {
+        return dados.stream().filter(s -> s.getTimeId().equals(timeId)).toList();
+    }
+
+    @Override
     public boolean existePendentePorTimeETorneio(TimeId timeId, TorneioId torneioId) {
         return dados.stream()
                 .anyMatch(s -> s.getTimeId().equals(timeId)

@@ -38,7 +38,7 @@ public final class ParticipanteTorneio {
         if (!(o instanceof ParticipanteTorneio that)) {
             return false;
         }
-        return timeId == that.timeId && torneioId.equals(that.torneioId);
+        return timeId.equals(that.timeId) && torneioId.equals(that.torneioId);
     }
 
     @Override

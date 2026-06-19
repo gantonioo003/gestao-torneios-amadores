@@ -83,6 +83,37 @@
         <h2 class="section-title">Ultimos jogos</h2>
         <div class="empty-state">Nenhuma partida registrada.</div>
       </section>
+
+      @if (podeEditarTime) {
+        <section class="card panel-strong">
+          <div class="roster-heading">
+            <div><div class="eyebrow">Participacao em torneios</div><h2 class="section-title">Solicitacoes e convites</h2></div>
+            <a class="btn btn-sm btn-outline" routerLink="/buscar">Encontrar torneios</a>
+          </div>
+          @if (mensagem) { <div class="status status-green">{{ mensagem }}</div> }
+          @if (!participacoes.length) {
+            <div class="empty-state">Nenhuma solicitacao ou convite para este time.</div>
+          } @else {
+            @for (item of participacoes; track item.id) {
+              <div class="mini-row">
+                <div>
+                  <strong>{{ item.tipo === 'CONVITE' ? 'Convite de torneio' : 'Solicitacao enviada' }}</strong>
+                  <div class="small muted">Torneio #{{ item.torneioId }} · {{ item.status }}</div>
+                </div>
+                @if (item.status === 'PENDENTE' && item.tipo === 'CONVITE') {
+                  <div class="participation-actions">
+                    <button class="btn btn-sm btn-primary" [disabled]="!!processando" (click)="aceitarConvite(item)">Aceitar</button>
+                    <button class="btn btn-sm btn-danger" [disabled]="!!processando" (click)="recusarConvite(item)">Recusar</button>
+                  </div>
+                }
+                @if (item.status === 'PENDENTE' && item.tipo === 'CANDIDATURA') {
+                  <button class="btn btn-sm btn-danger" [disabled]="!!processando" (click)="cancelarCandidatura(item)">Cancelar solicitacao</button>
+                }
+              </div>
+            }
+          }
+        </section>
+      }
     </section>
 
     <aside class="grid">

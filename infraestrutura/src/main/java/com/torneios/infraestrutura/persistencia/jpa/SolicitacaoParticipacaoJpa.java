@@ -28,11 +28,14 @@ class SolicitacaoParticipacaoJpa {
     Long timeId;
     Long torneioId;
     String status;
+    String tipo;
 }
 
 interface SolicitacaoJpaRepository extends JpaRepository<SolicitacaoParticipacaoJpa, Long> {
     List<SolicitacaoParticipacaoJpa> findByTorneioIdAndStatus(Long torneioId, String status);
     List<SolicitacaoParticipacaoJpa> findBySolicitanteId(Long solicitanteId);
+    List<SolicitacaoParticipacaoJpa> findByTorneioId(Long torneioId);
+    List<SolicitacaoParticipacaoJpa> findByTimeId(Long timeId);
     boolean existsByTimeIdAndTorneioIdAndStatus(Long timeId, Long torneioId, String status);
 }
 
@@ -50,6 +53,7 @@ class SolicitacaoParticipacaoRepositorioImpl implements SolicitacaoParticipacaoR
         jpa.timeId = sol.getTimeId().valor();
         jpa.torneioId = sol.getTorneioId().valor();
         jpa.status = sol.getStatus().name();
+        jpa.tipo = sol.getTipo().name();
         repositorio.save(jpa);
     }
 
@@ -72,6 +76,16 @@ class SolicitacaoParticipacaoRepositorioImpl implements SolicitacaoParticipacaoR
     }
 
     @Override
+    public List<SolicitacaoParticipacao> listarPorTorneio(TorneioId torneioId) {
+        return repositorio.findByTorneioId(torneioId.valor()).stream().map(this::toDomain).toList();
+    }
+
+    @Override
+    public List<SolicitacaoParticipacao> listarPorTime(TimeId timeId) {
+        return repositorio.findByTimeId(timeId.valor()).stream().map(this::toDomain).toList();
+    }
+
+    @Override
     public boolean existePendentePorTimeETorneio(TimeId timeId, TorneioId torneioId) {
         return repositorio.existsByTimeIdAndTorneioIdAndStatus(
             timeId.valor(), torneioId.valor(), StatusSolicitacao.PENDENTE.name());
@@ -82,7 +96,10 @@ class SolicitacaoParticipacaoRepositorioImpl implements SolicitacaoParticipacaoR
             new SolicitacaoParticipacaoId(jpa.id),
             new UsuarioId(jpa.solicitanteId),
             new TimeId(jpa.timeId),
-            new TorneioId(jpa.torneioId)
+            new TorneioId(jpa.torneioId),
+            jpa.tipo == null
+                    ? com.torneios.dominio.participacao.solicitacao.TipoSolicitacaoParticipacao.CANDIDATURA
+                    : com.torneios.dominio.participacao.solicitacao.TipoSolicitacaoParticipacao.valueOf(jpa.tipo)
         );
         var status = StatusSolicitacao.valueOf(jpa.status);
         switch (status) {

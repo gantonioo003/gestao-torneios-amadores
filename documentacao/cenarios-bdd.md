@@ -63,7 +63,7 @@ Cenarios principais:
 
 ---
 
-### F4. Gerenciar inscricoes, curadoria e participantes finais do torneio
+### F4. Gerenciar candidaturas, convites e composicao final dos participantes do torneio
 Dominio: dominio-participacao
 Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F4-gerenciar-inscricoes-e-participantes-do-torneio.feature
 
@@ -83,6 +83,11 @@ Cenarios principais:
 - impedir alteracao da lista final apos inicio do torneio
 - visualizar lista de times candidatos pendentes
 - informar ausencia de solicitacoes pendentes para avaliacao
+- organizador convidar um time existente
+- treinador aceitar ou recusar convite do torneio
+- organizador cancelar convite pendente
+- notificar o treinador quando a candidatura for aprovada
+- notificar o organizador quando o time aceitar um convite
 
 ---
 

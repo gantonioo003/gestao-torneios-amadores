@@ -28,6 +28,8 @@ import com.torneios.aplicacao.participacao.conta.ContaAtividadeServicoAplicacao;
 import com.torneios.aplicacao.participacao.conta.ContaServicoAplicacao;
 import com.torneios.aplicacao.participacao.conta.IdentidadeExternaVerificador;
 import com.torneios.aplicacao.participacao.inscricao.InscricaoServicoAplicacao;
+import com.torneios.aplicacao.participacao.notificacao.NotificacaoParticipacaoRepositorioAplicacao;
+import com.torneios.aplicacao.participacao.notificacao.NotificacaoParticipacaoServicoAplicacao;
 import com.torneios.aplicacao.participacao.profissional.ProfissionalRepositorioAplicacao;
 import com.torneios.aplicacao.participacao.profissional.ProfissionalServicoAplicacao;
 import com.torneios.aplicacao.participacao.time.TimeRepositorioAplicacao;
@@ -185,7 +187,8 @@ public class BackendAplicacao {
     public SolicitacaoParticipacaoServico solicitacaoServico(SolicitacaoParticipacaoRepositorio repositorio,
                                                              TimeRepositorio timeRepositorio,
                                                              AutenticacaoServico autenticacaoServico,
-                                                             TorneioRepositorio torneioRepositorio) {
+                                                             TorneioRepositorio torneioRepositorio,
+                                                             TorneioServico torneioServico) {
         return new SolicitacaoParticipacaoServico(repositorio, timeRepositorio,
                 autenticacaoServico, new com.torneios.dominio.participacao.solicitacao.PoliticaParticipacaoTorneio() {
                     @Override
@@ -203,6 +206,50 @@ public class BackendAplicacao {
                                 .map(t -> t.getOrganizadorId().equals(usuarioId))
                                 .orElse(false);
                     }
+
+                    @Override
+                    public com.torneios.dominio.compartilhado.usuario.UsuarioId organizadorDoTorneio(
+                            com.torneios.dominio.compartilhado.torneio.TorneioId torneioId) {
+                        return torneioRepositorio.buscarPorId(torneioId)
+                                .orElseThrow(() -> new IllegalArgumentException("Torneio nao encontrado."))
+                                .getOrganizadorId();
+                    }
+
+                    @Override
+                    public void adicionarParticipante(
+                            com.torneios.dominio.compartilhado.torneio.TorneioId torneioId,
+                            com.torneios.dominio.compartilhado.time.TimeId timeId) {
+                        var organizadorId = organizadorDoTorneio(torneioId);
+                        torneioServico.aprovarParticipante(torneioId, organizadorId, timeId);
+                    }
+
+                    @Override
+                    public void removerParticipante(
+                            com.torneios.dominio.compartilhado.torneio.TorneioId torneioId,
+                            com.torneios.dominio.compartilhado.time.TimeId timeId) {
+                        var organizadorId = organizadorDoTorneio(torneioId);
+                        torneioServico.removerParticipante(torneioId, organizadorId, timeId);
+                    }
+
+                    @Override
+                    public boolean possuiParticipante(
+                            com.torneios.dominio.compartilhado.torneio.TorneioId torneioId,
+                            com.torneios.dominio.compartilhado.time.TimeId timeId) {
+                        return torneioRepositorio.buscarPorId(torneioId)
+                                .map(torneio -> torneio.possuiParticipante(timeId))
+                                .orElse(false);
+                    }
+
+                    @Override
+                    public boolean torneioIniciado(
+                            com.torneios.dominio.compartilhado.torneio.TorneioId torneioId) {
+                        return torneioRepositorio.buscarPorId(torneioId)
+                                .map(torneio -> torneio.getStatus()
+                                        == com.torneios.dominio.compartilhado.enumeracao.StatusTorneio.INICIADO
+                                        || torneio.getStatus()
+                                        == com.torneios.dominio.compartilhado.enumeracao.StatusTorneio.FINALIZADO)
+                                .orElse(false);
+                    }
                 });
     }
 
@@ -212,8 +259,16 @@ public class BackendAplicacao {
     }
 
     @Bean
-    public InscricaoServicoAplicacao inscricaoServicoAplicacao(SolicitacaoParticipacaoServico solicitacaoParticipacaoServico) {
-        return new InscricaoServicoAplicacao(solicitacaoParticipacaoServico);
+    public InscricaoServicoAplicacao inscricaoServicoAplicacao(
+            SolicitacaoParticipacaoServico solicitacaoParticipacaoServico,
+            NotificacaoParticipacaoServicoAplicacao notificacaoServicoAplicacao) {
+        return new InscricaoServicoAplicacao(solicitacaoParticipacaoServico, notificacaoServicoAplicacao);
+    }
+
+    @Bean
+    public NotificacaoParticipacaoServicoAplicacao notificacaoParticipacaoServicoAplicacao(
+            NotificacaoParticipacaoRepositorioAplicacao repositorio) {
+        return new NotificacaoParticipacaoServicoAplicacao(repositorio);
     }
 
     @Bean

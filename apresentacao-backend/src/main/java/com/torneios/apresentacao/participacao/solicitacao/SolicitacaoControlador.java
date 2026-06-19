@@ -6,6 +6,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.participacao.candidatura.SolicitacaoResumo;
 import com.torneios.aplicacao.participacao.candidatura.SolicitacaoServicoAplicacao;
+import com.torneios.aplicacao.participacao.inscricao.InscricaoServicoAplicacao;
 import com.torneios.apresentacao.SessaoUsuario;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
@@ -24,26 +26,32 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("backend/solicitacao-participacao")
+@Transactional
 class SolicitacaoControlador {
 
     @Autowired SolicitacaoParticipacaoServico solicitacaoServico;
     @Autowired SolicitacaoServicoAplicacao solicitacaoServicoConsulta;
+    @Autowired InscricaoServicoAplicacao inscricaoServicoAplicacao;
 
     @RequestMapping(method = POST, path = "solicitar")
-    void solicitar(@RequestParam long timeId,
+    InscricaoServicoAplicacao.InscricaoResumo solicitar(@RequestParam long timeId,
                    @RequestParam long torneioId,
                    HttpSession sessao) {
-        solicitacaoServico.solicitarParticipacao(
-                new SolicitacaoParticipacaoId(gerarId()),
-                new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)),
-                new TimeId(timeId),
-                new TorneioId(torneioId));
+        return inscricaoServicoAplicacao.solicitarParticipacao(
+                gerarId(), SessaoUsuario.exigirUsuarioId(sessao), timeId, torneioId);
+    }
+
+    @RequestMapping(method = POST, path = "convidar")
+    InscricaoServicoAplicacao.InscricaoResumo convidar(@RequestParam long timeId,
+                                                       @RequestParam long torneioId,
+                                                       HttpSession sessao) {
+        return inscricaoServicoAplicacao.convidarTime(
+                gerarId(), SessaoUsuario.exigirUsuarioId(sessao), timeId, torneioId);
     }
 
     @RequestMapping(method = POST, path = "{id}/aprovar")
-    void aprovar(@PathVariable long id, HttpSession sessao) {
-        solicitacaoServico.aprovarSolicitacao(
-                new SolicitacaoParticipacaoId(id), new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)));
+    InscricaoServicoAplicacao.InscricaoResumo aprovar(@PathVariable long id, HttpSession sessao) {
+        return inscricaoServicoAplicacao.aprovarSolicitacao(id, SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = POST, path = "{id}/rejeitar")
@@ -66,6 +74,20 @@ class SolicitacaoControlador {
     @RequestMapping(method = GET, path = "pesquisa-por-torneio")
     List<? extends SolicitacaoResumo> pesquisarPendentesPorTorneio(@RequestParam long torneioId) {
         return solicitacaoServicoConsulta.pesquisarPendentesPorTorneio(torneioId);
+    }
+
+    @RequestMapping(method = GET, path = "torneio")
+    List<InscricaoServicoAplicacao.InscricaoResumo> acompanharTorneio(
+            @RequestParam long torneioId, HttpSession sessao) {
+        return inscricaoServicoAplicacao.acompanharTorneio(
+                torneioId, SessaoUsuario.exigirUsuarioId(sessao));
+    }
+
+    @RequestMapping(method = GET, path = "time")
+    List<InscricaoServicoAplicacao.InscricaoResumo> acompanharTime(
+            @RequestParam long timeId, HttpSession sessao) {
+        return inscricaoServicoAplicacao.acompanharTime(
+                timeId, SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     private long gerarId() {

@@ -17,5 +17,9 @@ public interface SolicitacaoParticipacaoRepositorio {
 
     List<SolicitacaoParticipacao> listarPorSolicitante(UsuarioId usuarioId);
 
+    List<SolicitacaoParticipacao> listarPorTorneio(TorneioId torneioId);
+
+    List<SolicitacaoParticipacao> listarPorTime(TimeId timeId);
+
     boolean existePendentePorTimeETorneio(TimeId timeId, TorneioId torneioId);
 }

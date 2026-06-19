@@ -47,31 +47,46 @@ public class SolicitacaoParticipacaoServico {
         if (!politicaParticipacaoTorneio.aceitaSolicitacoes(torneioId)) {
             throw new OperacaoNaoPermitidaException("O torneio nao aceita novas solicitacoes de participacao.");
         }
-        if (solicitacaoParticipacaoRepositorio.existePendentePorTimeETorneio(timeId, torneioId)) {
-            throw new RegraDeNegocioException("Ja existe uma solicitacao pendente para esse time no torneio.");
-        }
+        validarNovaSolicitacao(timeId, torneioId);
 
         SolicitacaoParticipacao solicitacao = new SolicitacaoParticipacao(solicitacaoId, usuarioId, timeId, torneioId);
         solicitacaoParticipacaoRepositorio.salvar(solicitacao);
         return solicitacao;
     }
 
-    public void aprovarSolicitacao(SolicitacaoParticipacaoId solicitacaoId, UsuarioId organizadorId) {
+    public SolicitacaoParticipacao convidarTime(SolicitacaoParticipacaoId solicitacaoId,
+                                                UsuarioId organizadorId,
+                                                TimeId timeId,
+                                                TorneioId torneioId) {
         autenticacaoServico.exigirAutenticacao(organizadorId);
+        validarOrganizador(torneioId, organizadorId);
+        validarTorneioNaoIniciado(torneioId);
+        obterTime(timeId);
+        validarNovaSolicitacao(timeId, torneioId);
+        SolicitacaoParticipacao convite = new SolicitacaoParticipacao(
+                solicitacaoId, organizadorId, timeId, torneioId, TipoSolicitacaoParticipacao.CONVITE);
+        solicitacaoParticipacaoRepositorio.salvar(convite);
+        return convite;
+    }
+
+    public SolicitacaoParticipacao aprovarSolicitacao(SolicitacaoParticipacaoId solicitacaoId, UsuarioId usuarioId) {
+        autenticacaoServico.exigirAutenticacao(usuarioId);
         SolicitacaoParticipacao solicitacao = obterSolicitacao(solicitacaoId);
-        validarOrganizador(solicitacao.getTorneioId(), organizadorId);
+        validarAvaliador(solicitacao, usuarioId);
         validarTorneioNaoIniciado(solicitacao.getTorneioId());
         solicitacao.aprovar();
         solicitacaoParticipacaoRepositorio.salvar(solicitacao);
+        politicaParticipacaoTorneio.adicionarParticipante(solicitacao.getTorneioId(), solicitacao.getTimeId());
         Time time = obterTime(solicitacao.getTimeId());
         time.vincularAoTorneio(solicitacao.getTorneioId());
         timeRepositorio.salvar(time);
+        return solicitacao;
     }
 
-    public void rejeitarSolicitacao(SolicitacaoParticipacaoId solicitacaoId, UsuarioId organizadorId) {
-        autenticacaoServico.exigirAutenticacao(organizadorId);
+    public void rejeitarSolicitacao(SolicitacaoParticipacaoId solicitacaoId, UsuarioId usuarioId) {
+        autenticacaoServico.exigirAutenticacao(usuarioId);
         SolicitacaoParticipacao solicitacao = obterSolicitacao(solicitacaoId);
-        validarOrganizador(solicitacao.getTorneioId(), organizadorId);
+        validarAvaliador(solicitacao, usuarioId);
         validarTorneioNaoIniciado(solicitacao.getTorneioId());
         solicitacao.rejeitar();
         solicitacaoParticipacaoRepositorio.salvar(solicitacao);
@@ -87,11 +102,27 @@ public class SolicitacaoParticipacaoServico {
         }
         time.removerVinculoTorneio(torneioId);
         timeRepositorio.salvar(time);
+        politicaParticipacaoTorneio.removerParticipante(torneioId, timeId);
     }
 
     public List<SolicitacaoParticipacao> acompanharCandidaturas(UsuarioId usuarioId) {
         autenticacaoServico.exigirAutenticacao(usuarioId);
         return solicitacaoParticipacaoRepositorio.listarPorSolicitante(usuarioId);
+    }
+
+    public List<SolicitacaoParticipacao> acompanharTorneio(TorneioId torneioId, UsuarioId organizadorId) {
+        autenticacaoServico.exigirAutenticacao(organizadorId);
+        validarOrganizador(torneioId, organizadorId);
+        return solicitacaoParticipacaoRepositorio.listarPorTorneio(torneioId);
+    }
+
+    public List<SolicitacaoParticipacao> acompanharTime(TimeId timeId, UsuarioId usuarioId) {
+        autenticacaoServico.exigirAutenticacao(usuarioId);
+        Time time = obterTime(timeId);
+        if (!time.getResponsavel().equals(usuarioId)) {
+            throw new OperacaoNaoPermitidaException("Apenas o treinador responsavel pode acompanhar o time.");
+        }
+        return solicitacaoParticipacaoRepositorio.listarPorTime(timeId);
     }
 
     public void cancelarCandidatura(SolicitacaoParticipacaoId solicitacaoId, UsuarioId usuarioId) {
@@ -112,10 +143,38 @@ public class SolicitacaoParticipacaoServico {
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Solicitacao de participacao nao encontrada."));
     }
 
+    public UsuarioId organizadorDoTorneio(TorneioId torneioId) {
+        return politicaParticipacaoTorneio.organizadorDoTorneio(torneioId);
+    }
+
+    public UsuarioId responsavelDoTime(TimeId timeId) {
+        return obterTime(timeId).getResponsavel();
+    }
+
     private void validarOrganizador(TorneioId torneioId, UsuarioId organizadorId) {
         if (!politicaParticipacaoTorneio.usuarioEhOrganizador(torneioId, organizadorId)) {
             throw new OperacaoNaoPermitidaException(
                     "Apenas o organizador do torneio pode avaliar solicitacoes de participacao.");
+        }
+    }
+
+    private void validarAvaliador(SolicitacaoParticipacao solicitacao, UsuarioId usuarioId) {
+        if (solicitacao.getTipo() == TipoSolicitacaoParticipacao.CANDIDATURA) {
+            validarOrganizador(solicitacao.getTorneioId(), usuarioId);
+            return;
+        }
+        Time time = obterTime(solicitacao.getTimeId());
+        if (!time.getResponsavel().equals(usuarioId)) {
+            throw new OperacaoNaoPermitidaException("Apenas o treinador do time pode responder ao convite.");
+        }
+    }
+
+    private void validarNovaSolicitacao(TimeId timeId, TorneioId torneioId) {
+        if (politicaParticipacaoTorneio.possuiParticipante(torneioId, timeId)) {
+            throw new RegraDeNegocioException("O time ja participa deste torneio.");
+        }
+        if (solicitacaoParticipacaoRepositorio.existePendentePorTimeETorneio(timeId, torneioId)) {
+            throw new RegraDeNegocioException("Ja existe uma negociacao pendente entre o time e o torneio.");
         }
     }
 

@@ -7,6 +7,7 @@ import java.util.List;
 import com.torneios.dominio.compartilhado.enumeracao.FormatoEquipe;
 import com.torneios.dominio.compartilhado.enumeracao.FormatoTorneio;
 import com.torneios.dominio.compartilhado.enumeracao.StatusTorneio;
+import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.torneio.TorneioFuncionalidade;
 import com.torneios.dominio.torneio.estrutura.ModoGeracaoEstrutura;
 import com.torneios.dominio.torneio.estrutura.TipoEstruturaCompeticao;
@@ -314,7 +315,8 @@ public class F9Steps extends TorneioFuncionalidade {
     @Quando("ele remover o time da lista de participantes aprovados")
     public void ele_remover_time_dos_participantes() {
         try {
-            torneioServico.removerParticipante(TORNEIO_ID, ORGANIZADOR_ID, TIME_A_ID);
+            torneioServico.removerParticipante(
+                    TORNEIO_ID, ORGANIZADOR_ID, new TimeId(TIME_A_ID.valor()));
         } catch (Exception e) {
             excecaoCapturada = e;
         }

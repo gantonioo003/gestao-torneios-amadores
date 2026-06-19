@@ -7,7 +7,7 @@ F2. Gerenciar identidade, autenticacao, perfil e permissoes por funcao no futebo
 
 F3. Gerenciar o chat privado autenticado entre usuarios, com solicitacao de conversa, aprovacao ou recusa, envio de mensagens somente apos aprovacao e consulta segura do historico pelos participantes.
 
-F4. Gerenciar inscricoes, curadoria e composicao final dos participantes do torneio, permitindo candidatura, acompanhamento, cancelamento, avaliacao, aprovacao, rejeicao e ajuste da lista final antes do inicio
+F4. Gerenciar candidaturas, convites e composicao final dos participantes do torneio, exibindo publicamente a disponibilidade de vagas, permitindo ao treinador solicitar participacao e acompanhar ou cancelar pelo perfil do time, permitindo ao organizador convidar times e avaliar candidaturas na edicao do torneio, consolidando a entrada somente apos aceite e notificando automaticamente a outra parte.
 
 ## Times, elenco e desempenho
 F5. Gerenciar times do treinador, permitindo cadastrar, editar, excluir e consultar torneios vinculados, alem de gerenciar o elenco de profissionais esportivos.

@@ -26,6 +26,29 @@
 
       <div class="top-actions">
         @if (usuario(); as conta) {
+          <div class="notification-shell">
+            <button class="icon-action icon-button notification-button" title="Notificacoes" aria-label="Abrir notificacoes" (click)="alternarNotificacoes()">
+              <i class="bi bi-bell"></i>
+              @if (notificacoesNaoLidas) {
+                <span class="notification-badge">{{ notificacoesNaoLidas }}</span>
+              }
+            </button>
+            @if (notificacoesAbertas) {
+              <div class="notification-panel">
+                <div class="notification-heading"><strong>Notificacoes</strong><span>{{ notificacoesNaoLidas }} nova(s)</span></div>
+                @if (!notificacoes.length) {
+                  <p>Nenhuma notificacao por enquanto.</p>
+                } @else {
+                  @for (notificacao of notificacoes; track notificacao.id) {
+                    <button [class.unread]="!notificacao.lida" (click)="abrirNotificacao(notificacao)">
+                      <i class="bi bi-trophy"></i>
+                      <span><strong>{{ notificacao.titulo }}</strong><small>{{ notificacao.mensagem }}</small></span>
+                    </button>
+                  }
+                }
+              </div>
+            }
+          </div>
           <a
             class="account-chip"
             routerLink="/home-logada"

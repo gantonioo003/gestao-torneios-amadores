@@ -13,16 +13,26 @@ public class SolicitacaoParticipacao {
     private final UsuarioId solicitante;
     private final TimeId timeId;
     private final TorneioId torneioId;
+    private final TipoSolicitacaoParticipacao tipo;
     private StatusSolicitacao status;
 
     public SolicitacaoParticipacao(SolicitacaoParticipacaoId id,
                                    UsuarioId solicitante,
                                    TimeId timeId,
                                    TorneioId torneioId) {
+        this(id, solicitante, timeId, torneioId, TipoSolicitacaoParticipacao.CANDIDATURA);
+    }
+
+    public SolicitacaoParticipacao(SolicitacaoParticipacaoId id,
+                                   UsuarioId solicitante,
+                                   TimeId timeId,
+                                   TorneioId torneioId,
+                                   TipoSolicitacaoParticipacao tipo) {
         this.id = Objects.requireNonNull(id, "O id da solicitacao e obrigatorio.");
         this.solicitante = Objects.requireNonNull(solicitante, "O solicitante e obrigatorio.");
         this.timeId = Objects.requireNonNull(timeId, "O time da solicitacao e obrigatorio.");
         this.torneioId = Objects.requireNonNull(torneioId, "O torneio da solicitacao e obrigatorio.");
+        this.tipo = Objects.requireNonNull(tipo, "O tipo da solicitacao e obrigatorio.");
         this.status = StatusSolicitacao.PENDENTE;
     }
 
@@ -46,6 +56,10 @@ public class SolicitacaoParticipacao {
         return status;
     }
 
+    public TipoSolicitacaoParticipacao getTipo() {
+        return tipo;
+    }
+
     public boolean estaPendente() {
         return status == StatusSolicitacao.PENDENTE;
     }
@@ -63,7 +77,7 @@ public class SolicitacaoParticipacao {
     public void cancelar(UsuarioId usuarioId) {
         validarPendente();
         if (!solicitante.equals(usuarioId)) {
-            throw new IllegalStateException("Apenas o solicitante pode cancelar a candidatura.");
+            throw new IllegalStateException("Apenas quem iniciou a solicitacao pode cancela-la.");
         }
         this.status = StatusSolicitacao.CANCELADA;
     }

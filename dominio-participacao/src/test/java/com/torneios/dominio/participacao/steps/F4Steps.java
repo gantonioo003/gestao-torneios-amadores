@@ -6,6 +6,7 @@ import com.torneios.dominio.compartilhado.enumeracao.StatusSolicitacao;
 import com.torneios.dominio.participacao.ParticipacaoFuncionalidade;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacao;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoId;
+import com.torneios.dominio.participacao.solicitacao.TipoSolicitacaoParticipacao;
 import com.torneios.dominio.participacao.time.Time;
 
 import io.cucumber.java.pt.Dado;
@@ -13,6 +14,87 @@ import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
 
 public class F4Steps extends ParticipacaoFuncionalidade {
+
+    @Dado("que existe um time cadastrado para outro treinador")
+    public void existe_time_cadastrado_para_outro_treinador() {
+        repositorio.salvar(new Time(TIME_A_ID, "Time Alpha", USUARIO_AUTENTICADO_ID));
+    }
+
+    @Dado("que existe um convite pendente para o time")
+    @Dado("que existe um convite pendente iniciado pelo organizador")
+    public void existe_convite_pendente_para_time() {
+        existe_time_cadastrado_para_outro_treinador();
+        repositorio.salvar(new SolicitacaoParticipacao(
+                SOLICITACAO_ID, ORGANIZADOR_ID, TIME_A_ID, TORNEIO_ID,
+                TipoSolicitacaoParticipacao.CONVITE));
+    }
+
+    @Dado("que o usuario autenticado e o treinador responsavel pelo time")
+    public void usuario_e_treinador_responsavel() {
+        usuarioAtual = USUARIO_AUTENTICADO_ID;
+    }
+
+    @Quando("o organizador convidar o time para participar")
+    public void organizador_convidar_time() {
+        try {
+            solicitacaoCapturada = solicitacaoServico.convidarTime(
+                    SOLICITACAO_ID, ORGANIZADOR_ID, TIME_A_ID, TORNEIO_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o treinador aceitar o convite")
+    public void treinador_aceitar_convite() {
+        try {
+            solicitacaoServico.aprovarSolicitacao(SOLICITACAO_ID, usuarioAtual);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o treinador recusar o convite")
+    public void treinador_recusar_convite() {
+        try {
+            solicitacaoServico.rejeitarSolicitacao(SOLICITACAO_ID, usuarioAtual);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o organizador cancelar o convite")
+    public void organizador_cancelar_convite() {
+        try {
+            solicitacaoServico.cancelarCandidatura(SOLICITACAO_ID, ORGANIZADOR_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve registrar um convite pendente")
+    public void registrar_convite_pendente() {
+        assertNull(excecaoCapturada);
+        assertEquals(TipoSolicitacaoParticipacao.CONVITE, solicitacaoCapturada.getTipo());
+        assertEquals(StatusSolicitacao.PENDENTE, solicitacaoCapturada.getStatus());
+    }
+
+    @Entao("o sistema deve aprovar o convite e vincular o time ao torneio")
+    public void aprovar_convite_e_vincular_time() {
+        assertNull(excecaoCapturada);
+        assertEquals(StatusSolicitacao.APROVADA,
+                repositorio.buscarPorId(SOLICITACAO_ID).orElseThrow().getStatus());
+        assertTrue(repositorio.buscarPorId(TIME_A_ID).orElseThrow().estaVinculadoAoTorneio(TORNEIO_ID));
+    }
+
+    @Entao("o sistema deve registrar o convite como rejeitado")
+    public void convite_rejeitado() {
+        solicitacao_rejeitada();
+    }
+
+    @Entao("o sistema deve marcar o convite como cancelado")
+    public void convite_cancelado() {
+        candidatura_cancelada();
+    }
 
     @Dado("que o torneio está com vagas abertas para solicitação de participação")
     @Dado("que o torneio esta com vagas abertas para solicitacao de participacao")
