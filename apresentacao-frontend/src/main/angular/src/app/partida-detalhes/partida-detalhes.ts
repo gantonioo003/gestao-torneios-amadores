@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { KeyValuePipe } from '@angular/common';
 import { catchError, finalize, forkJoin, of, switchMap } from 'rxjs';
 import { AuthService } from '../core/auth.service';
 import {
@@ -14,13 +15,13 @@ import {
 
 @Component({
   selector: 'app-partida-detalhes',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, KeyValuePipe],
   templateUrl: './partida-detalhes.html',
   styleUrl: './partida-detalhes.css'
 })
 export class PartidaDetalhes implements OnInit {
   readonly usuario = this.auth.usuario;
-  aba: 'resumo' | 'estatisticas' | 'gerenciar' = 'resumo';
+  aba: 'resumo' | 'estatisticas' | 'gerenciar' | 'escalacao' = 'resumo';
   partidaId = '';
   partida: any = {};
   torneio: any = {};
@@ -45,6 +46,56 @@ export class PartidaDetalhes implements OnInit {
   processando = '';
   mensagem = '';
   erro = '';
+
+  // F8 - Mesa Tática
+  mesaTaticaMandante: any = null;
+  mesaTaticaVisitante: any = null;
+  elencoMandante: any[] = [];
+  elencoVisitante: any[] = [];
+  timeAtivoEscalacao: 'mandante' | 'visitante' = 'mandante';
+  editandoEscalacao = false;
+  salvandoEscalacao = false;
+  esquemaEditando = '';
+  titularesEditando: string[] = [];
+  reservasEditando: string[] = [];
+
+  readonly esquemasPorFormato: Record<string, { valor: string; label: string }[]> = {
+    ONZE_POR_ONZE: [
+      { valor: 'QUATRO_QUATRO_DOIS', label: '4-4-2' },
+      { valor: 'QUATRO_TRES_TRES', label: '4-3-3' },
+      { valor: 'TRES_CINCO_DOIS', label: '3-5-2' },
+      { valor: 'QUATRO_DOIS_TRES_UM', label: '4-2-3-1' }
+    ],
+    SETE_POR_SETE: [
+      { valor: 'DOIS_TRES_UM', label: '2-3-1' },
+      { valor: 'TRES_DOIS_UM', label: '3-2-1' },
+      { valor: 'TRES_UM_DOIS', label: '3-1-2' }
+    ],
+    CINCO_POR_CINCO: [
+      { valor: 'UM_DOIS_UM', label: '1-2-1' },
+      { valor: 'DOIS_UM_UM', label: '2-1-1' },
+      { valor: 'DOIS_DOIS', label: '2-2' }
+    ],
+    TRES_POR_TRES: [
+      { valor: 'UM_UM', label: '1-1' },
+      { valor: 'DOIS_UM', label: '2-1' }
+    ]
+  };
+
+  private readonly distribuicaoPorEsquema: Record<string, Record<string, number>> = {
+    QUATRO_QUATRO_DOIS: { GOLEIRO: 1, DEFENSOR: 4, MEIO_CAMPISTA: 4, ATACANTE: 2 },
+    QUATRO_TRES_TRES:   { GOLEIRO: 1, DEFENSOR: 4, MEIO_CAMPISTA: 3, ATACANTE: 3 },
+    TRES_CINCO_DOIS:    { GOLEIRO: 1, DEFENSOR: 3, MEIO_CAMPISTA: 5, ATACANTE: 2 },
+    QUATRO_DOIS_TRES_UM:{ GOLEIRO: 1, DEFENSOR: 4, MEIO_CAMPISTA: 5, ATACANTE: 1 },
+    DOIS_TRES_UM:       { GOLEIRO: 1, DEFENSOR: 2, MEIO_CAMPISTA: 3, ATACANTE: 1 },
+    TRES_DOIS_UM:       { GOLEIRO: 1, DEFENSOR: 3, MEIO_CAMPISTA: 2, ATACANTE: 1 },
+    TRES_UM_DOIS:       { GOLEIRO: 1, DEFENSOR: 3, MEIO_CAMPISTA: 1, ATACANTE: 2 },
+    UM_DOIS_UM:         { GOLEIRO: 1, DEFENSOR: 1, MEIO_CAMPISTA: 2, ATACANTE: 1 },
+    DOIS_UM_UM:         { GOLEIRO: 1, DEFENSOR: 2, MEIO_CAMPISTA: 1, ATACANTE: 1 },
+    DOIS_DOIS:          { GOLEIRO: 1, DEFENSOR: 2, MEIO_CAMPISTA: 0, ATACANTE: 2 },
+    UM_UM:              { GOLEIRO: 1, DEFENSOR: 1, MEIO_CAMPISTA: 0, ATACANTE: 1 },
+    DOIS_UM:            { GOLEIRO: 1, DEFENSOR: 2, MEIO_CAMPISTA: 0, ATACANTE: 1 }
+  };
 
   constructor(
     private readonly http: HttpClient,
@@ -94,11 +145,140 @@ export class PartidaDetalhes implements OnInit {
     return this.podeIniciarPartida || this.podeGerenciarScout;
   }
 
-  abrirAba(aba: 'resumo' | 'estatisticas' | 'gerenciar') {
+  abrirAba(aba: 'resumo' | 'estatisticas' | 'gerenciar' | 'escalacao') {
     if (aba === 'gerenciar' && !this.podeGerenciarPartida) return;
     this.aba = aba;
     this.mensagem = '';
     this.erro = '';
+    if (aba === 'escalacao') this.carregarEscalacoes();
+  }
+
+  // F8 - Mesa Tática
+  get slotsDoEsquema(): { posicao: string; label: string }[] {
+    const dist = this.distribuicaoPorEsquema[this.esquemaEditando] ?? {};
+    const slots: { posicao: string; label: string }[] = [];
+    const ordemPosicoes = ['GOLEIRO', 'DEFENSOR', 'MEIO_CAMPISTA', 'ATACANTE'];
+    const labelPosicao: Record<string, string> = {
+      GOLEIRO: 'Goleiro', DEFENSOR: 'Defensor', MEIO_CAMPISTA: 'Meia', ATACANTE: 'Atacante'
+    };
+    for (const posicao of ordemPosicoes) {
+      for (let i = 0; i < (dist[posicao] ?? 0); i++) {
+        const qtd = dist[posicao] ?? 0;
+        slots.push({ posicao, label: `${labelPosicao[posicao]}${qtd > 1 ? ' ' + (i + 1) : ''}` });
+      }
+    }
+    return slots;
+  }
+
+  get formatoTorneio(): string {
+    return this.torneio?.formatoEquipe ?? 'ONZE_POR_ONZE';
+  }
+
+  get elencoAtivoEscalacao(): any[] {
+    return this.timeAtivoEscalacao === 'mandante' ? this.elencoMandante : this.elencoVisitante;
+  }
+
+  get mesaTaticaAtiva(): any {
+    return this.timeAtivoEscalacao === 'mandante' ? this.mesaTaticaMandante : this.mesaTaticaVisitante;
+  }
+
+  get timeIdAtivo(): string {
+    return String(this.timeAtivoEscalacao === 'mandante' ? this.partida.mandanteId : this.partida.visitanteId);
+  }
+
+  get podeEditarEscalacaoAtiva(): boolean {
+    if (!this.usuario()) return false;
+    const elenco = this.elencoAtivoEscalacao;
+    const ehTreinador = elenco.some(v =>
+      v.tipoProfissional === 'TREINADOR' && String(v.cadastranteId) === String(this.usuario()?.id));
+    const ehResponsavel = this.usuario()?.podeGerenciarTimes === true;
+    const ehOrganizador = this.usuario()?.podeCriarTorneio === true
+      && !!this.torneio && String(this.usuario()?.id) === String(this.torneio.organizadorId);
+    return ehTreinador || ehResponsavel || ehOrganizador;
+  }
+
+  selecionarTimeEscalacao(lado: 'mandante' | 'visitante') {
+    this.timeAtivoEscalacao = lado;
+    this.editandoEscalacao = false;
+    this.esquemaEditando = '';
+    this.titularesEditando = [];
+  }
+
+  iniciarEdicaoEscalacao() {
+    const mesa = this.mesaTaticaAtiva;
+    this.esquemaEditando = mesa?.esquemaTatico ?? '';
+    this.atualizarSlotsEsquema();
+    if (mesa?.titularesPosicionados?.length) {
+      const ids = mesa.titularesPosicionados.map((t: any) => String(t.jogadorId));
+      this.titularesEditando = ids;
+    }
+    this.reservasEditando = mesa?.reservas?.map(String) ?? [];
+    this.editandoEscalacao = true;
+  }
+
+  atualizarSlotsEsquema() {
+    const total = this.slotsDoEsquema.length;
+    const novos: string[] = Array(total).fill('');
+    for (let i = 0; i < Math.min(novos.length, this.titularesEditando.length); i++) {
+      novos[i] = this.titularesEditando[i];
+    }
+    this.titularesEditando = novos;
+  }
+
+  salvarEscalacao() {
+    if (!this.esquemaEditando || this.salvandoEscalacao) return;
+    const titularesValidos = this.titularesEditando.filter(id => !!id);
+    if (titularesValidos.length !== this.slotsDoEsquema.length) {
+      this.erro = 'Preencha todos os titulares antes de salvar.';
+      return;
+    }
+    this.salvandoEscalacao = true;
+    this.erro = '';
+    const titulares = this.slotsDoEsquema
+      .map((slot, i) => ({ jogadorId: Number(this.titularesEditando[i]), posicao: slot.posicao }))
+      .filter(t => !!t.jogadorId);
+    this.http.post('/backend/escalacao/salvar-por-responsavel', {
+      partidaId: Number(this.partidaId),
+      timeId: Number(this.timeIdAtivo),
+      usuarioId: Number(this.usuario()?.id),
+      esquemaTatico: this.esquemaEditando,
+      titulares,
+      reservas: this.reservasEditando.filter(id => !!id).map(Number)
+    }).pipe(finalize(() => this.salvandoEscalacao = false)).subscribe({
+      next: () => {
+        this.editandoEscalacao = false;
+        this.mensagem = 'Escalacao salva com sucesso.';
+        this.carregarEscalacoes();
+      },
+      error: (e: any) => this.erro = this.mensagemErro(e)
+    });
+  }
+
+  toggleReserva(jogadorId: string) {
+    const idx = this.reservasEditando.indexOf(jogadorId);
+    if (idx >= 0) {
+      this.reservasEditando.splice(idx, 1);
+    } else {
+      this.reservasEditando.push(jogadorId);
+    }
+  }
+
+  nomeAbreviado(jogadorId: string | number): string {
+    const nome = this.nomeJogador(jogadorId);
+    const partes = nome.split(' ');
+    return partes.length > 1 ? `${partes[0]} ${partes[partes.length - 1]}` : nome;
+  }
+
+  private carregarEscalacoes() {
+    if (!this.partidaId) return;
+    const m = this.http.get<any>(`/backend/escalacao/mesa-tatica?partidaId=${this.partidaId}&timeId=${this.partida.mandanteId}`)
+      .pipe(catchError(() => of(null)));
+    const v = this.http.get<any>(`/backend/escalacao/mesa-tatica?partidaId=${this.partidaId}&timeId=${this.partida.visitanteId}`)
+      .pipe(catchError(() => of(null)));
+    forkJoin({ mandante: m, visitante: v }).subscribe(r => {
+      this.mesaTaticaMandante = r.mandante;
+      this.mesaTaticaVisitante = r.visitante;
+    });
   }
 
   escolhaAtual(): string | null {
@@ -287,6 +467,8 @@ export class PartidaDetalhes implements OnInit {
           ...(dados.mandante?.time?.elenco ?? []),
           ...(dados.visitante?.time?.elenco ?? [])
         ];
+        this.elencoMandante = dados.mandante?.time?.elenco ?? [];
+        this.elencoVisitante = dados.visitante?.time?.elenco ?? [];
         this.jogadores = elencos
           .filter((vinculo: any) => vinculo.tipoProfissional === 'JOGADOR'
             || String(vinculo.funcao).toUpperCase() === 'JOGADOR')

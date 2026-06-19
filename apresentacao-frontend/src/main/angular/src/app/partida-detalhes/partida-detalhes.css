@@ -560,6 +560,127 @@
   border-radius: 9px;
 }
 
+/* F8 - Mesa Tática */
+.escalacao-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, .55fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.escalacao-campo {
+  display: grid;
+  gap: 14px;
+}
+
+.escalacao-time-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 4px;
+  background: #f4f6f3;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.escalacao-time-toggle button {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .18s, color .18s;
+}
+
+.escalacao-time-toggle button.active {
+  background: #fff;
+  color: var(--green-dark);
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+
+.escalacao-esquema-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.escalacao-field {
+  min-height: 420px;
+}
+
+.escalacao-reservas {
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.escalacao-reservas .eyebrow {
+  margin-bottom: 8px;
+}
+
+.escalacao-reservas-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.escalacao-editor {
+  padding: 22px;
+  display: grid;
+  gap: 14px;
+}
+
+.escalacao-slots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.escalacao-reservas-check {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px;
+  background: #f8faf8;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+
+.escalacao-check-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.escalacao-erro {
+  padding: 10px 13px;
+  color: #a52d2a;
+  background: #fff0ef;
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+.escalacao-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+
 @media (max-width: 780px) {
   .match-page {
     width: min(100% - 20px, 1120px);
@@ -598,6 +719,15 @@
   .organizer-flow > header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .escalacao-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .escalacao-slots,
+  .escalacao-reservas-check {
+    grid-template-columns: 1fr;
   }
 
   .organizer-step,

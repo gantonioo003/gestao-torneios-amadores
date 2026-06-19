@@ -8,9 +8,14 @@
         <p class="page-subtitle">Partidas, elenco, torneios vinculados e estatisticas do time.</p>
       </div>
     </div>
-    @if (podeEditarTime) {
-      <a class="btn btn-outline" [routerLink]="['/time', time.id, 'edicao']">Editar perfil</a>
-    }
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+      <a class="btn btn-outline" [routerLink]="['/comparativo']" [queryParams]="{ tipo: 'time', id: time.id, nome: time.nome }">
+        <i class="bi bi-bar-chart-line"></i> Comparar
+      </a>
+      @if (podeEditarTime) {
+        <a class="btn btn-outline" [routerLink]="['/time', time.id, 'edicao']">Editar perfil</a>
+      }
+    </div>
   </div>
 
   @if (mensagem) {

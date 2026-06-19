@@ -14,9 +14,14 @@
         <p class="page-subtitle">{{ tipoLabel(profissional.tipo || 'JOGADOR') }} com historico, vinculos e estatisticas acumuladas.</p>
       </div>
     </div>
-    @if (podeEditar()) {
-      <button class="btn btn-outline" (click)="editarPerfil()">Editar perfil</button>
-    }
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+      <a class="btn btn-outline" [routerLink]="['/comparativo']" [queryParams]="{ tipo: 'jogador', id: profissional.id, nome: profissional.nome }">
+        <i class="bi bi-bar-chart-line"></i> Comparar
+      </a>
+      @if (podeEditar()) {
+        <button class="btn btn-outline" (click)="editarPerfil()">Editar perfil</button>
+      }
+    </div>
   </div>
 
   <nav class="professional-tabs">

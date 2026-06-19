@@ -55,6 +55,9 @@
       <button [class.active]="aba === 'estatisticas'" (click)="abrirAba('estatisticas')">
         <i class="bi bi-bar-chart"></i> Estatisticas
       </button>
+      <button [class.active]="aba === 'escalacao'" (click)="abrirAba('escalacao')">
+        <i class="bi bi-layout-wtf"></i> Mesa tatica
+      </button>
       @if (podeGerenciarPartida) {
         <button [class.active]="aba === 'gerenciar'" (click)="abrirAba('gerenciar')">
           <i class="bi bi-sliders"></i> Gerenciar partida
@@ -173,6 +176,117 @@
             } @empty { <small>As notas aparecem quando houver scout.</small> }
           </div>
         </section>
+      </div>
+    }
+
+    @if (aba === 'escalacao') {
+      <div class="escalacao-layout">
+        <section class="card panel-strong escalacao-campo">
+          <div class="escalacao-time-toggle">
+            <button [class.active]="timeAtivoEscalacao === 'mandante'" (click)="selecionarTimeEscalacao('mandante')">
+              <i class="bi bi-shield"></i> {{ nomeMandante }}
+            </button>
+            <button [class.active]="timeAtivoEscalacao === 'visitante'" (click)="selecionarTimeEscalacao('visitante')">
+              <i class="bi bi-shield"></i> {{ nomeVisitante }}
+            </button>
+          </div>
+
+          @if (!mesaTaticaAtiva) {
+            <div class="empty-state">Nenhuma escalacao definida para este time ainda.</div>
+          } @else {
+            <div class="escalacao-esquema-label">
+              <i class="bi bi-diagram-3"></i>
+              {{ mesaTaticaAtiva.esquemaTatico?.replaceAll('_', '-')?.toLowerCase() }}
+            </div>
+            <div class="field-board escalacao-field">
+              @for (jogador of mesaTaticaAtiva.titularesPosicionados; track jogador.jogadorId) {
+                <div class="player-dot" [style.left.%]="jogador.eixoX" [style.top.%]="jogador.eixoY">
+                  <div class="player-face">{{ nomeJogador(jogador.jogadorId).slice(0, 1) }}</div>
+                  <span>{{ nomeAbreviado(jogador.jogadorId) }}</span>
+                </div>
+              }
+            </div>
+            @if (mesaTaticaAtiva.reservas?.length) {
+              <div class="escalacao-reservas">
+                <div class="eyebrow">Reservas</div>
+                <div class="escalacao-reservas-lista">
+                  @for (id of mesaTaticaAtiva.reservas; track id) {
+                    <span class="status status-gray">{{ nomeJogador(id) }}</span>
+                  }
+                </div>
+              </div>
+            }
+          }
+
+          @if (podeEditarEscalacaoAtiva && !editandoEscalacao) {
+            <button class="btn btn-outline" style="margin-top: 14px" (click)="iniciarEdicaoEscalacao()">
+              <i class="bi bi-pencil"></i> {{ mesaTaticaAtiva ? 'Editar escalacao' : 'Montar escalacao' }}
+            </button>
+          }
+        </section>
+
+        @if (editandoEscalacao) {
+          <section class="card escalacao-editor">
+            <h2 class="section-title">Montar escalacao — {{ timeAtivoEscalacao === 'mandante' ? nomeMandante : nomeVisitante }}</h2>
+
+            <div class="field">
+              <label>Esquema tatico</label>
+              <select [(ngModel)]="esquemaEditando" (ngModelChange)="atualizarSlotsEsquema()">
+                <option value="">Selecione o esquema</option>
+                @for (grupo of esquemasPorFormato | keyvalue; track grupo.key) {
+                  <optgroup [label]="grupo.key.replaceAll('_', ' ')">
+                    @for (e of grupo.value; track e.valor) {
+                      <option [value]="e.valor">{{ e.label }}</option>
+                    }
+                  </optgroup>
+                }
+              </select>
+            </div>
+
+            @if (esquemaEditando && slotsDoEsquema.length) {
+              <div class="escalacao-slots">
+                @for (slot of slotsDoEsquema; track $index) {
+                  <div class="field">
+                    <label>{{ slot.label }}</label>
+                    <select [(ngModel)]="titularesEditando[$index]">
+                      <option value="">Selecione</option>
+                      @for (v of elencoAtivoEscalacao; track v.profissionalId) {
+                        <option [value]="v.profissionalId">{{ v.nomeProfissional }}</option>
+                      }
+                    </select>
+                  </div>
+                }
+              </div>
+
+              <div class="field" style="margin-top: 8px">
+                <label>Reservas <span class="muted">(opcional)</span></label>
+                <div class="escalacao-reservas-check">
+                  @for (v of elencoAtivoEscalacao; track v.profissionalId) {
+                    @if (!titularesEditando.includes('' + v.profissionalId)) {
+                      <label class="escalacao-check-item">
+                        <input type="checkbox"
+                          [checked]="reservasEditando.includes('' + v.profissionalId)"
+                          (change)="toggleReserva('' + v.profissionalId)">
+                        {{ v.nomeProfissional }}
+                      </label>
+                    }
+                  }
+                </div>
+              </div>
+
+              @if (erro) {
+                <div class="escalacao-erro"><i class="bi bi-exclamation-circle"></i> {{ erro }}</div>
+              }
+
+              <div class="escalacao-acoes">
+                <button class="btn" (click)="editandoEscalacao = false; erro = ''">Cancelar</button>
+                <button class="btn btn-primary" [disabled]="salvandoEscalacao" (click)="salvarEscalacao()">
+                  {{ salvandoEscalacao ? 'Salvando...' : 'Salvar escalacao' }}
+                </button>
+              </div>
+            }
+          </section>
+        }
       </div>
     }
 
