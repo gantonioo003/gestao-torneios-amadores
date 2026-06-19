@@ -24,6 +24,9 @@
 - Como usuario autenticado, quero acompanhar atualizacoes automaticas sobre jogos no feed para ver rapidamente o que aconteceu na competicao.
 - Como usuario autenticado, quero publicar no feed social geral com texto, midia e hashtags para compartilhar jogos, resultados e momentos das peladas.
 - Como usuario autenticado, quero curtir e reagir a publicacoes do feed para interagir com outros usuarios.
+- Como usuario autenticado, quero encaminhar uma publicacao para uma conversa aprovada ou grupo acessivel para compartilha-la sem sair da plataforma.
+- Como usuario autenticado, quero publicar foto ou video e permitir respostas somente com foto para registrar momentos da comunidade.
+- Como usuario, quero ver minhas postagens pessoais em uma aba discreta do perfil, separada dos meus dados e sem misturar publicacoes feitas como time ou torneio.
 - Como visitante, quero visualizar o feed social geral sem login para acompanhar o movimento da plataforma antes de criar uma conta.
 - Como usuario, quero filtrar o feed por hashtag para acompanhar um torneio, time ou assunto especifico.
 
@@ -51,8 +54,11 @@
 - Como organizador, quero ajustar a lista final de participantes antes do inicio para montar a competicao corretamente.
 
 ## 4. Desafios e amistosos entre times
-- Como responsavel por um time, quero propor um desafio amistoso para outro time para encontrar adversarios fora dos torneios.
-- Como responsavel pelo time desafiado, quero aceitar ou recusar o convite para controlar a agenda do meu time.
+- Como treinador com acesso a um time, quero propor um desafio pela busca ou perfil de outro time para encontrar adversarios fora dos torneios.
+- Como treinador com um unico time, quero que ele seja selecionado automaticamente como proponente.
+- Como treinador com varios times, quero escolher qual deles esta propondo o amistoso.
+- Como treinador, quero acompanhar no meu time os desafios recebidos, enviados, confirmados e encerrados.
+- Como treinador desafiado, quero aceitar ou recusar uma proposta e notificar os envolvidos quando o amistoso for confirmado.
 - Como responsavel por um dos times envolvidos, quero reagendar data e local do amistoso para combinar melhor a partida.
 - Como responsavel por um dos times envolvidos, quero registrar o resultado do amistoso para alimentar o historico dos times.
 
@@ -93,3 +99,10 @@
 - Como usuario, quero salvar apenas os comparativos que eu considerar importantes para montar um historico de analises.
 - Como usuario, quero consultar comparativos salvos para acompanhar analises de desempenho feitas anteriormente.
 - Como usuario, quero atualizar ou excluir comparativos salvos quando os dados mudarem ou a analise nao for mais util.
+
+## 9. Central de notificacoes
+- Como usuario autenticado, quero visualizar em uma unica pagina todos os meus avisos para acompanhar acontecimentos importantes.
+- Como usuario autenticado, quero identificar notificacoes nao lidas e marca-las individualmente ou em conjunto.
+- Como usuario autenticado, quero filtrar notificacoes por torneios, times, amistosos, social ou sistema.
+- Como usuario autenticado, quero arquivar notificacoes antigas sem apagar o historico.
+- Como usuario autenticado, quero escolher quais categorias desejo receber e manter essas preferencias salvas na minha conta.

@@ -1,6 +1,7 @@
 package com.torneios.dominio.participacao.acesso;
 
 public enum TipoContaUsuario {
+    USUARIO_COMUM,
     JOGADOR,
     ORGANIZADOR,
     TREINADOR,
@@ -17,6 +18,10 @@ public enum TipoContaUsuario {
     }
 
     public boolean possuiPerfilProfissional() {
-        return this != ORGANIZADOR;
+        return this == JOGADOR
+                || this == TREINADOR
+                || this == AUXILIAR_TECNICO
+                || this == PREPARADOR_FISICO
+                || this == MEDICO;
     }
 }

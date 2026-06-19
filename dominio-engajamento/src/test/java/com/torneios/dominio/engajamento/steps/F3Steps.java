@@ -176,4 +176,62 @@ public class F3Steps extends EngajamentoFuncionalidade {
     public void sistema_deve_impedir_solicitacao_conversa() {
         assertNotNull(excecaoCapturada);
     }
+
+    @Dado("que o criador possui conversa aprovada com um usuario e nao possui com outro")
+    public void criadorPossuiContatoELonge() {
+        consultaChat.autenticar(USUARIO_ID);
+        consultaChat.cadastrarUsuario(OUTRO_USUARIO_ID);
+        consultaChat.cadastrarUsuario(ORGANIZADOR_ID);
+        consultaChat.registrarConversaAprovada(USUARIO_ID, OUTRO_USUARIO_ID);
+    }
+
+    @Quando("ele criar um grupo com os dois usuarios")
+    public void criarGrupoComDoisUsuarios() {
+        grupoChat = grupoChatServico.criar(
+                grupoId(1L), "Grupo da comunidade", USUARIO_ID, List.of(OUTRO_USUARIO_ID, ORGANIZADOR_ID));
+    }
+
+    @Entao("o contato aprovado deve entrar e o outro usuario deve receber convite")
+    public void contatoEntraOutroRecebeConvite() {
+        assertTrue(grupoChat.possuiParticipante(OUTRO_USUARIO_ID));
+        assertTrue(grupoChat.possuiConvitePendente(ORGANIZADOR_ID));
+        assertFalse(grupoChat.possuiParticipante(ORGANIZADOR_ID));
+    }
+
+    @Dado("que existe um grupo com convite pendente para o usuario")
+    public void grupoComConvitePendente() {
+        consultaChat.autenticar(USUARIO_ID);
+        consultaChat.autenticar(OUTRO_USUARIO_ID);
+        grupoChat = grupoChatServico.criar(grupoId(2L), "Grupo aberto", USUARIO_ID, List.of(OUTRO_USUARIO_ID));
+    }
+
+    @Quando("o usuario aceitar o convite do grupo")
+    public void aceitarConviteGrupo() {
+        grupoChat = grupoChatServico.aceitarConvite(grupoChat.getId(), OUTRO_USUARIO_ID);
+    }
+
+    @Entao("ele deve se tornar participante do grupo")
+    public void tornaParticipanteGrupo() {
+        assertTrue(grupoChat.possuiParticipante(OUTRO_USUARIO_ID));
+        assertFalse(grupoChat.possuiConvitePendente(OUTRO_USUARIO_ID));
+    }
+
+    @Dado("que um treinador possui um profissional vinculado ao seu elenco")
+    public void treinadorPossuiProfissional() {
+        consultaChat.autenticar(USUARIO_ID);
+        consultaChat.cadastrarUsuario(OUTRO_USUARIO_ID);
+        consultaChat.registrarComandado(USUARIO_ID, OUTRO_USUARIO_ID);
+    }
+
+    @Quando("o treinador criar um grupo com esse profissional")
+    public void treinadorCriaGrupoProfissional() {
+        grupoChat = grupoChatServico.criar(
+                grupoId(3L), "Elenco principal", USUARIO_ID, List.of(OUTRO_USUARIO_ID));
+    }
+
+    @Entao("o profissional deve entrar no grupo sem convite")
+    public void profissionalEntraSemConvite() {
+        assertTrue(grupoChat.possuiParticipante(OUTRO_USUARIO_ID));
+        assertFalse(grupoChat.possuiConvitePendente(OUTRO_USUARIO_ID));
+    }
 }

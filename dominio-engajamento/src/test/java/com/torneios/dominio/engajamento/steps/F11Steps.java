@@ -7,6 +7,8 @@ import java.util.List;
 import com.torneios.dominio.engajamento.EngajamentoFuncionalidade;
 import com.torneios.dominio.engajamento.feed.TipoPublicacaoFeed;
 import com.torneios.dominio.engajamento.feed.TipoReacaoFeed;
+import com.torneios.dominio.engajamento.feed.TipoIdentidadeFeed;
+import com.torneios.dominio.compartilhado.time.TimeId;
 
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Entao;
@@ -232,5 +234,98 @@ public class F11Steps extends EngajamentoFuncionalidade {
     public void sistema_deve_listar_apenas_publicacoes_da_hashtag() {
         assertEquals(1, publicacoesFeed.size());
         assertTrue(publicacoesFeed.get(0).getHashtags().contains("copabairro"));
+    }
+
+    @Dado("que o usuario autenticado e responsavel por um time")
+    public void usuarioResponsavelTime() {
+        consultaFeed.autenticar(USUARIO_ID);
+        consultaFeed.registrarTime(new TimeId(TIME_A_ID), USUARIO_ID);
+    }
+
+    @Quando("ele publicar uma postagem representando o time")
+    public void publicarRepresentandoTime() {
+        publicacaoFeed = feedTorneioServico.publicarPostagem(
+                publicacaoId(50L), USUARIO_ID, TipoIdentidadeFeed.TIME, TIME_A_ID,
+                "Treino concluido #VilaFC", List.of("VilaFC"), List.of());
+    }
+
+    @Entao("o sistema deve salvar a publicacao com identidade do time")
+    public void salvaIdentidadeTime() {
+        assertEquals(TipoIdentidadeFeed.TIME, publicacaoFeed.getTipoIdentidade());
+        assertEquals(TIME_A_ID, publicacaoFeed.getIdentidadeId());
+    }
+
+    @Dado("que existe um time administrado por outro usuario")
+    public void timeOutroResponsavel() {
+        consultaFeed.autenticar(USUARIO_ID);
+        consultaFeed.registrarTime(new TimeId(TIME_A_ID), OUTRO_USUARIO_ID);
+    }
+
+    @Quando("o usuario tentar publicar representando esse time")
+    public void tentarPublicarOutroTime() {
+        try {
+            feedTorneioServico.publicarPostagem(
+                    publicacaoId(51L), USUARIO_ID, TipoIdentidadeFeed.TIME, TIME_A_ID,
+                    "Publicacao indevida", List.of(), List.of());
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o usuario responder a publicacao apenas com uma foto")
+    public void responderApenasFoto() {
+        publicacaoFeed = feedTorneioServico.comentarPublicacao(
+                publicacaoId(52L), publicacaoFeed.getId(), USUARIO_ID, "", List.of("foto-resposta.jpg"));
+    }
+
+    @Entao("o comentario com foto deve ser salvo na publicacao")
+    public void comentarioFotoSalvo() {
+        assertEquals(1, publicacaoFeed.getMidias().size());
+        assertEquals("foto-resposta.jpg", publicacaoFeed.getMidias().get(0));
+    }
+
+    @Quando("o usuario curtir a publicacao duas vezes")
+    public void curtirDuasVezes() {
+        feedTorneioServico.curtirPublicacao(publicacaoFeed.getId(), USUARIO_ID);
+        publicacaoFeed = feedTorneioServico.curtirPublicacao(publicacaoFeed.getId(), USUARIO_ID);
+    }
+
+    @Entao("o sistema deve remover a curtida no segundo clique sem duplicar")
+    public void removerCurtidaSegundoClique() {
+        assertEquals(0, publicacaoFeed.getQuantidadeCurtidas());
+    }
+
+    @Dado("que o usuario publicou como pessoa e representando um time")
+    public void publicouPessoaETime() {
+        usuarioResponsavelTime();
+        feedTorneioServico.publicarPostagem(
+                publicacaoId(53L), USUARIO_ID, TipoIdentidadeFeed.USUARIO, USUARIO_ID.valor(),
+                "Post pessoal", List.of(), List.of());
+        feedTorneioServico.publicarPostagem(
+                publicacaoId(54L), USUARIO_ID, TipoIdentidadeFeed.TIME, TIME_A_ID,
+                "Post do time", List.of(), List.of());
+    }
+
+    @Quando("o perfil consultar as publicacoes pessoais do usuario")
+    public void perfilConsultarPublicacoes() {
+        publicacoesFeed = feedTorneioServico.listarPorAutor(USUARIO_ID);
+    }
+
+    @Entao("o sistema deve listar apenas a postagem feita como usuario")
+    public void listarSomentePessoal() {
+        assertEquals(1, publicacoesFeed.size());
+        assertEquals(TipoIdentidadeFeed.USUARIO, publicacoesFeed.get(0).getTipoIdentidade());
+    }
+
+    @Quando("o chat consultar a publicacao encaminhada")
+    public void chatConsultarPublicacaoEncaminhada() {
+        publicacaoFeed = feedTorneioServico.consultarPublicacao(publicacaoFeed.getId());
+    }
+
+    @Entao("o sistema deve retornar a publicacao ativa para o card da mensagem")
+    public void retornarPublicacaoParaCardMensagem() {
+        assertNotNull(publicacaoFeed);
+        assertFalse(publicacaoFeed.estaRemovida());
+        assertEquals("Unidos do Bairro venceu bonito #CopaBairro", publicacaoFeed.getConteudo());
     }
 }

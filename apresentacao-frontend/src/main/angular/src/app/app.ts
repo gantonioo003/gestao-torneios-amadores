@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/auth.service';
 
@@ -30,6 +30,11 @@ export class App {
     return this.notificacoes.filter(item => !item.lida).length;
   }
 
+  @HostListener('window:notificacoes-atualizadas')
+  aoAtualizarNotificacoes() {
+    this.carregarNotificacoes();
+  }
+
   alternarNotificacoes() {
     this.notificacoesAbertas = !this.notificacoesAbertas;
     if (this.notificacoesAbertas) this.carregarNotificacoes();
@@ -41,6 +46,17 @@ export class App {
       this.notificacoesAbertas = false;
       this.router.navigateByUrl(notificacao.link);
     });
+  }
+
+  iconeNotificacao(categoria: string): string {
+    const icones: Record<string, string> = {
+      TORNEIO: 'bi-trophy',
+      TIME: 'bi-shield',
+      AMISTOSO: 'bi-dribbble',
+      SOCIAL: 'bi-people',
+      SISTEMA: 'bi-info-circle'
+    };
+    return icones[categoria] ?? 'bi-bell';
   }
 
   sair() {

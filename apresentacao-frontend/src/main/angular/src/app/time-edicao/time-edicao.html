@@ -72,6 +72,22 @@
           <div class="empty-state">Nenhum profissional vinculado ainda.</div>
         }
       </section>
+
+      <details class="danger-zone">
+        <summary>
+          <i class="bi bi-gear"></i>
+          Opcoes avancadas
+        </summary>
+        <div class="danger-zone-content">
+          <div>
+            <strong>Excluir time</strong>
+            <p>Remove definitivamente este time quando ele nao estiver vinculado a competicoes.</p>
+          </div>
+          <button class="btn btn-sm btn-danger" (click)="excluir()">
+            <i class="bi bi-trash"></i> Excluir time
+          </button>
+        </div>
+      </details>
     }
   </div>
 </main>

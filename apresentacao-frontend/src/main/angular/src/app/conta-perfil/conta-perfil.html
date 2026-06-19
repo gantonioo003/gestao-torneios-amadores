@@ -4,7 +4,13 @@
   } @else if (perfil) {
     <section class="card panel-strong profile-header">
       <div class="profile-identity">
-        <div class="profile-monogram">{{ iniciais(perfil.nome) }}</div>
+        <div class="profile-monogram" [class.has-photo]="perfil.fotoPerfilUrl">
+          @if (perfil.fotoPerfilUrl) {
+            <img [src]="perfil.fotoPerfilUrl" alt="">
+          } @else {
+            {{ iniciais(perfil.nome) }}
+          }
+        </div>
         <div>
           <div class="profile-username">&#64;{{ perfil.nomeUsuario }}</div>
           <h1>{{ perfil.nome }}</h1>
@@ -21,11 +27,27 @@
           <i class="bi bi-pencil"></i> Gerenciar meu perfil
         </a>
       } @else {
-        <a class="btn btn-primary" routerLink="/chat"><i class="bi bi-chat-dots"></i> Solicitar conversa</a>
+        <div class="profile-actions">
+          <a class="btn btn-primary" routerLink="/chat"><i class="bi bi-chat-dots"></i> Solicitar conversa</a>
+          @if (usuario()) {
+            <button class="btn btn-outline" (click)="denunciarPerfil()"><i class="bi bi-flag"></i> Denunciar</button>
+          }
+        </div>
       }
     </section>
+    @if (aviso) {
+      <div class="profile-message profile-success">{{ aviso }}</div>
+    }
 
-    <div class="grid profile-layout">
+    <nav class="profile-tabs">
+      <button [class.active]="aba === 'perfil'" (click)="aba = 'perfil'">Perfil</button>
+      <button [class.active]="aba === 'publicacoes'" (click)="aba = 'publicacoes'">
+        Publicacoes <span>{{ publicacoes.length }}</span>
+      </button>
+    </nav>
+
+    @if (aba === 'perfil') {
+      <div class="grid profile-layout">
       <section class="grid">
         <article class="card">
           <h2 class="section-title">Sobre</h2>
@@ -97,7 +119,49 @@
           <a class="btn btn-outline btn-block" routerLink="/buscar">Buscar na plataforma</a>
         </article>
       </aside>
-    </div>
+      </div>
+    } @else {
+      <section class="profile-posts">
+        @for (post of publicacoes; track post.id) {
+          <article class="card profile-post">
+            <header>
+              <div class="profile-post-avatar" [class.has-photo]="post.autorFotoPerfilUrl">
+                @if (post.autorFotoPerfilUrl) {
+                  <img [src]="post.autorFotoPerfilUrl" alt="">
+                } @else {
+                  {{ iniciais(post.identidadeNome) }}
+                }
+              </div>
+              <div>
+                <strong>{{ post.identidadeNome }}</strong>
+                <small>&#64;{{ post.autorNomeUsuario }} · {{ tempo(post.criadaEm) }}</small>
+              </div>
+            </header>
+            @if (post.conteudo) {
+              <p>{{ post.conteudo }}</p>
+            }
+            @for (midia of post.midias; track midia) {
+              <img [src]="midia" alt="Midia da publicacao">
+            }
+            <div class="profile-post-tags">
+              @for (tag of post.hashtags; track tag) {
+                <span>#{{ tag }}</span>
+              }
+            </div>
+            <footer>
+              <span><i class="bi bi-heart"></i> {{ post.quantidadeCurtidas }}</span>
+              <span><i class="bi bi-chat"></i> {{ post.comentarios.length }}</span>
+            </footer>
+          </article>
+        } @empty {
+          <div class="card profile-post-empty">
+            <i class="bi bi-chat-square-text"></i>
+            <strong>Nenhuma publicacao pessoal ainda</strong>
+            <p>Quando esta pessoa publicar no feed, os posts aparecerao aqui.</p>
+          </div>
+        }
+      </section>
+    }
   } @else {
     <section class="empty-state">
       <h1>Perfil não encontrado</h1>

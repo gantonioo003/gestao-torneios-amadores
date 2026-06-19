@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { Desafio } from './desafio/desafio';
 import { FeedSocial } from './feed-social/feed-social';
 import { HomeLogada } from './home-logada/home-logada';
 import { HomePublica } from './home-publica/home-publica';
@@ -19,6 +18,7 @@ import { authGuard, roleGuard, timeRosterGuard } from './core/auth.guard';
 import { ContaPerfil } from './conta-perfil/conta-perfil';
 import { Palpites } from './palpites/palpites';
 import { BuscaGeral } from './busca-geral/busca-geral';
+import { Notificacoes } from './notificacoes/notificacoes';
 
 export const routes: Routes = [
   { path: '', component: HomePublica },
@@ -35,8 +35,9 @@ export const routes: Routes = [
   { path: 'ranking', redirectTo: 'buscar', pathMatch: 'full' },
   { path: 'palpites', component: Palpites, canActivate: [authGuard] },
   { path: 'feed', component: FeedSocial, canActivate: [authGuard] },
-  { path: 'desafio', component: Desafio },
+  { path: 'desafio', redirectTo: 'buscar', pathMatch: 'full' },
   { path: 'chat', component: ChatPrivado, canActivate: [authGuard] },
+  { path: 'notificacoes', component: Notificacoes, canActivate: [authGuard] },
   { path: 'time/pesquisa', redirectTo: 'buscar', pathMatch: 'full' },
   { path: 'time/criacao', component: TimeCriacao, canActivate: [authGuard, roleGuard], data: { permissao: 'gerenciarTimes' } },
   { path: 'time/:id/detalhes', component: TimeDetalhes, resolve: TIME_DETALHES_RESOLVEDORES },

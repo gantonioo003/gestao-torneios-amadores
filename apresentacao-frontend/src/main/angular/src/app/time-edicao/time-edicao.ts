@@ -4,7 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveData, Router, RouterModule, RouterStateSnapshot } from '@angular/router';
 import { catchError, of } from 'rxjs';
 
-@Component({ selector: 'app-time-edicao', imports: [FormsModule, RouterModule], templateUrl: './time-edicao.html' })
+@Component({
+  selector: 'app-time-edicao',
+  imports: [FormsModule, RouterModule],
+  templateUrl: './time-edicao.html',
+  styleUrl: './time-edicao.css'
+})
 export class TimeEdicao {
   static readonly ID = 'id';
   static readonly RECURSO = 'recurso';
@@ -30,6 +35,15 @@ export class TimeEdicao {
     const destino = this.recurso.id ? ['/time', this.recurso.id, 'detalhes'] : ['/buscar'];
     this.http.post(url, { id: this.recurso.id, nome: this.recurso.nome })
       .subscribe({ next: () => this.router.navigate(destino), error: e => alert(e.error?.mensagem ?? 'Erro') });
+  }
+
+  excluir() {
+    if (!confirm(`Excluir definitivamente o time "${this.recurso.nome}"?`)) return;
+    this.http.post(`/backend/time/${this.recurso.id}/excluir`, {}, { responseType: 'text' })
+      .subscribe({
+        next: () => this.router.navigate(['/buscar']),
+        error: e => alert(e.error?.mensagem ?? 'Nao foi possivel excluir o time.')
+      });
   }
 
   buscarProfissionais() {

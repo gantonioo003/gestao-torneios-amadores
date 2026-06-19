@@ -36,6 +36,7 @@ export class Login implements OnInit, AfterViewInit {
   configuracaoCarregada = false;
 
   readonly tiposConta = [
+    { valor: 'USUARIO_COMUM', nome: 'Nenhuma das opções', descricao: 'Acompanhe torneios, faça palpites e participe do feed e do chat.' },
     { valor: 'JOGADOR', nome: 'Jogador', descricao: 'Tenha sua página, acompanhe times e oportunidades.' },
     { valor: 'TREINADOR', nome: 'Técnico / treinador', descricao: 'Crie e administre seus times, elenco e comissão.' },
     { valor: 'AUXILIAR_TECNICO', nome: 'Auxiliar técnico', descricao: 'Tenha seu perfil profissional e participe de elencos.' },

@@ -15,14 +15,6 @@ interface ContaAtividade {
   palpites: Array<{ apurado: boolean }>;
 }
 
-interface PreferenciasNotificacao {
-  mensagensPrivadas: boolean;
-  torneios: boolean;
-  resultados: boolean;
-  feedSocial: boolean;
-  resumoSemanal: boolean;
-}
-
 @Component({
   selector: 'app-home-logada',
   imports: [FormsModule, RouterLink],
@@ -43,14 +35,6 @@ export class HomeLogada implements OnInit {
   salvando = false;
   mensagem = '';
   erro = '';
-  preferenciasNotificacao: PreferenciasNotificacao = {
-    mensagensPrivadas: true,
-    torneios: true,
-    resultados: true,
-    feedSocial: false,
-    resumoSemanal: false
-  };
-
   constructor(
     private readonly http: HttpClient,
     private readonly auth: AuthService,
@@ -84,8 +68,6 @@ export class HomeLogada implements OnInit {
     const conta = this.usuario();
     if (!conta) return;
     this.prepararFormulario();
-    this.carregarPreferenciasNotificacao(conta.id);
-
     if (conta.podeGerenciarTimes) {
       this.http.get<any[]>('/backend/time/pesquisa?meus=true')
         .pipe(catchError(() => of([])))
@@ -134,17 +116,6 @@ export class HomeLogada implements OnInit {
       queryParamsHandling: 'merge',
       replaceUrl: true
     });
-  }
-
-  salvarPreferenciasNotificacao() {
-    const conta = this.usuario();
-    if (!conta) return;
-    localStorage.setItem(
-      this.chavePreferenciasNotificacao(conta.id),
-      JSON.stringify(this.preferenciasNotificacao)
-    );
-    this.erro = '';
-    this.mensagem = 'Preferências de notificação salvas neste dispositivo.';
   }
 
   sairConta() {
@@ -200,6 +171,7 @@ export class HomeLogada implements OnInit {
 
   tipoLabel(tipo?: string): string {
     const labels: Record<string, string> = {
+      USUARIO_COMUM: 'Usuário',
       JOGADOR: 'Jogador',
       ORGANIZADOR: 'Organizador',
       TREINADOR: 'Técnico / treinador',
@@ -266,20 +238,4 @@ export class HomeLogada implements OnInit {
     };
   }
 
-  private carregarPreferenciasNotificacao(contaId: number) {
-    try {
-      const preferencias = localStorage.getItem(this.chavePreferenciasNotificacao(contaId));
-      if (!preferencias) return;
-      this.preferenciasNotificacao = {
-        ...this.preferenciasNotificacao,
-        ...JSON.parse(preferencias)
-      };
-    } catch {
-      localStorage.removeItem(this.chavePreferenciasNotificacao(contaId));
-    }
-  }
-
-  private chavePreferenciasNotificacao(contaId: number): string {
-    return `liga-amadora.notificacoes.${contaId}`;
-  }
 }

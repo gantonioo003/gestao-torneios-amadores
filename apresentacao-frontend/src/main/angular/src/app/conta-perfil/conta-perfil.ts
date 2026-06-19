@@ -11,6 +11,7 @@ interface PerfilPublico {
   cidade?: string;
   estado?: string;
   biografia?: string;
+  fotoPerfilUrl?: string;
   tipo: string;
   podeCriarTorneio: boolean;
   podeGerenciarTimes: boolean;
@@ -30,6 +31,19 @@ interface ContaAtividade {
   torneiosParticipando: TorneioAtividade[];
 }
 
+interface PostPerfil {
+  id: number;
+  identidadeNome: string;
+  autorNomeUsuario: string;
+  autorFotoPerfilUrl?: string;
+  conteudo: string;
+  hashtags: string[];
+  midias: string[];
+  quantidadeCurtidas: number;
+  comentarios: unknown[];
+  criadaEm: string;
+}
+
 @Component({
   selector: 'app-conta-perfil',
   imports: [RouterLink],
@@ -41,6 +55,9 @@ export class ContaPerfil implements OnInit {
   atividade?: ContaAtividade;
   carregando = true;
   erro = '';
+  aviso = '';
+  aba: 'perfil' | 'publicacoes' = 'perfil';
+  publicacoes: PostPerfil[] = [];
 
   readonly usuario = this.auth.usuario;
   readonly ehProprioPerfil = computed(
@@ -62,6 +79,7 @@ export class ContaPerfil implements OnInit {
 
   tipoLabel(tipo?: string): string {
     const nomes: Record<string, string> = {
+      USUARIO_COMUM: 'Usuário',
       JOGADOR: 'Jogador',
       ORGANIZADOR: 'Organizador',
       TREINADOR: 'Técnico / treinador',
@@ -92,6 +110,20 @@ export class ContaPerfil implements OnInit {
       .toUpperCase();
   }
 
+  denunciarPerfil() {
+    if (!this.perfil || !this.usuario()) return;
+    const motivo = prompt('Por que este perfil deve ser revisado?');
+    if (!motivo?.trim()) return;
+    this.http.post('/backend/moderacao/denuncias', {
+      tipoAlvo: 'PERFIL',
+      alvoId: this.perfil.id,
+      motivo: motivo.trim()
+    }).subscribe({
+      next: () => this.aviso = 'Denuncia enviada para analise.',
+      error: erro => this.aviso = erro?.error?.mensagem ?? 'Nao foi possivel enviar a denuncia.'
+    });
+  }
+
   private carregarPerfil(nomeUsuario: string) {
     this.carregando = true;
     this.erro = '';
@@ -101,6 +133,7 @@ export class ContaPerfil implements OnInit {
         next: perfil => {
           this.perfil = perfil;
           this.carregarAtividade(nomeUsuario);
+          this.carregarPublicacoes(perfil.id);
         },
         error: () => {
           this.perfil = undefined;
@@ -119,5 +152,19 @@ export class ContaPerfil implements OnInit {
         torneiosParticipando: []
       }
     });
+  }
+
+  private carregarPublicacoes(usuarioId: number) {
+    this.http.get<PostPerfil[]>(`/backend/feed/autor/${usuarioId}`).subscribe({
+      next: publicacoes => this.publicacoes = publicacoes,
+      error: () => this.publicacoes = []
+    });
+  }
+
+  tempo(dataIso: string): string {
+    const horas = Math.floor((Date.now() - new Date(dataIso).getTime()) / 3_600_000);
+    if (horas < 1) return 'agora';
+    if (horas < 24) return `${horas}h`;
+    return `${Math.floor(horas / 24)}d`;
   }
 }

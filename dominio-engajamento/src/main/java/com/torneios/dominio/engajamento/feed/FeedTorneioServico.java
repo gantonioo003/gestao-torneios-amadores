@@ -9,6 +9,7 @@ import com.torneios.dominio.compartilhado.excecao.RegraDeNegocioException;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
+import com.torneios.dominio.compartilhado.time.TimeId;
 
 public class FeedTorneioServico {
 
@@ -44,6 +45,58 @@ public class FeedTorneioServico {
                 publicacaoId, autorId, conteudo, hashtags, midias);
         feedTorneioRepositorio.salvar(publicacao);
         return publicacao;
+    }
+
+    public PublicacaoFeed publicarPostagem(PublicacaoFeedId publicacaoId,
+                                           UsuarioId autorId,
+                                           TipoIdentidadeFeed tipoIdentidade,
+                                           long identidadeId,
+                                           String conteudo,
+                                           List<String> hashtags,
+                                           List<String> midias) {
+        validarUsuarioAutenticado(autorId);
+        TorneioId torneioId = null;
+        switch (tipoIdentidade) {
+            case USUARIO -> {
+                if (identidadeId != autorId.valor()) {
+                    throw new OperacaoNaoPermitidaException("O usuario so pode publicar com a propria identidade.");
+                }
+            }
+            case TIME -> {
+                if (!consultaSuporte.usuarioEhResponsavelTime(new TimeId(identidadeId), autorId)) {
+                    throw new OperacaoNaoPermitidaException(
+                            "Apenas o responsavel do time pode publicar usando esta identidade.");
+                }
+            }
+            case TORNEIO -> {
+                torneioId = new TorneioId(identidadeId);
+                validarOrganizador(torneioId, autorId);
+            }
+            case SISTEMA -> throw new OperacaoNaoPermitidaException(
+                    "A identidade de sistema e reservada para atualizacoes automaticas.");
+        }
+        PublicacaoFeed publicacao = PublicacaoFeed.postagem(
+                publicacaoId, autorId, tipoIdentidade, identidadeId, torneioId, conteudo, hashtags, midias);
+        feedTorneioRepositorio.salvar(publicacao);
+        return publicacao;
+    }
+
+    public PublicacaoFeed comentarPublicacao(PublicacaoFeedId comentarioId,
+                                             PublicacaoFeedId publicacaoId,
+                                             UsuarioId autorId,
+                                             String conteudo,
+                                             List<String> midias) {
+        validarUsuarioAutenticado(autorId);
+        PublicacaoFeed publicacaoPai = obterPublicacao(publicacaoId);
+        if (publicacaoPai.getTipo() == TipoPublicacaoFeed.COMENTARIO || publicacaoPai.estaRemovida()) {
+            throw new OperacaoNaoPermitidaException(
+                    "Comentarios so podem ser adicionados a uma publicacao ativa do feed.");
+        }
+        PublicacaoFeed comentario = PublicacaoFeed.comentarioPublicacao(
+                comentarioId, publicacaoId, autorId, conteudo,
+                midias == null ? List.of() : midias);
+        feedTorneioRepositorio.salvar(comentario);
+        return comentario;
     }
 
     public PublicacaoFeed comentarPartida(PublicacaoFeedId publicacaoId,
@@ -115,6 +168,7 @@ public class FeedTorneioServico {
     public List<PublicacaoFeed> listarFeedGeral() {
         return feedTorneioRepositorio.listarTodos().stream()
                 .filter(publicacao -> !publicacao.estaRemovida())
+                .filter(publicacao -> publicacao.getPublicacaoPaiId().isEmpty())
                 .toList();
     }
 
@@ -122,6 +176,30 @@ public class FeedTorneioServico {
         return feedTorneioRepositorio.listarPorHashtag(hashtag).stream()
                 .filter(publicacao -> !publicacao.estaRemovida())
                 .toList();
+    }
+
+    public List<PublicacaoFeed> listarPorAutor(UsuarioId usuarioId) {
+        Objects.requireNonNull(usuarioId, "O autor do perfil e obrigatorio.");
+        return feedTorneioRepositorio.listarPorAutor(usuarioId).stream()
+                .filter(publicacao -> !publicacao.estaRemovida())
+                .filter(publicacao -> publicacao.getPublicacaoPaiId().isEmpty())
+                .filter(publicacao -> publicacao.getTipoIdentidade() == TipoIdentidadeFeed.USUARIO)
+                .toList();
+    }
+
+    public List<PublicacaoFeed> listarComentarios(PublicacaoFeedId publicacaoId) {
+        obterPublicacao(publicacaoId);
+        return feedTorneioRepositorio.listarComentarios(publicacaoId).stream()
+                .filter(publicacao -> !publicacao.estaRemovida())
+                .toList();
+    }
+
+    public PublicacaoFeed consultarPublicacao(PublicacaoFeedId publicacaoId) {
+        PublicacaoFeed publicacao = obterPublicacao(publicacaoId);
+        if (publicacao.estaRemovida()) {
+            throw new EntidadeNaoEncontradaException("Publicacao do feed nao encontrada.");
+        }
+        return publicacao;
     }
 
     private PublicacaoFeed obterPublicacao(PublicacaoFeedId publicacaoId) {

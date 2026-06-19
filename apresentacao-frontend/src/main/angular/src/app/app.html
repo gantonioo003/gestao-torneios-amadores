@@ -39,12 +39,15 @@
                 @if (!notificacoes.length) {
                   <p>Nenhuma notificacao por enquanto.</p>
                 } @else {
-                  @for (notificacao of notificacoes; track notificacao.id) {
+                  @for (notificacao of notificacoes.slice(0, 4); track notificacao.id) {
                     <button [class.unread]="!notificacao.lida" (click)="abrirNotificacao(notificacao)">
-                      <i class="bi bi-trophy"></i>
+                      <i class="bi {{ iconeNotificacao(notificacao.categoria) }}"></i>
                       <span><strong>{{ notificacao.titulo }}</strong><small>{{ notificacao.mensagem }}</small></span>
                     </button>
                   }
+                  <a class="notification-all" routerLink="/notificacoes" (click)="notificacoesAbertas = false">
+                    Ver todas as notificacoes
+                  </a>
                 }
               </div>
             }

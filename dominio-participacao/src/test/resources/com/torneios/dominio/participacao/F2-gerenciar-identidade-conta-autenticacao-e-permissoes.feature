@@ -24,6 +24,11 @@ Feature: Gerenciar identidade, conta, autenticacao, perfil e permissoes
     When o usuario cadastrar uma nova conta do tipo treinador
     Then o sistema deve criar a conta como treinador
 
+  Scenario: Cadastrar conta comum apenas para acompanhar e interagir
+    Given que nao existe conta cadastrada para o email informado
+    When o usuario cadastrar uma conta comum sem funcao esportiva
+    Then o sistema deve criar a conta sem funcao esportiva
+
   Scenario: Realizar login com email e senha validos
     Given que existe uma conta cadastrada para o usuario
     When ele informar email e senha validos
@@ -66,6 +71,16 @@ Feature: Gerenciar identidade, conta, autenticacao, perfil e permissoes
 
   Scenario: Impedir organizador de gerenciar times
     Given que existe uma conta organizadora cadastrada
+    When o sistema verificar a permissao para gerenciar times
+    Then o sistema deve impedir a operacao
+
+  Scenario: Impedir conta comum de criar torneios
+    Given que existe uma conta comum cadastrada
+    When o sistema verificar a permissao para criar torneios
+    Then o sistema deve impedir a operacao
+
+  Scenario: Impedir conta comum de gerenciar times
+    Given que existe uma conta comum cadastrada
     When o sistema verificar a permissao para gerenciar times
     Then o sistema deve impedir a operacao
 

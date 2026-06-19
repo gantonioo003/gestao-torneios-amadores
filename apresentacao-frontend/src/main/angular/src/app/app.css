@@ -123,6 +123,17 @@
   line-height: 1.35;
 }
 
+.notification-all {
+  margin-top: 5px;
+  padding: 10px;
+  display: block;
+  text-align: center;
+  color: var(--green-dark);
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 900;
+}
+
 @media (max-width: 640px) {
   .account-chip {
     max-width: 116px;

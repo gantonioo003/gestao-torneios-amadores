@@ -16,6 +16,36 @@
     }
   </div>
 
+  @if (usuario() && progresso) {
+    <section class="prediction-game card panel-strong">
+      <div class="game-level">
+        <span class="level-orbit">{{ progresso.nivel }}</span>
+        <div>
+          <div class="eyebrow">Liga dos palpiteiros</div>
+          <h2>Nivel {{ progresso.nivel }} · {{ progresso.pontos }} XP</h2>
+          <div class="xp-track" aria-label="Progresso do nivel">
+            <i [style.width.%]="percentualNivel"></i>
+          </div>
+          <small>{{ progresso.pontosProximoNivel - progresso.pontos }} XP para o proximo nivel</small>
+        </div>
+      </div>
+
+      <div class="game-metrics">
+        <span><i class="bi bi-fire"></i><strong>{{ progresso.sequenciaAtual }}</strong><small>dias seguidos</small></span>
+        <span><i class="bi bi-bullseye"></i><strong>{{ progresso.totalAcertos }}</strong><small>acertos</small></span>
+        <span><i class="bi bi-bar-chart"></i><strong>#{{ progresso.posicaoRanking }}</strong><small>no ranking</small></span>
+      </div>
+
+      <div class="badge-rack">
+        @for (selo of progresso.selos; track selo) {
+          <span title="{{ seloLabel(selo) }}"><i class="bi bi-patch-check-fill"></i> {{ seloLabel(selo) }}</span>
+        } @empty {
+          <small>Faca seu primeiro palpite para liberar um selo.</small>
+        }
+      </div>
+    </section>
+  }
+
   <section class="prediction-overview" aria-label="Resumo dos palpites">
     <article class="prediction-stat">
       <span class="prediction-stat-icon"><i class="bi bi-lightning-charge"></i></span>
@@ -41,6 +71,25 @@
       </span>
     </article>
   </section>
+
+  @if (ranking.length) {
+    <section class="card prediction-ranking">
+      <div>
+        <div class="eyebrow">Temporada da comunidade</div>
+        <h2>Ranking de palpiteiros</h2>
+        <p>Ganhe 10 XP por novo palpite, bonus diario e 25 XP por acerto.</p>
+      </div>
+      <div class="ranking-strip">
+        @for (item of ranking.slice(0, 5); track item.usuarioId; let posicao = $index) {
+          <article [class.current-user]="item.usuarioId === usuario()?.id">
+            <b>#{{ posicao + 1 }}</b>
+            <span>{{ item.nome }}</span>
+            <strong>{{ item.pontos }} XP</strong>
+          </article>
+        }
+      </div>
+    </section>
+  }
 
   <section class="card panel-strong prediction-hub">
     <div>

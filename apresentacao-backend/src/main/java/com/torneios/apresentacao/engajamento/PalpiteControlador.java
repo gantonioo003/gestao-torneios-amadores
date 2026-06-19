@@ -77,6 +77,16 @@ class PalpiteControlador {
         return palpiteServicoAplicacao.listarPorUsuario(SessaoUsuario.exigirUsuarioId(sessao));
     }
 
+    @RequestMapping(method = GET, path = "progresso")
+    PalpiteServicoAplicacao.ProgressoResumo progresso(HttpSession sessao) {
+        return palpiteServicoAplicacao.consultarProgresso(SessaoUsuario.exigirUsuarioId(sessao));
+    }
+
+    @RequestMapping(method = GET, path = "ranking")
+    List<PalpiteServicoAplicacao.RankingPalpiteResumo> ranking() {
+        return palpiteServicoAplicacao.listarRanking();
+    }
+
     static class PalpiteDto {
         public String tipo;
         public long torneioId;

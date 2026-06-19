@@ -25,7 +25,7 @@ public class DesafioAmistosoRepositorioMemoria implements DesafioAmistosoReposit
     }
 
     @Override
-    public List<DesafioAmistoso> listarHistoricoDoTime(TimeId timeId) {
+    public List<DesafioAmistoso> listarPorTime(TimeId timeId) {
         return dados.values().stream()
                 .filter(desafioAmistoso -> desafioAmistoso.envolveTime(timeId))
                 .toList();

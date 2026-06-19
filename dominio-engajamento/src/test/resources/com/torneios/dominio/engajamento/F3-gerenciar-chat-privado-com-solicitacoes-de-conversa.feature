@@ -1,4 +1,4 @@
-Feature: Gerenciar chat privado com solicitacoes de conversa
+Feature: Gerenciar conversas privadas e grupos
 
   As a usuario autenticado da plataforma
   I want solicitar conversas privadas e controlar quem pode me enviar mensagens
@@ -54,3 +54,18 @@ Feature: Gerenciar chat privado com solicitacoes de conversa
     And que existe outro usuario cadastrado na plataforma
     When ele tentar solicitar uma conversa privada com esse usuario
     Then o sistema deve impedir a operacao
+
+  Scenario: Criar grupo com entrada direta e convite pendente
+    Given que o criador possui conversa aprovada com um usuario e nao possui com outro
+    When ele criar um grupo com os dois usuarios
+    Then o contato aprovado deve entrar e o outro usuario deve receber convite
+
+  Scenario: Aceitar convite para participar de grupo
+    Given que existe um grupo com convite pendente para o usuario
+    When o usuario aceitar o convite do grupo
+    Then ele deve se tornar participante do grupo
+
+  Scenario: Treinador adicionar profissional comandado diretamente
+    Given que um treinador possui um profissional vinculado ao seu elenco
+    When o treinador criar um grupo com esse profissional
+    Then o profissional deve entrar no grupo sem convite

@@ -29,6 +29,32 @@ export interface ConversaChat {
   mensagens: MensagemChat[];
 }
 
+export interface ParticipanteGrupoChat {
+  id: number;
+  nome: string;
+  email: string;
+}
+
+export interface GrupoChat {
+  id: number;
+  nome: string;
+  criadorId: number;
+  criadoEm: string;
+  ultimaAtividadeEm: string;
+  participantes: ParticipanteGrupoChat[];
+  convitesPendentes: ParticipanteGrupoChat[];
+  mensagens: MensagemChat[];
+}
+
+export interface PublicacaoCompartilhada {
+  id: number;
+  identidadeNome: string;
+  tipoIdentidade: string;
+  autorNomeUsuario: string;
+  conteudo: string;
+  midias: string[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class ChatApiService {
   private readonly baseUrl = '/backend/chat-privado';
@@ -73,5 +99,33 @@ export class ChatApiService {
     return this.http.post<MensagemChat>(`${this.baseUrl}/${conversaId}/mensagem`, {
       conteudo
     });
+  }
+
+  criarGrupo(nome: string, participantes: number[]) {
+    return this.http.post<GrupoChat>(`${this.baseUrl}/grupos`, { nome, participantes });
+  }
+
+  listarGrupos() {
+    return this.http.get<GrupoChat[]>(`${this.baseUrl}/grupos`);
+  }
+
+  consultarGrupo(grupoId: number) {
+    return this.http.get<GrupoChat>(`${this.baseUrl}/grupos/${grupoId}`);
+  }
+
+  aceitarGrupo(grupoId: number) {
+    return this.http.post<GrupoChat>(`${this.baseUrl}/grupos/${grupoId}/aceitar`, null);
+  }
+
+  recusarGrupo(grupoId: number) {
+    return this.http.post<GrupoChat>(`${this.baseUrl}/grupos/${grupoId}/recusar`, null);
+  }
+
+  enviarMensagemGrupo(grupoId: number, conteudo: string) {
+    return this.http.post<MensagemChat>(`${this.baseUrl}/grupos/${grupoId}/mensagem`, { conteudo });
+  }
+
+  buscarPublicacao(publicacaoId: number) {
+    return this.http.get<PublicacaoCompartilhada>(`/backend/feed/${publicacaoId}`);
   }
 }

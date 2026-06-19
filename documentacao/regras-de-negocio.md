@@ -18,6 +18,10 @@ RN07. O sistema deve exibir o percentual de votos por opcao para todo palpite co
 
 RN08. Apos o evento alvo ser concluido, o sistema deve apurar automaticamente o resultado real e marcar cada palpite como acertado ou nao acertado.
 
+RN08A. Um novo palpite autenticado concede pontos de participacao, com bonus apenas na primeira participacao do dia; alterar a opcao de um palpite existente nao concede novos pontos.
+
+RN08B. A apuracao concede pontos uma unica vez, com recompensa maior para acerto, e atualiza automaticamente nivel, sequencia, selos e ranking do usuario.
+
 RN09. Palpites apurados nao podem ser alterados nem removidos.
 
 RN10. Palpites de visitantes tambem devem ser salvos para contagem, percentuais e apuracao.
@@ -32,13 +36,41 @@ RN14. O usuario pode editar os dados cadastrais da propria conta.
 
 RN15. O usuario pode excluir a propria conta, removendo seu acesso ao sistema.
 
-RN16. A conta de usuario pode representar jogador, treinador, membro de comissao ou organizador.
+RN16. A conta de usuario pode ser comum, sem funcao esportiva, ou representar jogador, treinador, membro de comissao ou organizador.
+
+RN16A. A conta comum pode usar recursos sociais, palpites e acompanhamento, mas nao pode criar torneios, gerenciar times ou possuir perfil profissional esportivo.
 
 RN17. Contas do tipo jogador podem usar a plataforma para buscar times e acompanhar oportunidades de participacao.
 
 RN18. Contas do tipo organizador gerenciam exclusivamente torneios; somente contas de treinador podem criar e administrar times e elencos.
 
 RN19. Apenas usuarios autenticados podem solicitar conversas privadas no chat.
+
+RN19A. Um grupo deve possuir pelo menos duas pessoas entre criador, participantes liberados e convidados pendentes.
+
+RN19B. Usuarios com conversa privada aprovada entram imediatamente no grupo. Outros usuarios recebem convite e so acessam as mensagens apos aceitar.
+
+RN19C. O treinador pode incluir diretamente jogadores e membros da comissao vinculados aos times sob sua responsabilidade, mesmo sem conversa privada anterior.
+
+RN19D. Publicacoes, comentarios e perfis podem ser denunciados por usuarios autenticados; denuncias pendentes duplicadas do mesmo usuario para o mesmo alvo sao bloqueadas e ficam disponiveis para analise de moderacao.
+
+RN19E. Toda publicacao manual guarda a conta autora real e pode ser exibida como usuario, time ou torneio quando a conta possuir permissao sobre a identidade escolhida.
+
+RN19F. O responsavel pode publicar representando seus times e o organizador pode publicar representando seus torneios; nenhuma conta pode representar entidade administrada por outra pessoa.
+
+RN19G. Postagens e comentarios podem conter texto, foto ou ambos, mas nao podem ser totalmente vazios.
+
+RN19H. Cada conta possui no maximo uma curtida por publicacao; clicar novamente remove a propria curtida, sem criar duplicidade.
+
+RN19I. Comentarios pertencem a uma publicacao principal e nao devem aparecer como posts independentes na timeline.
+
+RN19J. O perfil publico exibe em aba separada e discreta somente as postagens pessoais da conta, usando o mesmo nome e a mesma foto do perfil.
+
+RN19K. Assuntos do momento sao calculados a partir das hashtags e do engajamento de curtidas, reacoes e comentarios.
+
+RN19L. Uma publicacao ativa pode ser encaminhada para conversas privadas aprovadas ou grupos acessiveis ao usuario; a mensagem guarda a referencia da publicacao e o chat exibe seu conteudo atualizado em um card.
+
+RN19M. Postagens do feed podem conter imagem ou video, respeitando o limite de tamanho definido pela interface.
 
 RN20. Uma solicitacao de conversa deve ser salva como solicitada e exibida na aba de solicitados do destinatario.
 
@@ -164,6 +196,16 @@ RN70. Responsaveis pelos times envolvidos podem registrar o resultado de um amis
 
 RN71. O resultado do amistoso deve ficar disponivel no historico dos dois times envolvidos.
 
+RN71A. Apenas contas do tipo treinador com pelo menos um time sob sua responsabilidade podem visualizar e executar a acao de solicitar confronto amistoso.
+
+RN71B. Quando o treinador possuir apenas um time, esse time deve ser selecionado automaticamente como proponente; quando possuir mais de um, ele deve escolher qual time enviara o desafio.
+
+RN71C. O perfil administrado do time deve separar confrontos recebidos, enviados, confirmados e encerrados, permitindo as acoes compativeis com cada estado.
+
+RN71D. Nao pode existir mais de um desafio proposto ou aceito simultaneamente entre os mesmos dois times.
+
+RN71E. Ao propor um desafio, o responsavel pelo time desafiado deve ser notificado; ao aceitar, os responsaveis dos dois times devem receber a confirmacao do amistoso.
+
 RN72. Apenas o organizador do torneio pode publicar comunicados oficiais no feed social do torneio.
 
 RN73. Usuarios autenticados podem comentar em partidas pertencentes ao torneio.
@@ -225,3 +267,23 @@ RN98. Para figurar no ranking de melhor avaliado da edição, o jogador deve ter
 RN99. Quando um resultado ou evento de scout for corrigido após o fechamento de uma partida, o sistema deve executar um recálculo retroativo completo da edição, zerando e reprocessando toda a classificação e os scouts consolidados de todos os jogadores afetados, registrando log de auditoria da operação.
 
 RN100. Quando todas as partidas de uma edição estiverem finalizadas, o organizador pode encerrar a edição, momento em que o sistema registra o campeão, vice e destaques de forma imutável no histórico da liga.
+
+---
+
+## Central de notificacoes
+
+RN101. Toda notificacao deve ser persistida com destinatario, categoria, titulo, mensagem, link, data de criacao e estados de leitura e arquivamento.
+
+RN102. Apenas o usuario destinatario pode marcar ou arquivar uma notificacao.
+
+RN103. Marcar uma notificacao como lida nao deve remove-la do historico.
+
+RN104. Arquivar uma notificacao deve remove-la da lista ativa, preservando-a no historico arquivado e marcando-a como lida.
+
+RN105. O usuario pode marcar todas as suas notificacoes ativas como lidas em uma unica operacao.
+
+RN106. As preferencias de categorias devem ser persistidas por usuario e aplicadas antes da criacao de uma nova notificacao.
+
+RN107. Quando nao houver preferencias salvas, todas as categorias de notificacao devem estar habilitadas por padrao.
+
+RN108. A central deve permitir consultar avisos das categorias torneio, time, amistoso, social e sistema.

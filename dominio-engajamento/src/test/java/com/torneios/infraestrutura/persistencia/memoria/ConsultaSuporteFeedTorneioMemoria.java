@@ -9,12 +9,14 @@ import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.engajamento.feed.ConsultaSuporteFeedTorneio;
+import com.torneios.dominio.compartilhado.time.TimeId;
 
 public class ConsultaSuporteFeedTorneioMemoria implements ConsultaSuporteFeedTorneio {
 
     private final Set<UsuarioId> usuariosAutenticados = new HashSet<>();
     private final Map<TorneioId, UsuarioId> organizadoresPorTorneio = new HashMap<>();
     private final Map<TorneioId, Set<PartidaId>> partidasPorTorneio = new HashMap<>();
+    private final Map<TimeId, UsuarioId> responsaveisPorTime = new HashMap<>();
 
     public void autenticar(UsuarioId usuarioId) {
         usuariosAutenticados.add(usuarioId);
@@ -41,5 +43,14 @@ public class ConsultaSuporteFeedTorneioMemoria implements ConsultaSuporteFeedTor
     @Override
     public boolean partidaPertenceAoTorneio(TorneioId torneioId, PartidaId partidaId) {
         return partidasPorTorneio.getOrDefault(torneioId, Set.of()).contains(partidaId);
+    }
+
+    public void registrarTime(TimeId timeId, UsuarioId responsavelId) {
+        responsaveisPorTime.put(timeId, responsavelId);
+    }
+
+    @Override
+    public boolean usuarioEhResponsavelTime(TimeId timeId, UsuarioId usuarioId) {
+        return usuarioId.equals(responsaveisPorTime.get(timeId));
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.engajamento.chat.ChatPrivadoServicoAplicacao;
+import com.torneios.aplicacao.engajamento.chat.GrupoChatServicoAplicacao;
 import com.torneios.apresentacao.SessaoUsuario;
 
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +27,9 @@ class ChatPrivadoControlador {
 
     @Autowired
     ChatPrivadoServicoAplicacao chatPrivadoServicoAplicacao;
+
+    @Autowired
+    GrupoChatServicoAplicacao grupoChatServicoAplicacao;
 
     @RequestMapping(method = POST, path = "solicitar")
     ChatPrivadoServicoAplicacao.ConversaResumo solicitar(@RequestParam long destinatarioId,
@@ -93,11 +97,52 @@ class ChatPrivadoControlador {
                 SessaoUsuario.exigirUsuarioId(sessao));
     }
 
+    @RequestMapping(method = POST, path = "grupos")
+    GrupoChatServicoAplicacao.GrupoResumo criarGrupo(@RequestBody GrupoDto dto, HttpSession sessao) {
+        return grupoChatServicoAplicacao.criar(
+                proximoId(),
+                dto.nome,
+                SessaoUsuario.exigirUsuarioId(sessao),
+                dto.participantes);
+    }
+
+    @RequestMapping(method = GET, path = "grupos")
+    List<GrupoChatServicoAplicacao.GrupoResumo> listarGrupos(HttpSession sessao) {
+        return grupoChatServicoAplicacao.listar(SessaoUsuario.exigirUsuarioId(sessao));
+    }
+
+    @RequestMapping(method = GET, path = "grupos/{id}")
+    GrupoChatServicoAplicacao.GrupoResumo consultarGrupo(@PathVariable long id, HttpSession sessao) {
+        return grupoChatServicoAplicacao.consultar(id, SessaoUsuario.exigirUsuarioId(sessao));
+    }
+
+    @RequestMapping(method = POST, path = "grupos/{id}/aceitar")
+    GrupoChatServicoAplicacao.GrupoResumo aceitarGrupo(@PathVariable long id, HttpSession sessao) {
+        return grupoChatServicoAplicacao.aceitarConvite(id, SessaoUsuario.exigirUsuarioId(sessao));
+    }
+
+    @RequestMapping(method = POST, path = "grupos/{id}/recusar")
+    GrupoChatServicoAplicacao.GrupoResumo recusarGrupo(@PathVariable long id, HttpSession sessao) {
+        return grupoChatServicoAplicacao.recusarConvite(id, SessaoUsuario.exigirUsuarioId(sessao));
+    }
+
+    @RequestMapping(method = POST, path = "grupos/{id}/mensagem")
+    GrupoChatServicoAplicacao.MensagemResumo enviarMensagemGrupo(
+            @PathVariable long id, @RequestBody MensagemDto dto, HttpSession sessao) {
+        return grupoChatServicoAplicacao.enviarMensagem(
+                id, proximoId(), SessaoUsuario.exigirUsuarioId(sessao), dto.conteudo);
+    }
+
     private long proximoId() {
         return geradorId.incrementAndGet();
     }
 
     static class MensagemDto {
         public String conteudo;
+    }
+
+    static class GrupoDto {
+        public String nome;
+        public List<Long> participantes;
     }
 }

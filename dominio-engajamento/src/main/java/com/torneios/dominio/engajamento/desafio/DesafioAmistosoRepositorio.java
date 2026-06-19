@@ -11,5 +11,5 @@ public interface DesafioAmistosoRepositorio {
 
     Optional<DesafioAmistoso> buscarPorId(DesafioAmistosoId desafioAmistosoId);
 
-    List<DesafioAmistoso> listarHistoricoDoTime(TimeId timeId);
+    List<DesafioAmistoso> listarPorTime(TimeId timeId);
 }

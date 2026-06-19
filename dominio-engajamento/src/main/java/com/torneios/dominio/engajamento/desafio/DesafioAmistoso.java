@@ -89,8 +89,8 @@ public class DesafioAmistoso {
     }
 
     public void cancelar() {
-        if (status == StatusDesafioAmistoso.RESULTADO_REGISTRADO) {
-            throw new OperacaoNaoPermitidaException("Nao e permitido cancelar amistoso com resultado registrado.");
+        if (status != StatusDesafioAmistoso.PROPOSTO && status != StatusDesafioAmistoso.ACEITO) {
+            throw new OperacaoNaoPermitidaException("Nao e permitido cancelar um desafio ja encerrado.");
         }
         status = StatusDesafioAmistoso.CANCELADO;
     }

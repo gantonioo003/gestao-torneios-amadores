@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.time.LocalDateTime;
 
 import com.torneios.dominio.compartilhado.excecao.OperacaoNaoPermitidaException;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
@@ -21,7 +22,11 @@ public class PublicacaoFeed {
     private final TorneioId torneioId;
     private final TipoPublicacaoFeed tipo;
     private final UsuarioId autorId;
+    private final TipoIdentidadeFeed tipoIdentidade;
+    private final Long identidadeId;
     private final PartidaId partidaId;
+    private final PublicacaoFeedId publicacaoPaiId;
+    private final LocalDateTime criadaEm;
     private final List<String> midias;
     private final Set<String> hashtags;
     private final Set<UsuarioId> curtidas;
@@ -33,18 +38,26 @@ public class PublicacaoFeed {
                            TorneioId torneioId,
                            TipoPublicacaoFeed tipo,
                            UsuarioId autorId,
+                           TipoIdentidadeFeed tipoIdentidade,
+                           Long identidadeId,
                            PartidaId partidaId,
+                           PublicacaoFeedId publicacaoPaiId,
                            String conteudo,
                            Collection<String> hashtags,
-                           Collection<String> midias) {
+                           Collection<String> midias,
+                           LocalDateTime criadaEm) {
         this.id = Objects.requireNonNull(id, "O id da publicacao e obrigatorio.");
         this.torneioId = torneioId;
         this.tipo = Objects.requireNonNull(tipo, "O tipo da publicacao e obrigatorio.");
         this.autorId = autorId;
+        this.tipoIdentidade = Objects.requireNonNull(tipoIdentidade, "A identidade da publicacao e obrigatoria.");
+        this.identidadeId = identidadeId;
         this.partidaId = partidaId;
-        this.conteudo = validarConteudo(conteudo);
-        this.hashtags = new LinkedHashSet<>(normalizarHashtags(hashtags, conteudo));
+        this.publicacaoPaiId = publicacaoPaiId;
+        this.criadaEm = criadaEm == null ? LocalDateTime.now() : criadaEm;
         this.midias = new ArrayList<>(normalizarMidias(midias));
+        this.conteudo = validarConteudo(conteudo, tipo, this.midias);
+        this.hashtags = new LinkedHashSet<>(normalizarHashtags(hashtags, this.conteudo));
         this.curtidas = new LinkedHashSet<>();
         this.reacoes = new LinkedHashMap<>();
         this.removida = false;
@@ -57,7 +70,8 @@ public class PublicacaoFeed {
         Objects.requireNonNull(torneioId, "O torneio do comunicado e obrigatorio.");
         Objects.requireNonNull(organizadorId, "O organizador do comunicado e obrigatorio.");
         return new PublicacaoFeed(id, torneioId, TipoPublicacaoFeed.COMUNICADO_OFICIAL,
-                organizadorId, null, conteudo, List.of(), List.of());
+                organizadorId, TipoIdentidadeFeed.TORNEIO, torneioId.valor(), null, null,
+                conteudo, List.of(), List.of(), LocalDateTime.now());
     }
 
     public static PublicacaoFeed postagemSocial(PublicacaoFeedId id,
@@ -67,7 +81,25 @@ public class PublicacaoFeed {
                                                 Collection<String> midias) {
         Objects.requireNonNull(autorId, "O autor da postagem e obrigatorio.");
         return new PublicacaoFeed(id, null, TipoPublicacaoFeed.POSTAGEM_SOCIAL,
-                autorId, null, conteudo, hashtags, midias);
+                autorId, TipoIdentidadeFeed.USUARIO, autorId.valor(), null, null,
+                conteudo, hashtags, midias, LocalDateTime.now());
+    }
+
+    public static PublicacaoFeed postagem(PublicacaoFeedId id,
+                                          UsuarioId autorId,
+                                          TipoIdentidadeFeed tipoIdentidade,
+                                          long identidadeId,
+                                          TorneioId torneioId,
+                                          String conteudo,
+                                          Collection<String> hashtags,
+                                          Collection<String> midias) {
+        Objects.requireNonNull(autorId, "O autor da postagem e obrigatorio.");
+        if (tipoIdentidade == TipoIdentidadeFeed.SISTEMA) {
+            throw new IllegalArgumentException("Uma postagem manual nao pode usar identidade de sistema.");
+        }
+        return new PublicacaoFeed(id, torneioId, TipoPublicacaoFeed.POSTAGEM_SOCIAL,
+                autorId, tipoIdentidade, identidadeId, null, null,
+                conteudo, hashtags, midias, LocalDateTime.now());
     }
 
     public static PublicacaoFeed comentario(PublicacaoFeedId id,
@@ -79,7 +111,20 @@ public class PublicacaoFeed {
         Objects.requireNonNull(partidaId, "A partida comentada e obrigatoria.");
         Objects.requireNonNull(autorId, "O autor do comentario e obrigatorio.");
         return new PublicacaoFeed(id, torneioId, TipoPublicacaoFeed.COMENTARIO,
-                autorId, partidaId, conteudo, List.of(), List.of());
+                autorId, TipoIdentidadeFeed.USUARIO, autorId.valor(), partidaId, null,
+                conteudo, List.of(), List.of(), LocalDateTime.now());
+    }
+
+    public static PublicacaoFeed comentarioPublicacao(PublicacaoFeedId id,
+                                                      PublicacaoFeedId publicacaoPaiId,
+                                                      UsuarioId autorId,
+                                                      String conteudo,
+                                                      Collection<String> midias) {
+        Objects.requireNonNull(publicacaoPaiId, "A publicacao comentada e obrigatoria.");
+        Objects.requireNonNull(autorId, "O autor do comentario e obrigatorio.");
+        return new PublicacaoFeed(id, null, TipoPublicacaoFeed.COMENTARIO,
+                autorId, TipoIdentidadeFeed.USUARIO, autorId.valor(), null, publicacaoPaiId,
+                conteudo, List.of(), midias, LocalDateTime.now());
     }
 
     public static PublicacaoFeed atualizacaoAutomatica(PublicacaoFeedId id,
@@ -89,7 +134,8 @@ public class PublicacaoFeed {
         Objects.requireNonNull(torneioId, "O torneio da atualizacao automatica e obrigatorio.");
         Objects.requireNonNull(partidaId, "A partida da atualizacao automatica e obrigatoria.");
         return new PublicacaoFeed(id, torneioId, TipoPublicacaoFeed.ATUALIZACAO_AUTOMATICA,
-                null, partidaId, conteudo, List.of(), List.of());
+                null, TipoIdentidadeFeed.SISTEMA, partidaId.valor(), partidaId, null,
+                conteudo, List.of(), List.of(), LocalDateTime.now());
     }
 
     public PublicacaoFeedId getId() {
@@ -112,8 +158,24 @@ public class PublicacaoFeed {
         return Optional.ofNullable(autorId);
     }
 
+    public TipoIdentidadeFeed getTipoIdentidade() {
+        return tipoIdentidade;
+    }
+
+    public Long getIdentidadeId() {
+        return identidadeId;
+    }
+
     public Optional<PartidaId> getPartidaId() {
         return Optional.ofNullable(partidaId);
+    }
+
+    public Optional<PublicacaoFeedId> getPublicacaoPaiId() {
+        return Optional.ofNullable(publicacaoPaiId);
+    }
+
+    public LocalDateTime getCriadaEm() {
+        return criadaEm;
     }
 
     public String getConteudo() {
@@ -142,7 +204,7 @@ public class PublicacaoFeed {
 
     public void editarConteudo(UsuarioId usuarioId, String novoConteudo) {
         validarAlteracaoManual(usuarioId);
-        this.conteudo = validarConteudo(novoConteudo);
+        this.conteudo = validarConteudo(novoConteudo, tipo, midias);
         this.hashtags.clear();
         this.hashtags.addAll(normalizarHashtags(this.hashtags, novoConteudo));
     }
@@ -154,12 +216,18 @@ public class PublicacaoFeed {
 
     public void curtir(UsuarioId usuarioId) {
         validarInteracao(usuarioId);
-        curtidas.add(usuarioId);
+        if (!curtidas.remove(usuarioId)) {
+            curtidas.add(usuarioId);
+        }
     }
 
     public void removerCurtida(UsuarioId usuarioId) {
         validarInteracao(usuarioId);
         curtidas.remove(usuarioId);
+    }
+
+    public boolean foiCurtidaPor(UsuarioId usuarioId) {
+        return usuarioId != null && curtidas.contains(usuarioId);
     }
 
     public void reagir(UsuarioId usuarioId, TipoReacaoFeed tipoReacao) {
@@ -193,11 +261,13 @@ public class PublicacaoFeed {
         }
     }
 
-    private static String validarConteudo(String conteudo) {
-        if (conteudo == null || conteudo.isBlank()) {
+    private static String validarConteudo(String conteudo,
+                                          TipoPublicacaoFeed tipo,
+                                          Collection<String> midias) {
+        if ((conteudo == null || conteudo.isBlank()) && (midias == null || midias.isEmpty())) {
             throw new IllegalArgumentException("O conteudo da publicacao e obrigatorio.");
         }
-        return conteudo.trim();
+        return conteudo == null ? "" : conteudo.trim();
     }
 
     private static List<String> normalizarHashtags(Collection<String> hashtags, String conteudo) {

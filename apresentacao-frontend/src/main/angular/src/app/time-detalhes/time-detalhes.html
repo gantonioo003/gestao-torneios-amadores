@@ -13,6 +13,49 @@
     }
   </div>
 
+  @if (mensagem) {
+    <div class="team-feedback success"><i class="bi bi-check-circle"></i> {{ mensagem }}</div>
+  }
+  @if (erro) {
+    <div class="team-feedback error"><i class="bi bi-exclamation-circle"></i> {{ erro }}</div>
+  }
+
+  @if (podeProporDesafio && propostaAberta) {
+    <section class="friendly-proposal">
+      <div class="friendly-proposal-copy">
+        <div class="eyebrow">Confronto opcional</div>
+        <h2>Desafiar {{ time.nome }}</h2>
+        <p>Escolha seu time e sugira a primeira data. O outro tecnico recebe a proposta e decide se aceita.</p>
+      </div>
+      <div class="friendly-proposal-form">
+        @if (meusTimes.length === 1) {
+          <div class="friendly-proponent">
+            <span>Time proponente</span>
+            <strong><i class="bi bi-shield"></i> {{ meusTimes[0].nome }}</strong>
+          </div>
+        } @else {
+          <div class="field">
+            <label>Qual time esta propondo?</label>
+            <select [(ngModel)]="timeDesafianteSelecionado">
+              @for (meuTime of meusTimes; track meuTime.id) {
+                <option [value]="meuTime.id">{{ meuTime.nome }}</option>
+              }
+            </select>
+          </div>
+        }
+        <div class="field"><label>Data</label><input type="date" [(ngModel)]="dataAmistoso"></div>
+        <div class="field"><label>Horario</label><input type="time" [(ngModel)]="horaAmistoso"></div>
+        <div class="field"><label>Local</label><input [(ngModel)]="localAmistoso" placeholder="Campo ou arena"></div>
+        <div class="friendly-proposal-actions">
+          <button class="btn btn-outline" (click)="propostaAberta = false">Agora nao</button>
+          <button class="btn btn-primary" [disabled]="!!processando" (click)="proporDesafio()">
+            <i class="bi bi-send"></i> Enviar desafio
+          </button>
+        </div>
+      </div>
+    </section>
+  }
+
   <div class="grid layout-2-1">
     <section class="grid">
       <div class="grid grid-4">
@@ -113,10 +156,95 @@
             }
           }
         </section>
+
+        <section class="card panel-strong friendly-center">
+          <div class="roster-heading">
+            <div>
+              <div class="eyebrow">Fora dos torneios</div>
+              <h2 class="section-title">Confrontos amistosos</h2>
+              <p class="small muted">Acompanhe propostas, jogos confirmados e o historico deste time.</p>
+            </div>
+            <a class="btn btn-sm btn-outline" routerLink="/buscar">
+              <i class="bi bi-search"></i> Encontrar adversario
+            </a>
+          </div>
+
+          <div class="friendly-tabs">
+            <button [class.active]="abaConfrontos === 'recebidos'" (click)="abaConfrontos = 'recebidos'">
+              Recebidos <span>{{ confrontosRecebidos.length }}</span>
+            </button>
+            <button [class.active]="abaConfrontos === 'enviados'" (click)="abaConfrontos = 'enviados'">
+              Enviados <span>{{ confrontosEnviados.length }}</span>
+            </button>
+            <button [class.active]="abaConfrontos === 'confirmados'" (click)="abaConfrontos = 'confirmados'">
+              Confirmados <span>{{ confrontosConfirmados.length }}</span>
+            </button>
+            <button [class.active]="abaConfrontos === 'historico'" (click)="abaConfrontos = 'historico'">
+              Historico <span>{{ historicoConfrontos.length }}</span>
+            </button>
+          </div>
+
+          @if (!confrontosDaAba.length) {
+            <div class="friendly-empty">
+              <i class="bi bi-calendar2-heart"></i>
+              <strong>Nenhum confronto nesta etapa</strong>
+              <span>Os desafios aparecem aqui conforme os tecnicos negociam os amistosos.</span>
+            </div>
+          } @else {
+            <div class="friendly-list">
+              @for (item of confrontosDaAba; track item.id) {
+                <article class="friendly-match">
+                  <div class="friendly-match-icon"><i class="bi bi-shield-shaded"></i></div>
+                  <div class="friendly-match-copy">
+                    <span class="status" [class.status-green]="item.status === 'ACEITO' || item.status === 'RESULTADO_REGISTRADO'">
+                      {{ statusConfronto(item.status) }}
+                    </span>
+                    <h3>{{ time.nome }} <small>vs</small> {{ adversario(item) }}</h3>
+                    <p><i class="bi bi-calendar3"></i> {{ dataConfronto(item.dataHora) }} <span>·</span> <i class="bi bi-geo-alt"></i> {{ item.local }}</p>
+                    @if (item.status === 'RESULTADO_REGISTRADO') {
+                      <strong class="friendly-score">{{ item.golsDesafiante }} x {{ item.golsDesafiado }}</strong>
+                    }
+                  </div>
+                  <div class="friendly-actions">
+                    @if (abaConfrontos === 'recebidos') {
+                      <button class="btn btn-sm btn-primary" [disabled]="!!processando" (click)="aceitarDesafio(item)">Aceitar</button>
+                      <button class="btn btn-sm btn-danger" [disabled]="!!processando" (click)="recusarDesafio(item)">Recusar</button>
+                    }
+                    @if (abaConfrontos === 'enviados') {
+                      <button class="btn btn-sm btn-danger" [disabled]="!!processando" (click)="cancelarDesafio(item)">Cancelar</button>
+                    }
+                    @if (abaConfrontos === 'confirmados') {
+                      <button class="btn btn-sm btn-outline" (click)="abrirReagendamento(item)">Reagendar</button>
+                      <button class="btn btn-sm btn-primary" (click)="abrirResultado(item)">Informar placar</button>
+                    }
+                  </div>
+
+                  @if (editandoConfrontoId === item.id) {
+                    <div class="friendly-inline-form">
+                      <div class="field"><label>Nova data</label><input type="date" [(ngModel)]="novaDataAmistoso"></div>
+                      <div class="field"><label>Novo horario</label><input type="time" [(ngModel)]="novaHoraAmistoso"></div>
+                      <div class="field"><label>Novo local</label><input [(ngModel)]="novoLocalAmistoso"></div>
+                      <button class="btn btn-sm btn-primary" [disabled]="!!processando" (click)="reagendarDesafio(item)">Salvar</button>
+                    </div>
+                  }
+
+                  @if (resultadoConfrontoId === item.id) {
+                    <div class="friendly-inline-form score-form">
+                      <div class="field"><label>{{ nomeTime(item.timeDesafianteId) }}</label><input type="number" min="0" [(ngModel)]="golsDesafiante"></div>
+                      <span>x</span>
+                      <div class="field"><label>{{ nomeTime(item.timeDesafiadoId) }}</label><input type="number" min="0" [(ngModel)]="golsDesafiado"></div>
+                      <button class="btn btn-sm btn-primary" [disabled]="!!processando" (click)="registrarResultado(item)">Registrar</button>
+                    </div>
+                  }
+                </article>
+              }
+            </div>
+          }
+        </section>
       }
     </section>
 
-    <aside class="grid">
+    <aside class="team-sidebar">
       <div class="card">
         <h2 class="section-title">Torneios vinculados</h2>
         @if (!torneios.length) {
@@ -129,10 +257,15 @@
           }
         }
       </div>
-      <a class="btn btn-primary btn-block" routerLink="/desafio">Propor amistoso</a>
-      <a class="btn btn-outline btn-block" routerLink="/buscar">Buscar outros times</a>
+      @if (podeProporDesafio) {
+        <button class="btn btn-primary btn-block" (click)="propostaAberta = true">
+          <i class="bi bi-lightning-charge"></i> Solicitar confronto
+        </button>
+      }
       @if (podeEditarTime) {
-        <button class="btn btn-danger btn-block" (click)="excluir()">Excluir time</button>
+        <a class="btn btn-outline btn-block" [routerLink]="['/time', time.id, 'edicao']">
+          <i class="bi bi-gear"></i> Configurar time
+        </a>
       }
     </aside>
   </div>

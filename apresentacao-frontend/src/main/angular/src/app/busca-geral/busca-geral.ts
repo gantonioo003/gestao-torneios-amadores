@@ -16,6 +16,7 @@ interface TorneioBusca {
 interface TimeBusca {
   id: number;
   nome: string;
+  responsavelId: number;
 }
 
 interface ProfissionalBusca {
@@ -35,6 +36,7 @@ export class BuscaGeral implements OnInit {
   torneios: TorneioBusca[] = [];
   times: TimeBusca[] = [];
   profissionais: ProfissionalBusca[] = [];
+  meusTimesIds = new Set<string>();
   carregando = true;
   readonly usuario = this.auth.usuario;
 
@@ -44,6 +46,11 @@ export class BuscaGeral implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (this.usuario()?.tipo === 'TREINADOR') {
+      this.http.get<TimeBusca[]>('/backend/time/pesquisa?meus=true')
+        .pipe(catchError(() => of([])))
+        .subscribe(times => this.meusTimesIds = new Set(times.map(time => String(time.id))));
+    }
     this.buscar();
   }
 
@@ -99,6 +106,13 @@ export class BuscaGeral implements OnInit {
       MEDICO: 'Medico'
     };
     return labels[tipo] ?? 'Comissao';
+  }
+
+  podeDesafiar(time: TimeBusca): boolean {
+    return this.usuario()?.tipo === 'TREINADOR'
+      && this.usuario()?.podeGerenciarTimes === true
+      && this.meusTimesIds.size > 0
+      && !this.meusTimesIds.has(String(time.id));
   }
 
   private pontuacaoTorneio(torneio: TorneioBusca): number {

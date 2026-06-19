@@ -24,13 +24,42 @@
         <i class="bi bi-arrow-up-right"></i>
       </button>
 
+      <button class="group-trigger" (click)="mostrarCriarGrupo()">
+        <i class="bi bi-people-fill"></i>
+        <span>Novo grupo</span>
+        <i class="bi bi-plus-lg"></i>
+      </button>
+
       <div class="inbox-search">
         <i class="bi bi-search"></i>
         <input [(ngModel)]="filtroInbox" placeholder="Pesquisar no inbox" aria-label="Pesquisar conversas">
       </div>
 
       <div class="conversation-label">
-        <span>Mensagens</span>
+        <span>Grupos</span>
+        <span>{{ grupos.length }}</span>
+      </div>
+
+      <div class="group-list">
+        @for (grupo of grupos; track grupo.id) {
+          <button class="conversation-item group-item" [class.pending]="convitePendenteParaMim(grupo)"
+            (click)="abrirGrupo(grupo)">
+            <span class="chat-avatar group-avatar"><i class="bi bi-people-fill"></i></span>
+            <span class="conversation-copy">
+              <span class="conversation-name">{{ grupo.nome }}</span>
+              <span class="conversation-preview">
+                {{ convitePendenteParaMim(grupo) ? 'Convite aguardando sua resposta' : grupo.participantes.length + ' participantes' }}
+              </span>
+            </span>
+            @if (convitePendenteParaMim(grupo)) {
+              <span class="request-count inline-count">1</span>
+            }
+          </button>
+        }
+      </div>
+
+      <div class="conversation-label">
+        <span>Mensagens privadas</span>
         <span>{{ inbox.length }}</span>
       </div>
 
@@ -118,7 +147,7 @@
               <div class="person-avatar">{{ iniciais(pessoa.nome) }}</div>
               <div class="person-info">
                 <strong>{{ pessoa.nome }}</strong>
-                <span>{{ pessoa.tipo === 'JOGADOR' ? 'Jogador' : 'Organizador' }}</span>
+                <span>{{ tipoContaLabel(pessoa.tipo) }}</span>
                 <small>{{ pessoa.email }}</small>
               </div>
               @if (jaPossuiContato(pessoa.id)) {
@@ -169,13 +198,27 @@
         </div>
 
         <div class="request-list">
+          @for (grupo of convitesGrupo; track grupo.id) {
+            <article class="request-card group-request">
+              <span class="person-avatar"><i class="bi bi-people-fill"></i></span>
+              <div class="request-copy">
+                <strong>{{ grupo.nome }}</strong>
+                <span>Convite para grupo</span>
+                <small>{{ grupo.participantes.length }} pessoa(s) ja estao no grupo</small>
+              </div>
+              <div class="request-buttons">
+                <button class="accept-button" (click)="aceitarConviteGrupo(grupo)">Entrar</button>
+                <button class="decline-button" (click)="recusarConviteGrupo(grupo)">Recusar</button>
+              </div>
+            </article>
+          }
           @if (abaSolicitacao === 'recebidas') {
             @for (solicitacao of solicitacoesRecebidas; track solicitacao.id) {
               <article class="request-card">
                 <span class="person-avatar">{{ iniciais(solicitacao.outroUsuarioNome) }}</span>
                 <div class="request-copy">
                   <strong>{{ solicitacao.outroUsuarioNome }}</strong>
-                  <span>{{ solicitacao.outroUsuarioTipo === 'JOGADOR' ? 'Jogador' : 'Organizador' }}</span>
+                  <span>{{ tipoContaLabel(solicitacao.outroUsuarioTipo) }}</span>
                   <small>Enviada em {{ formatarHora(solicitacao.solicitadaEm) }}</small>
                 </div>
                 <div class="request-buttons">
@@ -212,6 +255,54 @@
         </div>
       }
 
+      @if (visao === 'criar-grupo') {
+        <header class="content-header">
+          <button class="mobile-back" aria-label="Voltar ao inbox" (click)="mostrarInicio()">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <div>
+            <span class="eyebrow">Conversa coletiva</span>
+            <h2>Criar grupo</h2>
+            <p>Contatos liberados e integrantes do seu time entram direto. Os demais recebem convite.</p>
+          </div>
+        </header>
+
+        <div class="group-builder">
+          <label>
+            <span>Nome do grupo</span>
+            <input [(ngModel)]="nomeNovoGrupo" maxlength="80" placeholder="Ex.: Elenco principal">
+          </label>
+          <div class="people-search">
+            <i class="bi bi-search"></i>
+            <input [(ngModel)]="termoBusca" (ngModelChange)="agendarBusca()" placeholder="Buscar pessoas">
+          </div>
+          <div class="selected-count">
+            <strong>{{ participantesNovoGrupo.length }}</strong> pessoa(s) selecionada(s)
+          </div>
+          <div class="people-grid group-people-grid">
+            @for (pessoa of usuariosEncontrados; track pessoa.id) {
+              <button class="person-card selectable-person"
+                [class.selected]="participantesNovoGrupo.includes(pessoa.id)"
+                (click)="alternarParticipante(pessoa.id)">
+                <span class="person-avatar">{{ iniciais(pessoa.nome) }}</span>
+                <span class="person-info">
+                  <strong>{{ pessoa.nome }}</strong>
+                  <span>{{ tipoContaLabel(pessoa.tipo) }}</span>
+                  <small>{{ jaPossuiContato(pessoa.id) ? 'Entra imediatamente' : 'Pode receber convite' }}</small>
+                </span>
+                <i class="bi" [class.bi-check-circle-fill]="participantesNovoGrupo.includes(pessoa.id)"
+                  [class.bi-circle]="!participantesNovoGrupo.includes(pessoa.id)"></i>
+              </button>
+            }
+          </div>
+          <button class="btn btn-primary create-group-button"
+            [disabled]="!nomeNovoGrupo.trim() || !participantesNovoGrupo.length || enviando"
+            (click)="criarGrupo()">
+            <i class="bi bi-people-fill"></i> Criar grupo
+          </button>
+        </div>
+      }
+
       @if (visao === 'conversa' && conversaAtiva) {
         <header class="conversation-header">
           <button class="mobile-back" aria-label="Voltar ao inbox" (click)="mostrarInicio()">
@@ -235,7 +326,29 @@
           @for (mensagem of conversaAtiva.mensagens; track mensagem.id) {
             <div class="message-row" [class.mine]="mensagem.autorId === usuario.id">
               <div class="message-bubble">
-                <span>{{ mensagem.conteudo }}</span>
+                @if (publicacaoDaMensagem(mensagem); as publicacao) {
+                  <a class="shared-post-card" routerLink="/feed"
+                    [queryParams]="{ publicacao: publicacao.id }">
+                    @if (publicacao.midias[0]) {
+                      @if (ehVideo(publicacao.midias[0])) {
+                        <video [src]="publicacao.midias[0]" muted preload="metadata"></video>
+                      } @else {
+                        <img [src]="publicacao.midias[0]" alt="">
+                      }
+                    }
+                    <span class="shared-post-copy">
+                      <small>Publicacao de {{ publicacao.identidadeNome }}</small>
+                      <strong>{{ publicacao.conteudo || 'Abrir publicacao com midia' }}</strong>
+                      <span>&#64;{{ publicacao.autorNomeUsuario }} · Ver no feed</span>
+                    </span>
+                  </a>
+                } @else if (publicacaoIndisponivel(mensagem)) {
+                  <span class="shared-post-unavailable"><i class="bi bi-eye-slash"></i> Publicacao indisponivel</span>
+                } @else if (resumoMensagem(mensagem) === 'Publicacao compartilhada') {
+                  <span class="shared-post-loading">Carregando publicacao...</span>
+                } @else {
+                  <span>{{ mensagem.conteudo }}</span>
+                }
                 <time>{{ formatarHora(mensagem.enviadaEm) }}</time>
               </div>
             </div>
@@ -263,13 +376,75 @@
           </button>
         </div>
       }
+
+      @if (visao === 'grupo' && grupoAtivo) {
+        <header class="conversation-header">
+          <button class="mobile-back" aria-label="Voltar ao inbox" (click)="mostrarInicio()">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <span class="chat-avatar group-avatar"><i class="bi bi-people-fill"></i></span>
+          <div>
+            <strong>{{ grupoAtivo.nome }}</strong>
+            <span>{{ grupoAtivo.participantes.length }} participantes · {{ grupoAtivo.convitesPendentes.length }} convite(s) pendente(s)</span>
+          </div>
+        </header>
+
+        <div class="message-history" #mensagensArea>
+          <div class="conversation-intro">
+            <span class="person-avatar large group-avatar"><i class="bi bi-people-fill"></i></span>
+            <strong>{{ grupoAtivo.nome }}</strong>
+            <span>{{ grupoAtivo.participantes.length }} pessoas no grupo</span>
+            <small>Somente membros aceitos podem acessar e enviar mensagens.</small>
+          </div>
+          @for (mensagem of grupoAtivo.mensagens; track mensagem.id) {
+            <div class="message-row" [class.mine]="mensagem.autorId === usuario.id">
+              <div class="message-bubble">
+                @if (publicacaoDaMensagem(mensagem); as publicacao) {
+                  <a class="shared-post-card" routerLink="/feed"
+                    [queryParams]="{ publicacao: publicacao.id }">
+                    @if (publicacao.midias[0]) {
+                      @if (ehVideo(publicacao.midias[0])) {
+                        <video [src]="publicacao.midias[0]" muted preload="metadata"></video>
+                      } @else {
+                        <img [src]="publicacao.midias[0]" alt="">
+                      }
+                    }
+                    <span class="shared-post-copy">
+                      <small>Publicacao de {{ publicacao.identidadeNome }}</small>
+                      <strong>{{ publicacao.conteudo || 'Abrir publicacao com midia' }}</strong>
+                      <span>&#64;{{ publicacao.autorNomeUsuario }} · Ver no feed</span>
+                    </span>
+                  </a>
+                } @else if (publicacaoIndisponivel(mensagem)) {
+                  <span class="shared-post-unavailable"><i class="bi bi-eye-slash"></i> Publicacao indisponivel</span>
+                } @else if (resumoMensagem(mensagem) === 'Publicacao compartilhada') {
+                  <span class="shared-post-loading">Carregando publicacao...</span>
+                } @else {
+                  <span>{{ mensagem.conteudo }}</span>
+                }
+                <time>{{ formatarHora(mensagem.enviadaEm) }}</time>
+              </div>
+            </div>
+          } @empty {
+            <div class="first-message"><i class="bi bi-stars"></i><span>O grupo esta pronto. Envie a primeira mensagem.</span></div>
+          }
+        </div>
+
+        <div class="message-composer">
+          <textarea [(ngModel)]="novaMensagem" (keydown.enter)="aoPressionarEnter($event)"
+            rows="1" maxlength="1000" placeholder="Mensagem para o grupo..."></textarea>
+          <button class="send-button" [disabled]="!novaMensagem.trim() || enviando" (click)="enviarMensagem()">
+            <i class="bi bi-send-fill"></i>
+          </button>
+        </div>
+      }
     </section>
 
     @if (visao === 'conversa' && conversaAtiva) {
       <aside class="conversation-profile">
         <span class="person-avatar profile-avatar">{{ iniciais(conversaAtiva.outroUsuarioNome) }}</span>
         <h3>{{ conversaAtiva.outroUsuarioNome }}</h3>
-        <p>{{ conversaAtiva.outroUsuarioTipo === 'JOGADOR' ? 'Jogador' : 'Organizador' }} na Liga Amadora+</p>
+        <p>{{ tipoContaLabel(conversaAtiva.outroUsuarioTipo) }} na Liga Amadora+</p>
         <div class="privacy-note">
           <i class="bi bi-shield-lock"></i>
           <div>

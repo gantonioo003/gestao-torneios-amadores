@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.engajamento.feed.FeedServicoAplicacao;
+import com.torneios.apresentacao.SessaoUsuario;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("backend/feed")
@@ -22,31 +24,44 @@ class FeedControlador {
     FeedServicoAplicacao feedServicoAplicacao;
 
     @RequestMapping(method = POST, path = "publicar-comunicado")
-    FeedServicoAplicacao.PublicacaoResumo publicarComunicado(@RequestBody ComunicadoDto dto) {
+    FeedServicoAplicacao.PublicacaoResumo publicarComunicado(@RequestBody ComunicadoDto dto, HttpSession sessao) {
         return feedServicoAplicacao.publicarComunicado(
                 System.currentTimeMillis(),
                 dto.torneioId,
-                dto.organizadorId,
+                SessaoUsuario.exigirUsuarioId(sessao),
                 dto.conteudo);
     }
 
     @RequestMapping(method = POST, path = "publicar-social")
-    FeedServicoAplicacao.PublicacaoResumo publicarSocial(@RequestBody PublicacaoSocialDto dto) {
-        return feedServicoAplicacao.publicarPostagemSocial(
+    FeedServicoAplicacao.PublicacaoResumo publicarSocial(@RequestBody PublicacaoSocialDto dto, HttpSession sessao) {
+        long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
+        return feedServicoAplicacao.publicar(
                 System.currentTimeMillis(),
-                dto.autorId,
+                usuarioId,
+                dto.tipoIdentidade == null ? "USUARIO" : dto.tipoIdentidade,
+                dto.identidadeId == null ? usuarioId : dto.identidadeId,
                 dto.conteudo,
                 dto.hashtags,
                 dto.midias);
     }
 
+    @RequestMapping(method = POST, path = "{id}/comentar")
+    FeedServicoAplicacao.PublicacaoResumo comentar(@PathVariable long id,
+                                                   @RequestBody ComentarioDto dto,
+                                                   HttpSession sessao) {
+        return feedServicoAplicacao.comentar(
+                System.currentTimeMillis(), id, SessaoUsuario.exigirUsuarioId(sessao),
+                dto.conteudo, dto.midias);
+    }
+
     @RequestMapping(method = POST, path = "comentar-partida")
-    FeedServicoAplicacao.PublicacaoResumo comentarPartida(@RequestBody ComentarioPartidaDto dto) {
+    FeedServicoAplicacao.PublicacaoResumo comentarPartida(
+            @RequestBody ComentarioPartidaDto dto, HttpSession sessao) {
         return feedServicoAplicacao.comentarPartida(
                 System.currentTimeMillis(),
                 dto.torneioId,
                 dto.partidaId,
-                dto.usuarioId,
+                SessaoUsuario.exigirUsuarioId(sessao),
                 dto.conteudo);
     }
 
@@ -61,26 +76,27 @@ class FeedControlador {
 
     @RequestMapping(method = POST, path = "{id}/editar")
     FeedServicoAplicacao.PublicacaoResumo editar(@PathVariable long id,
-                                                 @RequestParam long usuarioId,
-                                                 @RequestBody String novoConteudo) {
-        return feedServicoAplicacao.editarPublicacao(id, usuarioId, novoConteudo);
+                                                 @RequestBody String novoConteudo,
+                                                 HttpSession sessao) {
+        return feedServicoAplicacao.editarPublicacao(id, SessaoUsuario.exigirUsuarioId(sessao), novoConteudo);
     }
 
     @RequestMapping(method = POST, path = "{id}/remover")
-    void remover(@PathVariable long id, @RequestParam long usuarioId) {
-        feedServicoAplicacao.removerPublicacao(id, usuarioId);
+    void remover(@PathVariable long id, HttpSession sessao) {
+        feedServicoAplicacao.removerPublicacao(id, SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = POST, path = "{id}/curtir")
-    FeedServicoAplicacao.PublicacaoResumo curtir(@PathVariable long id, @RequestParam long usuarioId) {
-        return feedServicoAplicacao.curtirPublicacao(id, usuarioId);
+    FeedServicoAplicacao.PublicacaoResumo curtir(@PathVariable long id, HttpSession sessao) {
+        return feedServicoAplicacao.curtirPublicacao(id, SessaoUsuario.exigirUsuarioId(sessao));
     }
 
     @RequestMapping(method = POST, path = "{id}/reagir")
     FeedServicoAplicacao.PublicacaoResumo reagir(@PathVariable long id,
-                                                 @RequestParam long usuarioId,
-                                                 @RequestParam String tipoReacao) {
-        return feedServicoAplicacao.reagirPublicacao(id, usuarioId, tipoReacao);
+                                                 @RequestParam String tipoReacao,
+                                                 HttpSession sessao) {
+        return feedServicoAplicacao.reagirPublicacao(
+                id, SessaoUsuario.exigirUsuarioId(sessao), tipoReacao);
     }
 
     @RequestMapping(method = GET, path = "torneio/{torneioId}")
@@ -89,8 +105,29 @@ class FeedControlador {
     }
 
     @RequestMapping(method = GET, path = "geral")
-    List<FeedServicoAplicacao.PublicacaoResumo> listarFeedGeral() {
-        return feedServicoAplicacao.listarFeedGeral();
+    List<FeedServicoAplicacao.PublicacaoResumo> listarFeedGeral(HttpSession sessao) {
+        return feedServicoAplicacao.listarFeedGeral(SessaoUsuario.usuarioIdOuNulo(sessao));
+    }
+
+    @RequestMapping(method = GET, path = "autor/{autorId}")
+    List<FeedServicoAplicacao.PublicacaoResumo> listarPorAutor(
+            @PathVariable long autorId, HttpSession sessao) {
+        return feedServicoAplicacao.listarPorAutor(autorId, SessaoUsuario.usuarioIdOuNulo(sessao));
+    }
+
+    @RequestMapping(method = GET, path = "{id}")
+    FeedServicoAplicacao.PublicacaoResumo consultar(@PathVariable long id, HttpSession sessao) {
+        return feedServicoAplicacao.consultar(id, SessaoUsuario.usuarioIdOuNulo(sessao));
+    }
+
+    @RequestMapping(method = GET, path = "identidades")
+    List<FeedServicoAplicacao.IdentidadeResumo> identidades(HttpSession sessao) {
+        return feedServicoAplicacao.listarIdentidades(SessaoUsuario.exigirUsuarioId(sessao));
+    }
+
+    @RequestMapping(method = GET, path = "assuntos")
+    List<FeedServicoAplicacao.AssuntoResumo> assuntos() {
+        return feedServicoAplicacao.listarAssuntosDoMomento();
     }
 
     @RequestMapping(method = GET, path = "hashtag")
@@ -105,9 +142,15 @@ class FeedControlador {
     }
 
     static class PublicacaoSocialDto {
-        public long autorId;
+        public String tipoIdentidade;
+        public Long identidadeId;
         public String conteudo;
         public List<String> hashtags;
+        public List<String> midias;
+    }
+
+    static class ComentarioDto {
+        public String conteudo;
         public List<String> midias;
     }
 

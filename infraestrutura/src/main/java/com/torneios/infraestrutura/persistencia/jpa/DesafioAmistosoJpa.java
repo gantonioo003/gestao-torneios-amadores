@@ -68,7 +68,7 @@ class DesafioAmistosoRepositorioImpl implements DesafioAmistosoRepositorio {
     }
 
     @Override
-    public List<DesafioAmistoso> listarHistoricoDoTime(TimeId timeId) {
+    public List<DesafioAmistoso> listarPorTime(TimeId timeId) {
         return repositorio.findByTimeDesafianteIdOrTimeDesafiadoId(timeId.valor(), timeId.valor()).stream()
                 .map(this::paraDominio)
                 .toList();

@@ -22,6 +22,12 @@ public class F10Steps extends EngajamentoFuncionalidade {
         consultaDesafio.definirResponsavel(TIME_DESAFIADO_ID, OUTRO_USUARIO_ID);
     }
 
+    @Dado("que existe um time desafiante ligado a uma conta comum")
+    public void existe_time_desafiante_conta_comum() {
+        que_existe_time_desafiante_com_responsavel_autenticado();
+        consultaDesafio.bloquearGerenciamentoDeTimes(USUARIO_ID);
+    }
+
     @Dado("que existe um convite de amistoso pendente")
     public void que_existe_convite_amistoso_pendente() {
         que_existe_time_desafiante_com_responsavel_autenticado();
@@ -71,6 +77,40 @@ public class F10Steps extends EngajamentoFuncionalidade {
         try {
             consultaDesafio.autenticar(OUTRO_USUARIO_ID);
             desafioAmistoso = desafioAmistosoServico.recusarConvite(desafioId(1L), OUTRO_USUARIO_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o responsavel acompanhar os confrontos do seu time")
+    public void responsavel_acompanhar_confrontos_do_time() {
+        try {
+            confrontosAmistosos = desafioAmistosoServico.acompanharConfrontosDoTime(
+                    TIME_DESAFIANTE_ID, USUARIO_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o responsavel do time desafiante cancelar o desafio")
+    public void responsavel_time_desafiante_cancelar_desafio() {
+        try {
+            desafioAmistoso = desafioAmistosoServico.cancelarDesafio(desafioId(1L), USUARIO_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o responsavel tentar enviar outro desafio entre os mesmos times")
+    public void responsavel_tentar_desafio_duplicado() {
+        try {
+            desafioAmistoso = desafioAmistosoServico.proporConfronto(
+                    desafioId(4L),
+                    USUARIO_ID,
+                    TIME_DESAFIANTE_ID,
+                    TIME_DESAFIADO_ID,
+                    LocalDateTime.of(2026, 6, 12, 18, 30),
+                    "Arena Comunitaria");
         } catch (Exception e) {
             excecaoCapturada = e;
         }
@@ -145,6 +185,19 @@ public class F10Steps extends EngajamentoFuncionalidade {
     public void sistema_deve_marcar_convite_recusado() {
         assertNull(excecaoCapturada);
         assertEquals(StatusDesafioAmistoso.RECUSADO, desafioAmistoso.getStatus());
+    }
+
+    @Entao("o sistema deve listar o convite de amistoso")
+    public void sistema_deve_listar_convite_amistoso() {
+        assertNull(excecaoCapturada);
+        assertEquals(1, confrontosAmistosos.size());
+        assertEquals(StatusDesafioAmistoso.PROPOSTO, confrontosAmistosos.get(0).getStatus());
+    }
+
+    @Entao("o sistema deve marcar o desafio como cancelado")
+    public void sistema_deve_marcar_desafio_cancelado() {
+        assertNull(excecaoCapturada);
+        assertEquals(StatusDesafioAmistoso.CANCELADO, desafioAmistoso.getStatus());
     }
 
     @Entao("o sistema deve atualizar data e local do amistoso")

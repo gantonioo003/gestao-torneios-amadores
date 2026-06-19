@@ -12,7 +12,7 @@ Pessoa sem login que pode acessar areas publicas da plataforma e registrar palpi
 Cadastro que identifica o usuario na plataforma, contendo nome, email, senha e tipo de conta. Pode ser criada, editada e excluida pelo proprio usuario.
 
 ### Tipo de conta
-Classificacao principal da conta dentro da plataforma. Pode ser jogador, organizador, treinador ou auxiliar.
+Classificacao principal da conta dentro da plataforma. Pode ser uma conta comum sem funcao esportiva, jogador, organizador, treinador ou membro de comissao.
 
 ### Conta de jogador
 Conta usada por atleta que deseja acompanhar torneios, interagir no feed, registrar palpites, consultar estatisticas e buscar times para jogar.
@@ -196,6 +196,27 @@ Processo automatico que ocorre apos a conclusao do evento alvo, quando o sistema
 ### Percentual de palpites
 Distribuicao agregada e anonima dos palpites registrados por opcao, exibida em tempo real enquanto a janela de votacao estiver aberta.
 
+### Progresso de palpites
+Registro persistente de pontos, nivel, sequencia diaria, acertos e selos conquistados por uma conta autenticada.
+
+### Grupo de chat
+Conversa coletiva com criador, participantes aceitos, convites pendentes e historico acessivel somente aos membros liberados.
+
+### Denuncia
+Registro de um conteudo ou perfil sinalizado por usuario autenticado, com motivo e estado de moderacao pendente, analisada ou arquivada.
+
+### Identidade da publicacao
+Entidade exibida como autora publica de um post. Pode ser a propria conta, um time administrado pelo treinador, um torneio administrado pelo organizador ou o sistema em atualizacoes automaticas.
+
+### Postagem pessoal
+Publicacao feita com a identidade da propria conta. E a unica categoria de post exibida na aba Publicacoes do perfil pessoal.
+
+### Assunto do momento
+Hashtag destacada conforme a soma de publicacoes, curtidas, reacoes e comentarios recebidos no feed.
+
+### Publicacao encaminhada
+Referencia de uma publicacao ativa enviada para conversa privada aprovada ou grupo acessivel e exibida no chat como card atualizado.
+
 ### Feed social geral
 Linha do tempo publica da plataforma, semelhante a uma rede social, com postagens sobre jogos, times, torneios e peladas. Visitantes podem visualizar, mas apenas usuarios autenticados podem publicar ou interagir.
 
@@ -222,4 +243,13 @@ Interacao textual feita por usuario autenticado em uma partida do torneio. Pode 
 
 ### Atualizacao automatica
 Publicacao criada pelo sistema no feed social quando ocorre um evento relevante da partida, como resultado registrado.
+
+### Notificacao
+Aviso persistido destinado a uma conta sobre um acontecimento relevante. Possui categoria, conteudo, destino, data e estados de leitura e arquivamento.
+
+### Categoria de notificacao
+Classificacao do aviso como torneio, time, amistoso, social ou sistema, usada para filtros e preferencias.
+
+### Preferencias de notificacao
+Conjunto persistido de categorias que cada usuario escolheu manter habilitadas para novos avisos.
 

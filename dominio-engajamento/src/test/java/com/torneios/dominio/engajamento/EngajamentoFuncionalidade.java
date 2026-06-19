@@ -11,6 +11,9 @@ import com.torneios.dominio.engajamento.chat.ConversaPrivada;
 import com.torneios.dominio.engajamento.chat.ConversaPrivadaId;
 import com.torneios.dominio.engajamento.chat.MensagemChat;
 import com.torneios.dominio.engajamento.chat.MensagemChatId;
+import com.torneios.dominio.engajamento.chat.GrupoChat;
+import com.torneios.dominio.engajamento.chat.GrupoChatId;
+import com.torneios.dominio.engajamento.chat.GrupoChatServico;
 import com.torneios.dominio.engajamento.desafio.DesafioAmistoso;
 import com.torneios.dominio.engajamento.desafio.DesafioAmistosoId;
 import com.torneios.dominio.engajamento.desafio.DesafioAmistosoServico;
@@ -31,6 +34,7 @@ import com.torneios.infraestrutura.persistencia.memoria.ConversaPrivadaRepositor
 import com.torneios.infraestrutura.persistencia.memoria.DesafioAmistosoRepositorioMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.FeedTorneioRepositorioMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.PalpiteRepositorioMemoria;
+import com.torneios.infraestrutura.persistencia.memoria.GrupoChatRepositorioMemoria;
 
 public abstract class EngajamentoFuncionalidade {
 
@@ -64,6 +68,8 @@ public abstract class EngajamentoFuncionalidade {
     protected static ConsultaSuporteChatMemoria consultaChat = new ConsultaSuporteChatMemoria();
     protected static ChatPrivadoServico chatPrivadoServico = new ChatPrivadoServico(
             conversaPrivadaRepositorio, consultaChat);
+    protected static GrupoChatRepositorioMemoria grupoChatRepositorio = new GrupoChatRepositorioMemoria();
+    protected static GrupoChatServico grupoChatServico = new GrupoChatServico(grupoChatRepositorio, consultaChat);
 
     protected static EventoAlvoPalpite eventoAlvo;
     protected static Palpite palpite;
@@ -75,9 +81,11 @@ public abstract class EngajamentoFuncionalidade {
     protected static List<PublicacaoFeed> publicacoesFeed;
     protected static DesafioAmistoso desafioAmistoso;
     protected static List<DesafioAmistoso> historicoAmistosos;
+    protected static List<DesafioAmistoso> confrontosAmistosos;
     protected static ConversaPrivada conversaPrivada;
     protected static MensagemChat mensagemChat;
     protected static List<ConversaPrivada> conversasPrivadas;
+    protected static GrupoChat grupoChat;
     protected static Exception excecaoCapturada;
 
     public void resetar() {
@@ -96,6 +104,8 @@ public abstract class EngajamentoFuncionalidade {
         conversaPrivadaRepositorio = new ConversaPrivadaRepositorioMemoria();
         consultaChat = new ConsultaSuporteChatMemoria();
         chatPrivadoServico = new ChatPrivadoServico(conversaPrivadaRepositorio, consultaChat);
+        grupoChatRepositorio = new GrupoChatRepositorioMemoria();
+        grupoChatServico = new GrupoChatServico(grupoChatRepositorio, consultaChat);
 
         eventoAlvo = null;
         palpite = null;
@@ -107,9 +117,11 @@ public abstract class EngajamentoFuncionalidade {
         publicacoesFeed = null;
         desafioAmistoso = null;
         historicoAmistosos = null;
+        confrontosAmistosos = null;
         conversaPrivada = null;
         mensagemChat = null;
         conversasPrivadas = null;
+        grupoChat = null;
         excecaoCapturada = null;
     }
 
@@ -156,6 +168,10 @@ public abstract class EngajamentoFuncionalidade {
 
     protected MensagemChatId mensagemId(long valor) {
         return new MensagemChatId(valor);
+    }
+
+    protected GrupoChatId grupoId(long valor) {
+        return new GrupoChatId(valor);
     }
 }
 

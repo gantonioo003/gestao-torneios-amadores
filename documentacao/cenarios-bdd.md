@@ -32,6 +32,7 @@ Cenarios principais:
 - cadastrar conta do tipo jogador
 - cadastrar conta do tipo organizador
 - cadastrar conta do tipo treinador
+- cadastrar conta comum sem funcao esportiva
 - realizar login com email e senha validos
 - impedir login com senha incorreta
 - editar dados da conta
@@ -41,6 +42,7 @@ Cenarios principais:
 - permitir gerenciamento de times ao treinador
 - impedir organizador de gerenciar times
 - impedir jogador de gerenciar times
+- impedir conta comum de criar torneios ou gerenciar times
 - salvar torneio no perfil da conta
 - remover torneio salvo do perfil da conta
 
@@ -185,17 +187,24 @@ Cenarios principais:
 
 ---
 
-### F10. Gerenciar o ciclo social de desafios e amistosos opcionais entre times
+### F10. Gerenciar confrontos amistosos entre times por contas de treinador
 Dominio: dominio-engajamento
 Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F10-gerenciar-desafios-e-amistosos-entre-times.feature
 
 Cenarios principais:
 - propor confronto amistoso para outro time
+- propor pela busca ou pelo perfil publico do time adversario
+- selecionar automaticamente o unico time do treinador ou permitir escolher entre varios
+- acompanhar confrontos recebidos, enviados, confirmados e encerrados no proprio time
 - aceitar convite de amistoso
 - recusar convite de amistoso
+- cancelar desafio enviado
 - reagendar amistoso aceito
 - registrar resultado no historico dos times
+- notificar o time desafiado e os responsaveis quando o amistoso for aceito
 - impedir desafio contra o proprio time
+- impedir desafio por conta comum ou treinador sem time
+- impedir desafios duplicados em aberto entre os mesmos times
 - impedir aceite por usuario sem responsabilidade pelos times
 
 ---
@@ -217,6 +226,10 @@ Cenarios principais:
 - usuario autenticado curtir e reagir em publicacao do feed
 - impedir interacao de visitante no feed
 - filtrar publicacoes por hashtag
+- publicar como time administrado e impedir representacao de time alheio
+- comentar apenas com foto e alternar uma unica curtida por conta
+- listar no perfil somente postagens feitas com identidade pessoal
+- consultar publicacao ativa encaminhada para exibicao em card no chat
 
 ---
 
@@ -266,7 +279,18 @@ Cenarios principais:
 
 ---
 
-### F15.
+### F15. Gerenciar central de notificacoes e preferencias do usuario
+Dominio: dominio-participacao, no contexto existente de acesso
+Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F15-gerenciar-central-de-notificacoes.feature
+
+Cenarios principais:
+- receber notificacao de categoria habilitada
+- consultar notificacao persistida como nao lida
+- marcar uma notificacao como lida
+- marcar todas as notificacoes como lidas
+- arquivar notificacao sem apagar o historico
+- impedir geracao de notificacao de categoria desativada
+- impedir outro usuario de alterar a notificacao
 
 ---
 
@@ -288,7 +312,8 @@ Cenarios principais:
 - RN13. Login exige email e senha validos.
 - RN14. Usuario pode editar os dados da propria conta.
 - RN15. Usuario pode excluir a propria conta.
-- RN16. A conta de usuario pode ser do tipo jogador, organizador, treinador ou auxiliar.
+- RN16. A conta de usuario pode ser comum, sem funcao esportiva, ou representar jogador, organizador, treinador ou membro de comissao.
+- RN16A. A conta comum pode usar recursos sociais, palpites e acompanhamento, mas nao pode criar torneios, gerenciar times ou possuir perfil profissional esportivo.
 - RN17. Contas do tipo jogador podem usar a plataforma para buscar times e acompanhar oportunidades de participacao.
 - RN18. Contas do tipo organizador gerenciam exclusivamente torneios; somente contas de treinador podem criar e administrar times e elencos.
 - RN19. Apenas usuarios autenticados podem solicitar conversas privadas.

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +18,7 @@ import com.torneios.dominio.engajamento.feed.PublicacaoFeed;
 import com.torneios.dominio.engajamento.feed.PublicacaoFeedId;
 import com.torneios.dominio.engajamento.feed.TipoPublicacaoFeed;
 import com.torneios.dominio.engajamento.feed.TipoReacaoFeed;
+import com.torneios.dominio.engajamento.feed.TipoIdentidadeFeed;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -34,6 +36,10 @@ class PublicacaoFeedJpa {
     String tipo;
     Long autorId;
     Long partidaId;
+    String tipoIdentidade;
+    Long identidadeId;
+    Long publicacaoPaiId;
+    LocalDateTime criadaEm;
     String conteudo;
 
     @Lob
@@ -53,6 +59,8 @@ class PublicacaoFeedJpa {
 
 interface PublicacaoFeedJpaRepository extends JpaRepository<PublicacaoFeedJpa, Long> {
     List<PublicacaoFeedJpa> findByTorneioId(Long torneioId);
+    List<PublicacaoFeedJpa> findByAutorIdOrderByCriadaEmDesc(Long autorId);
+    List<PublicacaoFeedJpa> findByPublicacaoPaiIdOrderByCriadaEmAsc(Long publicacaoPaiId);
 }
 
 @Repository
@@ -69,6 +77,10 @@ class FeedTorneioRepositorioImpl implements FeedTorneioRepositorio {
         jpa.tipo = publicacao.getTipo().name();
         jpa.autorId = publicacao.getAutorId().map(UsuarioId::valor).orElse(null);
         jpa.partidaId = publicacao.getPartidaId().map(PartidaId::valor).orElse(null);
+        jpa.tipoIdentidade = publicacao.getTipoIdentidade().name();
+        jpa.identidadeId = publicacao.getIdentidadeId();
+        jpa.publicacaoPaiId = publicacao.getPublicacaoPaiId().map(PublicacaoFeedId::valor).orElse(null);
+        jpa.criadaEm = publicacao.getCriadaEm();
         jpa.conteudo = publicacao.getConteudo();
         jpa.hashtagsData = PersistenciaTextoUtil.serializarLista(new ArrayList<>(publicacao.getHashtags()));
         jpa.midiasData = PersistenciaTextoUtil.serializarLista(publicacao.getMidias());
@@ -110,6 +122,20 @@ class FeedTorneioRepositorioImpl implements FeedTorneioRepositorio {
                 .toList();
     }
 
+    @Override
+    public List<PublicacaoFeed> listarPorAutor(UsuarioId usuarioId) {
+        return repositorio.findByAutorIdOrderByCriadaEmDesc(usuarioId.valor()).stream()
+                .map(this::paraDominio)
+                .toList();
+    }
+
+    @Override
+    public List<PublicacaoFeed> listarComentarios(PublicacaoFeedId publicacaoPaiId) {
+        return repositorio.findByPublicacaoPaiIdOrderByCriadaEmAsc(publicacaoPaiId.valor()).stream()
+                .map(this::paraDominio)
+                .toList();
+    }
+
     private PublicacaoFeed paraDominio(PublicacaoFeedJpa jpa) {
         TipoPublicacaoFeed tipo = TipoPublicacaoFeed.valueOf(jpa.tipo);
         PublicacaoFeed publicacao = switch (tipo) {
@@ -124,12 +150,19 @@ class FeedTorneioRepositorioImpl implements FeedTorneioRepositorio {
                     new TorneioId(jpa.torneioId),
                     new UsuarioId(jpa.autorId),
                     jpa.conteudo);
-            case COMENTARIO -> PublicacaoFeed.comentario(
-                    new PublicacaoFeedId(jpa.id),
-                    new TorneioId(jpa.torneioId),
-                    new PartidaId(jpa.partidaId),
-                    new UsuarioId(jpa.autorId),
-                    jpa.conteudo);
+            case COMENTARIO -> jpa.publicacaoPaiId != null
+                    ? PublicacaoFeed.comentarioPublicacao(
+                            new PublicacaoFeedId(jpa.id),
+                            new PublicacaoFeedId(jpa.publicacaoPaiId),
+                            new UsuarioId(jpa.autorId),
+                            jpa.conteudo,
+                            PersistenciaTextoUtil.desserializarLista(jpa.midiasData))
+                    : PublicacaoFeed.comentario(
+                            new PublicacaoFeedId(jpa.id),
+                            new TorneioId(jpa.torneioId),
+                            new PartidaId(jpa.partidaId),
+                            new UsuarioId(jpa.autorId),
+                            jpa.conteudo);
             case ATUALIZACAO_AUTOMATICA -> PublicacaoFeed.atualizacaoAutomatica(
                     new PublicacaoFeedId(jpa.id),
                     new TorneioId(jpa.torneioId),
@@ -143,10 +176,35 @@ class FeedTorneioRepositorioImpl implements FeedTorneioRepositorio {
         for (List<String> reacao : PersistenciaTextoUtil.desserializarLinhas(jpa.reacoesData)) {
             publicacao.reagir(new UsuarioId(Long.parseLong(reacao.get(0))), TipoReacaoFeed.valueOf(reacao.get(1)));
         }
+        ReflexaoDominioJpa.definirCampo(publicacao, "tipoIdentidade",
+                jpa.tipoIdentidade == null ? identidadeLegada(jpa) : TipoIdentidadeFeed.valueOf(jpa.tipoIdentidade));
+        ReflexaoDominioJpa.definirCampo(publicacao, "identidadeId",
+                jpa.identidadeId == null ? identidadeIdLegada(jpa) : jpa.identidadeId);
+        ReflexaoDominioJpa.definirCampo(publicacao, "publicacaoPaiId",
+                jpa.publicacaoPaiId == null ? null : new PublicacaoFeedId(jpa.publicacaoPaiId));
+        ReflexaoDominioJpa.definirCampo(publicacao, "criadaEm",
+                jpa.criadaEm == null ? LocalDateTime.now() : jpa.criadaEm);
         if (jpa.removida) {
             ReflexaoDominioJpa.definirCampo(publicacao, "removida", true);
         }
         return publicacao;
+    }
+
+    private TipoIdentidadeFeed identidadeLegada(PublicacaoFeedJpa jpa) {
+        if (TipoPublicacaoFeed.ATUALIZACAO_AUTOMATICA.name().equals(jpa.tipo)) return TipoIdentidadeFeed.SISTEMA;
+        if (jpa.torneioId != null && TipoPublicacaoFeed.COMUNICADO_OFICIAL.name().equals(jpa.tipo)) {
+            return TipoIdentidadeFeed.TORNEIO;
+        }
+        return TipoIdentidadeFeed.USUARIO;
+    }
+
+    private Long identidadeIdLegada(PublicacaoFeedJpa jpa) {
+        return switch (identidadeLegada(jpa)) {
+            case TORNEIO -> jpa.torneioId;
+            case SISTEMA -> jpa.partidaId;
+            case USUARIO -> jpa.autorId;
+            case TIME -> null;
+        };
     }
 
     private List<String> serializarReacao(Map.Entry<UsuarioId, TipoReacaoFeed> entrada) {

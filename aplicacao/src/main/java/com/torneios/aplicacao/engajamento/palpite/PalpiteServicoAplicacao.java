@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDate;
 
 import com.torneios.dominio.compartilhado.enumeracao.StatusTorneio;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
@@ -20,6 +21,9 @@ import com.torneios.dominio.engajamento.palpite.PalpiteRepositorio;
 import com.torneios.dominio.engajamento.palpite.PalpiteServico;
 import com.torneios.dominio.engajamento.palpite.PercentuaisPalpite;
 import com.torneios.dominio.engajamento.palpite.TipoPalpite;
+import com.torneios.dominio.engajamento.palpite.ProgressoPalpite;
+import com.torneios.dominio.engajamento.palpite.ProgressoPalpiteServico;
+import com.torneios.aplicacao.participacao.conta.ContaRepositorioAplicacao;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoId;
 import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoRepositorio;
 import com.torneios.dominio.participacao.profissional.TipoProfissional;
@@ -34,9 +38,11 @@ public class PalpiteServicoAplicacao {
     private final PartidaRepositorio partidaRepositorio;
     private final TimeRepositorio timeRepositorio;
     private final ProfissionalEsportivoRepositorio profissionalRepositorio;
+    private final ProgressoPalpiteServico progressoServico;
+    private final ContaRepositorioAplicacao contaRepositorio;
 
     public PalpiteServicoAplicacao(PalpiteServico palpiteServico, PalpiteRepositorio palpiteRepositorio) {
-        this(palpiteServico, palpiteRepositorio, null, null, null, null);
+        this(palpiteServico, palpiteRepositorio, null, null, null, null, null, null);
     }
 
     public PalpiteServicoAplicacao(PalpiteServico palpiteServico,
@@ -45,6 +51,18 @@ public class PalpiteServicoAplicacao {
                                    PartidaRepositorio partidaRepositorio,
                                    TimeRepositorio timeRepositorio,
                                    ProfissionalEsportivoRepositorio profissionalRepositorio) {
+        this(palpiteServico, palpiteRepositorio, torneioRepositorio, partidaRepositorio,
+                timeRepositorio, profissionalRepositorio, null, null);
+    }
+
+    public PalpiteServicoAplicacao(PalpiteServico palpiteServico,
+                                   PalpiteRepositorio palpiteRepositorio,
+                                   TorneioRepositorio torneioRepositorio,
+                                   PartidaRepositorio partidaRepositorio,
+                                   TimeRepositorio timeRepositorio,
+                                   ProfissionalEsportivoRepositorio profissionalRepositorio,
+                                   ProgressoPalpiteServico progressoServico,
+                                   ContaRepositorioAplicacao contaRepositorio) {
         notNull(palpiteServico, "O servico de palpite e obrigatorio.");
         notNull(palpiteRepositorio, "O repositorio de palpite e obrigatorio.");
         this.palpiteServico = palpiteServico;
@@ -53,6 +71,8 @@ public class PalpiteServicoAplicacao {
         this.partidaRepositorio = partidaRepositorio;
         this.timeRepositorio = timeRepositorio;
         this.profissionalRepositorio = profissionalRepositorio;
+        this.progressoServico = progressoServico;
+        this.contaRepositorio = contaRepositorio;
     }
 
     public PalpiteResumo registrarOuAtualizar(long palpiteId,
@@ -62,11 +82,17 @@ public class PalpiteServicoAplicacao {
                                               Long partidaId,
                                               long opcao) {
         EventoAlvoPalpite eventoAlvo = criarEventoAlvo(tipo, torneioId, partidaId);
-        return converter(palpiteServico.registrarOuAtualizar(
+        UsuarioId usuario = new UsuarioId(usuarioId);
+        boolean novoPalpite = palpiteRepositorio.buscarPorUsuarioEEvento(usuario, eventoAlvo).isEmpty();
+        Palpite salvo = palpiteServico.registrarOuAtualizar(
                 new PalpiteId(palpiteId),
-                new UsuarioId(usuarioId),
+                usuario,
                 eventoAlvo,
-                new OpcaoPalpite(opcao)));
+                new OpcaoPalpite(opcao));
+        if (novoPalpite && progressoServico != null) {
+            progressoServico.registrarNovoPalpite(usuario, LocalDate.now());
+        }
+        return converter(salvo);
     }
 
     public PalpiteResumo registrarOuAtualizarComoVisitante(long palpiteId,
@@ -88,9 +114,67 @@ public class PalpiteServicoAplicacao {
     }
 
     public List<PalpiteResumo> apurar(String tipo, long torneioId, Long partidaId, long resultadoReal) {
-        return palpiteServico.apurar(criarEventoAlvo(tipo, torneioId, partidaId), resultadoReal).stream()
+        EventoAlvoPalpite evento = criarEventoAlvo(tipo, torneioId, partidaId);
+        List<Palpite> pendentes = palpiteRepositorio.listarPorEvento(evento).stream()
+                .filter(palpite -> !palpite.estaApurado() && palpite.getUsuarioId() != null)
+                .toList();
+        List<Palpite> apurados = palpiteServico.apurar(evento, resultadoReal);
+        premiarApuracao(pendentes);
+        return apurados.stream()
                 .map(this::converter)
                 .toList();
+    }
+
+    public ProgressoResumo consultarProgresso(long usuarioId) {
+        notNull(progressoServico, "O servico de progresso e obrigatorio.");
+        List<ProgressoPalpite> ranking = progressoServico.ranking();
+        ProgressoPalpite progresso = progressoServico.consultar(new UsuarioId(usuarioId));
+        int posicao = 1;
+        for (int i = 0; i < ranking.size(); i++) {
+            if (ranking.get(i).getUsuarioId().valor() == usuarioId) {
+                posicao = i + 1;
+                break;
+            }
+        }
+        return converterProgresso(progresso, posicao);
+    }
+
+    public List<RankingPalpiteResumo> listarRanking() {
+        notNull(progressoServico, "O servico de progresso e obrigatorio.");
+        return progressoServico.ranking().stream()
+                .limit(50)
+                .map(progresso -> new RankingPalpiteResumo(
+                        progresso.getUsuarioId().valor(),
+                        contaRepositorio == null ? "Palpiteiro" : contaRepositorio
+                                .pesquisarPorId(progresso.getUsuarioId().valor())
+                                .map(conta -> conta.getNome())
+                                .orElse("Palpiteiro"),
+                        progresso.getPontos(),
+                        progresso.getTotalAcertos(),
+                        progresso.getSequenciaAtual(),
+                        progresso.getSelos().stream().map(Enum::name).toList()))
+                .toList();
+    }
+
+    private void premiarApuracao(List<Palpite> pendentes) {
+        if (progressoServico == null) return;
+        pendentes.forEach(palpite -> progressoServico.registrarApuracao(
+                palpite.getUsuarioId(),
+                palpite.acertou().orElse(false)));
+    }
+
+    private ProgressoResumo converterProgresso(ProgressoPalpite progresso, int posicao) {
+        int nivel = (progresso.getPontos() / 100) + 1;
+        return new ProgressoResumo(
+                progresso.getPontos(),
+                nivel,
+                nivel * 100,
+                progresso.getSequenciaAtual(),
+                progresso.getMaiorSequencia(),
+                progresso.getTotalPalpites(),
+                progresso.getTotalAcertos(),
+                posicao,
+                progresso.getSelos().stream().map(Enum::name).toList());
     }
 
     public List<PalpiteResumo> listarPorEvento(String tipo, long torneioId, Long partidaId) {
@@ -278,5 +362,24 @@ public class PalpiteServicoAplicacao {
     }
 
     public record OpcaoResumo(Long id, String nome) {
+    }
+
+    public record ProgressoResumo(int pontos,
+                                  int nivel,
+                                  int pontosProximoNivel,
+                                  int sequenciaAtual,
+                                  int maiorSequencia,
+                                  int totalPalpites,
+                                  int totalAcertos,
+                                  int posicaoRanking,
+                                  List<String> selos) {
+    }
+
+    public record RankingPalpiteResumo(long usuarioId,
+                                       String nome,
+                                       int pontos,
+                                       int acertos,
+                                       int sequencia,
+                                       List<String> selos) {
     }
 }

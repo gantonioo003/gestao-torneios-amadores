@@ -43,6 +43,27 @@ interface PalpiteUsuario {
   acertou?: boolean;
 }
 
+interface ProgressoPalpite {
+  pontos: number;
+  nivel: number;
+  pontosProximoNivel: number;
+  sequenciaAtual: number;
+  maiorSequencia: number;
+  totalPalpites: number;
+  totalAcertos: number;
+  posicaoRanking: number;
+  selos: string[];
+}
+
+interface RankingPalpite {
+  usuarioId: number;
+  nome: string;
+  pontos: number;
+  acertos: number;
+  sequencia: number;
+  selos: string[];
+}
+
 @Component({
   selector: 'app-palpites',
   imports: [RouterLink],
@@ -54,6 +75,8 @@ export class Palpites implements OnInit {
   torneios: TorneioDisponivel[] = [];
   partidas: PartidaDisponivel[] = [];
   meusPalpites: PalpiteUsuario[] = [];
+  progresso: ProgressoPalpite | null = null;
+  ranking: RankingPalpite[] = [];
   carregando = true;
   votando = '';
   aba: 'disponiveis' | 'andamento' | 'historico' = 'disponiveis';
@@ -73,6 +96,23 @@ export class Palpites implements OnInit {
 
   get palpitesAnteriores(): PalpiteUsuario[] {
     return this.meusPalpites.filter(palpite => palpite.apurado);
+  }
+
+  get percentualNivel(): number {
+    if (!this.progresso) return 0;
+    const inicioNivel = (this.progresso.nivel - 1) * 100;
+    return Math.max(0, Math.min(100, this.progresso.pontos - inicioNivel));
+  }
+
+  seloLabel(selo: string): string {
+    const labels: Record<string, string> = {
+      PRIMEIRO_PALPITE: 'Primeiro chute',
+      TRES_DIAS_SEGUIDOS: 'Ritmo de 3 dias',
+      SETE_DIAS_SEGUIDOS: 'Semana perfeita',
+      DEZ_ACERTOS: 'Olho de craque',
+      CINQUENTA_PALPITES: 'Veterano'
+    };
+    return labels[selo] ?? selo;
   }
 
   votarPartida(partida: PartidaDisponivel, opcao: OpcaoPalpite) {
@@ -130,13 +170,20 @@ export class Palpites implements OnInit {
     const historico = this.usuario()
       ? this.http.get<PalpiteUsuario[]>('/backend/palpites/meus').pipe(catchError(() => of([])))
       : of([]);
+    const progresso = this.usuario()
+      ? this.http.get<ProgressoPalpite>('/backend/palpites/progresso').pipe(catchError(() => of(null)))
+      : of(null);
+    const ranking = this.http.get<RankingPalpite[]>('/backend/palpites/ranking')
+      .pipe(catchError(() => of([])));
 
-    forkJoin({ oportunidades, historico })
+    forkJoin({ oportunidades, historico, progresso, ranking })
       .pipe(finalize(() => this.carregando = false))
-      .subscribe(({ oportunidades, historico }) => {
+      .subscribe(({ oportunidades, historico, progresso, ranking }) => {
         this.torneios = oportunidades.torneios ?? [];
         this.partidas = oportunidades.partidas ?? [];
         this.meusPalpites = historico;
+        this.progresso = progresso;
+        this.ranking = ranking;
       });
   }
 
@@ -173,6 +220,7 @@ export class Palpites implements OnInit {
             this.meusPalpites = [palpite, ...this.meusPalpites];
           }
         }
+        if (this.usuario()) this.atualizarGamificacao();
         depoisDeSalvar();
       },
       error: erro => alert(
@@ -203,6 +251,16 @@ export class Palpites implements OnInit {
       ?? `visitante-${Date.now()}-${Math.random().toString(16).slice(2)}`;
     localStorage.setItem(chave, novo);
     return novo;
+  }
+
+  private atualizarGamificacao() {
+    forkJoin({
+      progresso: this.http.get<ProgressoPalpite>('/backend/palpites/progresso'),
+      ranking: this.http.get<RankingPalpite[]>('/backend/palpites/ranking')
+    }).subscribe(({ progresso, ranking }) => {
+      this.progresso = progresso;
+      this.ranking = ranking;
+    });
   }
 }
 

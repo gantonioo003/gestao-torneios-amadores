@@ -62,6 +62,11 @@ public class F2Steps extends ParticipacaoFuncionalidade {
         try { contaCapturada = contaUsuarioServico.cadastrarConta(USUARIO_AUTENTICADO_ID, "Treinador", EMAIL_USUARIO, SENHA_USUARIO, TipoContaUsuario.TREINADOR); } catch (Exception e) { excecaoCapturada = e; }
     }
 
+    @Quando("o usuario cadastrar uma conta comum sem funcao esportiva")
+    public void usuario_cadastrar_conta_comum() {
+        try { contaCapturada = contaUsuarioServico.cadastrarConta(USUARIO_AUTENTICADO_ID, "Torcedor", EMAIL_USUARIO, SENHA_USUARIO, TipoContaUsuario.USUARIO_COMUM); } catch (Exception e) { excecaoCapturada = e; }
+    }
+
     @Quando("ele informar email e senha validos")
     public void ele_informar_email_e_senha_validos() {
         try { contaCapturada = contaUsuarioServico.autenticar(EMAIL_USUARIO, SENHA_USUARIO); usuarioAtual = contaCapturada.getId(); } catch (Exception e) { excecaoCapturada = e; }
@@ -103,6 +108,12 @@ public class F2Steps extends ParticipacaoFuncionalidade {
     public void existe_conta_treinador_cadastrada() {
         contaCapturada = contaUsuarioServico.cadastrarConta(
                 USUARIO_AUTENTICADO_ID, "Treinador", EMAIL_USUARIO, SENHA_USUARIO, TipoContaUsuario.TREINADOR);
+    }
+
+    @Dado("que existe uma conta comum cadastrada")
+    public void existe_conta_comum_cadastrada() {
+        contaCapturada = contaUsuarioServico.cadastrarConta(
+                USUARIO_AUTENTICADO_ID, "Torcedor", EMAIL_USUARIO, SENHA_USUARIO, TipoContaUsuario.USUARIO_COMUM);
     }
 
     @Quando("o sistema verificar a permissao para criar torneios")
@@ -153,6 +164,15 @@ public class F2Steps extends ParticipacaoFuncionalidade {
     public void sistema_deve_criar_conta_como_treinador() {
         sistema_deve_criar_conta_usuario();
         assertEquals(TipoContaUsuario.TREINADOR, contaCapturada.getTipo());
+    }
+
+    @Entao("o sistema deve criar a conta sem funcao esportiva")
+    public void sistema_deve_criar_conta_comum() {
+        sistema_deve_criar_conta_usuario();
+        assertEquals(TipoContaUsuario.USUARIO_COMUM, contaCapturada.getTipo());
+        assertFalse(contaCapturada.podeCriarTorneio());
+        assertFalse(contaCapturada.podeGerenciarTimes());
+        assertFalse(contaCapturada.possuiPerfilProfissional());
     }
 
     @Entao("a conta deve possuir permissao para criar torneios")

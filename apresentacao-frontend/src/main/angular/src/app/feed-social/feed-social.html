@@ -1,71 +1,284 @@
-<main class="page">
-  <div class="hero-row">
-    <div>
-      <div class="eyebrow">Comunidade</div>
-      <h1 class="page-title">Feed social do torneio</h1>
-      <p class="page-subtitle">Comunicados, postagens de times, comentarios de partida e atualizacoes automaticas em um lugar so.</p>
-    </div>
-    <a class="btn btn-outline" routerLink="/chat"><i class="bi bi-chat-dots"></i> Chat privado</a>
-  </div>
+<main class="social-feed-page">
+  <section class="feed-main">
+    <header class="feed-titlebar">
+      <div>
+        <span class="eyebrow">Comunidade Liga Amadora+</span>
+        <h1>Feed</h1>
+      </div>
+      <a routerLink="/chat" aria-label="Abrir chat"><i class="bi bi-chat-dots"></i></a>
+    </header>
 
-  <div class="grid layout-2-1">
-    <section class="grid">
-      <div class="card panel-strong">
-        <div class="tabs" style="margin-bottom: 12px">
-          <button class="tab" [class.active]="aba === 'todos'" (click)="aba = 'todos'">Todos</button>
-          <button class="tab" [class.active]="aba === 'torneios'" (click)="aba = 'torneios'">Torneios</button>
-          <button class="tab" [class.active]="aba === 'partidas'" (click)="aba = 'partidas'">Partidas</button>
-          <button class="tab" [class.active]="aba === 'times'" (click)="aba = 'times'">Times</button>
-        </div>
-        <div class="field" style="display: flex; gap: 8px">
-          <input [(ngModel)]="novoPost" placeholder="Compartilhe uma atualizacao">
-          <button class="btn btn-primary" (click)="publicar()">Publicar</button>
+    <nav class="feed-tabs" aria-label="Filtros do feed">
+      <button [class.active]="aba === 'todos'" (click)="aba = 'todos'">Todos</button>
+      <button [class.active]="aba === 'torneios'" (click)="aba = 'torneios'">Torneios</button>
+      <button [class.active]="aba === 'partidas'" (click)="aba = 'partidas'">Partidas</button>
+      <button [class.active]="aba === 'times'" (click)="aba = 'times'">Times</button>
+    </nav>
+
+    <section class="post-composer">
+      <span class="feed-avatar" [class.has-photo]="usuario()?.fotoPerfilUrl">
+        @if (usuario()?.fotoPerfilUrl) {
+          <img [src]="usuario()?.fotoPerfilUrl" alt="">
+        } @else {
+          {{ iniciais(usuario()?.nome || 'U') }}
+        }
+      </span>
+      <div class="composer-body">
+        <select [(ngModel)]="identidadeSelecionada" aria-label="Publicar como">
+          @for (identidade of identidades; track chaveIdentidade(identidade)) {
+            <option [value]="chaveIdentidade(identidade)">
+              {{ identidade.nome }} · {{ identidade.descricao }}
+            </option>
+          }
+        </select>
+        <textarea [(ngModel)]="novoPost" maxlength="700"
+          placeholder="O que esta acontecendo no futebol amador?"></textarea>
+        @if (midiaPreview) {
+          <div class="composer-preview">
+            @if (ehVideo(midiaPreview)) {
+              <video [src]="midiaPreview" controls preload="metadata"></video>
+            } @else {
+              <img [src]="midiaPreview" alt="Imagem selecionada">
+            }
+            <button (click)="midiaPreview = ''" aria-label="Remover midia"><i class="bi bi-x-lg"></i></button>
+          </div>
+        }
+        <div class="composer-actions">
+          <label title="Adicionar foto ou video">
+            <i class="bi bi-image"></i>
+            <input type="file" accept="image/*,video/*" (change)="selecionarFoto($event)">
+          </label>
+          <span># hashtags no texto aparecem nos assuntos do momento</span>
+          <button [disabled]="(!novoPost.trim() && !midiaPreview) || publicando" (click)="publicar()">
+            Publicar
+          </button>
         </div>
       </div>
+    </section>
 
-      @for (post of feedFiltrado(); track post.autor + post.tempo) {
-        <article class="card post">
-          <div class="post-head">
-            <div class="avatar"><i class="bi bi-megaphone"></i></div>
-            <div>
-              <strong>{{ post.autor }}</strong>
-              <div class="small muted">{{ post.tempo }} - {{ post.tipo }}</div>
+    @if (mensagem) {
+      <div class="feed-message">{{ mensagem }} <button (click)="mensagem = ''"><i class="bi bi-x"></i></button></div>
+    }
+
+    @if (carregando) {
+      <div class="feed-loading">Carregando publicacoes...</div>
+    } @else {
+      <section class="timeline">
+        @for (post of feedFiltrado; track post.id) {
+          <article class="social-post" [id]="'publicacao-' + post.id"
+            [class.selected-post]="publicacaoSelecionadaId === post.id">
+            <span class="feed-avatar" [class.has-photo]="post.tipoIdentidade === 'USUARIO' && post.autorFotoPerfilUrl"
+              [class.team-avatar]="post.tipoIdentidade === 'TIME'"
+              [class.tournament-avatar]="post.tipoIdentidade === 'TORNEIO'">
+              @if (post.tipoIdentidade === 'USUARIO' && post.autorFotoPerfilUrl) {
+                <img [src]="post.autorFotoPerfilUrl" alt="">
+              } @else {
+                {{ iniciais(post.identidadeNome) }}
+              }
+            </span>
+
+            <div class="post-content">
+              <header>
+                <div>
+                  <strong>{{ post.identidadeNome }}</strong>
+                  @if (post.tipoIdentidade !== 'USUARIO') {
+                    <span class="identity-chip">{{ post.tipoIdentidade === 'TIME' ? 'Time' : post.tipoIdentidade === 'TORNEIO' ? 'Torneio' : 'Partida' }}</span>
+                  }
+                  <small>&#64;{{ post.autorNomeUsuario }} · {{ tempo(post.criadaEm) }}</small>
+                </div>
+                <button class="quiet-action" (click)="denunciar(post)" title="Denunciar publicacao">
+                  <i class="bi bi-three-dots"></i>
+                </button>
+              </header>
+
+              @if (post.conteudo) {
+                <p>{{ post.conteudo }}</p>
+              }
+
+              @if (post.midias.length) {
+                <div class="post-media">
+                  @for (midia of post.midias; track midia) {
+                    @if (ehVideo(midia)) {
+                      <video [src]="midia" controls preload="metadata"></video>
+                    } @else {
+                      <img [src]="midia" alt="Midia da publicacao">
+                    }
+                  }
+                </div>
+              }
+
+              @if (post.hashtags.length) {
+                <div class="post-tags">
+                  @for (tag of post.hashtags; track tag) {
+                    <button (click)="filtrarHashtag(tag)">#{{ tag }}</button>
+                  }
+                </div>
+              }
+
+              <div class="engagement-row">
+                <button (click)="alternarComentarios(post.id)" [class.active]="comentariosAbertos.has(post.id)">
+                  <i class="bi bi-chat"></i><span>{{ post.comentarios.length }}</span>
+                </button>
+                <button (click)="reagir(post, 'COMEMORACAO')">
+                  <i class="bi bi-emoji-smile"></i><span>{{ totalReacoes(post) }}</span>
+                </button>
+                <button (click)="curtir(post)" [class.liked]="post.curtidaPeloUsuario">
+                  <i class="bi" [class.bi-heart-fill]="post.curtidaPeloUsuario"
+                    [class.bi-heart]="!post.curtidaPeloUsuario"></i>
+                  <span>{{ post.quantidadeCurtidas }}</span>
+                </button>
+                <button title="Encaminhar no chat" (click)="abrirCompartilhamento(post)">
+                  <i class="bi bi-share"></i>
+                </button>
+              </div>
+
+              @if (comentariosAbertos.has(post.id)) {
+                <section class="comments-thread">
+                  @for (comentario of post.comentarios; track comentario.id) {
+                    <article>
+                      <span class="comment-avatar" [class.has-photo]="comentario.autorFotoPerfilUrl">
+                        @if (comentario.autorFotoPerfilUrl) {
+                          <img [src]="comentario.autorFotoPerfilUrl" alt="">
+                        } @else {
+                          {{ iniciais(comentario.autorNome) }}
+                        }
+                      </span>
+                      <div>
+                        <strong>{{ comentario.autorNome }}</strong>
+                        <small>&#64;{{ comentario.autorNomeUsuario }} · {{ tempo(comentario.criadaEm) }}</small>
+                        @if (comentario.conteudo) {
+                          <p>{{ comentario.conteudo }}</p>
+                        }
+                        @for (midia of comentario.midias; track midia) {
+                          <img class="comment-media" [src]="midia" alt="Foto do comentario">
+                        }
+                      </div>
+                    </article>
+                  }
+                  <div class="comment-composer">
+                    <span class="comment-avatar" [class.has-photo]="usuario()?.fotoPerfilUrl">
+                      @if (usuario()?.fotoPerfilUrl) {
+                        <img [src]="usuario()?.fotoPerfilUrl" alt="">
+                      } @else {
+                        {{ iniciais(usuario()?.nome || 'U') }}
+                      }
+                    </span>
+                    <div>
+                      @if (midiaComentarioPorPost[post.id]) {
+                        <div class="comment-preview">
+                          <img [src]="midiaComentarioPorPost[post.id]" alt="Foto selecionada">
+                          <button (click)="midiaComentarioPorPost[post.id] = ''"><i class="bi bi-x"></i></button>
+                        </div>
+                      }
+                      <input [(ngModel)]="comentarioPorPost[post.id]"
+                        (keydown.enter)="comentar(post)" placeholder="Publique sua resposta">
+                    </div>
+                    <label class="comment-photo" title="Responder com foto">
+                      <i class="bi bi-image"></i>
+                      <input type="file" accept="image/*" (change)="selecionarFotoComentario(post.id, $event)">
+                    </label>
+                    <button (click)="comentar(post)"
+                      [disabled]="!podeComentar(post.id)">
+                      Responder
+                    </button>
+                  </div>
+                </section>
+              }
             </div>
+          </article>
+        } @empty {
+          <div class="feed-empty">
+            <i class="bi bi-chat-square-text"></i>
+            <strong>Nenhuma publicacao encontrada</strong>
+            <span>Troque o filtro ou seja a primeira pessoa a publicar aqui.</span>
           </div>
-          <p style="margin: 0">{{ post.texto }}</p>
-          @if (post.imagem) {
-            <div class="post-image">
-              <div style="text-align: center"><i class="bi bi-camera" style="font-size: 34px"></i><div>Imagem da partida</div></div>
-            </div>
-          }
-          <span style="color: var(--green-dark); font-weight: 800">{{ post.tags }}</span>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap">
-            <button class="btn btn-sm" (click)="curtir(post)"><i class="bi bi-heart"></i> {{ post.curtidas }}</button>
-            <button class="btn btn-sm"><i class="bi bi-chat"></i> {{ post.comentarios }}</button>
-            <button class="btn btn-sm"><i class="bi bi-emoji-smile"></i> Reagir</button>
-          </div>
-        </article>
+        }
+      </section>
+    }
+  </section>
+
+  <aside class="feed-sidebar">
+    <div class="feed-search">
+      <i class="bi bi-search"></i>
+      <input [(ngModel)]="busca" placeholder="Buscar no feed">
+    </div>
+
+    <section class="trend-card">
+      <div class="eyebrow">Agora na comunidade</div>
+      <h2>Assuntos do momento</h2>
+      @for (assunto of assuntos; track assunto.hashtag; let posicao = $index) {
+        <button (click)="filtrarHashtag(assunto.hashtag)">
+          <small>{{ posicao + 1 }} · Futebol amador</small>
+          <strong>#{{ assunto.hashtag }}</strong>
+          <span>{{ assunto.pontuacao }} pontos de engajamento</span>
+        </button>
+      } @empty {
+        <p>As hashtags mais comentadas aparecerao aqui.</p>
       }
     </section>
 
-    <aside class="grid">
-      <div class="card">
-        <h2 class="section-title">Buscar</h2>
-        <div class="field"><input [(ngModel)]="busca" placeholder="Buscar no feed"></div>
-      </div>
-      <div class="card">
-        <h2 class="section-title">Hashtags</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 8px">
-          <span class="status status-green">#CopaBairro</span>
-          <span class="status status-green">#Golaco</span>
-          <span class="status status-green">#FutAmador</span>
-          <span class="status status-green">#Juntos</span>
-        </div>
-      </div>
-      <div class="card">
-        <h2 class="section-title">Acesso</h2>
-        <p class="muted">Visitante pode ver e filtrar. Usuario logado pode postar, comentar, curtir e reagir.</p>
-      </div>
-    </aside>
-  </div>
+    @if (usuario()?.podeCriarTorneio) {
+      <section class="trend-card moderation-card">
+        <div class="eyebrow">Comunidade segura</div>
+        <h2>Fila de moderacao</h2>
+        @for (denuncia of denuncias; track denuncia.id) {
+          <article>
+            <strong>{{ denuncia.tipoAlvo }} #{{ denuncia.alvoId }}</strong>
+            <span>{{ denuncia.motivo }}</span>
+            <button (click)="analisar(denuncia)">Marcar analisada</button>
+          </article>
+        } @empty {
+          <p>Nenhuma denuncia pendente.</p>
+        }
+      </section>
+    }
+
+    <small class="feed-policy">Ao publicar, voce concorda em manter o respeito pela comunidade esportiva.</small>
+  </aside>
 </main>
+
+@if (compartilhandoPost) {
+  <div class="share-backdrop" (click)="fecharCompartilhamento()">
+    <section class="share-dialog" role="dialog" aria-modal="true"
+      aria-label="Encaminhar publicacao" (click)="$event.stopPropagation()">
+      <header>
+        <div>
+          <span class="eyebrow">Compartilhar no chat</span>
+          <h2>Encaminhar publicacao</h2>
+        </div>
+        <button (click)="fecharCompartilhamento()" aria-label="Fechar"><i class="bi bi-x-lg"></i></button>
+      </header>
+
+      <div class="share-post-preview">
+        <strong>{{ compartilhandoPost.identidadeNome }}</strong>
+        <span>{{ compartilhandoPost.conteudo || 'Publicacao com midia' }}</span>
+      </div>
+
+      @if (carregandoDestinos) {
+        <div class="share-empty">Carregando suas conversas...</div>
+      } @else {
+        <div class="share-targets">
+          @for (conversa of conversasCompartilhamento; track conversa.id) {
+            <button (click)="encaminharParaConversa(conversa)" [disabled]="!!enviandoPara">
+              <span class="share-avatar">{{ iniciais(conversa.outroUsuarioNome) }}</span>
+              <span><strong>{{ conversa.outroUsuarioNome }}</strong><small>Conversa privada</small></span>
+              <i class="bi bi-send"></i>
+            </button>
+          }
+          @for (grupo of gruposCompartilhamento; track grupo.id) {
+            <button (click)="encaminharParaGrupo(grupo)" [disabled]="!!enviandoPara">
+              <span class="share-avatar group"><i class="bi bi-people-fill"></i></span>
+              <span><strong>{{ grupo.nome }}</strong><small>Grupo</small></span>
+              <i class="bi bi-send"></i>
+            </button>
+          }
+          @if (!conversasCompartilhamento.length && !gruposCompartilhamento.length) {
+            <div class="share-empty">
+              Voce ainda nao tem conversas liberadas ou grupos disponiveis.
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </div>
+}

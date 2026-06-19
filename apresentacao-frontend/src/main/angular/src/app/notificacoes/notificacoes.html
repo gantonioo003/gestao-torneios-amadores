@@ -1,0 +1,105 @@
+<main class="page notification-page">
+  <header class="notification-hero">
+    <div>
+      <span class="eyebrow">Sua central</span>
+      <h1>Notificacoes</h1>
+      <p>Acompanhe convites, torneios, times e interacoes sem perder o que importa.</p>
+    </div>
+    <div class="unread-counter">
+      <strong>{{ naoLidas }}</strong>
+      <span>nao lidas</span>
+    </div>
+  </header>
+
+  @if (mensagem) { <div class="alert alert-success">{{ mensagem }}</div> }
+  @if (erro) { <div class="alert alert-error">{{ erro }}</div> }
+
+  <div class="notification-layout">
+    <section class="notification-main">
+      <div class="notification-toolbar">
+        <div class="notification-tabs">
+          <button [class.active]="aba === 'ativas'" (click)="aba = 'ativas'">Todas</button>
+          <button [class.active]="aba === 'nao-lidas'" (click)="aba = 'nao-lidas'">
+            Nao lidas <span>{{ naoLidas }}</span>
+          </button>
+          <button [class.active]="aba === 'arquivadas'" (click)="aba = 'arquivadas'">Arquivadas</button>
+        </div>
+        @if (naoLidas > 0) {
+          <button class="read-all" (click)="marcarTodasComoLidas()">
+            <i class="bi bi-check2-all"></i> Marcar todas como lidas
+          </button>
+        }
+      </div>
+
+      <div class="category-filter">
+        <button [class.active]="categoriaSelecionada === 'TODAS'" (click)="categoriaSelecionada = 'TODAS'">
+          Todas
+        </button>
+        @for (categoria of categorias; track categoria) {
+          <button [class.active]="categoriaSelecionada === categoria" (click)="categoriaSelecionada = categoria">
+            {{ categoriaLabel(categoria) }}
+          </button>
+        }
+      </div>
+
+      @if (carregando) {
+        <div class="notification-empty"><span class="spinner"></span> Carregando notificacoes...</div>
+      } @else {
+        <div class="notification-list">
+          @for (item of notificacoesFiltradas; track item.id) {
+            <article class="notification-card" [class.unread]="!item.lida">
+              <button class="notification-open" (click)="abrir(item)">
+                <span class="notification-icon" [attr.data-category]="item.categoria">
+                  <i class="bi {{ icone(item.categoria) }}"></i>
+                </span>
+                <span class="notification-copy">
+                  <span class="notification-meta">
+                    <small>{{ categoriaLabel(item.categoria) }}</small>
+                    <time>{{ formatarData(item.criadaEm) }}</time>
+                  </span>
+                  <strong>{{ item.titulo }}</strong>
+                  <span>{{ item.mensagem }}</span>
+                </span>
+                @if (!item.lida) { <i class="unread-dot"></i> }
+              </button>
+              @if (!item.arquivada) {
+                <button class="archive-button" title="Arquivar" aria-label="Arquivar notificacao" (click)="arquivar(item)">
+                  <i class="bi bi-archive"></i>
+                </button>
+              }
+            </article>
+          } @empty {
+            <div class="notification-empty">
+              <i class="bi bi-bell-slash"></i>
+              <strong>Nada por aqui</strong>
+              <span>Nao existem notificacoes para este filtro.</span>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <aside class="preference-card">
+      <span class="eyebrow">Preferencias</span>
+      <h2>O que voce quer receber?</h2>
+      <p>Essas escolhas ficam salvas na sua conta.</p>
+      <div class="preference-list">
+        @for (categoria of categorias; track categoria) {
+          <label>
+            <span>
+              <i class="bi {{ icone(categoria) }}"></i>
+              <span><strong>{{ categoriaLabel(categoria) }}</strong><small>{{ categoriaDescricao(categoria) }}</small></span>
+            </span>
+            <input
+              type="checkbox"
+              [checked]="categoriaAtiva(categoria)"
+              (change)="alternarCategoria(categoria, $any($event.target).checked)">
+          </label>
+        }
+      </div>
+      <button class="btn btn-primary btn-block" [disabled]="salvandoPreferencias" (click)="salvarPreferencias()">
+        {{ salvandoPreferencias ? 'Salvando...' : 'Salvar preferencias' }}
+      </button>
+    </aside>
+  </div>
+</main>

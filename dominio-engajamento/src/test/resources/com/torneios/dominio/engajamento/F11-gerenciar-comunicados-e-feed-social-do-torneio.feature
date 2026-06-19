@@ -1,4 +1,4 @@
-Feature: Gerenciar comunicados e feed social do torneio
+Feature: Gerenciar ecossistema de feed social da plataforma e dos torneios
 
   As a usuario da plataforma
   I want acompanhar e interagir com publicacoes sobre torneios, partidas e peladas
@@ -68,3 +68,33 @@ Feature: Gerenciar comunicados e feed social do torneio
     Given que existem postagens com hashtags diferentes no feed social geral
     When o usuario filtrar o feed por uma hashtag
     Then o sistema deve listar apenas publicacoes daquela hashtag
+
+  Scenario: Publicar como time administrado pelo treinador
+    Given que o usuario autenticado e responsavel por um time
+    When ele publicar uma postagem representando o time
+    Then o sistema deve salvar a publicacao com identidade do time
+
+  Scenario: Impedir publicacao usando time de outro responsavel
+    Given que existe um time administrado por outro usuario
+    When o usuario tentar publicar representando esse time
+    Then o sistema deve impedir a operacao
+
+  Scenario: Comentar uma publicacao apenas com foto
+    Given que existe uma postagem publicada no feed social geral
+    When o usuario responder a publicacao apenas com uma foto
+    Then o comentario com foto deve ser salvo na publicacao
+
+  Scenario: Alternar uma unica curtida por conta
+    Given que existe uma postagem publicada no feed social geral
+    When o usuario curtir a publicacao duas vezes
+    Then o sistema deve remover a curtida no segundo clique sem duplicar
+
+  Scenario: Listar apenas postagens pessoais no perfil
+    Given que o usuario publicou como pessoa e representando um time
+    When o perfil consultar as publicacoes pessoais do usuario
+    Then o sistema deve listar apenas a postagem feita como usuario
+
+  Scenario: Disponibilizar publicacao ativa para encaminhamento no chat
+    Given que existe uma postagem publicada no feed social geral
+    When o chat consultar a publicacao encaminhada
+    Then o sistema deve retornar a publicacao ativa para o card da mensagem

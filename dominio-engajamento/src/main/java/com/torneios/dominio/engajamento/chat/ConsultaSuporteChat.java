@@ -7,4 +7,8 @@ public interface ConsultaSuporteChat {
     boolean usuarioEstaAutenticado(UsuarioId usuarioId);
 
     boolean usuarioExiste(UsuarioId usuarioId);
+
+    boolean possuiConversaAprovada(UsuarioId primeiroUsuarioId, UsuarioId segundoUsuarioId);
+
+    boolean usuarioEhComandadoPor(UsuarioId treinadorId, UsuarioId profissionalUsuarioId);
 }

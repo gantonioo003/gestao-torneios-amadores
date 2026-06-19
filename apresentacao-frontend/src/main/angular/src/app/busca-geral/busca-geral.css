@@ -293,6 +293,28 @@
   color: var(--muted);
 }
 
+.result-copy {
+  color: inherit;
+}
+
+.challenge-shortcut {
+  padding: 8px 11px;
+  color: #087442;
+  background: #e7f7ee;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.challenge-shortcut:hover {
+  background: #d5f1e1;
+}
+
+.result-chevron {
+  color: var(--muted);
+}
+
 .search-empty {
   min-height: 280px;
   display: grid;
@@ -350,5 +372,14 @@
 
   .result-row .status {
     display: none;
+  }
+
+  .challenge-shortcut {
+    padding: 8px;
+    font-size: 0;
+  }
+
+  .challenge-shortcut i {
+    font-size: 15px;
   }
 }

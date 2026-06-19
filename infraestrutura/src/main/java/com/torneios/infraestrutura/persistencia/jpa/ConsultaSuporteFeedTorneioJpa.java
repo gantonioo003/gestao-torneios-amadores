@@ -10,6 +10,8 @@ import com.torneios.dominio.competicao.partida.PartidaRepositorio;
 import com.torneios.dominio.engajamento.feed.ConsultaSuporteFeedTorneio;
 import com.torneios.dominio.participacao.acesso.AutenticacaoServico;
 import com.torneios.dominio.torneio.torneio.TorneioRepositorio;
+import com.torneios.dominio.compartilhado.time.TimeId;
+import com.torneios.dominio.participacao.time.TimeRepositorio;
 
 @Component
 class ConsultaSuporteFeedTorneioJpa implements ConsultaSuporteFeedTorneio {
@@ -22,6 +24,9 @@ class ConsultaSuporteFeedTorneioJpa implements ConsultaSuporteFeedTorneio {
 
     @Autowired
     PartidaRepositorio partidaRepositorio;
+
+    @Autowired
+    TimeRepositorio timeRepositorio;
 
     @Override
     public boolean usuarioEstaAutenticado(UsuarioId usuarioId) {
@@ -39,6 +44,13 @@ class ConsultaSuporteFeedTorneioJpa implements ConsultaSuporteFeedTorneio {
     public boolean partidaPertenceAoTorneio(TorneioId torneioId, PartidaId partidaId) {
         return partidaRepositorio.buscarPorId(partidaId)
                 .map(partida -> partida.getTorneioId().equals(torneioId))
+                .orElse(false);
+    }
+
+    @Override
+    public boolean usuarioEhResponsavelTime(TimeId timeId, UsuarioId usuarioId) {
+        return timeRepositorio.buscarPorId(timeId)
+                .map(time -> time.getResponsavel().equals(usuarioId))
                 .orElse(false);
     }
 }

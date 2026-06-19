@@ -11,6 +11,8 @@ import com.torneios.dominio.engajamento.palpite.Palpite;
 import com.torneios.dominio.engajamento.palpite.PalpiteServico;
 import com.torneios.dominio.engajamento.palpite.TipoPalpite;
 import com.torneios.dominio.engajamento.palpite.OpcaoPalpite;
+import com.torneios.dominio.engajamento.palpite.PalpiteRepositorio;
+import com.torneios.dominio.engajamento.palpite.ProgressoPalpiteServico;
 
 public class ApuracaoAutomaticaPalpiteServicoAplicacao {
 
@@ -18,16 +20,30 @@ public class ApuracaoAutomaticaPalpiteServicoAplicacao {
     private final PartidaRepositorio partidaRepositorio;
     private final ResultadoCompeticaoServicoAplicacao resultadoCompeticaoServico;
     private final RankingServicoAplicacao rankingServico;
+    private final PalpiteRepositorio palpiteRepositorio;
+    private final ProgressoPalpiteServico progressoServico;
 
     public ApuracaoAutomaticaPalpiteServicoAplicacao(
             PalpiteServico palpiteServico,
             PartidaRepositorio partidaRepositorio,
             ResultadoCompeticaoServicoAplicacao resultadoCompeticaoServico,
             RankingServicoAplicacao rankingServico) {
+        this(palpiteServico, partidaRepositorio, resultadoCompeticaoServico, rankingServico, null, null);
+    }
+
+    public ApuracaoAutomaticaPalpiteServicoAplicacao(
+            PalpiteServico palpiteServico,
+            PartidaRepositorio partidaRepositorio,
+            ResultadoCompeticaoServicoAplicacao resultadoCompeticaoServico,
+            RankingServicoAplicacao rankingServico,
+            PalpiteRepositorio palpiteRepositorio,
+            ProgressoPalpiteServico progressoServico) {
         this.palpiteServico = palpiteServico;
         this.partidaRepositorio = partidaRepositorio;
         this.resultadoCompeticaoServico = resultadoCompeticaoServico;
         this.rankingServico = rankingServico;
+        this.palpiteRepositorio = palpiteRepositorio;
+        this.progressoServico = progressoServico;
     }
 
     public List<Palpite> apurarVencedorPartida(long torneioId,
@@ -40,29 +56,28 @@ public class ApuracaoAutomaticaPalpiteServicoAplicacao {
                 : golsMandante > golsVisitante
                     ? partida.getMandante().valor()
                     : partida.getVisitante().valor();
-        return palpiteServico.apurar(
-                EventoAlvoPalpite.paraPartida(
+        EventoAlvoPalpite evento = EventoAlvoPalpite.paraPartida(
                         new com.torneios.dominio.compartilhado.torneio.TorneioId(torneioId),
-                        new PartidaId(partidaId)),
-                vencedorId);
+                        new PartidaId(partidaId));
+        return apurarComPontuacao(evento, vencedorId);
     }
 
     public void apurarRankingsDoTorneio(long torneioId) {
         resultadoCompeticaoServico.visualizarClassificacao(torneioId).stream()
                 .findFirst()
-                .ifPresent(campeao -> palpiteServico.apurar(
+                .ifPresent(campeao -> apurarComPontuacao(
                         eventoTorneio(TipoPalpite.CAMPEAO_TORNEIO, torneioId),
                         campeao.timeId()));
 
         rankingServico.gerarRankingArtilharia(torneioId).stream()
                 .findFirst()
-                .ifPresent(artilheiro -> palpiteServico.apurar(
+                .ifPresent(artilheiro -> apurarComPontuacao(
                         eventoTorneio(TipoPalpite.ARTILHEIRO_TORNEIO, torneioId),
                         artilheiro.jogadorId()));
 
         rankingServico.listarLideresAssistencias(torneioId).stream()
                 .findFirst()
-                .ifPresent(lider -> palpiteServico.apurar(
+                .ifPresent(lider -> apurarComPontuacao(
                         eventoTorneio(TipoPalpite.LIDER_ASSISTENCIAS_TORNEIO, torneioId),
                         lider.jogadorId()));
     }
@@ -75,5 +90,18 @@ public class ApuracaoAutomaticaPalpiteServicoAplicacao {
             case LIDER_ASSISTENCIAS_TORNEIO -> EventoAlvoPalpite.paraLiderAssistencias(id);
             case VENCEDOR_PARTIDA -> throw new IllegalArgumentException("Tipo de torneio esperado.");
         };
+    }
+
+    private List<Palpite> apurarComPontuacao(EventoAlvoPalpite evento, long resultadoReal) {
+        List<Palpite> pendentes = palpiteRepositorio == null ? List.of() : palpiteRepositorio.listarPorEvento(evento)
+                .stream()
+                .filter(palpite -> !palpite.estaApurado() && palpite.getUsuarioId() != null)
+                .toList();
+        List<Palpite> apurados = palpiteServico.apurar(evento, resultadoReal);
+        if (progressoServico != null) {
+            pendentes.forEach(palpite -> progressoServico.registrarApuracao(
+                    palpite.getUsuarioId(), palpite.acertou().orElse(false)));
+        }
+        return apurados;
     }
 }

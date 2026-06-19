@@ -10,7 +10,9 @@ import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.engajamento.desafio.DesafioAmistoso;
 import com.torneios.dominio.engajamento.desafio.DesafioAmistosoId;
 import com.torneios.dominio.engajamento.desafio.DesafioAmistosoServico;
+import com.torneios.dominio.engajamento.desafio.ConsultaSuporteDesafioAmistoso;
 import com.torneios.dominio.engajamento.desafio.ResultadoAmistoso;
+import com.torneios.aplicacao.participacao.notificacao.NotificacaoParticipacaoServicoAplicacao;
 
 /**
  * Casos de uso de desafios amistosos fora do fluxo principal do torneio.
@@ -18,10 +20,18 @@ import com.torneios.dominio.engajamento.desafio.ResultadoAmistoso;
 public class DesafioServicoAplicacao {
 
     private final DesafioAmistosoServico desafioAmistosoServico;
+    private final ConsultaSuporteDesafioAmistoso consultaSuporte;
+    private final NotificacaoParticipacaoServicoAplicacao notificacaoServico;
 
-    public DesafioServicoAplicacao(DesafioAmistosoServico desafioAmistosoServico) {
+    public DesafioServicoAplicacao(DesafioAmistosoServico desafioAmistosoServico,
+                                   ConsultaSuporteDesafioAmistoso consultaSuporte,
+                                   NotificacaoParticipacaoServicoAplicacao notificacaoServico) {
         notNull(desafioAmistosoServico, "O servico de desafio amistoso e obrigatorio.");
+        notNull(consultaSuporte, "A consulta de suporte de desafio amistoso e obrigatoria.");
+        notNull(notificacaoServico, "O servico de notificacoes e obrigatorio.");
         this.desafioAmistosoServico = desafioAmistosoServico;
+        this.consultaSuporte = consultaSuporte;
+        this.notificacaoServico = notificacaoServico;
     }
 
     public DesafioResumo proporConfronto(long desafioId,
@@ -30,21 +40,38 @@ public class DesafioServicoAplicacao {
                                          long timeDesafiadoId,
                                          LocalDateTime dataHora,
                                          String local) {
-        return converter(desafioAmistosoServico.proporConfronto(
+        DesafioAmistoso desafio = desafioAmistosoServico.proporConfronto(
                 new DesafioAmistosoId(desafioId),
                 new UsuarioId(usuarioId),
                 new TimeId(timeDesafianteId),
                 new TimeId(timeDesafiadoId),
                 dataHora,
-                local));
+                local);
+        consultaSuporte.buscarResponsavelDoTime(new TimeId(timeDesafiadoId))
+                .ifPresent(responsavel -> notificacaoServico.notificarDesafioRecebido(
+                        responsavel.valor(), timeDesafiadoId));
+        return converter(desafio);
     }
 
     public DesafioResumo aceitarConvite(long desafioId, long usuarioId) {
-        return converter(desafioAmistosoServico.aceitarConvite(new DesafioAmistosoId(desafioId), new UsuarioId(usuarioId)));
+        DesafioAmistoso desafio = desafioAmistosoServico.aceitarConvite(
+                new DesafioAmistosoId(desafioId), new UsuarioId(usuarioId));
+        notificacaoServico.notificarDesafioAceito(
+                desafio.getProponenteId().valor(), desafio.getTimeDesafianteId().valor());
+        consultaSuporte.buscarResponsavelDoTime(desafio.getTimeDesafiadoId())
+                .filter(responsavel -> !responsavel.equals(desafio.getProponenteId()))
+                .ifPresent(responsavel -> notificacaoServico.notificarDesafioAceito(
+                        responsavel.valor(), desafio.getTimeDesafiadoId().valor()));
+        return converter(desafio);
     }
 
     public DesafioResumo recusarConvite(long desafioId, long usuarioId) {
         return converter(desafioAmistosoServico.recusarConvite(new DesafioAmistosoId(desafioId), new UsuarioId(usuarioId)));
+    }
+
+    public DesafioResumo cancelarDesafio(long desafioId, long usuarioId) {
+        return converter(desafioAmistosoServico.cancelarDesafio(
+                new DesafioAmistosoId(desafioId), new UsuarioId(usuarioId)));
     }
 
     public DesafioResumo reagendarAmistoso(long desafioId, long usuarioId, LocalDateTime novaDataHora, String novoLocal) {
@@ -71,12 +98,19 @@ public class DesafioServicoAplicacao {
                 .toList();
     }
 
+    public List<DesafioResumo> acompanharConfrontosDoTime(long timeId, long usuarioId) {
+        return desafioAmistosoServico.acompanharConfrontosDoTime(
+                        new TimeId(timeId), new UsuarioId(usuarioId)).stream()
+                .map(this::converter)
+                .toList();
+    }
+
     private DesafioResumo converter(DesafioAmistoso desafioAmistoso) {
         return new DesafioResumo(
-                desafioAmistoso.getId().valor(),
-                desafioAmistoso.getProponenteId().valor(),
-                desafioAmistoso.getTimeDesafianteId().valor(),
-                desafioAmistoso.getTimeDesafiadoId().valor(),
+                String.valueOf(desafioAmistoso.getId().valor()),
+                String.valueOf(desafioAmistoso.getProponenteId().valor()),
+                String.valueOf(desafioAmistoso.getTimeDesafianteId().valor()),
+                String.valueOf(desafioAmistoso.getTimeDesafiadoId().valor()),
                 desafioAmistoso.getDataHora(),
                 desafioAmistoso.getLocal(),
                 desafioAmistoso.getStatus().name(),
@@ -84,10 +118,10 @@ public class DesafioServicoAplicacao {
                 desafioAmistoso.getResultado().map(ResultadoAmistoso::golsDesafiado).orElse(null));
     }
 
-    public record DesafioResumo(long id,
-                                long proponenteId,
-                                long timeDesafianteId,
-                                long timeDesafiadoId,
+    public record DesafioResumo(String id,
+                                String proponenteId,
+                                String timeDesafianteId,
+                                String timeDesafiadoId,
                                 LocalDateTime dataHora,
                                 String local,
                                 String status,

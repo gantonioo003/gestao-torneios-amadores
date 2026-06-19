@@ -1,7 +1,13 @@
 <main class="page">
   <div class="hero-row">
     <div class="post-head">
-      <div class="avatar photo" style="width: 82px; height: 82px; font-size: 28px">JS</div>
+      <div class="professional-photo">
+        @if (conta.fotoPerfilUrl) {
+          <img [src]="conta.fotoPerfilUrl" alt="">
+        } @else {
+          {{ iniciais(profissional.nome || 'Jogador') }}
+        }
+      </div>
       <div>
         <div class="eyebrow">Perfil do jogador</div>
         <h1 class="page-title">{{ profissional.nome || 'Joao Silva' }}</h1>
@@ -13,7 +19,15 @@
     }
   </div>
 
-  <div class="grid layout-2-1">
+  <nav class="professional-tabs">
+    <button [class.active]="aba === 'dados'" (click)="aba = 'dados'">Dados esportivos</button>
+    <button [class.active]="aba === 'publicacoes'" (click)="aba = 'publicacoes'">
+      Publicacoes <span>{{ publicacoes.length }}</span>
+    </button>
+  </nav>
+
+  @if (aba === 'dados') {
+    <div class="grid layout-2-1">
     <section class="grid">
       <div class="grid grid-4">
         <div class="card" style="text-align: center"><strong style="font-size: 28px">18</strong><div class="small muted">Gols</div></div>
@@ -79,5 +93,41 @@
         <button class="btn btn-danger btn-block" (click)="removerPerfil()">Remover perfil</button>
       }
     </aside>
-  </div>
+    </div>
+  } @else {
+    <section class="professional-posts">
+      @for (post of publicacoes; track post.id) {
+        <article class="card professional-post">
+          <header>
+            <div class="post-account-photo">
+              @if (post.autorFotoPerfilUrl) {
+                <img [src]="post.autorFotoPerfilUrl" alt="">
+              } @else {
+                {{ iniciais(post.autorNome) }}
+              }
+            </div>
+            <div>
+              <strong>{{ post.autorNome }}</strong>
+              <small>&#64;{{ post.autorNomeUsuario }} · {{ tempo(post.criadaEm) }}</small>
+            </div>
+          </header>
+          @if (post.conteudo) {
+            <p>{{ post.conteudo }}</p>
+          }
+          @for (midia of post.midias; track midia) {
+            <img class="professional-post-media" [src]="midia" alt="Midia da publicacao">
+          }
+          <footer>
+            <span><i class="bi bi-heart"></i> {{ post.quantidadeCurtidas }}</span>
+            <span><i class="bi bi-chat"></i> {{ post.comentarios.length }}</span>
+          </footer>
+        </article>
+      } @empty {
+        <div class="card professional-post-empty">
+          <strong>Nenhuma publicacao pessoal ainda</strong>
+          <span>Os posts feitos por esta conta aparecerao aqui.</span>
+        </div>
+      }
+    </section>
+  }
 </main>

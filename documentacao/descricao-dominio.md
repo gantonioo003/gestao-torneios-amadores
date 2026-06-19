@@ -2,7 +2,7 @@
 
 ## Visao geral
 
-O dominio do sistema e a gestao de torneios amadores de futebol com suporte ao registro opcional de dados estatisticos de partidas e jogadores, comparativos de desempenho e engajamento por meio de palpites, chat privado, comunicados, desafios opcionais e feed social da plataforma.
+O dominio do sistema e a gestao de torneios amadores de futebol com suporte ao registro opcional de dados estatisticos de partidas e jogadores, comparativos de desempenho e engajamento por meio de palpites gamificados, conversas privadas e em grupo, comunicados, desafios opcionais, feed social e moderacao da comunidade.
 
 O sistema tem como objetivo permitir que usuarios criem, gerenciem e participem de torneios de futebol amador em diferentes formatos, como mata-mata, fase de grupos com mata-mata, pontos corridos e final unica.
 
@@ -30,7 +30,7 @@ Competicoes amadoras costumam ser organizadas manualmente, o que dificulta o con
 - comparativos de desempenho entre times e jogadores
 - engajamento de usuarios e visitantes em torno da competicao
 - controle de mensagens privadas para evitar contato direto sem aprovacao
-- feed social com postagens, midias, hashtags, curtidas, reacoes, comentarios e atualizacoes automaticas sobre jogos
+- feed social com postagens, fotos, videos, hashtags, curtidas, reacoes, comentarios, encaminhamento para o chat e atualizacoes automaticas sobre jogos
 
 Alem disso, nao ha padronizacao no acompanhamento das competicoes, dificultando a organizacao e a transparencia das informacoes, e tambem nao existe espaco para que usuarios participem ativamente dando palpites, comentando partidas e acompanhando comunicados oficiais em um local centralizado.
 
@@ -102,14 +102,17 @@ Os principais conceitos do dominio sao:
 - Comunicado oficial
 - Comentario
 - Atualizacao automatica
+- Notificacao
+- Categoria de notificacao
+- Preferencias de notificacao
 
 ---
 
 ## Funcionamento geral
 
-Usuarios podem criar conta conforme sua funcao no futebol, realizar login, editar seus dados cadastrais e excluir a propria conta. Jogadores e membros de comissao possuem perfil profissional; treinadores criam e administram times e elencos; organizadores criam e conduzem exclusivamente torneios. Palpites sobre eventos da competicao, como vencedor de partida, campeao do torneio, artilheiro e lider de assistencias, podem ser registrados por usuarios autenticados ou visitantes identificados, sempre salvando o voto para contagem, percentuais e apuracao. Cada palpite respeita uma janela de votacao e e apurado automaticamente quando o evento alvo e concluido.
+Usuarios podem criar conta conforme sua funcao no futebol ou escolher uma conta comum apenas para acompanhar torneios, fazer palpites e usar feed e chat. A conta comum nao cria torneios, nao gerencia times e nao possui perfil profissional esportivo. Jogadores e membros de comissao possuem perfil profissional; treinadores criam e administram times e elencos; organizadores criam e conduzem exclusivamente torneios. Palpites sobre eventos da competicao, como vencedor de partida, campeao do torneio, artilheiro e lider de assistencias, podem ser registrados por usuarios autenticados ou visitantes identificados, sempre salvando o voto para contagem, percentuais e apuracao. Cada palpite respeita uma janela de votacao e e apurado automaticamente quando o evento alvo e concluido.
 
-O engajamento tambem ocorre por meio do feed social. Visitantes podem visualizar o feed geral, enquanto usuarios autenticados podem publicar postagens com texto, midia e hashtags, comentar, curtir e reagir. O organizador pode publicar comunicados oficiais no feed do torneio e o sistema pode gerar atualizacoes automaticas sobre jogos, como resultados registrados.
+O engajamento tambem ocorre por meio do feed social. Visitantes podem visualizar o feed geral, enquanto usuarios autenticados podem publicar postagens com texto, foto, video e hashtags, comentar, curtir, reagir e encaminhar publicacoes para conversas e grupos ja liberados. O organizador pode publicar comunicados oficiais no feed do torneio e o sistema pode gerar atualizacoes automaticas sobre jogos, como resultados registrados.
 
 Um torneio pode ser criado ja com participantes definidos ou com vagas abertas para candidaturas de entrada de times.
 
@@ -118,9 +121,11 @@ Essas duas definicoes, assim como o organizador responsavel e o numero da edicao
 
 Usuarios com times cadastrados podem gerenciar inscricoes em torneios abertos, solicitando participacao, acompanhando o status e cancelando candidaturas ainda pendentes. No mesmo fluxo, cabe ao organizador aprovar ou rejeitar essas solicitacoes e ajustar a lista final de participantes antes do inicio da competicao.
 
-Usuarios autenticados tambem podem usar chat privado. Uma conversa com outro usuario nasce como solicitacao e fica na aba de solicitados do destinatario. Somente apos aprovacao a troca de mensagens e liberada, em uma logica semelhante a redes sociais como o Instagram.
+Usuarios autenticados tambem podem usar chat privado e criar grupos. Uma conversa privada nasce como solicitacao. Nos grupos, contatos previamente aprovados entram imediatamente; contas sem contato recebem convite; e o treinador pode adicionar diretamente profissionais vinculados ao seu elenco. O feed funciona como timeline social: a mesma conta pode publicar com sua identidade pessoal ou representar times e torneios que administra, anexar fotos ou videos, hashtags e comentarios, receber uma curtida por conta e aparecer em assuntos do momento. Publicacoes podem ser encaminhadas como cards para conversas aprovadas e grupos acessiveis. As postagens pessoais ficam em uma aba discreta do perfil usando o mesmo nome e foto da conta. Publicacoes, comentarios e perfis podem ser denunciados, gerando um registro persistente para analise de moderacao.
 
-Fora do fluxo formal dos torneios, responsaveis por times podem, opcionalmente, propor desafios amistosos para outros times, aceitar ou recusar convites, reagendar data e local e registrar o placar no historico dos times envolvidos. Isso reforca a ideia da plataforma como uma rede social de times amadores, mas nao e obrigatorio para que os torneios oficiais funcionem.
+Os acontecimentos relevantes da plataforma podem gerar notificacoes persistidas para o usuario. O sino apresenta um resumo das mais recentes e a central de notificacoes permite consultar o historico completo, filtrar por categoria, marcar avisos como lidos, arquivar itens antigos e salvar no banco as categorias que o usuario deseja receber. Uma categoria desativada deixa de gerar novos avisos, sem apagar o historico anterior.
+
+Fora do fluxo formal dos torneios, contas de treinador com acesso a um time podem, opcionalmente, propor desafios pela busca ou pelo perfil de outro time. O proprio perfil administrado organiza propostas recebidas, enviadas, confirmadas e encerradas; o treinador desafiado pode aceitar ou recusar, os envolvidos podem reagendar e registrar o placar, e o sistema notifica os responsaveis quando a proposta chega ou o amistoso e confirmado. Contas comuns apenas visualizam os perfis e nao recebem controles de confronto.
 
 O organizador define o formato do torneio, gerencia os participantes aprovados e prepara a competicao, gerando estrutura, rodadas e partidas conforme o formato escolhido. Depois de adicionar os times, a competicao pode ser montada por sorteio automatico ou manualmente, permitindo que o organizador escolha a ordem dos confrontos ou a distribuicao dos times.
 

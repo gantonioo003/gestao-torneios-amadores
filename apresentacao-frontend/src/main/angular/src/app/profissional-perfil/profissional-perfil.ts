@@ -18,6 +18,9 @@ export class ProfissionalPerfil implements OnInit {
   profissional: any = {};
   historico: any[] = [];
   timesAtuais: any[] = [];
+  conta: any = {};
+  publicacoes: any[] = [];
+  aba: 'dados' | 'publicacoes' = 'dados';
   mostrarFormCarreira = false;
   carreiraForm: any = {};
   readonly usuario = this.auth.usuario;
@@ -34,6 +37,15 @@ export class ProfissionalPerfil implements OnInit {
     this.profissional = data.profissional ?? {};
     this.historico = data.historico ?? [];
     this.timesAtuais = data.timesAtuais ?? [];
+    if (this.profissional.cadastranteId) {
+      this.http.get<any>(`/backend/conta-usuario/${this.profissional.cadastranteId}`).subscribe({
+        next: conta => this.conta = conta
+      });
+      this.http.get<any[]>(`/backend/feed/autor/${this.profissional.cadastranteId}`).subscribe({
+        next: publicacoes => this.publicacoes = publicacoes,
+        error: () => this.publicacoes = []
+      });
+    }
   }
 
   podeEditar(): boolean {
@@ -92,6 +104,18 @@ export class ProfissionalPerfil implements OnInit {
   motivoLabel(motivo: string): string {
     const m: any = { FIM_DE_CONTRATO: 'Fim de contrato', TRANSFERENCIA: 'Transferência', LESAO: 'Lesão', APOSENTADORIA: 'Aposentadoria' };
     return m[motivo] ?? motivo;
+  }
+
+  iniciais(nome: string): string {
+    return (nome || '?').split(/\s+/).filter(Boolean).slice(0, 2)
+      .map(parte => parte[0]).join('').toUpperCase();
+  }
+
+  tempo(dataIso: string): string {
+    const horas = Math.floor((Date.now() - new Date(dataIso).getTime()) / 3_600_000);
+    if (horas < 1) return 'agora';
+    if (horas < 24) return `${horas}h`;
+    return `${Math.floor(horas / 24)}d`;
   }
 }
 

@@ -130,14 +130,23 @@
           </div>
 
           @for (time of times; track time.id) {
-            <a class="result-row" [routerLink]="['/time', time.id, 'detalhes']">
+            <div class="result-row">
               <span class="result-icon"><i class="bi bi-shield"></i></span>
-              <span class="result-copy">
+              <a class="result-copy" [routerLink]="['/time', time.id, 'detalhes']">
                 <strong>{{ time.nome }}</strong>
                 <small>Perfil do time</small>
-              </span>
-              <i class="bi bi-chevron-right"></i>
-            </a>
+              </a>
+              @if (podeDesafiar(time)) {
+                <a class="challenge-shortcut" [routerLink]="['/time', time.id, 'detalhes']" [queryParams]="{ desafiar: true }">
+                  <i class="bi bi-lightning-charge"></i> Desafiar
+                </a>
+              } @else {
+                <span></span>
+              }
+              <a class="result-chevron" [routerLink]="['/time', time.id, 'detalhes']" aria-label="Abrir perfil do time">
+                <i class="bi bi-chevron-right"></i>
+              </a>
+            </div>
           }
         </section>
       }

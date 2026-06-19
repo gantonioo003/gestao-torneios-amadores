@@ -34,6 +34,13 @@ public class DesafioAmistosoServico {
         if (!consultaSuporte.timesPodemSeDesafiar(timeDesafianteId, timeDesafiadoId)) {
             throw new RegraDeNegocioException("Os times informados nao podem participar deste desafio.");
         }
+        boolean confrontoEmAberto = desafioAmistosoRepositorio.listarPorTime(timeDesafianteId).stream()
+                .anyMatch(desafio -> envolveMesmosTimes(desafio, timeDesafianteId, timeDesafiadoId)
+                        && (desafio.getStatus() == StatusDesafioAmistoso.PROPOSTO
+                        || desafio.getStatus() == StatusDesafioAmistoso.ACEITO));
+        if (confrontoEmAberto) {
+            throw new RegraDeNegocioException("Ja existe um desafio em aberto entre estes times.");
+        }
 
         DesafioAmistoso desafioAmistoso = new DesafioAmistoso(
                 desafioAmistosoId, usuarioId, timeDesafianteId, timeDesafiadoId, dataHora, local);
@@ -55,6 +62,15 @@ public class DesafioAmistosoServico {
         validarUsuarioAutenticado(usuarioId);
         validarResponsavelDoTime(desafioAmistoso.getTimeDesafiadoId(), usuarioId);
         desafioAmistoso.recusar();
+        desafioAmistosoRepositorio.salvar(desafioAmistoso);
+        return desafioAmistoso;
+    }
+
+    public DesafioAmistoso cancelarDesafio(DesafioAmistosoId desafioAmistosoId, UsuarioId usuarioId) {
+        DesafioAmistoso desafioAmistoso = obterDesafio(desafioAmistosoId);
+        validarUsuarioAutenticado(usuarioId);
+        validarResponsavelDoTime(desafioAmistoso.getTimeDesafianteId(), usuarioId);
+        desafioAmistoso.cancelar();
         desafioAmistosoRepositorio.salvar(desafioAmistoso);
         return desafioAmistoso;
     }
@@ -84,9 +100,15 @@ public class DesafioAmistosoServico {
 
     public List<DesafioAmistoso> listarHistoricoDoTime(TimeId timeId) {
         Objects.requireNonNull(timeId, "O time do historico e obrigatorio.");
-        return desafioAmistosoRepositorio.listarHistoricoDoTime(timeId).stream()
+        return desafioAmistosoRepositorio.listarPorTime(timeId).stream()
                 .filter(desafioAmistoso -> desafioAmistoso.getStatus() == StatusDesafioAmistoso.RESULTADO_REGISTRADO)
                 .toList();
+    }
+
+    public List<DesafioAmistoso> acompanharConfrontosDoTime(TimeId timeId, UsuarioId usuarioId) {
+        validarUsuarioAutenticado(usuarioId);
+        validarResponsavelDoTime(timeId, usuarioId);
+        return desafioAmistosoRepositorio.listarPorTime(timeId);
     }
 
     private DesafioAmistoso obterDesafio(DesafioAmistosoId desafioAmistosoId) {
@@ -98,6 +120,10 @@ public class DesafioAmistosoServico {
         Objects.requireNonNull(usuarioId, "O usuario do desafio e obrigatorio.");
         if (!consultaSuporte.usuarioEstaAutenticado(usuarioId)) {
             throw new OperacaoNaoPermitidaException("Apenas usuarios autenticados podem gerenciar desafios.");
+        }
+        if (!consultaSuporte.usuarioPodeGerenciarTimes(usuarioId)) {
+            throw new OperacaoNaoPermitidaException(
+                    "Apenas contas de treinador podem gerenciar confrontos amistosos.");
         }
     }
 
@@ -113,5 +139,11 @@ public class DesafioAmistosoServico {
             throw new OperacaoNaoPermitidaException(
                     "Apenas responsaveis dos times envolvidos podem gerenciar o amistoso.");
         }
+    }
+
+    private boolean envolveMesmosTimes(DesafioAmistoso desafio,
+                                       TimeId primeiroTimeId,
+                                       TimeId segundoTimeId) {
+        return desafio.envolveTime(primeiroTimeId) && desafio.envolveTime(segundoTimeId);
     }
 }

@@ -355,36 +355,13 @@
                 </div>
               </div>
 
-              <article class="settings-group settings-toggle-group">
-                <label class="settings-toggle-row">
-                  <span class="settings-row-icon"><i class="bi bi-chat-dots"></i></span>
-                  <span class="settings-row-copy"><strong>Mensagens privadas</strong><small>Novas mensagens e solicitações de conversa.</small></span>
-                  <span class="settings-switch"><input type="checkbox" [(ngModel)]="preferenciasNotificacao.mensagensPrivadas"><span></span></span>
-                </label>
-                <label class="settings-toggle-row">
-                  <span class="settings-row-icon"><i class="bi bi-trophy"></i></span>
-                  <span class="settings-row-copy"><strong>Torneios</strong><small>Inscrições, convites e alterações nos torneios acompanhados.</small></span>
-                  <span class="settings-switch"><input type="checkbox" [(ngModel)]="preferenciasNotificacao.torneios"><span></span></span>
-                </label>
-                <label class="settings-toggle-row">
-                  <span class="settings-row-icon"><i class="bi bi-megaphone"></i></span>
-                  <span class="settings-row-copy"><strong>Resultados e partidas</strong><small>Placar final, início de jogos e mudanças na classificação.</small></span>
-                  <span class="settings-switch"><input type="checkbox" [(ngModel)]="preferenciasNotificacao.resultados"><span></span></span>
-                </label>
-                <label class="settings-toggle-row">
-                  <span class="settings-row-icon"><i class="bi bi-people"></i></span>
-                  <span class="settings-row-copy"><strong>Feed social</strong><small>Comentários, reações e publicações da comunidade.</small></span>
-                  <span class="settings-switch"><input type="checkbox" [(ngModel)]="preferenciasNotificacao.feedSocial"><span></span></span>
-                </label>
-                <label class="settings-toggle-row">
-                  <span class="settings-row-icon"><i class="bi bi-envelope-paper"></i></span>
-                  <span class="settings-row-copy"><strong>Resumo semanal</strong><small>Um resumo das principais atividades ligadas à sua conta.</small></span>
-                  <span class="settings-switch"><input type="checkbox" [(ngModel)]="preferenciasNotificacao.resumoSemanal"><span></span></span>
-                </label>
+              <article class="settings-group settings-note">
+                <i class="bi bi-bell-check"></i>
+                <p><strong>Suas escolhas agora acompanham sua conta.</strong> Categorias, leitura e historico ficam salvos no banco e valem em qualquer dispositivo.</p>
               </article>
               <div class="settings-save-row">
-                <small>Estas escolhas ficam salvas neste dispositivo.</small>
-                <button class="btn btn-primary" (click)="salvarPreferenciasNotificacao()">Salvar preferências</button>
+                <small>Gerencie torneios, times, amistosos, social e sistema em um unico lugar.</small>
+                <a class="btn btn-primary" routerLink="/notificacoes">Abrir central de notificacoes</a>
               </div>
             }
 
