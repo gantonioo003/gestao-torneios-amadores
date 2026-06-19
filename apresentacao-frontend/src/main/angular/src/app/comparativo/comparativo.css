@@ -1,0 +1,272 @@
+.comparativo-page {
+  width: min(1100px, calc(100% - 32px));
+}
+
+.comp-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, .45fr) 1fr;
+  align-items: start;
+  gap: 14px;
+}
+
+.comp-config {
+  padding: 22px;
+}
+
+.comp-slot {
+  margin-bottom: 4px;
+}
+
+.comp-slot-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.empty-slot {
+  padding: 14px;
+  background: #f8faf8;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.vs-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.vs-divider::before,
+.vs-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.vs-divider span {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--green-dark);
+}
+
+.comp-resultado {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.comp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 300px;
+  text-align: center;
+}
+
+.comp-cabecalho {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 24px;
+}
+
+.comp-entidade {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 12px;
+  transition: background .15s;
+}
+
+.comp-entidade.vencedor {
+  background: #eefaf3;
+}
+
+.comp-avatar {
+  width: 56px;
+  height: 56px;
+  font-size: 20px;
+}
+
+.comp-pontos {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+.badge-vencedor {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #078246;
+  background: #d4f0e0;
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+
+.vs-badge {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--muted);
+  opacity: .4;
+}
+
+.comp-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.comp-tabela th {
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 13px;
+  background: #f8faf8;
+  border-bottom: 1px solid var(--line);
+}
+
+.comp-tabela th:first-child {
+  text-align: left;
+}
+
+.comp-tabela th.col-vencedor {
+  background: #eefaf3;
+  color: var(--green-dark);
+}
+
+.comp-tabela td {
+  padding: 13px 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.comp-tabela td:first-child {
+  text-align: left;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.comp-tabela tr:last-child td {
+  border-bottom: 0;
+}
+
+.comp-tabela .stat-melhor {
+  font-weight: 700;
+  color: #078246;
+}
+
+.comp-tabela .stat-pior {
+  color: #c0392b;
+}
+
+.comp-erro {
+  padding: 12px 14px;
+  color: #a52d2a;
+  background: #fff0ef;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.comp-busca {
+  position: relative;
+}
+
+.comp-busca > i {
+  position: absolute;
+  top: 50%;
+  left: 13px;
+  color: var(--muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.comp-busca input {
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 11px 9px 38px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  outline: none;
+  font: inherit;
+  transition: border-color .24s, box-shadow .24s;
+}
+
+.comp-busca input:focus {
+  border-color: #8edcaf;
+  box-shadow: 0 0 0 3px rgba(18, 184, 95, .12);
+}
+
+.comp-resultados {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.comp-opcao,
+.comp-selecionado {
+  width: 100%;
+  min-height: 56px;
+  padding: 9px 12px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  border-radius: 9px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.comp-opcao {
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  transition: border-color .2s, background .2s;
+}
+
+.comp-opcao:hover {
+  border-color: #9bdcb8;
+  background: #fbfffc;
+}
+
+.comp-selecionado {
+  background: var(--green-soft);
+  border: 1px solid #b8dfc9;
+}
+
+.comp-acoes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 800px) {
+  .comp-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .comp-cabecalho {
+    grid-template-columns: 1fr auto 1fr;
+  }
+}

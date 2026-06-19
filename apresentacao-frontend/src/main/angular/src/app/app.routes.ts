@@ -19,6 +19,7 @@ import { authGuard, roleGuard, timeRosterGuard } from './core/auth.guard';
 import { ContaPerfil } from './conta-perfil/conta-perfil';
 import { Palpites } from './palpites/palpites';
 import { BuscaGeral } from './busca-geral/busca-geral';
+import { Comparativo } from './comparativo/comparativo';
 
 export const routes: Routes = [
   { path: '', component: HomePublica },
@@ -45,5 +46,6 @@ export const routes: Routes = [
   { path: 'profissional/pesquisa', redirectTo: 'buscar', pathMatch: 'full' },
   { path: 'profissional/:id/edicao', component: ProfissionalEdicao, resolve: PROFISSIONAL_EDICAO_RESOLVEDORES, canActivate: [authGuard] },
   { path: 'profissional/:id/perfil', component: ProfissionalPerfil, resolve: PROFISSIONAL_PERFIL_RESOLVEDORES },
+  { path: 'comparativo', component: Comparativo },
   { path: '**', redirectTo: '' }
 ];
