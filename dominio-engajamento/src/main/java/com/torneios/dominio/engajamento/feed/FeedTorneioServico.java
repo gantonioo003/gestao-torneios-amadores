@@ -187,6 +187,19 @@ public class FeedTorneioServico {
                 .toList();
     }
 
+    public List<PublicacaoFeed> listarPorIdentidade(TipoIdentidadeFeed tipoIdentidade, long identidadeId) {
+        Objects.requireNonNull(tipoIdentidade, "O tipo da identidade e obrigatorio.");
+        if (tipoIdentidade == TipoIdentidadeFeed.SISTEMA || identidadeId <= 0) {
+            throw new IllegalArgumentException("A identidade consultada e invalida.");
+        }
+        return feedTorneioRepositorio.listarTodos().stream()
+                .filter(publicacao -> !publicacao.estaRemovida())
+                .filter(publicacao -> publicacao.getPublicacaoPaiId().isEmpty())
+                .filter(publicacao -> publicacao.getTipoIdentidade() == tipoIdentidade)
+                .filter(publicacao -> Objects.equals(publicacao.getIdentidadeId(), identidadeId))
+                .toList();
+    }
+
     public List<PublicacaoFeed> listarComentarios(PublicacaoFeedId publicacaoId) {
         obterPublicacao(publicacaoId);
         return feedTorneioRepositorio.listarComentarios(publicacaoId).stream()

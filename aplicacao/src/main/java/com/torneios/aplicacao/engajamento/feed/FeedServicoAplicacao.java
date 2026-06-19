@@ -180,6 +180,16 @@ public class FeedServicoAplicacao {
                 .toList();
     }
 
+    public List<PublicacaoResumo> listarPorIdentidade(String tipoIdentidade,
+                                                     long identidadeId,
+                                                     Long usuarioAtualId) {
+        return feedTorneioServico.listarPorIdentidade(
+                        TipoIdentidadeFeed.valueOf(tipoIdentidade), identidadeId).stream()
+                .sorted(Comparator.comparing(PublicacaoFeed::getCriadaEm).reversed())
+                .map(publicacao -> converter(publicacao, usuarioAtualId, true))
+                .toList();
+    }
+
     public PublicacaoResumo consultar(long publicacaoId, Long usuarioAtualId) {
         return converter(
                 feedTorneioServico.consultarPublicacao(new PublicacaoFeedId(publicacaoId)),

@@ -315,6 +315,11 @@ public class F11Steps extends EngajamentoFuncionalidade {
     public void listarSomentePessoal() {
         assertEquals(1, publicacoesFeed.size());
         assertEquals(TipoIdentidadeFeed.USUARIO, publicacoesFeed.get(0).getTipoIdentidade());
+        assertEquals(1, feedTorneioServico
+                .listarPorIdentidade(TipoIdentidadeFeed.TIME, TIME_A_ID).size());
+        assertEquals(TipoIdentidadeFeed.TIME, feedTorneioServico
+                .listarPorIdentidade(TipoIdentidadeFeed.TIME, TIME_A_ID)
+                .get(0).getTipoIdentidade());
     }
 
     @Quando("o chat consultar a publicacao encaminhada")

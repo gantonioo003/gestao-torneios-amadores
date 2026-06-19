@@ -51,15 +51,6 @@ interface AssuntoMomento {
   pontuacao: number;
 }
 
-interface Denuncia {
-  id: number;
-  tipoAlvo: string;
-  alvoId: number;
-  motivo: string;
-  status: string;
-  criadaEm: string;
-}
-
 type AbaFeed = 'todos' | 'torneios' | 'partidas' | 'times';
 
 @Component({
@@ -72,7 +63,7 @@ export class FeedSocial implements OnInit {
   aba: AbaFeed = 'todos';
   busca = '';
   novoPost = '';
-  midiaPreview = '';
+  midiasPreview: string[] = [];
   identidadeSelecionada = '';
   identidades: IdentidadeFeed[] = [];
   posts: PublicacaoFeed[] = [];
@@ -83,7 +74,6 @@ export class FeedSocial implements OnInit {
   publicando = false;
   carregando = true;
   mensagem = '';
-  denuncias: Denuncia[] = [];
   compartilhandoPost: PublicacaoFeed | null = null;
   conversasCompartilhamento: ConversaChat[] = [];
   gruposCompartilhamento: GrupoChat[] = [];
@@ -115,7 +105,6 @@ export class FeedSocial implements OnInit {
       this.carregando = false;
       this.destacarPublicacaoSelecionada();
     });
-    if (this.usuario()?.podeCriarTorneio) this.carregarDenuncias();
   }
 
   get feedFiltrado(): PublicacaoFeed[] {
@@ -133,21 +122,32 @@ export class FeedSocial implements OnInit {
     });
   }
 
+  get radarComunidade(): PublicacaoFeed[] {
+    const identidades = new Set<string>();
+    return this.posts.filter(post => {
+      if (post.tipoIdentidade === 'USUARIO') return false;
+      const chave = `${post.tipoIdentidade}:${post.identidadeId}`;
+      if (identidades.has(chave)) return false;
+      identidades.add(chave);
+      return true;
+    }).slice(0, 4);
+  }
+
   publicar() {
     const identidade = this.identidadeAtual();
-    if (!identidade || (!this.novoPost.trim() && !this.midiaPreview) || this.publicando) return;
+    if (!identidade || (!this.novoPost.trim() && !this.midiasPreview.length) || this.publicando) return;
     this.publicando = true;
     this.http.post<PublicacaoFeed>('/backend/feed/publicar-social', {
       tipoIdentidade: identidade.tipo,
-      identidadeId: identidade.id,
+      identidadeId: identidade.tipo === 'USUARIO' ? null : identidade.id,
       conteudo: this.novoPost.trim(),
       hashtags: this.extrairHashtags(this.novoPost),
-      midias: this.midiaPreview ? [this.midiaPreview] : []
+      midias: this.midiasPreview
     }).subscribe({
       next: post => {
         this.posts = [post, ...this.posts];
         this.novoPost = '';
-        this.midiaPreview = '';
+        this.midiasPreview = [];
         this.publicando = false;
         this.atualizarAssuntos();
       },
@@ -159,16 +159,35 @@ export class FeedSocial implements OnInit {
   }
 
   selecionarFoto(evento: Event) {
-    const arquivo = (evento.target as HTMLInputElement).files?.[0];
-    if (!arquivo) return;
-    const tipoPermitido = arquivo.type.startsWith('image/') || arquivo.type.startsWith('video/');
-    if (!tipoPermitido || arquivo.size > 5_000_000) {
-      this.mensagem = 'Escolha uma imagem ou video de ate 5 MB.';
+    const input = evento.target as HTMLInputElement;
+    const arquivos = Array.from(input.files ?? []);
+    if (!arquivos.length) return;
+    const vagas = Math.max(0, 4 - this.midiasPreview.length);
+    const selecionados = arquivos.slice(0, vagas);
+    const invalidos = selecionados.some(arquivo =>
+      (!arquivo.type.startsWith('image/') && !arquivo.type.startsWith('video/'))
+      || arquivo.size > 5_000_000);
+    if (invalidos) {
+      this.mensagem = 'Escolha fotos ou videos de ate 5 MB cada.';
+      input.value = '';
       return;
     }
-    const leitor = new FileReader();
-    leitor.onload = () => this.midiaPreview = String(leitor.result ?? '');
-    leitor.readAsDataURL(arquivo);
+    selecionados.forEach(arquivo => {
+      const leitor = new FileReader();
+      leitor.onload = () => this.midiasPreview = [
+        ...this.midiasPreview,
+        String(leitor.result ?? '')
+      ].slice(0, 4);
+      leitor.readAsDataURL(arquivo);
+    });
+    if (arquivos.length > vagas) {
+      this.mensagem = 'Cada publicacao pode ter ate 4 fotos ou videos.';
+    }
+    input.value = '';
+  }
+
+  removerMidia(indice: number) {
+    this.midiasPreview = this.midiasPreview.filter((_, atual) => atual !== indice);
   }
 
   curtir(post: PublicacaoFeed) {
@@ -287,25 +306,24 @@ export class FeedSocial implements OnInit {
     this.busca = `#${hashtag}`;
   }
 
+  abrirNoRadar(post: PublicacaoFeed) {
+    this.aba = post.tipoIdentidade === 'TIME'
+      ? 'times'
+      : post.tipoIdentidade === 'TORNEIO' ? 'torneios' : 'partidas';
+    this.busca = post.identidadeNome;
+    document.querySelector('.feed-main')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   denunciar(post: PublicacaoFeed) {
     const motivo = prompt('Por que esta publicacao deve ser revisada?');
     if (!motivo?.trim()) return;
-    this.http.post<Denuncia>('/backend/moderacao/denuncias', {
-      tipoAlvo: post.tipo === 'COMENTARIO' ? 'COMENTARIO' : 'PUBLICACAO',
-      alvoId: post.id,
-      motivo: motivo.trim()
-    }).subscribe({
-      next: () => this.mensagem = 'Denuncia enviada para analise.',
-      error: erro => this.mensagem = erro?.error?.mensagem ?? 'Nao foi possivel enviar a denuncia.'
-    });
+    this.enviarDenuncia('PUBLICACAO', post.id, motivo.trim());
   }
 
-  analisar(denuncia: Denuncia) {
-    this.http.post<Denuncia>(`/backend/moderacao/denuncias/${denuncia.id}/analisar`, null)
-      .subscribe({
-        next: () => this.denuncias = this.denuncias.filter(item => item.id !== denuncia.id),
-        error: () => this.mensagem = 'Nao foi possivel concluir a analise.'
-      });
+  denunciarComentario(comentario: ComentarioFeed) {
+    const motivo = prompt('Por que este comentario deve ser revisado?');
+    if (!motivo?.trim()) return;
+    this.enviarDenuncia('COMENTARIO', comentario.id, motivo.trim());
   }
 
   identidadeAtual(): IdentidadeFeed | undefined {
@@ -347,9 +365,14 @@ export class FeedSocial implements OnInit {
       .subscribe(assuntos => this.assuntos = assuntos);
   }
 
-  private carregarDenuncias() {
-    this.http.get<Denuncia[]>('/backend/moderacao/denuncias').subscribe({
-      next: denuncias => this.denuncias = denuncias
+  private enviarDenuncia(tipoAlvo: string, alvoId: number, motivo: string) {
+    this.http.post('/backend/moderacao/denuncias', {
+      tipoAlvo,
+      alvoId,
+      motivo
+    }).subscribe({
+      next: () => this.mensagem = 'Denuncia enviada para analise.',
+      error: erro => this.mensagem = erro?.error?.mensagem ?? 'Nao foi possivel enviar a denuncia.'
     });
   }
 

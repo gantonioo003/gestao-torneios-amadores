@@ -19,13 +19,11 @@ export class Comparativo implements OnInit {
   termoBusca = '';
   resultadosBusca: any[] = [];
 
-  torneios: any[] = [];
-  torneioId = '';
-
   resultado: any = null;
   carregando = false;
   salvando = false;
   salvo = false;
+  compartilhado = false;
   erro = '';
 
   constructor(
@@ -36,7 +34,7 @@ export class Comparativo implements OnInit {
 
   ngOnInit() {
     const params = this.rota.snapshot.queryParamMap;
-    this.tipo = (params.get('tipo') as any) ?? 'jogador';
+    this.tipo = params.get('tipo') === 'time' ? 'time' : 'jogador';
     const id = params.get('id');
     const nome = params.get('nome') ?? '';
 
@@ -44,13 +42,20 @@ export class Comparativo implements OnInit {
       this.primeiro = { id, nome };
     }
 
-    this.http.get<any[]>('/backend/torneio/pesquisa?nome=')
-      .pipe(catchError(() => of([])))
-      .subscribe(t => this.torneios = t);
+    const segundoId = params.get('segundoId');
+    const segundoNome = params.get('segundoNome');
+    if (this.primeiro && segundoId && segundoNome) {
+      this.segundo = { id: segundoId, nome: segundoNome };
+      this.comparar();
+    }
   }
 
   get labelTipo(): string {
     return this.tipo === 'jogador' ? 'Jogador' : 'Time';
+  }
+
+  get labelTipoPlural(): string {
+    return this.tipo === 'jogador' ? 'Jogadores' : 'Times';
   }
 
   get rotaPerfilPrimeiro(): string[] {
@@ -68,7 +73,10 @@ export class Comparativo implements OnInit {
       : `/backend/time/pesquisa?nome=${encodeURIComponent(termo)}`;
     this.http.get<any[]>(url)
       .pipe(catchError(() => of([])))
-      .subscribe(r => this.resultadosBusca = r.slice(0, 8));
+      .subscribe(r => this.resultadosBusca = r
+        .filter(item => this.tipo === 'time' || item.tipo === 'JOGADOR')
+        .filter(item => String(item.id) !== String(this.primeiro?.id))
+        .slice(0, 8));
   }
 
   selecionarSegundo(entidade: any) {
@@ -77,12 +85,46 @@ export class Comparativo implements OnInit {
     this.resultadosBusca = [];
     this.resultado = null;
     this.salvo = false;
+    this.compartilhado = false;
+    this.atualizarLinkComparacao();
+    this.comparar();
   }
 
   trocarSegundo() {
     this.segundo = null;
     this.resultado = null;
     this.salvo = false;
+    this.compartilhado = false;
+    this.router.navigate([], {
+      relativeTo: this.rota,
+      queryParams: { segundoId: null, segundoNome: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
+  }
+
+  alterarTipo(tipo: 'jogador' | 'time') {
+    if (this.tipo === tipo) return;
+    this.tipo = tipo;
+    this.primeiro = null;
+    this.segundo = null;
+    this.resultado = null;
+    this.resultadosBusca = [];
+    this.termoBusca = '';
+    this.erro = '';
+    this.salvo = false;
+    this.compartilhado = false;
+    this.router.navigate([], {
+      relativeTo: this.rota,
+      queryParams: {
+        tipo,
+        id: null,
+        nome: null,
+        segundoId: null,
+        segundoNome: null
+      },
+      replaceUrl: true
+    });
   }
 
   podeComparar(): boolean {
@@ -95,19 +137,13 @@ export class Comparativo implements OnInit {
     this.resultado = null;
     this.salvo = false;
 
-    if (!this.torneioId) {
-      this.erro = 'Selecione um torneio para gerar o comparativo. As estatisticas sao calculadas por competicao.';
-      return;
-    }
-
     this.carregando = true;
-    const torneioId = Number(this.torneioId);
     const url = this.tipo === 'jogador'
       ? '/backend/comparativo-desempenho/jogadores'
       : '/backend/comparativo-desempenho/times';
     const corpo = this.tipo === 'jogador'
-      ? { torneioId, primeiroJogadorId: this.primeiro.id, segundoJogadorId: this.segundo.id }
-      : { torneioId, primeiroTimeId: this.primeiro.id, segundoTimeId: this.segundo.id };
+      ? { primeiroJogadorId: this.primeiro.id, segundoJogadorId: this.segundo.id }
+      : { primeiroTimeId: this.primeiro.id, segundoTimeId: this.segundo.id };
 
     this.http.post<any>(url, corpo)
       .pipe(finalize(() => this.carregando = false))
@@ -118,13 +154,15 @@ export class Comparativo implements OnInit {
   }
 
   salvar() {
-    if (!this.resultado || this.tipo !== 'time') return;
+    if (!this.resultado) return;
     this.salvando = true;
-    this.http.post('/backend/comparativo-desempenho/salvar', {
-      torneioId: Number(this.torneioId) || 0,
-      primeiroTimeId: this.primeiro.id,
-      segundoTimeId: this.segundo.id
-    }, { responseType: 'text' })
+    const url = this.tipo === 'jogador'
+      ? '/backend/comparativo-desempenho/salvar-jogadores'
+      : '/backend/comparativo-desempenho/salvar-times';
+    const corpo = this.tipo === 'jogador'
+      ? { primeiroJogadorId: this.primeiro.id, segundoJogadorId: this.segundo.id }
+      : { primeiroTimeId: this.primeiro.id, segundoTimeId: this.segundo.id };
+    this.http.post(url, corpo, { responseType: 'text' })
       .pipe(catchError(() => of(null)))
       .subscribe(() => { this.salvando = false; this.salvo = true; });
   }
@@ -152,12 +190,110 @@ export class Comparativo implements OnInit {
     URL.revokeObjectURL(url);
   }
 
+  async compartilhar() {
+    if (!this.resultado) return;
+    const texto = this.resumoCompartilhamento();
+    const dados = {
+      title: `${this.resultado.primeiro.rotulo} x ${this.resultado.segundo.rotulo}`,
+      text: texto,
+      url: window.location.href
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(dados);
+      } else {
+        await navigator.clipboard.writeText(`${texto}\n${window.location.href}`);
+      }
+      this.compartilhado = true;
+    } catch (erro: any) {
+      if (erro?.name !== 'AbortError') {
+        this.erro = 'Nao foi possivel compartilhar o comparativo.';
+      }
+    }
+  }
+
   melhor(lado: 'primeiro' | 'segundo'): boolean {
     if (!this.resultado) return false;
     return this.resultado.melhorLado === (lado === 'primeiro' ? 1 : 2);
   }
 
+  pontosRadar(lado: 'primeiro' | 'segundo'): string {
+    if (!this.resultado) return '';
+    const outro = lado === 'primeiro' ? 'segundo' : 'primeiro';
+    const valores = [
+      this.normalizarPositivo(this.resultado[lado].gols, this.resultado[outro].gols),
+      this.normalizarPositivo(this.resultado[lado].assistencias, this.resultado[outro].assistencias),
+      this.normalizarPositivo(
+        this.resultado[lado].partidasComEventos,
+        this.resultado[outro].partidasComEventos
+      ),
+      this.normalizarDisciplina(this.resultado[lado], this.resultado[outro]),
+      this.normalizarPositivo(
+        this.resultado[lado].pontuacaoComparativa,
+        this.resultado[outro].pontuacaoComparativa
+      )
+    ];
+    const centroX = 150;
+    const centroY = 126;
+    const raio = 88;
+
+    return valores.map((valor, indice) => {
+      const angulo = (-90 + indice * 72) * Math.PI / 180;
+      const distancia = raio * valor / 100;
+      return `${(centroX + Math.cos(angulo) * distancia).toFixed(1)},${(centroY + Math.sin(angulo) * distancia).toFixed(1)}`;
+    }).join(' ');
+  }
+
+  valorResumo(lado: 'primeiro' | 'segundo', metrica: 'gols' | 'assistencias' | 'partidasComEventos' | 'pontuacaoComparativa'): string {
+    if (!this.resultado) return '-';
+    const valor = this.resultado[lado][metrica];
+    return metrica === 'pontuacaoComparativa' ? Number(valor).toFixed(1) : String(valor);
+  }
+
   nomeEntidade(entidade: any): string {
     return entidade?.nome ?? entidade?.nomeTime ?? entidade?.name ?? '';
+  }
+
+  private normalizarPositivo(valor: number, outroValor: number): number {
+    const maior = Math.max(Number(valor) || 0, Number(outroValor) || 0);
+    if (maior === 0) return 55;
+    return 25 + 75 * ((Number(valor) || 0) / maior);
+  }
+
+  private normalizarDisciplina(entidade: any, outraEntidade: any): number {
+    const penalidade = (Number(entidade.cartoesAmarelos) || 0)
+      + (Number(entidade.cartoesVermelhos) || 0) * 2;
+    const outraPenalidade = (Number(outraEntidade.cartoesAmarelos) || 0)
+      + (Number(outraEntidade.cartoesVermelhos) || 0) * 2;
+    const maior = Math.max(penalidade, outraPenalidade);
+    if (maior === 0) return 100;
+    return 100 - 75 * (penalidade / maior);
+  }
+
+  private atualizarLinkComparacao() {
+    this.router.navigate([], {
+      relativeTo: this.rota,
+      queryParams: {
+        tipo: this.tipo,
+        id: this.primeiro?.id,
+        nome: this.nomeEntidade(this.primeiro),
+        segundoId: this.segundo?.id,
+        segundoNome: this.nomeEntidade(this.segundo)
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
+  }
+
+  private resumoCompartilhamento(): string {
+    const primeiro = this.resultado.primeiro;
+    const segundo = this.resultado.segundo;
+    return [
+      `Comparativo: ${primeiro.rotulo} x ${segundo.rotulo}`,
+      `Pontuacao: ${primeiro.pontuacaoComparativa.toFixed(1)} x ${segundo.pontuacaoComparativa.toFixed(1)}`,
+      `Gols: ${primeiro.gols} x ${segundo.gols}`,
+      `Assistencias: ${primeiro.assistencias} x ${segundo.assistencias}`
+    ].join(' | ');
   }
 }

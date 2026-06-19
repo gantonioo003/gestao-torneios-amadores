@@ -24,6 +24,11 @@ public class ConsultaComparacaoDesempenhoMemoria implements ConsultaComparacaoDe
     }
 
     @Override
+    public boolean jogadorExiste(JogadorId jogadorId) {
+        return nomesJogadores.containsKey(jogadorId);
+    }
+
+    @Override
     public String nomeJogador(JogadorId jogadorId) {
         return nomesJogadores.getOrDefault(jogadorId, "Jogador " + jogadorId.valor());
     }

@@ -2,6 +2,7 @@ package com.torneios.dominio.competicao.partida;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.torneios.dominio.compartilhado.enumeracao.FormatoTorneio;
@@ -133,6 +134,20 @@ public class PartidaServico {
             throw new OperacaoNaoPermitidaException("A partida informada nao pertence ao torneio.");
         }
         partida.iniciar();
+        partidaRepositorio.salvar(partida);
+    }
+
+    public void agendarPartida(TorneioId torneioId,
+                               PartidaId partidaId,
+                               UsuarioId usuarioId,
+                               LocalDateTime dataHora,
+                               String local) {
+        validarOrganizador(torneioId, usuarioId);
+        Partida partida = obterPartida(partidaId);
+        if (!partida.getTorneioId().equals(torneioId)) {
+            throw new OperacaoNaoPermitidaException("A partida informada nao pertence ao torneio.");
+        }
+        partida.agendar(dataHora, local);
         partidaRepositorio.salvar(partida);
     }
 

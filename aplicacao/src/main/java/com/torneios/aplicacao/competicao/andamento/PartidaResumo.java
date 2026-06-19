@@ -1,5 +1,7 @@
 package com.torneios.aplicacao.competicao.andamento;
 
+import java.time.LocalDateTime;
+
 public interface PartidaResumo {
     Long getId();
     Long getTorneioId();
@@ -10,4 +12,6 @@ public interface PartidaResumo {
     boolean isEncerrada();
     Integer getGolsMandante();
     Integer getGolsVisitante();
+    LocalDateTime getDataHoraAgendada();
+    String getLocalPartida();
 }

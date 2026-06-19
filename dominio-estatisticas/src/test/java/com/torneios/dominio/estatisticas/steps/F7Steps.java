@@ -2,6 +2,7 @@ package com.torneios.dominio.estatisticas.steps;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.estatisticas.EstatisticasFuncionalidade;
 import com.torneios.dominio.estatisticas.comparacao.TipoComparativoDesempenho;
 
@@ -35,7 +36,7 @@ public class F7Steps extends EstatisticasFuncionalidade {
     public void usuario_gerar_comparativo_entre_jogadores() {
         try {
             comparativoDesempenho = comparacaoDesempenhoServico.gerarComparativoJogadores(
-                    1L, TORNEIO_ID, JOGADOR_A_ID, JOGADOR_B_ID);
+                    1L, JOGADOR_A_ID, JOGADOR_B_ID);
         } catch (Exception e) {
             excecaoCapturada = e;
         }
@@ -45,7 +46,7 @@ public class F7Steps extends EstatisticasFuncionalidade {
     public void usuario_gerar_comparativo_entre_times() {
         try {
             comparativoDesempenho = comparacaoDesempenhoServico.gerarComparativoTimes(
-                    2L, TORNEIO_ID, TIME_A_ID, TIME_B_ID);
+                    2L, TIME_A_ID, TIME_B_ID);
         } catch (Exception e) {
             excecaoCapturada = e;
         }
@@ -56,15 +57,25 @@ public class F7Steps extends EstatisticasFuncionalidade {
         usuario_gerar_comparativo_entre_jogadores();
     }
 
+    @Quando("o usuario tentar comparar um jogador com um perfil de treinador")
+    public void usuario_tentar_comparar_jogador_com_treinador() {
+        try {
+            comparacaoDesempenhoServico.gerarComparativoJogadores(
+                    3L, JOGADOR_A_ID, new JogadorId(999L));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
     @Dado("que existe um comparativo temporario gerado")
     public void que_existe_um_comparativo_temporario_gerado() {
         que_existem_estatisticas_registradas_para_dois_jogadores();
         comparativoDesempenho = comparacaoDesempenhoServico.gerarComparativoJogadores(
-                10L, TORNEIO_ID, JOGADOR_A_ID, JOGADOR_B_ID);
+                10L, JOGADOR_A_ID, JOGADOR_B_ID);
     }
 
-    @Dado("que existe um comparativo salvo para o torneio")
-    public void que_existe_um_comparativo_salvo_para_o_torneio() {
+    @Dado("que existe um comparativo geral salvo")
+    public void que_existe_um_comparativo_geral_salvo() {
         que_existe_um_comparativo_temporario_gerado();
         comparacaoDesempenhoServico.salvarComparativo(comparativoDesempenho);
     }
@@ -84,10 +95,10 @@ public class F7Steps extends EstatisticasFuncionalidade {
         }
     }
 
-    @Quando("o usuario consultar os comparativos salvos do torneio")
-    public void usuario_consultar_comparativos_salvos_do_torneio() {
+    @Quando("o usuario consultar os comparativos gerais salvos")
+    public void usuario_consultar_comparativos_gerais_salvos() {
         try {
-            comparativosSalvos = comparacaoDesempenhoServico.consultarComparativosSalvos(TORNEIO_ID);
+            comparativosSalvos = comparacaoDesempenhoServico.consultarComparativosSalvos();
         } catch (Exception e) {
             excecaoCapturada = e;
         }
@@ -97,7 +108,7 @@ public class F7Steps extends EstatisticasFuncionalidade {
     public void usuario_atualizar_comparativo_salvo() {
         try {
             var comparativoAtualizado = comparacaoDesempenhoServico.gerarComparativoJogadores(
-                    comparativoDesempenho.getId(), TORNEIO_ID, JOGADOR_A_ID, JOGADOR_B_ID);
+                    comparativoDesempenho.getId(), JOGADOR_A_ID, JOGADOR_B_ID);
             comparativoDesempenho = comparacaoDesempenhoServico.atualizarComparativoSalvo(comparativoAtualizado);
         } catch (Exception e) {
             excecaoCapturada = e;
@@ -177,9 +188,18 @@ public class F7Steps extends EstatisticasFuncionalidade {
         assertTrue(comparativoDesempenho.getSegundo().getPosicaoRanking() > 0);
     }
 
-    @Entao("o sistema deve impedir a comparacao de desempenho")
-    public void sistema_deve_impedir_comparacao_de_desempenho() {
+    @Entao("o sistema deve exibir os dois perfis com estatisticas zeradas")
+    public void sistema_deve_exibir_perfis_com_estatisticas_zeradas() {
+        assertNull(excecaoCapturada);
+        assertNotNull(comparativoDesempenho);
+        assertEquals(0, comparativoDesempenho.getPrimeiro().getGols());
+        assertEquals(0, comparativoDesempenho.getSegundo().getGols());
+        assertTrue(comparativoDesempenho.getMelhorDesempenho().isEmpty());
+    }
+
+    @Entao("o sistema deve impedir a comparacao com perfil que nao seja jogador")
+    public void sistema_deve_impedir_comparacao_com_perfil_nao_jogador() {
         assertNotNull(excecaoCapturada);
-        assertTrue(comparativoRepositorio.listarTodos().isEmpty());
+        assertTrue(excecaoCapturada.getMessage().contains("apenas perfis de jogador"));
     }
 }

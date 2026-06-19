@@ -7,6 +7,8 @@ import com.torneios.dominio.compartilhado.time.TimeId;
 
 public interface ConsultaComparacaoDesempenho {
 
+    boolean jogadorExiste(JogadorId jogadorId);
+
     String nomeJogador(JogadorId jogadorId);
 
     String nomeTime(TimeId timeId);

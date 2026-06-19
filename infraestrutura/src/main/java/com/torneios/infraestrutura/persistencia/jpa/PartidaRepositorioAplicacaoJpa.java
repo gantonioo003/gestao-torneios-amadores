@@ -1,5 +1,6 @@
 package com.torneios.infraestrutura.persistencia.jpa;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,5 +74,15 @@ record PartidaJpaResumo(PartidaJpa jpa) implements PartidaResumo {
     @Override
     public Integer getGolsVisitante() {
         return jpa.golsVisitante;
+    }
+
+    @Override
+    public LocalDateTime getDataHoraAgendada() {
+        return jpa.dataHoraAgendada;
+    }
+
+    @Override
+    public String getLocalPartida() {
+        return jpa.localPartida;
     }
 }

@@ -121,13 +121,13 @@ Modo de preparacao em que o sistema distribui automaticamente os times aprovados
 Modo de preparacao em que o organizador escolhe manualmente a ordem ou distribuicao dos times aprovados antes da geracao das partidas.
 
 ### Escalacao
-Configuracao opcional definida pelo responsavel do time ou pelo tecnico para uma partida especifica, contendo o esquema tatico, os jogadores titulares por posicao, os jogadores reservas e a distribuicao visual dos titulares em uma mesa tatica. Essa visualizacao nao altera as regras da partida nem exige simetria entre os times. A escalacao pode ser editada ate o inicio da partida e fica congelada apos esse momento.
+Configuracao opcional definida pelo tecnico responsavel para uma partida especifica. Pode conter somente titulares em lista, titulares e reservas em lista ou uma mesa tatica. Fica privada e editavel ate o inicio da partida, quando e congelada e divulgada aos demais usuarios.
 
 ### Mesa tatica
-Representacao visual da escalacao em campo, gerada a partir do esquema tatico e dos titulares posicionados, para mostrar onde cada jogador inicia a partida.
+Representacao visual da escalacao em campo, gerada a partir de um esquema compativel com o formato da equipe. O espacamento das linhas se adapta a quantidade de jogadores do 3x3, 5x5, 7x7 ou 11x11.
 
 ### Esquema tatico
-Distribuicao das posicoes dos jogadores titulares em campo, compativel com o formato de equipe do torneio. Exemplos: 4-4-2 ou 4-3-3 no 11x11; 2-1-1 no 5x5; 1-1-1 no 3x3.
+Distribuicao das posicoes dos jogadores titulares em campo, compativel com o formato de equipe do torneio. Exemplos: 4-4-2 ou 4-3-3 no 11x11; 2-3-1 no 7x7; 2-1-1 no 5x5; 1-1 no 3x3, sempre considerando o goleiro.
 
 ### Posicao
 Funcao tatica atribuida a cada jogador titular dentro do esquema tatico, como goleiro, defensor, meio-campista ou atacante.

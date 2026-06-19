@@ -25,6 +25,14 @@
     <div class="team-feedback error"><i class="bi bi-exclamation-circle"></i> {{ erro }}</div>
   }
 
+  <nav class="team-profile-tabs" aria-label="Areas do time">
+    <button [class.active]="aba === 'dados'" (click)="aba = 'dados'">Dados do time</button>
+    <button [class.active]="aba === 'publicacoes'" (click)="aba = 'publicacoes'">
+      Publicacoes <span>{{ publicacoes.length }}</span>
+    </button>
+  </nav>
+
+  @if (aba === 'dados') {
   @if (podeProporDesafio && propostaAberta) {
     <section class="friendly-proposal">
       <div class="friendly-proposal-copy">
@@ -127,9 +135,47 @@
         }
       </section>
 
+      @if (podeEditarTime) {
+        <section class="card panel-strong upcoming-matches">
+          <div class="roster-heading">
+            <div>
+              <div class="eyebrow">Calendario do time</div>
+              <h2 class="section-title">Proximos jogos</h2>
+              <p class="small muted">Entre na partida para preparar titulares, reservas ou mesa tatica.</p>
+            </div>
+            <span class="status status-green">{{ proximosJogos.length }} agendado(s)</span>
+          </div>
+          @for (partida of proximosJogos; track partida.id) {
+            <article class="upcoming-match">
+              <div class="upcoming-date">
+                <i class="bi bi-calendar-event"></i>
+                <span>{{ dataPartida(partida) }}</span>
+              </div>
+              <div class="upcoming-copy">
+                <small>{{ torneioPartida(partida) }} · {{ partida.etapa }}</small>
+                <strong>{{ time.nome }} <em>vs</em> {{ adversarioPartida(partida) }}</strong>
+                <span><i class="bi bi-geo-alt"></i> {{ partida.localPartida || 'Local a definir' }}</span>
+              </div>
+              <a class="btn btn-primary" [routerLink]="['/partida', partida.id]" [queryParams]="{ escalar: true }">
+                <i class="bi bi-people"></i> Definir escalacao
+              </a>
+            </article>
+          } @empty {
+            <div class="empty-state">Nenhuma proxima partida encontrada para este time.</div>
+          }
+        </section>
+      }
+
       <section class="card">
         <h2 class="section-title">Ultimos jogos</h2>
-        <div class="empty-state">Nenhuma partida registrada.</div>
+        @for (partida of ultimosJogos.slice(0, 5); track partida.id) {
+          <a class="mini-row" [routerLink]="['/partida', partida.id]">
+            <span><strong>{{ adversarioPartida(partida) }}</strong><small class="muted">{{ dataPartida(partida) }}</small></span>
+            <b>{{ partida.golsMandante }} x {{ partida.golsVisitante }}</b>
+          </a>
+        } @empty {
+          <div class="empty-state">Nenhuma partida finalizada.</div>
+        }
       </section>
 
       @if (podeEditarTime) {
@@ -274,4 +320,50 @@
       }
     </aside>
   </div>
+  } @else {
+    <section class="team-posts">
+      <header class="team-posts-heading">
+        <div>
+          <div class="eyebrow">Voz oficial do time</div>
+          <h2>Publicacoes de {{ time.nome }}</h2>
+          <p>Esta aba mostra somente o que foi publicado representando o time.</p>
+        </div>
+        <span><i class="bi bi-shield"></i></span>
+      </header>
+
+      @for (post of publicacoes; track post.id) {
+        <article class="card team-post">
+          <div class="team-post-avatar">{{ iniciais(post.identidadeNome) }}</div>
+          <div>
+            <header>
+              <span><strong>{{ post.identidadeNome }}</strong><small>&#64;{{ post.autorNomeUsuario }} · {{ tempoPublicacao(post.criadaEm) }}</small></span>
+              <span class="status status-green">Time</span>
+            </header>
+            @if (post.conteudo) { <p>{{ post.conteudo }}</p> }
+            @if (post.midias.length) {
+              <div class="team-post-media">
+                @for (midia of post.midias; track midia) {
+                  @if (ehVideo(midia)) {
+                    <video [src]="midia" controls preload="metadata"></video>
+                  } @else {
+                    <img [src]="midia" alt="Midia da publicacao">
+                  }
+                }
+              </div>
+            }
+            <footer>
+              <span><i class="bi bi-heart"></i> {{ post.quantidadeCurtidas }}</span>
+              <span><i class="bi bi-chat"></i> {{ post.comentarios.length }}</span>
+            </footer>
+          </div>
+        </article>
+      } @empty {
+        <div class="card team-post-empty">
+          <i class="bi bi-chat-square-text"></i>
+          <strong>Nenhuma publicacao do time</strong>
+          <p>Postagens pessoais do treinador nao aparecem aqui.</p>
+        </div>
+      }
+    </section>
+  }
 </main>

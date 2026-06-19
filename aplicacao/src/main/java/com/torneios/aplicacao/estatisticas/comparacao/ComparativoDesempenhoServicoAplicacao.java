@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.time.TimeId;
-import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.estatisticas.comparacao.ComparacaoDesempenhoServico;
 import com.torneios.dominio.estatisticas.comparacao.ComparativoDesempenho;
 import com.torneios.dominio.estatisticas.comparacao.DesempenhoComparado;
@@ -24,40 +23,45 @@ public class ComparativoDesempenhoServicoAplicacao {
     }
 
     public ComparativoResumo gerarComparativoJogadores(long comparativoId,
-                                                       long torneioId,
                                                        long primeiroJogadorId,
                                                        long segundoJogadorId) {
         return converter(comparacaoDesempenhoServico.gerarComparativoJogadores(
                 comparativoId,
-                new TorneioId(torneioId),
                 new JogadorId(primeiroJogadorId),
                 new JogadorId(segundoJogadorId)));
     }
 
     public ComparativoResumo gerarComparativoTimes(long comparativoId,
-                                                   long torneioId,
                                                    long primeiroTimeId,
                                                    long segundoTimeId) {
         return converter(comparacaoDesempenhoServico.gerarComparativoTimes(
                 comparativoId,
-                new TorneioId(torneioId),
                 new TimeId(primeiroTimeId),
                 new TimeId(segundoTimeId)));
     }
 
-    public void salvarComparativo(long comparativoId,
-                                  long torneioId,
-                                  long primeiroTimeId,
-                                  long segundoTimeId) {
-        comparacaoDesempenhoServico.salvarComparativo(comparacaoDesempenhoServico.gerarComparativoTimes(
-                comparativoId,
-                new TorneioId(torneioId),
-                new TimeId(primeiroTimeId),
-                new TimeId(segundoTimeId)));
+    public void salvarComparativoJogadores(long comparativoId,
+                                           long primeiroJogadorId,
+                                           long segundoJogadorId) {
+        comparacaoDesempenhoServico.salvarComparativo(
+                comparacaoDesempenhoServico.gerarComparativoJogadores(
+                        comparativoId,
+                        new JogadorId(primeiroJogadorId),
+                        new JogadorId(segundoJogadorId)));
     }
 
-    public List<ComparativoResumo> consultarComparativosSalvos(long torneioId) {
-        return comparacaoDesempenhoServico.consultarComparativosSalvos(new TorneioId(torneioId)).stream()
+    public void salvarComparativoTimes(long comparativoId,
+                                       long primeiroTimeId,
+                                       long segundoTimeId) {
+        comparacaoDesempenhoServico.salvarComparativo(
+                comparacaoDesempenhoServico.gerarComparativoTimes(
+                        comparativoId,
+                        new TimeId(primeiroTimeId),
+                        new TimeId(segundoTimeId)));
+    }
+
+    public List<ComparativoResumo> consultarComparativosSalvos() {
+        return comparacaoDesempenhoServico.consultarComparativosSalvos().stream()
                 .map(this::converter)
                 .toList();
     }
@@ -66,7 +70,6 @@ public class ComparativoDesempenhoServicoAplicacao {
         notNull(comparativoResumo, "O comparativo atualizado e obrigatorio.");
         ComparativoDesempenho comparativo = new ComparativoDesempenho(
                 comparativoResumo.id(),
-                new TorneioId(comparativoResumo.torneioId()),
                 com.torneios.dominio.estatisticas.comparacao.TipoComparativoDesempenho.valueOf(comparativoResumo.tipo()),
                 new DesempenhoComparado(
                         comparativoResumo.primeiro().rotulo(),
@@ -100,7 +103,6 @@ public class ComparativoDesempenhoServicoAplicacao {
                 : comparativoDesempenho.getMelhorDesempenho().isPresent() ? 2L : null;
         return new ComparativoResumo(
                 comparativoDesempenho.getId(),
-                comparativoDesempenho.getTorneioId().valor(),
                 comparativoDesempenho.getTipo().name(),
                 converterDesempenho(comparativoDesempenho.getPrimeiro()),
                 converterDesempenho(comparativoDesempenho.getSegundo()),
@@ -120,7 +122,6 @@ public class ComparativoDesempenhoServicoAplicacao {
     }
 
     public record ComparativoResumo(long id,
-                                    long torneioId,
                                     String tipo,
                                     DesempenhoResumo primeiro,
                                     DesempenhoResumo segundo,

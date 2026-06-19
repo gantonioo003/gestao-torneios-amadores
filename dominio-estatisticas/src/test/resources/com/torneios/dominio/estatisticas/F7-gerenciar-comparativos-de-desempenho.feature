@@ -24,22 +24,27 @@ Feature: Gerenciar comparativos de desempenho entre times e jogadores
     Then o sistema deve armazenar o comparativo salvo
 
   Scenario: Consultar comparativos salvos
-    Given que existe um comparativo salvo para o torneio
-    When o usuario consultar os comparativos salvos do torneio
+    Given que existe um comparativo geral salvo
+    When o usuario consultar os comparativos gerais salvos
     Then o sistema deve listar os comparativos salvos
 
   Scenario: Atualizar comparativo salvo apos mudanca nos dados
-    Given que existe um comparativo salvo para o torneio
+    Given que existe um comparativo geral salvo
     And que novos eventos alteraram o desempenho dos jogadores
     When o usuario atualizar o comparativo salvo
     Then o sistema deve substituir o comparativo pelos dados atualizados
 
   Scenario: Excluir comparativo salvo
-    Given que existe um comparativo salvo para o torneio
+    Given que existe um comparativo geral salvo
     When o usuario excluir o comparativo salvo
     Then o sistema deve remover o comparativo do historico
 
-  Scenario: Impedir comparativo sem dados estatisticos
+  Scenario: Permitir comparativo basico sem scout registrado
     Given que nao existem estatisticas registradas para comparacao
-    When o usuario tentar gerar um comparativo entre os jogadores
-    Then o sistema deve impedir a comparacao de desempenho
+    When o usuario gerar um comparativo entre os jogadores
+    Then o sistema deve exibir os dois perfis com estatisticas zeradas
+
+  Scenario: Impedir comparacao de treinador como jogador
+    Given que existem estatisticas registradas para dois jogadores
+    When o usuario tentar comparar um jogador com um perfil de treinador
+    Then o sistema deve impedir a comparacao com perfil que nao seja jogador

@@ -14,16 +14,16 @@ F5. Gerenciar times do treinador, permitindo cadastrar, editar, excluir e consul
 
 F6. Cadastrar profissional esportivo com historico de carreira, permitindo gerenciar perfis de jogadores e treinadores com suas passagens por times.
 
-F7. Gerenciar analises comparativas de desempenho entre times e jogadores, permitindo gerar comparacoes por estatisticas, historico e rankings, salvar comparativos escolhidos, consultar analises salvas e atualiza-las quando os dados mudarem
+F7. Gerenciar analises comparativas gerais de desempenho entre times e jogadores, permitindo confrontar estatisticas, historico e rankings sem escolher torneio, salvar comparativos, consultar e atualizar analises, exportar os dados em CSV e compartilhar um link que reabre a comparacao escolhida.
 
-F8. Gerenciar a visualizacao opcional da escalacao do time em mesa tatica para partidas, incluindo esquema tatico, titulares posicionados em campo e reservas quando o time quiser montar essa visao
+F8. Gerenciar a preparacao e visualizacao opcional da escalacao para partidas, permitindo ao tecnico consultar proximos jogos, informar titulares e reservas em lista ou mesa tatica compativel com 3x3, 5x5, 7x7 ou 11x11, manter os dados privados ate o inicio e divulga-los automaticamente conforme o formato escolhido pelos dois times.
 
 ## Organizacao e comunicacao
 F9. Gerenciar torneios pela conta organizadora, permitindo criar a competicao com formato e quantidade por equipe imutaveis, editar dados internos e participantes antes do inicio, preparar estrutura, rodadas e partidas por sorteio automatico ou ordem manual e repetir novas edicoes com o historico preservado.
 
 F10. Gerenciar confrontos amistosos opcionais entre times por contas de treinador, permitindo propor desafios pela busca ou perfil do adversario, acompanhar solicitacoes recebidas, enviadas, aceitas e encerradas no proprio time, aceitar, recusar, cancelar ou reagendar propostas, registrar resultados no historico dos dois times e notificar os responsaveis quando o jogo for proposto ou confirmado.
 
-F11. Gerenciar o ecossistema de feed social da plataforma e dos torneios, permitindo publicacoes pessoais ou representando times e torneios autorizados, texto, fotos ou videos opcionais, hashtags, comentarios com texto ou foto, uma curtida alternavel por conta, reacoes, comunicados oficiais, atualizacoes automaticas de partidas, filtros por identidade, assuntos do momento, encaminhamento de publicacoes para conversas e grupos liberados e historico discreto de postagens pessoais no perfil.
+F11. Gerenciar o ecossistema de feed social da plataforma e dos torneios, permitindo publicacoes pessoais ou representando times e torneios autorizados, texto, emojis, conjuntos de fotos ou videos opcionais, hashtags, comentarios com texto ou foto, uma curtida alternavel por conta, reacoes, comunicados oficiais, atualizacoes automaticas de partidas, filtros por identidade, radar da comunidade, assuntos do momento, encaminhamento de publicacoes para conversas e grupos liberados e historicos separados de postagens nos perfis pessoais, times e torneios.
 
 ## Partidas, andamento e estatisticas
 F12. Gerenciar o registro do placar oficial da partida e a atualizacao automatica do andamento da competicao, permitindo salvar resultado mesmo sem eventos estatisticos e refletindo classificacao, chaveamento e status das partidas apos cada resultado

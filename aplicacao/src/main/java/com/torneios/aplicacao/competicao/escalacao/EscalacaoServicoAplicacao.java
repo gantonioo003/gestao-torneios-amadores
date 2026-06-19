@@ -17,6 +17,7 @@ import com.torneios.dominio.competicao.escalacao.EscalacaoServico;
 import com.torneios.dominio.competicao.escalacao.JogadorEscalado;
 import com.torneios.dominio.competicao.escalacao.JogadorPosicionadoMesaTatica;
 import com.torneios.dominio.competicao.escalacao.MesaTatica;
+import com.torneios.dominio.competicao.escalacao.TipoVisualizacaoEscalacao;
 
 /**
  * Casos de uso de geracao e consulta da mesa tatica do time.
@@ -34,6 +35,7 @@ public class EscalacaoServicoAplicacao {
                                                           long partidaId,
                                                           long timeId,
                                                           long usuarioId,
+                                                          String tipoVisualizacao,
                                                           String esquemaTatico,
                                                           List<JogadorEscaladoEntrada> titulares,
                                                           List<Long> reservas) {
@@ -42,7 +44,8 @@ public class EscalacaoServicoAplicacao {
                 new PartidaId(partidaId),
                 new TimeId(timeId),
                 new UsuarioId(usuarioId),
-                EsquemaTatico.valueOf(esquemaTatico),
+                TipoVisualizacaoEscalacao.valueOf(tipoVisualizacao),
+                converterEsquema(esquemaTatico),
                 converterTitulares(titulares),
                 converterReservas(reservas)));
     }
@@ -51,6 +54,7 @@ public class EscalacaoServicoAplicacao {
                                                       long partidaId,
                                                       long timeId,
                                                       long tecnicoId,
+                                                      String tipoVisualizacao,
                                                       String esquemaTatico,
                                                       List<JogadorEscaladoEntrada> titulares,
                                                       List<Long> reservas) {
@@ -59,9 +63,23 @@ public class EscalacaoServicoAplicacao {
                 new PartidaId(partidaId),
                 new TimeId(timeId),
                 new TecnicoId(tecnicoId),
-                EsquemaTatico.valueOf(esquemaTatico),
+                TipoVisualizacaoEscalacao.valueOf(tipoVisualizacao),
+                converterEsquema(esquemaTatico),
                 converterTitulares(titulares),
                 converterReservas(reservas)));
+    }
+
+    public EscalacaoResumo definirEscalacao(long escalacaoId,
+                                            long partidaId,
+                                            long timeId,
+                                            long usuarioId,
+                                            String tipoVisualizacao,
+                                            String esquemaTatico,
+                                            List<JogadorEscaladoEntrada> titulares,
+                                            List<Long> reservas) {
+        return definirEscalacaoPorResponsavel(
+                escalacaoId, partidaId, timeId, usuarioId, tipoVisualizacao,
+                esquemaTatico, titulares, reservas);
     }
 
     public EscalacaoResumo obterEscalacao(long partidaId, long timeId) {
@@ -74,8 +92,32 @@ public class EscalacaoServicoAplicacao {
                 .toList();
     }
 
+    public EscalacaoResumo obterEscalacaoDoResponsavel(long partidaId, long timeId, long usuarioId) {
+        return converter(escalacaoServico.obterEscalacaoDoResponsavel(
+                new PartidaId(partidaId), new TimeId(timeId), new UsuarioId(usuarioId)));
+    }
+
+    public VisualizacaoPublicaResumo visualizarPublicamente(long partidaId) {
+        List<EscalacaoResumo> escalacoes = escalacaoServico.listarPublicasPorPartida(new PartidaId(partidaId))
+                .stream()
+                .map(this::converter)
+                .toList();
+        boolean duasMesas = escalacoes.size() == 2
+                && escalacoes.stream().allMatch(item -> "MESA_TATICA".equals(item.tipoVisualizacao()));
+        return new VisualizacaoPublicaResumo(duasMesas ? "MESAS_TATICAS" : "LISTAS", escalacoes);
+    }
+
     public MesaTaticaResumo gerarMesaTatica(long partidaId, long timeId) {
         return converter(escalacaoServico.gerarMesaTatica(new PartidaId(partidaId), new TimeId(timeId)));
+    }
+
+    public MesaTaticaResumo gerarMesaTaticaPublica(long partidaId, long timeId) {
+        Escalacao escalacao = escalacaoServico.listarPublicasPorPartida(new PartidaId(partidaId)).stream()
+                .filter(item -> item.getTimeId().equals(new TimeId(timeId)))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "A escalacao nao esta disponivel publicamente para esta partida e time."));
+        return converter(escalacao.gerarMesaTatica());
     }
 
     public void congelarEscalacoesDaPartida(long partidaId) {
@@ -83,11 +125,19 @@ public class EscalacaoServicoAplicacao {
     }
 
     private List<JogadorEscalado> converterTitulares(List<JogadorEscaladoEntrada> titulares) {
-        return titulares.stream()
+        return titulares == null ? List.of() : titulares.stream()
                 .map(titular -> new JogadorEscalado(
                         new JogadorId(titular.jogadorId()),
-                        Posicao.valueOf(titular.posicao())))
+                        titular.posicao() == null || titular.posicao().isBlank()
+                                ? Posicao.ATACANTE
+                                : Posicao.valueOf(titular.posicao())))
                 .toList();
+    }
+
+    private EsquemaTatico converterEsquema(String esquemaTatico) {
+        return esquemaTatico == null || esquemaTatico.isBlank()
+                ? null
+                : EsquemaTatico.valueOf(esquemaTatico);
     }
 
     private List<JogadorId> converterReservas(List<Long> reservas) {
@@ -100,13 +150,19 @@ public class EscalacaoServicoAplicacao {
                 escalacao.getPartidaId().valor(),
                 escalacao.getTimeId().valor(),
                 escalacao.getFormatoEquipe().name(),
-                escalacao.getEsquemaTatico().name(),
+                escalacao.getTipoVisualizacao().name(),
+                escalacao.getEsquemaTatico() == null ? null : escalacao.getEsquemaTatico().name(),
                 escalacao.estaCongelada(),
                 escalacao.getTitulares().stream()
                         .map(titular -> new JogadorEscaladoResumo(
                                 titular.jogadorId().valor(),
                                 titular.posicao().name()))
                         .toList(),
+                escalacao.getTipoVisualizacao().usaMesaTatica()
+                        ? escalacao.gerarMesaTatica().getTitularesPosicionados().stream()
+                                .map(this::converterPosicionado)
+                                .toList()
+                        : List.of(),
                 escalacao.getReservas().stream().map(JogadorId::valor).toList());
     }
 
@@ -135,10 +191,16 @@ public class EscalacaoServicoAplicacao {
                                   long partidaId,
                                   long timeId,
                                   String formatoEquipe,
+                                  String tipoVisualizacao,
                                   String esquemaTatico,
                                   boolean congelada,
                                   List<JogadorEscaladoResumo> titulares,
+                                  List<JogadorPosicionadoResumo> titularesPosicionados,
                                   List<Long> reservas) {
+    }
+
+    public record VisualizacaoPublicaResumo(String modoExibicao,
+                                            List<EscalacaoResumo> escalacoes) {
     }
 
     public record JogadorEscaladoResumo(long jogadorId, String posicao) {

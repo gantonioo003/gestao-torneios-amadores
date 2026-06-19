@@ -548,31 +548,30 @@ BoundedContext Estatisticas implements Estatisticas {
 		}
 	}
 
-	Aggregate ComparativoDesempenho {
-		Service ComparacaoDesempenhoServico {
-			void gerarComparativoJogadores(@TorneioId torneio, @JogadorId primeiroJogador, @JogadorId segundoJogador);
-			void gerarComparativoTimes(@TorneioId torneio, @TimeId primeiroTime, @TimeId segundoTime);
-			void salvarComparativo(@ComparativoDesempenhoId comparativo);
-			void consultarComparativosSalvos(@TorneioId torneio);
-			void atualizarComparativoSalvo(@ComparativoDesempenhoId comparativo);
-			void excluirComparativoSalvo(@ComparativoDesempenhoId comparativo);
-		}
+		Aggregate ComparativoDesempenho {
+			Service ComparacaoDesempenhoServico {
+				void gerarComparativoJogadores(@JogadorId primeiroJogador, @JogadorId segundoJogador);
+				void gerarComparativoTimes(@TimeId primeiroTime, @TimeId segundoTime);
+				void salvarComparativo(@ComparativoDesempenhoId comparativo);
+				void consultarComparativosSalvos();
+				void atualizarComparativoSalvo(@ComparativoDesempenhoId comparativo);
+				void excluirComparativoSalvo(@ComparativoDesempenhoId comparativo);
+			}
 
 		Entity ComparativoDesempenho {
-			aggregateRoot
+				aggregateRoot
 
-			-ComparativoDesempenhoId id
-			-TorneioId torneio
-			String tipo
+				-ComparativoDesempenhoId id
+				String tipo
 			String primeiroComparado
 			String segundoComparado
 			double pontuacaoPrimeiro
 			double pontuacaoSegundo
 
-			Repository ComparativoDesempenhoRepository {
-				@ComparativoDesempenho obter(@ComparativoDesempenhoId id);
-				List<ComparativoDesempenho> listarPorTorneio(@TorneioId torneio);
-				void remover(@ComparativoDesempenhoId id);
+				Repository ComparativoDesempenhoRepository {
+					@ComparativoDesempenho obter(@ComparativoDesempenhoId id);
+					List<ComparativoDesempenho> listarTodos();
+					void remover(@ComparativoDesempenhoId id);
 			}
 		}
 

@@ -1,6 +1,7 @@
 package com.torneios.infraestrutura.persistencia.memoria;
 
 import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.time.TimeId;
-import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.estatisticas.comparacao.ComparativoDesempenho;
 import com.torneios.dominio.estatisticas.comparacao.ComparativoDesempenhoRepositorio;
 import com.torneios.dominio.estatisticas.comparacao.ConsultaComparacaoDesempenho;
@@ -35,10 +35,8 @@ class ComparativoDesempenhoRepositorioMemoriaInfra implements ComparativoDesempe
     }
 
     @Override
-    public List<ComparativoDesempenho> listarPorTorneio(TorneioId torneioId) {
-        return dados.values().stream()
-                .filter(comparativo -> comparativo.getTorneioId().equals(torneioId))
-                .toList();
+    public List<ComparativoDesempenho> listarTodos() {
+        return new ArrayList<>(dados.values());
     }
 
     @Override
@@ -55,6 +53,13 @@ class ConsultaComparacaoDesempenhoInfra implements ConsultaComparacaoDesempenho 
 
     @Autowired
     ProfissionalEsportivoRepositorio profissionalEsportivoRepositorio;
+
+    @Override
+    public boolean jogadorExiste(JogadorId jogadorId) {
+        return profissionalEsportivoRepositorio.buscarPorId(new ProfissionalEsportivoId(jogadorId.valor()))
+                .map(profissional -> profissional.getTipo() == TipoProfissional.JOGADOR)
+                .orElse(false);
+    }
 
     @Override
     public String nomeJogador(JogadorId jogadorId) {

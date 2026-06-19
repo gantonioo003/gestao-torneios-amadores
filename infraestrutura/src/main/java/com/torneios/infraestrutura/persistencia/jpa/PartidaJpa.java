@@ -35,6 +35,8 @@ class PartidaJpa {
     int quantidadeJogadoresPorEquipe;
     boolean iniciada;
     boolean encerrada;
+    LocalDateTime dataHoraAgendada;
+    String localPartida;
 
     @Column(nullable = true)
     Integer golsMandante;
@@ -68,6 +70,8 @@ class PartidaRepositorioImpl implements PartidaRepositorio, PreparacaoCompeticao
         jpa.quantidadeJogadoresPorEquipe = partida.getQuantidadeJogadoresPorEquipe();
         jpa.iniciada = partida.estaIniciada();
         jpa.encerrada = partida.estaEncerrada();
+        jpa.dataHoraAgendada = partida.getDataHoraAgendada();
+        jpa.localPartida = partida.getLocalPartida();
 
         if (partida.getResultado() != null) {
             jpa.golsMandante = partida.getResultado().golsMandante();
@@ -106,6 +110,9 @@ class PartidaRepositorioImpl implements PartidaRepositorio, PreparacaoCompeticao
                 new TimeId(jpa.visitanteId),
                 jpa.etapa,
                 jpa.quantidadeJogadoresPorEquipe);
+        if (jpa.dataHoraAgendada != null) {
+            partida.agendar(jpa.dataHoraAgendada, jpa.localPartida);
+        }
 
         if (jpa.encerrada && jpa.golsMandante != null && jpa.golsVisitante != null && jpa.dataHoraRegistroResultado != null) {
             partida.registrarResultado(new ResultadoPartida(jpa.golsMandante, jpa.golsVisitante),

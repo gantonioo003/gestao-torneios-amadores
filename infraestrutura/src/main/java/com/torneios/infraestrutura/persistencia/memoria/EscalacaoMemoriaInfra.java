@@ -21,7 +21,6 @@ import com.torneios.dominio.competicao.partida.PartidaRepositorio;
 import com.torneios.dominio.participacao.profissional.TipoProfissional;
 import com.torneios.dominio.participacao.time.TimeRepositorio;
 
-@Component
 class EscalacaoRepositorioMemoriaInfra implements EscalacaoRepositorio {
 
     private final Map<String, Escalacao> escalacoes = new LinkedHashMap<>();
@@ -60,7 +59,7 @@ class ConsultaSuporteEscalacaoInfra implements ConsultaSuporteEscalacao {
     @Override
     public boolean partidaIniciada(PartidaId partidaId) {
         return partidaRepositorio.buscarPorId(partidaId)
-                .map(partida -> partida.estaEncerrada())
+                .map(partida -> partida.estaIniciada())
                 .orElse(false);
     }
 

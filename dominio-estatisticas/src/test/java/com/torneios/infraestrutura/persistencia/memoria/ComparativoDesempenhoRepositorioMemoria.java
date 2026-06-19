@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.estatisticas.comparacao.ComparativoDesempenho;
 import com.torneios.dominio.estatisticas.comparacao.ComparativoDesempenhoRepositorio;
 
@@ -25,17 +24,11 @@ public class ComparativoDesempenhoRepositorioMemoria implements ComparativoDesem
     }
 
     @Override
-    public List<ComparativoDesempenho> listarPorTorneio(TorneioId torneioId) {
-        return dados.values().stream()
-                .filter(comparativo -> comparativo.getTorneioId().equals(torneioId))
-                .toList();
-    }
-
-    @Override
     public void remover(long comparativoId) {
         dados.remove(comparativoId);
     }
 
+    @Override
     public List<ComparativoDesempenho> listarTodos() {
         return new ArrayList<>(dados.values());
     }

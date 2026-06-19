@@ -13,7 +13,17 @@ import {
   TorneioPalpite
 } from '../core/palpite.service';
 
-type AbaTorneio = 'competicao' | 'palpites' | 'estatisticas' | 'regras' | 'configuracao';
+type AbaTorneio = 'classificacao' | 'eliminatoria' | 'palpites' | 'estatisticas' | 'regras' | 'publicacoes' | 'configuracao';
+
+interface ConfrontoChaveamento {
+  partida: any | null;
+  posicao: number;
+}
+
+interface FaseChaveamento {
+  nome: string;
+  confrontos: ConfrontoChaveamento[];
+}
 
 @Component({
   selector: 'app-torneio-detalhes',
@@ -22,7 +32,7 @@ type AbaTorneio = 'competicao' | 'palpites' | 'estatisticas' | 'regras' | 'confi
   styleUrl: './torneio-detalhes.css'
 })
 export class TorneioDetalhes implements OnInit {
-  aba: AbaTorneio = 'competicao';
+  aba: AbaTorneio = 'classificacao';
   torneioId = '';
   torneio: any = {};
   times: any[] = [];
@@ -32,6 +42,7 @@ export class TorneioDetalhes implements OnInit {
   artilharia: any[] = [];
   assistencias: any[] = [];
   chaveamento: any = null;
+  publicacoes: any[] = [];
   oportunidadesPalpite: CentralPalpites = { torneios: [], partidas: [] };
   solicitacoesPendentes: any[] = [];
   meusTimes: any[] = [];
@@ -81,16 +92,30 @@ export class TorneioDetalhes implements OnInit {
     return this.participantes.length >= this.quantidadeMinimaParticipantes;
   }
 
-  get partidasPorEtapa(): Array<{ nome: string; partidas: any[] }> {
-    const etapas = new Map<string, any[]>();
-    for (const partida of this.partidas) {
-      const etapa = partida.etapa || this.etapaPadrao();
-      etapas.set(etapa, [...(etapas.get(etapa) ?? []), partida]);
+  get fasesChaveamento(): FaseChaveamento[] {
+    if (!this.usaChaveamento) return [];
+
+    const nomesEsperados = this.nomesFasesEliminatorias();
+    const partidasEliminatorias = this.partidas.filter(partida => this.ehPartidaEliminatoria(partida));
+    const partidasPorFase = new Map<string, any[]>();
+
+    for (const partida of partidasEliminatorias) {
+      const nome = this.nomeFasePartida(partida, nomesEsperados, partidasEliminatorias);
+      partidasPorFase.set(nome, [...(partidasPorFase.get(nome) ?? []), partida]);
     }
-    if (!etapas.size) {
-      etapas.set(this.etapaPadrao(), []);
-    }
-    return Array.from(etapas, ([nome, partidas]) => ({ nome, partidas }));
+
+    return nomesEsperados.map((nome, indice) => {
+      const partidas = partidasPorFase.get(nome) ?? [];
+      const quantidadeEsperada = Math.max(1, 2 ** (nomesEsperados.length - indice - 1));
+      const quantidadeConfrontos = Math.max(quantidadeEsperada, partidas.length);
+      return {
+        nome,
+        confrontos: Array.from({ length: quantidadeConfrontos }, (_, posicao) => ({
+          partida: partidas[posicao] ?? null,
+          posicao
+        }))
+      };
+    });
   }
 
   get partidasFinalizadas(): number {
@@ -279,6 +304,35 @@ export class TorneioDetalhes implements OnInit {
     );
   }
 
+  timeVencedor(partida: any, lado: 'mandante' | 'visitante'): boolean {
+    if (!partida?.encerrada || partida.golsMandante == null || partida.golsVisitante == null) return false;
+    return lado === 'mandante'
+      ? partida.golsMandante > partida.golsVisitante
+      : partida.golsVisitante > partida.golsMandante;
+  }
+
+  statusConfronto(partida: any): string {
+    if (partida.encerrada) return 'Finalizada';
+    if (partida.iniciada) return 'Ao vivo';
+    return 'Agendada';
+  }
+
+  iniciais(nome: string): string {
+    return (nome || 'T').split(/\s+/).filter(Boolean).slice(0, 2)
+      .map(parte => parte[0]).join('').toUpperCase();
+  }
+
+  tempoPublicacao(dataIso: string): string {
+    const horas = Math.floor((Date.now() - new Date(dataIso).getTime()) / 3_600_000);
+    if (horas < 1) return 'agora';
+    if (horas < 24) return `${horas}h`;
+    return `${Math.floor(horas / 24)}d`;
+  }
+
+  ehVideo(midia: string): boolean {
+    return midia.startsWith('data:video/') || /\.(mp4|webm|ogg)(\?.*)?$/i.test(midia);
+  }
+
   moverParticipante(indice: number, deslocamento: number) {
     const destino = indice + deslocamento;
     if (destino < 0 || destino >= this.ordemManualParticipantes.length) return;
@@ -411,6 +465,8 @@ export class TorneioDetalhes implements OnInit {
         .pipe(catchError(() => of([]))),
       assistencias: this.http.get<any[]>(`/backend/ranking-estatistico/${this.torneioId}/assistencias`)
         .pipe(catchError(() => of([]))),
+      publicacoes: this.http.get<any[]>(`/backend/feed/identidade/TORNEIO/${this.torneioId}`)
+        .pipe(catchError(() => of([]))),
       palpites: this.palpites.oportunidades()
         .pipe(catchError(() => of({ torneios: [], partidas: [] } as CentralPalpites)))
     }).pipe(finalize(() => this.carregando = false)).subscribe(dados => {
@@ -426,7 +482,9 @@ export class TorneioDetalhes implements OnInit {
       this.chaveamento = dados.chaveamento;
       this.artilharia = dados.artilharia;
       this.assistencias = dados.assistencias;
+      this.publicacoes = dados.publicacoes;
       this.oportunidadesPalpite = dados.palpites;
+      this.aba = this.usaClassificacao ? 'classificacao' : 'eliminatoria';
       if (this.route.snapshot.queryParamMap.get('configurar') === 'true' && this.podeGerenciar()) {
         this.aba = 'configuracao';
       }
@@ -479,11 +537,54 @@ export class TorneioDetalhes implements OnInit {
     return `/backend/preparacao-torneio/${this.torneioId}/${acao}?${query}`;
   }
 
-  private etapaPadrao(): string {
-    if (this.torneio.formato === 'FINAL_UNICA') return 'Final';
-    if (this.torneio.formato === 'MATA_MATA') return 'Chaveamento';
-    if (this.torneio.formato === 'FASE_DE_GRUPOS_COM_MATA_MATA') return 'Fase eliminatoria';
-    return 'Rodadas';
+  private nomesFasesEliminatorias(): string[] {
+    if (this.torneio.formato === 'FINAL_UNICA') return ['Final'];
+
+    const participantesEliminatoria = this.torneio.formato === 'FASE_DE_GRUPOS_COM_MATA_MATA'
+      ? Math.max(2, Math.ceil(this.participantes.length / 2))
+      : Math.max(2, this.participantes.length);
+    const tamanhoChave = 2 ** Math.ceil(Math.log2(participantesEliminatoria));
+    const fases: string[] = [];
+
+    if (tamanhoChave >= 32) fases.push('16 avos de final');
+    if (tamanhoChave >= 16) fases.push('Oitavas de final');
+    if (tamanhoChave >= 8) fases.push('Quartas de final');
+    if (tamanhoChave >= 4) fases.push('Semifinais');
+    fases.push('Final');
+    return fases;
+  }
+
+  private ehPartidaEliminatoria(partida: any): boolean {
+    if (this.torneio.formato === 'MATA_MATA' || this.torneio.formato === 'FINAL_UNICA') return true;
+    if (this.torneio.formato !== 'FASE_DE_GRUPOS_COM_MATA_MATA') return false;
+    const etapa = this.normalizarTexto(partida.etapa);
+    return !etapa.startsWith('grupo') && !etapa.startsWith('fase de grupos');
+  }
+
+  private nomeFasePartida(partida: any, nomesEsperados: string[], partidasEliminatorias: any[]): string {
+    const etapa = this.normalizarTexto(partida.etapa);
+    const faseConhecida = nomesEsperados.find(nome => this.normalizarTexto(nome) === etapa);
+    if (faseConhecida) return faseConhecida;
+    if (etapa.includes('final') && !etapa.includes('semi') && !etapa.includes('quarta')
+      && !etapa.includes('oitava') && !etapa.includes('16 avo')) {
+      return 'Final';
+    }
+    if (etapa.includes('semi')) return 'Semifinais';
+    if (etapa.includes('quarta')) return 'Quartas de final';
+    if (etapa.includes('oitava')) return 'Oitavas de final';
+    if (etapa.includes('16 avo')) return '16 avos de final';
+
+    const etapasGenericas = ['chaveamento', 'chaveamento inicial', 'fase eliminatoria', 'fases eliminatorias'];
+    if (etapasGenericas.includes(etapa)) {
+      const indicePrimeiraFase = nomesEsperados.length
+        - Math.max(1, Math.ceil(Math.log2(Math.max(1, partidasEliminatorias.length))));
+      return nomesEsperados[Math.max(0, indicePrimeiraFase)] ?? nomesEsperados[0];
+    }
+    return nomesEsperados[0];
+  }
+
+  private normalizarTexto(valor: string | null | undefined): string {
+    return (valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
   }
 
   private atualizarPercentuaisEvento(torneio: TorneioPalpite, evento: EventoTorneioPalpite) {

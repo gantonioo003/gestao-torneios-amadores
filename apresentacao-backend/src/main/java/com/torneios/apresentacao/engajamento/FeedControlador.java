@@ -35,11 +35,15 @@ class FeedControlador {
     @RequestMapping(method = POST, path = "publicar-social")
     FeedServicoAplicacao.PublicacaoResumo publicarSocial(@RequestBody PublicacaoSocialDto dto, HttpSession sessao) {
         long usuarioId = SessaoUsuario.exigirUsuarioId(sessao);
+        String tipoIdentidade = dto.tipoIdentidade == null ? "USUARIO" : dto.tipoIdentidade;
+        long identidadeId = "USUARIO".equals(tipoIdentidade)
+                ? usuarioId
+                : dto.identidadeId == null ? usuarioId : dto.identidadeId;
         return feedServicoAplicacao.publicar(
                 System.currentTimeMillis(),
                 usuarioId,
-                dto.tipoIdentidade == null ? "USUARIO" : dto.tipoIdentidade,
-                dto.identidadeId == null ? usuarioId : dto.identidadeId,
+                tipoIdentidade,
+                identidadeId,
                 dto.conteudo,
                 dto.hashtags,
                 dto.midias);
@@ -113,6 +117,15 @@ class FeedControlador {
     List<FeedServicoAplicacao.PublicacaoResumo> listarPorAutor(
             @PathVariable long autorId, HttpSession sessao) {
         return feedServicoAplicacao.listarPorAutor(autorId, SessaoUsuario.usuarioIdOuNulo(sessao));
+    }
+
+    @RequestMapping(method = GET, path = "identidade/{tipoIdentidade}/{identidadeId}")
+    List<FeedServicoAplicacao.PublicacaoResumo> listarPorIdentidade(
+            @PathVariable String tipoIdentidade,
+            @PathVariable long identidadeId,
+            HttpSession sessao) {
+        return feedServicoAplicacao.listarPorIdentidade(
+                tipoIdentidade, identidadeId, SessaoUsuario.usuarioIdOuNulo(sessao));
     }
 
     @RequestMapping(method = GET, path = "{id}")

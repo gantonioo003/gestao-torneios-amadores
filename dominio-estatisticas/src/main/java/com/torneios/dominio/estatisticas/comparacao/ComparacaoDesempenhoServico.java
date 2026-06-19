@@ -13,7 +13,6 @@ import com.torneios.dominio.compartilhado.excecao.RegraDeNegocioException;
 import com.torneios.dominio.compartilhado.jogador.JogadorId;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.time.TimeId;
-import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.estatisticas.evento.EventoEstatistico;
 import com.torneios.dominio.estatisticas.evento.EventoEstatisticoRepositorio;
 
@@ -35,19 +34,20 @@ public class ComparacaoDesempenhoServico {
     }
 
     public ComparativoDesempenho gerarComparativoJogadores(long comparativoId,
-                                                           TorneioId torneioId,
                                                            JogadorId primeiroJogadorId,
                                                            JogadorId segundoJogadorId) {
-        Objects.requireNonNull(torneioId, "O torneio da comparacao e obrigatorio.");
         Objects.requireNonNull(primeiroJogadorId, "O primeiro jogador da comparacao e obrigatorio.");
         Objects.requireNonNull(segundoJogadorId, "O segundo jogador da comparacao e obrigatorio.");
         if (primeiroJogadorId.equals(segundoJogadorId)) {
             throw new RegraDeNegocioException("A comparacao deve envolver jogadores diferentes.");
         }
+        if (!consultaComparacaoDesempenho.jogadorExiste(primeiroJogadorId)
+                || !consultaComparacaoDesempenho.jogadorExiste(segundoJogadorId)) {
+            throw new RegraDeNegocioException("A comparacao de jogadores aceita apenas perfis de jogador.");
+        }
 
-        List<EventoEstatistico> eventos = eventosDoTorneio(torneioId);
-        Map<JogadorId, DesempenhoAcumulado> ranking = acumularJogadores(eventos);
-
+        Map<JogadorId, DesempenhoAcumulado> ranking =
+                acumularJogadores(eventoEstatisticoRepositorio.listarTodos());
         DesempenhoComparado primeiro = montarDesempenho(
                 consultaComparacaoDesempenho.nomeJogador(primeiroJogadorId),
                 ranking.get(primeiroJogadorId),
@@ -57,26 +57,21 @@ public class ComparacaoDesempenhoServico {
                 ranking.get(segundoJogadorId),
                 posicaoNoRanking(segundoJogadorId, ranking));
 
-        exigirDadosComparaveis(primeiro, segundo);
-
         return new ComparativoDesempenho(
-                comparativoId, torneioId, TipoComparativoDesempenho.JOGADORES, primeiro, segundo);
+                comparativoId, TipoComparativoDesempenho.JOGADORES, primeiro, segundo);
     }
 
     public ComparativoDesempenho gerarComparativoTimes(long comparativoId,
-                                                       TorneioId torneioId,
                                                        TimeId primeiroTimeId,
                                                        TimeId segundoTimeId) {
-        Objects.requireNonNull(torneioId, "O torneio da comparacao e obrigatorio.");
         Objects.requireNonNull(primeiroTimeId, "O primeiro time da comparacao e obrigatorio.");
         Objects.requireNonNull(segundoTimeId, "O segundo time da comparacao e obrigatorio.");
         if (primeiroTimeId.equals(segundoTimeId)) {
             throw new RegraDeNegocioException("A comparacao deve envolver times diferentes.");
         }
 
-        List<EventoEstatistico> eventos = eventosDoTorneio(torneioId);
-        Map<TimeId, DesempenhoAcumulado> ranking = acumularTimes(eventos);
-
+        Map<TimeId, DesempenhoAcumulado> ranking =
+                acumularTimes(eventoEstatisticoRepositorio.listarTodos());
         DesempenhoComparado primeiro = montarDesempenho(
                 consultaComparacaoDesempenho.nomeTime(primeiroTimeId),
                 ranking.get(primeiroTimeId),
@@ -86,10 +81,8 @@ public class ComparacaoDesempenhoServico {
                 ranking.get(segundoTimeId),
                 posicaoNoRanking(segundoTimeId, ranking));
 
-        exigirDadosComparaveis(primeiro, segundo);
-
         return new ComparativoDesempenho(
-                comparativoId, torneioId, TipoComparativoDesempenho.TIMES, primeiro, segundo);
+                comparativoId, TipoComparativoDesempenho.TIMES, primeiro, segundo);
     }
 
     public void salvarComparativo(ComparativoDesempenho comparativoDesempenho) {
@@ -97,9 +90,8 @@ public class ComparacaoDesempenhoServico {
                 "O comparativo de desempenho e obrigatorio para salvar."));
     }
 
-    public List<ComparativoDesempenho> consultarComparativosSalvos(TorneioId torneioId) {
-        Objects.requireNonNull(torneioId, "O torneio da consulta de comparativos e obrigatorio.");
-        return comparativoDesempenhoRepositorio.listarPorTorneio(torneioId);
+    public List<ComparativoDesempenho> consultarComparativosSalvos() {
+        return comparativoDesempenhoRepositorio.listarTodos();
     }
 
     public ComparativoDesempenho atualizarComparativoSalvo(ComparativoDesempenho comparativoDesempenho) {
@@ -116,10 +108,6 @@ public class ComparacaoDesempenhoServico {
             throw new RegraDeNegocioException("O comparativo salvo nao foi encontrado.");
         }
         comparativoDesempenhoRepositorio.remover(comparativoId);
-    }
-
-    private List<EventoEstatistico> eventosDoTorneio(TorneioId torneioId) {
-        return eventoEstatisticoRepositorio.listarPorTorneio(torneioId);
     }
 
     private Map<JogadorId, DesempenhoAcumulado> acumularJogadores(List<EventoEstatistico> eventos) {
@@ -166,12 +154,6 @@ public class ComparacaoDesempenhoServico {
                 dados.partidasComEventos(),
                 posicaoRanking,
                 dados.pontuacao());
-    }
-
-    private void exigirDadosComparaveis(DesempenhoComparado primeiro, DesempenhoComparado segundo) {
-        if (!primeiro.possuiDados() && !segundo.possuiDados()) {
-            throw new RegraDeNegocioException("Nao existem dados estatisticos para gerar o comparativo.");
-        }
     }
 
     private static class DesempenhoAcumulado {

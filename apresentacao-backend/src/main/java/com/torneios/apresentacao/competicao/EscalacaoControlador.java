@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.competicao.escalacao.EscalacaoServicoAplicacao;
+import com.torneios.apresentacao.SessaoUsuario;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("backend/escalacao")
@@ -22,43 +25,53 @@ class EscalacaoControlador {
     EscalacaoServicoAplicacao escalacaoServicoAplicacao;
 
     @RequestMapping(method = POST, path = "salvar-por-responsavel")
-    EscalacaoServicoAplicacao.EscalacaoResumo salvarPorResponsavel(@RequestBody EscalacaoDto dto) {
-        return escalacaoServicoAplicacao.definirEscalacaoPorResponsavel(
+    EscalacaoServicoAplicacao.EscalacaoResumo salvarPorResponsavel(
+            @RequestBody EscalacaoDto dto,
+            HttpSession sessao) {
+        return escalacaoServicoAplicacao.definirEscalacao(
                 System.currentTimeMillis(),
                 dto.partidaId,
                 dto.timeId,
-                dto.usuarioId,
+                SessaoUsuario.exigirUsuarioId(sessao),
+                dto.tipoVisualizacao,
                 dto.esquemaTatico,
                 dto.titulares,
                 dto.reservas);
     }
 
     @RequestMapping(method = POST, path = "salvar-por-tecnico")
-    EscalacaoServicoAplicacao.EscalacaoResumo salvarPorTecnico(@RequestBody EscalacaoTecnicoDto dto) {
-        return escalacaoServicoAplicacao.definirEscalacaoPorTecnico(
+    EscalacaoServicoAplicacao.EscalacaoResumo salvarPorTecnico(
+            @RequestBody EscalacaoTecnicoDto dto,
+            HttpSession sessao) {
+        return escalacaoServicoAplicacao.definirEscalacao(
                 System.currentTimeMillis(),
                 dto.partidaId,
                 dto.timeId,
-                dto.tecnicoId,
+                SessaoUsuario.exigirUsuarioId(sessao),
+                dto.tipoVisualizacao,
                 dto.esquemaTatico,
                 dto.titulares,
                 dto.reservas);
     }
 
     @RequestMapping(method = GET, path = "partida/{partidaId}/time/{timeId}")
-    EscalacaoServicoAplicacao.EscalacaoResumo obter(@PathVariable long partidaId, @PathVariable long timeId) {
-        return escalacaoServicoAplicacao.obterEscalacao(partidaId, timeId);
+    EscalacaoServicoAplicacao.EscalacaoResumo obter(
+            @PathVariable long partidaId,
+            @PathVariable long timeId,
+            HttpSession sessao) {
+        return escalacaoServicoAplicacao.obterEscalacaoDoResponsavel(
+                partidaId, timeId, SessaoUsuario.exigirUsuarioId(sessao));
     }
 
-    @RequestMapping(method = GET, path = "partida/{partidaId}")
-    List<EscalacaoServicoAplicacao.EscalacaoResumo> listarPorPartida(@PathVariable long partidaId) {
-        return escalacaoServicoAplicacao.listarPorPartida(partidaId);
+    @RequestMapping(method = GET, path = "partida/{partidaId}/publica")
+    EscalacaoServicoAplicacao.VisualizacaoPublicaResumo visualizarPublicamente(@PathVariable long partidaId) {
+        return escalacaoServicoAplicacao.visualizarPublicamente(partidaId);
     }
 
     @RequestMapping(method = GET, path = "mesa-tatica")
     EscalacaoServicoAplicacao.MesaTaticaResumo gerarMesaTatica(@RequestParam long partidaId,
                                                                @RequestParam long timeId) {
-        return escalacaoServicoAplicacao.gerarMesaTatica(partidaId, timeId);
+        return escalacaoServicoAplicacao.gerarMesaTaticaPublica(partidaId, timeId);
     }
 
     @RequestMapping(method = POST, path = "partida/{partidaId}/congelar")
@@ -69,7 +82,7 @@ class EscalacaoControlador {
     static class EscalacaoDto {
         public long partidaId;
         public long timeId;
-        public long usuarioId;
+        public String tipoVisualizacao;
         public String esquemaTatico;
         public List<EscalacaoServicoAplicacao.JogadorEscaladoEntrada> titulares;
         public List<Long> reservas;
@@ -78,7 +91,7 @@ class EscalacaoControlador {
     static class EscalacaoTecnicoDto {
         public long partidaId;
         public long timeId;
-        public long tecnicoId;
+        public String tipoVisualizacao;
         public String esquemaTatico;
         public List<EscalacaoServicoAplicacao.JogadorEscaladoEntrada> titulares;
         public List<Long> reservas;

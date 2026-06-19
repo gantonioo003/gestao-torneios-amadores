@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { KeyValuePipe } from '@angular/common';
 import { catchError, finalize, forkJoin, of, switchMap } from 'rxjs';
 import { AuthService } from '../core/auth.service';
 import {
@@ -15,7 +14,7 @@ import {
 
 @Component({
   selector: 'app-partida-detalhes',
-  imports: [FormsModule, RouterLink, KeyValuePipe],
+  imports: [FormsModule, RouterLink],
   templateUrl: './partida-detalhes.html',
   styleUrl: './partida-detalhes.css'
 })
@@ -48,16 +47,22 @@ export class PartidaDetalhes implements OnInit {
   erro = '';
 
   // F8 - Mesa Tática
-  mesaTaticaMandante: any = null;
-  mesaTaticaVisitante: any = null;
+  escalacaoMandante: any = null;
+  escalacaoVisitante: any = null;
+  modoExibicaoPublica = 'LISTAS';
+  podeEditarMandante = false;
+  podeEditarVisitante = false;
   elencoMandante: any[] = [];
   elencoVisitante: any[] = [];
   timeAtivoEscalacao: 'mandante' | 'visitante' = 'mandante';
   editandoEscalacao = false;
   salvandoEscalacao = false;
+  tipoVisualizacaoEditando: 'LISTA_TITULARES' | 'LISTA_COMPLETA' | 'MESA_TATICA' = 'LISTA_COMPLETA';
   esquemaEditando = '';
   titularesEditando: string[] = [];
   reservasEditando: string[] = [];
+  dataHoraAgendada = '';
+  localPartida = '';
 
   readonly esquemasPorFormato: Record<string, { valor: string; label: string }[]> = {
     ONZE_POR_ONZE: [
@@ -109,6 +114,8 @@ export class PartidaDetalhes implements OnInit {
     if (this.route.snapshot.queryParamMap.get('gerenciar') === 'true') {
       this.aba = 'gerenciar';
       this.scoutAtivo = true;
+    } else if (this.route.snapshot.queryParamMap.get('escalar') === 'true') {
+      this.aba = 'escalacao';
     }
     this.carregar();
   }
@@ -170,6 +177,33 @@ export class PartidaDetalhes implements OnInit {
     return slots;
   }
 
+  get slotsDaLista(): { posicao: string; label: string }[] {
+    return Array.from({ length: this.quantidadeJogadoresFormato }, (_, indice) => ({
+      posicao: indice === 0 ? 'GOLEIRO' : 'ATACANTE',
+      label: indice === 0 ? 'Goleiro' : `Titular ${indice + 1}`
+    }));
+  }
+
+  get slotsEditando(): { posicao: string; label: string }[] {
+    return this.tipoVisualizacaoEditando === 'MESA_TATICA'
+      ? this.slotsDoEsquema
+      : this.slotsDaLista;
+  }
+
+  get quantidadeJogadoresFormato(): number {
+    const quantidades: Record<string, number> = {
+      TRES_POR_TRES: 3,
+      CINCO_POR_CINCO: 5,
+      SETE_POR_SETE: 7,
+      ONZE_POR_ONZE: 11
+    };
+    return quantidades[this.formatoTorneio] ?? 11;
+  }
+
+  get esquemasDisponiveis(): { valor: string; label: string }[] {
+    return this.esquemasPorFormato[this.formatoTorneio] ?? [];
+  }
+
   get formatoTorneio(): string {
     return this.torneio?.formatoEquipe ?? 'ONZE_POR_ONZE';
   }
@@ -178,8 +212,8 @@ export class PartidaDetalhes implements OnInit {
     return this.timeAtivoEscalacao === 'mandante' ? this.elencoMandante : this.elencoVisitante;
   }
 
-  get mesaTaticaAtiva(): any {
-    return this.timeAtivoEscalacao === 'mandante' ? this.mesaTaticaMandante : this.mesaTaticaVisitante;
+  get escalacaoAtiva(): any {
+    return this.timeAtivoEscalacao === 'mandante' ? this.escalacaoMandante : this.escalacaoVisitante;
   }
 
   get timeIdAtivo(): string {
@@ -187,14 +221,17 @@ export class PartidaDetalhes implements OnInit {
   }
 
   get podeEditarEscalacaoAtiva(): boolean {
-    if (!this.usuario()) return false;
-    const elenco = this.elencoAtivoEscalacao;
-    const ehTreinador = elenco.some(v =>
-      v.tipoProfissional === 'TREINADOR' && String(v.cadastranteId) === String(this.usuario()?.id));
-    const ehResponsavel = this.usuario()?.podeGerenciarTimes === true;
-    const ehOrganizador = this.usuario()?.podeCriarTorneio === true
-      && !!this.torneio && String(this.usuario()?.id) === String(this.torneio.organizadorId);
-    return ehTreinador || ehResponsavel || ehOrganizador;
+    if (!this.usuario() || this.partida.iniciada || this.partida.encerrada) return false;
+    return this.timeAtivoEscalacao === 'mandante'
+      ? this.podeEditarMandante
+      : this.podeEditarVisitante;
+  }
+
+  get exibirMesasTaticas(): boolean {
+    return this.partida.iniciada
+      && this.modoExibicaoPublica === 'MESAS_TATICAS'
+      && !!this.escalacaoMandante
+      && !!this.escalacaoVisitante;
   }
 
   selecionarTimeEscalacao(lado: 'mandante' | 'visitante') {
@@ -202,22 +239,24 @@ export class PartidaDetalhes implements OnInit {
     this.editandoEscalacao = false;
     this.esquemaEditando = '';
     this.titularesEditando = [];
+    this.reservasEditando = [];
   }
 
   iniciarEdicaoEscalacao() {
-    const mesa = this.mesaTaticaAtiva;
-    this.esquemaEditando = mesa?.esquemaTatico ?? '';
+    const escalacao = this.escalacaoAtiva;
+    this.tipoVisualizacaoEditando = escalacao?.tipoVisualizacao ?? 'LISTA_COMPLETA';
+    this.esquemaEditando = escalacao?.esquemaTatico ?? this.esquemasDisponiveis[0]?.valor ?? '';
     this.atualizarSlotsEsquema();
-    if (mesa?.titularesPosicionados?.length) {
-      const ids = mesa.titularesPosicionados.map((t: any) => String(t.jogadorId));
+    if (escalacao?.titulares?.length) {
+      const ids = escalacao.titulares.map((t: any) => String(t.jogadorId));
       this.titularesEditando = ids;
     }
-    this.reservasEditando = mesa?.reservas?.map(String) ?? [];
+    this.reservasEditando = escalacao?.reservas?.map(String) ?? [];
     this.editandoEscalacao = true;
   }
 
   atualizarSlotsEsquema() {
-    const total = this.slotsDoEsquema.length;
+    const total = this.slotsEditando.length;
     const novos: string[] = Array(total).fill('');
     for (let i = 0; i < Math.min(novos.length, this.titularesEditando.length); i++) {
       novos[i] = this.titularesEditando[i];
@@ -226,24 +265,27 @@ export class PartidaDetalhes implements OnInit {
   }
 
   salvarEscalacao() {
-    if (!this.esquemaEditando || this.salvandoEscalacao) return;
+    if (this.tipoVisualizacaoEditando === 'MESA_TATICA' && !this.esquemaEditando) return;
+    if (this.salvandoEscalacao) return;
     const titularesValidos = this.titularesEditando.filter(id => !!id);
-    if (titularesValidos.length !== this.slotsDoEsquema.length) {
+    if (titularesValidos.length !== this.slotsEditando.length) {
       this.erro = 'Preencha todos os titulares antes de salvar.';
       return;
     }
     this.salvandoEscalacao = true;
     this.erro = '';
-    const titulares = this.slotsDoEsquema
-      .map((slot, i) => ({ jogadorId: Number(this.titularesEditando[i]), posicao: slot.posicao }))
+    const titulares = this.slotsEditando
+      .map((slot, i) => ({ jogadorId: this.titularesEditando[i], posicao: slot.posicao }))
       .filter(t => !!t.jogadorId);
     this.http.post('/backend/escalacao/salvar-por-responsavel', {
-      partidaId: Number(this.partidaId),
-      timeId: Number(this.timeIdAtivo),
-      usuarioId: Number(this.usuario()?.id),
-      esquemaTatico: this.esquemaEditando,
+      partidaId: this.partidaId,
+      timeId: this.timeIdAtivo,
+      tipoVisualizacao: this.tipoVisualizacaoEditando,
+      esquemaTatico: this.tipoVisualizacaoEditando === 'MESA_TATICA' ? this.esquemaEditando : null,
       titulares,
-      reservas: this.reservasEditando.filter(id => !!id).map(Number)
+      reservas: this.tipoVisualizacaoEditando === 'LISTA_TITULARES'
+        ? []
+        : this.reservasEditando.filter(id => !!id)
     }).pipe(finalize(() => this.salvandoEscalacao = false)).subscribe({
       next: () => {
         this.editandoEscalacao = false;
@@ -269,15 +311,47 @@ export class PartidaDetalhes implements OnInit {
     return partes.length > 1 ? `${partes[0]} ${partes[partes.length - 1]}` : nome;
   }
 
-  private carregarEscalacoes() {
+  tipoEscalacaoLabel(tipo: string): string {
+    const labels: Record<string, string> = {
+      MESA_TATICA: 'Mesa tatica',
+      LISTA_TITULARES: 'Somente titulares',
+      LISTA_COMPLETA: 'Titulares e reservas'
+    };
+    return labels[tipo] ?? 'Escalacao';
+  }
+
+  formacaoLabel(esquema: string | null): string {
+    return this.esquemasDisponiveis.find(item => item.valor === esquema)?.label
+      ?? esquema?.replaceAll('_', '-')?.toLowerCase()
+      ?? '';
+  }
+
+  carregarEscalacoes() {
     if (!this.partidaId) return;
-    const m = this.http.get<any>(`/backend/escalacao/mesa-tatica?partidaId=${this.partidaId}&timeId=${this.partida.mandanteId}`)
-      .pipe(catchError(() => of(null)));
-    const v = this.http.get<any>(`/backend/escalacao/mesa-tatica?partidaId=${this.partidaId}&timeId=${this.partida.visitanteId}`)
-      .pipe(catchError(() => of(null)));
-    forkJoin({ mandante: m, visitante: v }).subscribe(r => {
-      this.mesaTaticaMandante = r.mandante;
-      this.mesaTaticaVisitante = r.visitante;
+    if (this.partida.iniciada || this.partida.encerrada) {
+      this.http.get<any>(`/backend/escalacao/partida/${this.partidaId}/publica`)
+        .pipe(catchError(() => of({ modoExibicao: 'LISTAS', escalacoes: [] })))
+        .subscribe(resultado => {
+          this.modoExibicaoPublica = resultado.modoExibicao;
+          this.escalacaoMandante = resultado.escalacoes.find(
+            (item: any) => String(item.timeId) === String(this.partida.mandanteId)) ?? null;
+          this.escalacaoVisitante = resultado.escalacoes.find(
+            (item: any) => String(item.timeId) === String(this.partida.visitanteId)) ?? null;
+        });
+      return;
+    }
+
+    const mandante = this.podeEditarMandante
+      ? this.http.get<any>(`/backend/escalacao/partida/${this.partidaId}/time/${this.partida.mandanteId}`)
+          .pipe(catchError(() => of(null)))
+      : of(null);
+    const visitante = this.podeEditarVisitante
+      ? this.http.get<any>(`/backend/escalacao/partida/${this.partidaId}/time/${this.partida.visitanteId}`)
+          .pipe(catchError(() => of(null)))
+      : of(null);
+    forkJoin({ mandante, visitante }).subscribe(resultado => {
+      this.escalacaoMandante = resultado.mandante;
+      this.escalacaoVisitante = resultado.visitante;
     });
   }
 
@@ -425,6 +499,24 @@ export class PartidaDetalhes implements OnInit {
     });
   }
 
+  salvarAgendamento() {
+    if (!this.podeIniciarPartida || !this.dataHoraAgendada || this.processando) return;
+    this.processando = 'agendamento';
+    this.mensagem = '';
+    this.erro = '';
+    this.http.post(`/backend/partida/${this.partidaId}/agendar`, {
+      torneioId: this.partida.torneioId,
+      dataHora: this.dataHoraAgendada,
+      local: this.localPartida || null
+    }).pipe(finalize(() => this.processando = '')).subscribe({
+      next: () => {
+        this.mensagem = 'Data, horario e local da partida foram atualizados.';
+        this.carregar();
+      },
+      error: (erro: any) => this.erro = this.mensagemErro(erro)
+    });
+  }
+
   private carregar() {
     this.carregando = true;
     this.http.get<any>(`/backend/partida/${this.partidaId}`).pipe(
@@ -449,7 +541,9 @@ export class PartidaDetalhes implements OnInit {
           .pipe(catchError(() => of([]))),
         melhoresNotas: this.http.get<any[]>(
           `/backend/ranking-estatistico/${partida.torneioId}/melhores-medias?minimoPartidas=1`
-        ).pipe(catchError(() => of([])))
+        ).pipe(catchError(() => of([]))),
+        profissionais: this.http.get<any[]>('/backend/profissional/pesquisa?nome=')
+          .pipe(catchError(() => of([])))
       })),
       finalize(() => this.carregando = false)
     ).subscribe({
@@ -459,6 +553,8 @@ export class PartidaDetalhes implements OnInit {
         this.times = dados.times;
         this.golsMandante = this.partida.golsMandante ?? 0;
         this.golsVisitante = this.partida.golsVisitante ?? 0;
+        this.dataHoraAgendada = this.paraDataHoraLocal(this.partida.dataHoraAgendada);
+        this.localPartida = this.partida.localPartida ?? '';
         this.eventos = dados.eventos;
         this.artilharia = dados.artilharia;
         this.assistencias = dados.assistencias;
@@ -469,7 +565,9 @@ export class PartidaDetalhes implements OnInit {
         ];
         this.elencoMandante = dados.mandante?.time?.elenco ?? [];
         this.elencoVisitante = dados.visitante?.time?.elenco ?? [];
-        this.jogadores = elencos
+        this.podeEditarMandante = dados.mandante?.podeEditarTime === true;
+        this.podeEditarVisitante = dados.visitante?.podeEditarTime === true;
+        const jogadoresElenco = elencos
           .filter((vinculo: any) => vinculo.tipoProfissional === 'JOGADOR'
             || String(vinculo.funcao).toUpperCase() === 'JOGADOR')
           .map((vinculo: any) => ({
@@ -477,6 +575,11 @@ export class PartidaDetalhes implements OnInit {
             nome: vinculo.nomeProfissional,
             time: (dados.mandante?.time?.elenco ?? []).includes(vinculo) ? this.nomeMandante : this.nomeVisitante
           }));
+        this.jogadores = dados.profissionais.map((profissional: any) => ({
+          id: String(profissional.id),
+          nome: profissional.nome,
+          time: jogadoresElenco.find((item: any) => String(item.id) === String(profissional.id))?.time
+        }));
         this.oportunidade = dados.oportunidades.partidas.find(
           item => String(item.id) === String(this.partidaId)
         );
@@ -484,6 +587,9 @@ export class PartidaDetalhes implements OnInit {
           this.percentuais = this.oportunidade.percentuais;
         } else if (this.partida.torneioId) {
           this.atualizarPercentuais();
+        }
+        if (this.aba === 'escalacao') {
+          this.carregarEscalacoes();
         }
       },
       error: (erro: any) => this.erro = this.mensagemErro(erro)
@@ -521,6 +627,11 @@ export class PartidaDetalhes implements OnInit {
 
   private nomeTime(id: string): string {
     return this.times.find(time => String(time.id) === String(id))?.nome ?? `Time #${id}`;
+  }
+
+  private paraDataHoraLocal(valor: string | null | undefined): string {
+    if (!valor) return '';
+    return valor.length >= 16 ? valor.slice(0, 16) : valor;
   }
 
   private mensagemErro(erro: any): string {

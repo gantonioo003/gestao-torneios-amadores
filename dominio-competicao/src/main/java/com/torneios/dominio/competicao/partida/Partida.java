@@ -17,6 +17,8 @@ public class Partida {
     private final String etapa;
     private final int quantidadeJogadoresPorEquipe;
     private ResultadoPartida resultado;
+    private LocalDateTime dataHoraAgendada;
+    private String localPartida;
     private LocalDateTime dataHoraRegistroResultado;
     private boolean iniciada;
     private boolean encerrada;
@@ -82,6 +84,14 @@ public class Partida {
         return dataHoraRegistroResultado;
     }
 
+    public LocalDateTime getDataHoraAgendada() {
+        return dataHoraAgendada;
+    }
+
+    public String getLocalPartida() {
+        return localPartida;
+    }
+
     public boolean estaEncerrada() {
         return encerrada;
     }
@@ -95,6 +105,15 @@ public class Partida {
             throw new IllegalStateException("Nao e permitido iniciar uma partida encerrada.");
         }
         this.iniciada = true;
+    }
+
+    public void agendar(LocalDateTime dataHoraAgendada, String localPartida) {
+        if (iniciada || encerrada) {
+            throw new IllegalStateException("Nao e permitido reagendar uma partida iniciada.");
+        }
+        this.dataHoraAgendada = Objects.requireNonNull(
+                dataHoraAgendada, "A data e hora da partida sao obrigatorias.");
+        this.localPartida = localPartida == null || localPartida.isBlank() ? null : localPartida.trim();
     }
 
     public void registrarResultado(ResultadoPartida resultado) {

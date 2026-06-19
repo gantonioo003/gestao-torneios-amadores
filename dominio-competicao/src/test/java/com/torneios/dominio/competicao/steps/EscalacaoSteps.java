@@ -7,6 +7,8 @@ import java.util.List;
 import com.torneios.dominio.compartilhado.enumeracao.EsquemaTatico;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.competicao.CompeticaoFuncionalidade;
+import com.torneios.dominio.competicao.escalacao.Escalacao;
+import com.torneios.dominio.competicao.escalacao.TipoVisualizacaoEscalacao;
 import com.torneios.dominio.competicao.partida.Partida;
 
 import io.cucumber.java.pt.Dado;
@@ -14,6 +16,8 @@ import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
 
 public class EscalacaoSteps extends CompeticaoFuncionalidade {
+
+    private List<Escalacao> escalacoesPublicas;
 
     @Dado("que existe uma partida cadastrada no torneio sem exigencia de escalacao")
     public void que_existe_partida_sem_exigencia_escalacao() {
@@ -214,6 +218,7 @@ public class EscalacaoSteps extends CompeticaoFuncionalidade {
     @Dado("que existe uma escalacao definida para uma partida que ja foi iniciada")
     public void que_existe_escalacao_partida_ja_iniciada() {
         definirEscalacaoPadrao(true);
+        escalacaoServico.congelarEscalacoesDaPartida(PARTIDA_ID);
     }
 
     @Quando("ele tentar alterar a mesa tatica do time para a partida")
@@ -239,5 +244,71 @@ public class EscalacaoSteps extends CompeticaoFuncionalidade {
         assertTrue(escalacao.getReservas().isEmpty());
         assertNotNull(mesaTatica);
         assertTrue(mesaTatica.getReservas().isEmpty());
+    }
+
+    @Quando("ele informar a escalacao somente com os titulares em lista")
+    public void ele_informar_escalacao_somente_titulares_lista() {
+        try {
+            escalacao = escalacaoServico.definirEscalacaoPorResponsavel(
+                    ESCALACAO_ID, PARTIDA_ID, TIME_A_ID, ORGANIZADOR_ID,
+                    TipoVisualizacaoEscalacao.LISTA_TITULARES, null,
+                    titularesCincoPorCinco(), List.of());
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve salvar a escalacao em lista sem exigir esquema tatico")
+    public void sistema_deve_salvar_escalacao_lista_sem_esquema() {
+        assertNull(excecaoCapturada);
+        assertEquals(TipoVisualizacaoEscalacao.LISTA_TITULARES, escalacao.getTipoVisualizacao());
+        assertNull(escalacao.getEsquemaTatico());
+        assertEquals(5, escalacao.getTitulares().size());
+        assertTrue(escalacao.getReservas().isEmpty());
+    }
+
+    @Quando("um visitante tentar consultar as escalacoes publicas da partida")
+    public void visitante_tentar_consultar_escalacoes_publicas() {
+        try {
+            escalacoesPublicas = escalacaoServico.listarPublicasPorPartida(PARTIDA_ID);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve impedir a consulta publica da escalacao")
+    public void sistema_deve_impedir_consulta_publica() {
+        assertNotNull(excecaoCapturada);
+        assertNull(escalacoesPublicas);
+    }
+
+    @Quando("um visitante consultar as escalacoes publicas da partida")
+    public void visitante_consultar_escalacoes_publicas() {
+        visitante_tentar_consultar_escalacoes_publicas();
+    }
+
+    @Entao("o sistema deve divulgar a escalacao congelada")
+    public void sistema_deve_divulgar_escalacao_congelada() {
+        assertNull(excecaoCapturada);
+        assertNotNull(escalacoesPublicas);
+        assertEquals(1, escalacoesPublicas.size());
+        assertEquals(TIME_A_ID, escalacoesPublicas.get(0).getTimeId());
+        assertTrue(escalacoesPublicas.get(0).estaCongelada());
+    }
+
+    @Entao("os jogadores de cada linha devem ficar distribuidos sem sobreposicao")
+    public void jogadores_de_cada_linha_distribuidos_sem_sobreposicao() {
+        assertNull(excecaoCapturada);
+        assertNotNull(mesaTatica);
+        mesaTatica.getTitularesPosicionados().stream()
+                .collect(java.util.stream.Collectors.groupingBy(jogador -> jogador.posicao()))
+                .values()
+                .forEach(linha -> {
+                    long coordenadasDistintas = linha.stream()
+                            .map(jogador -> jogador.coordenada().eixoY())
+                            .distinct()
+                            .count();
+                    assertEquals(linha.size(), coordenadasDistintas);
+                });
     }
 }

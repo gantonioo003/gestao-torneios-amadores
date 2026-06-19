@@ -123,6 +123,16 @@
   background: var(--green-soft);
 }
 
+.tournament-tabs button > span {
+  min-width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  background: rgba(18, 184, 95, .12);
+  border-radius: 999px;
+  font-size: 10px;
+}
+
 .tournament-tabs .configuration-tab {
   margin-left: auto;
   color: #8a5b04;
@@ -408,12 +418,6 @@
   background: var(--green);
 }
 
-.bracket-section.after-standings {
-  margin-top: 30px;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
-}
-
 .subsection-heading {
   margin-bottom: 14px;
 }
@@ -426,67 +430,6 @@
 .subsection-heading > span {
   color: var(--muted);
   font-weight: 900;
-}
-
-.bracket-board {
-  padding: 18px;
-  display: flex;
-  gap: 18px;
-  overflow-x: auto;
-  background:
-    linear-gradient(rgba(255, 255, 255, .86), rgba(255, 255, 255, .86)),
-    repeating-linear-gradient(90deg, #e5ece7 0 1px, transparent 1px 130px);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-}
-
-.bracket-phase {
-  min-width: 220px;
-  display: grid;
-  align-content: center;
-  gap: 12px;
-}
-
-.bracket-phase h3 {
-  margin: 0;
-  color: var(--muted);
-  font-size: 12px;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.bracket-match {
-  padding: 10px;
-  display: grid;
-  gap: 7px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  box-shadow: 0 8px 22px rgba(24, 33, 31, .06);
-}
-
-.bracket-match > span {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-}
-
-.bracket-match i {
-  color: var(--green-dark);
-}
-
-.bracket-placeholder {
-  min-height: 100px;
-  padding: 14px;
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-  background: rgba(255, 255, 255, .8);
-  border: 1px dashed #cfd8d1;
-  border-radius: 10px;
-  text-align: center;
 }
 
 .statistics-overview {

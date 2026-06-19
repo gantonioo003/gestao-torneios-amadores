@@ -56,7 +56,7 @@
         <i class="bi bi-bar-chart"></i> Estatisticas
       </button>
       <button [class.active]="aba === 'escalacao'" (click)="abrirAba('escalacao')">
-        <i class="bi bi-layout-wtf"></i> Mesa tatica
+        <i class="bi bi-people"></i> Escalacoes
       </button>
       @if (podeGerenciarPartida) {
         <button [class.active]="aba === 'gerenciar'" (click)="abrirAba('gerenciar')">
@@ -180,8 +180,16 @@
     }
 
     @if (aba === 'escalacao') {
-      <div class="escalacao-layout">
+      <div class="escalacao-layout" [class.dual-public-layout]="exibirMesasTaticas">
         <section class="card panel-strong escalacao-campo">
+          <div class="escalacao-heading">
+            <div><div class="eyebrow">Preparacao da partida</div><h2>Escalacoes</h2></div>
+            <span class="status" [class.status-green]="partida.iniciada">
+              <i class="bi" [class.bi-eye]="partida.iniciada" [class.bi-eye-slash]="!partida.iniciada"></i>
+              {{ partida.iniciada ? 'Publicas' : 'Privadas ate o inicio' }}
+            </span>
+          </div>
+          @if (!exibirMesasTaticas) {
           <div class="escalacao-time-toggle">
             <button [class.active]="timeAtivoEscalacao === 'mandante'" (click)="selecionarTimeEscalacao('mandante')">
               <i class="bi bi-shield"></i> {{ nomeMandante }}
@@ -190,27 +198,82 @@
               <i class="bi bi-shield"></i> {{ nomeVisitante }}
             </button>
           </div>
+          }
 
-          @if (!mesaTaticaAtiva) {
-            <div class="empty-state">Nenhuma escalacao definida para este time ainda.</div>
-          } @else {
-            <div class="escalacao-esquema-label">
-              <i class="bi bi-diagram-3"></i>
-              {{ mesaTaticaAtiva.esquemaTatico?.replaceAll('_', '-')?.toLowerCase() }}
-            </div>
-            <div class="field-board escalacao-field">
-              @for (jogador of mesaTaticaAtiva.titularesPosicionados; track jogador.jogadorId) {
-                <div class="player-dot" [style.left.%]="jogador.eixoX" [style.top.%]="jogador.eixoY">
-                  <div class="player-face">{{ nomeJogador(jogador.jogadorId).slice(0, 1) }}</div>
-                  <span>{{ nomeAbreviado(jogador.jogadorId) }}</span>
+          @if (exibirMesasTaticas) {
+            <div class="duas-mesas">
+              <section>
+                <header><strong>{{ nomeMandante }}</strong><span>{{ formacaoLabel(escalacaoMandante.esquemaTatico) }}</span></header>
+                <div class="field-board escalacao-field">
+                  @for (jogador of escalacaoMandante.titularesPosicionados; track jogador.jogadorId) {
+                    <div class="player-dot" [style.left.%]="jogador.eixoX" [style.top.%]="jogador.eixoY">
+                      <div class="player-face">{{ nomeJogador(jogador.jogadorId).slice(0, 1) }}</div>
+                      <span>{{ nomeAbreviado(jogador.jogadorId) }}</span>
+                    </div>
+                  }
                 </div>
-              }
+                @if (escalacaoMandante.reservas?.length) {
+                  <div class="escalacao-reservas-lista dual-reserves">
+                    @for (id of escalacaoMandante.reservas; track id) {
+                      <span class="status status-gray">{{ nomeJogador(id) }}</span>
+                    }
+                  </div>
+                }
+              </section>
+              <section>
+                <header><strong>{{ nomeVisitante }}</strong><span>{{ formacaoLabel(escalacaoVisitante.esquemaTatico) }}</span></header>
+                <div class="field-board escalacao-field">
+                  @for (jogador of escalacaoVisitante.titularesPosicionados; track jogador.jogadorId) {
+                    <div class="player-dot" [style.left.%]="jogador.eixoX" [style.top.%]="jogador.eixoY">
+                      <div class="player-face">{{ nomeJogador(jogador.jogadorId).slice(0, 1) }}</div>
+                      <span>{{ nomeAbreviado(jogador.jogadorId) }}</span>
+                    </div>
+                  }
+                </div>
+                @if (escalacaoVisitante.reservas?.length) {
+                  <div class="escalacao-reservas-lista dual-reserves">
+                    @for (id of escalacaoVisitante.reservas; track id) {
+                      <span class="status status-gray">{{ nomeJogador(id) }}</span>
+                    }
+                  </div>
+                }
+              </section>
             </div>
-            @if (mesaTaticaAtiva.reservas?.length) {
+          } @else if (!escalacaoAtiva) {
+            <div class="empty-state escalacao-private-empty">
+              {{ partida.iniciada
+                ? 'Este time nao divulgou escalacao.'
+                : podeEditarEscalacaoAtiva
+                  ? 'Defina titulares, reservas ou mesa tatica.'
+                  : 'A escalacao deste time fica protegida ate o inicio da partida.' }}
+            </div>
+          } @else {
+            @if (escalacaoAtiva.tipoVisualizacao === 'MESA_TATICA' && !partida.iniciada) {
+              <div class="escalacao-esquema-label">
+                <i class="bi bi-diagram-3"></i>
+                {{ formacaoLabel(escalacaoAtiva.esquemaTatico) }}
+              </div>
+              <div class="field-board escalacao-field">
+                @for (jogador of escalacaoAtiva.titularesPosicionados; track jogador.jogadorId) {
+                  <div class="player-dot" [style.left.%]="jogador.eixoX" [style.top.%]="jogador.eixoY">
+                    <div class="player-face">{{ nomeJogador(jogador.jogadorId).slice(0, 1) }}</div>
+                    <span>{{ nomeAbreviado(jogador.jogadorId) }}</span>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="lineup-list">
+                <div class="eyebrow">{{ tipoEscalacaoLabel(escalacaoAtiva.tipoVisualizacao) }}</div>
+                @for (jogador of escalacaoAtiva.titulares; track jogador.jogadorId; let numero = $index) {
+                  <div><b>{{ numero + 1 }}</b><strong>{{ nomeJogador(jogador.jogadorId) }}</strong></div>
+                }
+              </div>
+            }
+            @if (escalacaoAtiva.reservas?.length) {
               <div class="escalacao-reservas">
                 <div class="eyebrow">Reservas</div>
                 <div class="escalacao-reservas-lista">
-                  @for (id of mesaTaticaAtiva.reservas; track id) {
+                  @for (id of escalacaoAtiva.reservas; track id) {
                     <span class="status status-gray">{{ nomeJogador(id) }}</span>
                   }
                 </div>
@@ -220,7 +283,7 @@
 
           @if (podeEditarEscalacaoAtiva && !editandoEscalacao) {
             <button class="btn btn-outline" style="margin-top: 14px" (click)="iniciarEdicaoEscalacao()">
-              <i class="bi bi-pencil"></i> {{ mesaTaticaAtiva ? 'Editar escalacao' : 'Montar escalacao' }}
+              <i class="bi bi-pencil"></i> {{ escalacaoAtiva ? 'Editar escalacao' : 'Montar escalacao' }}
             </button>
           }
         </section>
@@ -229,40 +292,53 @@
           <section class="card escalacao-editor">
             <h2 class="section-title">Montar escalacao — {{ timeAtivoEscalacao === 'mandante' ? nomeMandante : nomeVisitante }}</h2>
 
+            <div class="lineup-mode-grid">
+              <button [class.active]="tipoVisualizacaoEditando === 'LISTA_TITULARES'" (click)="tipoVisualizacaoEditando = 'LISTA_TITULARES'; atualizarSlotsEsquema()">
+                <i class="bi bi-list-ol"></i><strong>So titulares</strong><small>Rapido e direto.</small>
+              </button>
+              <button [class.active]="tipoVisualizacaoEditando === 'LISTA_COMPLETA'" (click)="tipoVisualizacaoEditando = 'LISTA_COMPLETA'; atualizarSlotsEsquema()">
+                <i class="bi bi-person-lines-fill"></i><strong>Titulares + reservas</strong><small>Lista completa.</small>
+              </button>
+              <button [class.active]="tipoVisualizacaoEditando === 'MESA_TATICA'" (click)="tipoVisualizacaoEditando = 'MESA_TATICA'; atualizarSlotsEsquema()">
+                <i class="bi bi-diagram-3"></i><strong>Mesa tatica</strong><small>Posicoes em campo.</small>
+              </button>
+            </div>
+
+            @if (tipoVisualizacaoEditando === 'MESA_TATICA') {
             <div class="field">
-              <label>Esquema tatico</label>
+              <label>Formacao compativel com {{ formatoTorneio.replaceAll('_', ' ').toLowerCase() }}</label>
               <select [(ngModel)]="esquemaEditando" (ngModelChange)="atualizarSlotsEsquema()">
                 <option value="">Selecione o esquema</option>
-                @for (grupo of esquemasPorFormato | keyvalue; track grupo.key) {
-                  <optgroup [label]="grupo.key.replaceAll('_', ' ')">
-                    @for (e of grupo.value; track e.valor) {
-                      <option [value]="e.valor">{{ e.label }}</option>
-                    }
-                  </optgroup>
+                @for (e of esquemasDisponiveis; track e.valor) {
+                  <option [value]="e.valor">{{ e.label }}</option>
                 }
               </select>
             </div>
+            }
 
-            @if (esquemaEditando && slotsDoEsquema.length) {
+            @if (tipoVisualizacaoEditando !== 'MESA_TATICA' || (esquemaEditando && slotsEditando.length)) {
               <div class="escalacao-slots">
-                @for (slot of slotsDoEsquema; track $index) {
+                @for (slot of slotsEditando; track $index) {
                   <div class="field">
                     <label>{{ slot.label }}</label>
                     <select [(ngModel)]="titularesEditando[$index]">
                       <option value="">Selecione</option>
                       @for (v of elencoAtivoEscalacao; track v.profissionalId) {
-                        <option [value]="v.profissionalId">{{ v.nomeProfissional }}</option>
+                        @if (v.tipoProfissional === 'JOGADOR' || v.funcao === 'JOGADOR') {
+                          <option [value]="v.profissionalId">{{ v.nomeProfissional }}</option>
+                        }
                       }
                     </select>
                   </div>
                 }
               </div>
 
+              @if (tipoVisualizacaoEditando !== 'LISTA_TITULARES') {
               <div class="field" style="margin-top: 8px">
                 <label>Reservas <span class="muted">(opcional)</span></label>
                 <div class="escalacao-reservas-check">
                   @for (v of elencoAtivoEscalacao; track v.profissionalId) {
-                    @if (!titularesEditando.includes('' + v.profissionalId)) {
+                    @if ((v.tipoProfissional === 'JOGADOR' || v.funcao === 'JOGADOR') && !titularesEditando.includes('' + v.profissionalId)) {
                       <label class="escalacao-check-item">
                         <input type="checkbox"
                           [checked]="reservasEditando.includes('' + v.profissionalId)"
@@ -273,6 +349,7 @@
                   }
                 </div>
               </div>
+              }
 
               @if (erro) {
                 <div class="escalacao-erro"><i class="bi bi-exclamation-circle"></i> {{ erro }}</div>
@@ -298,6 +375,25 @@
         </header>
 
         @if (podeIniciarPartida) {
+          <section class="card organizer-step organizer-step-block">
+            <span><i class="bi bi-calendar-event"></i></span>
+            <div>
+              <h3>Agendamento</h3>
+              <p>Defina quando e onde a partida sera realizada antes de inicia-la.</p>
+            </div>
+            <div class="organizer-step-content match-schedule-form">
+              <label>Data e horario
+                <input type="datetime-local" [(ngModel)]="dataHoraAgendada">
+              </label>
+              <label>Local
+                <input [(ngModel)]="localPartida" placeholder="Quadra, campo ou endereco">
+              </label>
+              <button class="btn btn-outline" [disabled]="!dataHoraAgendada || !!processando" (click)="salvarAgendamento()">
+                {{ processando === 'agendamento' ? 'Salvando...' : 'Salvar agendamento' }}
+              </button>
+            </div>
+          </section>
+
           <section class="card organizer-step">
             <span>1</span>
             <div><h3>Iniciar partida</h3><p>Fecha os palpites e libera o registro do jogo.</p></div>

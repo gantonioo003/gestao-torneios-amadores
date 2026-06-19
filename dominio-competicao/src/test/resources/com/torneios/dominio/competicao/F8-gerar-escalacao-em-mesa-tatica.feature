@@ -1,8 +1,8 @@
-Feature: Gerenciar visualizacao da escalacao do time em mesa tatica para uma partida
+Feature: Gerenciar preparacao e visualizacao da escalacao do time para uma partida
 
-  As a responsavel pelo time ou tecnico associado
-  I want gerar uma visualizacao da escalacao em uma mesa tatica com esquema, titulares por posicao e reservas
-  So that a partida tenha uma representacao visual organizada do time em campo
+  As a tecnico responsavel pelo time
+  I want informar titulares e reservas em lista ou mesa tatica antes da partida
+  So that a escalacao seja preparada com privacidade e divulgada de forma coerente quando o jogo iniciar
 
   Scenario: Permitir partida seguir normalmente sem mesa tatica
     Given que existe uma partida cadastrada no torneio sem exigencia de escalacao
@@ -74,3 +74,25 @@ Feature: Gerenciar visualizacao da escalacao do time em mesa tatica para uma par
     And que o usuario autenticado e o responsavel pelo time
     When ele gerar a escalacao em mesa tatica sem incluir reservas
     Then o sistema deve gerar a mesa tatica com lista de reservas vazia
+
+  Scenario: Permitir informar apenas os titulares em lista
+    Given que existe uma partida cadastrada no torneio com formato de equipe definido
+    And que o usuario autenticado e o responsavel pelo time
+    When ele informar a escalacao somente com os titulares em lista
+    Then o sistema deve salvar a escalacao em lista sem exigir esquema tatico
+
+  Scenario: Manter a escalacao privada antes do inicio da partida
+    Given que existe uma escalacao definida para uma partida que ainda nao foi iniciada
+    When um visitante tentar consultar as escalacoes publicas da partida
+    Then o sistema deve impedir a consulta publica da escalacao
+
+  Scenario: Divulgar a escalacao quando a partida iniciar
+    Given que existe uma escalacao definida para uma partida que ja foi iniciada
+    When um visitante consultar as escalacoes publicas da partida
+    Then o sistema deve divulgar a escalacao congelada
+
+  Scenario: Adaptar o espacamento da mesa a quantidade de jogadores de cada linha
+    Given que existe uma partida cadastrada no torneio com formato de equipe definido
+    And que o usuario autenticado e o responsavel pelo time
+    When ele gerar a escalacao em mesa tatica indicando os titulares por posicao e os reservas
+    Then os jogadores de cada linha devem ficar distribuidos sem sobreposicao

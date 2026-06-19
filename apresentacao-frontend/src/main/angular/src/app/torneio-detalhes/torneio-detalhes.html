@@ -27,10 +27,16 @@
     </header>
 
     <nav class="tournament-tabs" aria-label="Areas do torneio">
-      <button [class.active]="aba === 'competicao'" (click)="abrirAba('competicao')">
-        <i class="bi" [class.bi-table]="usaClassificacao" [class.bi-diagram-3]="!usaClassificacao"></i>
-        {{ usaClassificacao ? 'Classificacao' : 'Chaveamento' }}
-      </button>
+      @if (usaClassificacao) {
+        <button [class.active]="aba === 'classificacao'" (click)="abrirAba('classificacao')">
+          <i class="bi bi-table"></i> Classificacao
+        </button>
+      }
+      @if (usaChaveamento) {
+        <button [class.active]="aba === 'eliminatoria'" (click)="abrirAba('eliminatoria')">
+          <i class="bi bi-diagram-3"></i> Fase eliminatoria
+        </button>
+      }
       <button [class.active]="aba === 'estatisticas'" (click)="abrirAba('estatisticas')">
         <i class="bi bi-bar-chart"></i> Estatisticas
       </button>
@@ -39,6 +45,10 @@
       </button>
       <button [class.active]="aba === 'regras'" (click)="abrirAba('regras')">
         <i class="bi bi-journal-text"></i> Regras
+      </button>
+      <button [class.active]="aba === 'publicacoes'" (click)="abrirAba('publicacoes')">
+        <i class="bi bi-chat-square-text"></i> Publicacoes
+        @if (publicacoes.length) { <span>{{ publicacoes.length }}</span> }
       </button>
       @if (podeGerenciar()) {
         <button class="configuration-tab" [class.active]="aba === 'configuracao'" (click)="abrirAba('configuracao')">
@@ -54,7 +64,7 @@
       <div class="tournament-message error"><i class="bi bi-exclamation-circle"></i> {{ erro }}</div>
     }
 
-    @if (aba !== 'configuracao') {
+    @if (aba !== 'configuracao' && aba !== 'publicacoes') {
       <div class="tournament-workspace">
         <aside class="match-sidebar">
           <section class="card featured-match">
@@ -119,72 +129,100 @@
         </aside>
 
         <section class="card panel-strong tournament-main">
-          @if (aba === 'competicao') {
+          @if (aba === 'classificacao') {
             <div class="content-heading">
               <div>
                 <div class="eyebrow">{{ formatoLabel() }}</div>
-                <h2>{{ usaClassificacao ? 'Classificacao da edicao' : 'Caminho ate o titulo' }}</h2>
-                <p>{{ usaClassificacao ? 'Tabela atualizada pelos resultados oficiais das partidas.' : 'Confrontos organizados por fase eliminatoria.' }}</p>
+                <h2>Classificacao da edicao</h2>
+                <p>Tabela atualizada pelos resultados oficiais das partidas.</p>
               </div>
               <span class="status status-green"><i class="bi bi-globe2"></i> Publico</span>
             </div>
 
-            @if (usaClassificacao) {
-              @if (classificacao.length) {
-                <div class="standings-table-wrap">
-                  <table class="standings-table">
-                    <thead>
-                      <tr><th>#</th><th>Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>SG</th><th>Pts</th></tr>
-                    </thead>
-                    <tbody>
-                      @for (linha of classificacao; track linha.timeId; let posicao = $index) {
-                        <tr>
-                          <td><span class="position" [class.leader]="posicao < 2">{{ posicao + 1 }}</span></td>
-                          <td><a [routerLink]="['/time', linha.timeId, 'detalhes']"><i class="bi bi-shield"></i><strong>{{ nomeTime(linha.timeId) }}</strong></a></td>
-                          <td>{{ linha.vitorias + linha.empates + linha.derrotas }}</td>
-                          <td>{{ linha.vitorias }}</td>
-                          <td>{{ linha.empates }}</td>
-                          <td>{{ linha.derrotas }}</td>
-                          <td>{{ linha.saldoGols }}</td>
-                          <td><strong>{{ linha.pontos }}</strong></td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
-                </div>
-              } @else {
-                <div class="competition-empty">
-                  <i class="bi bi-table"></i>
-                  <strong>A tabela comeca com os primeiros resultados</strong>
-                  <p>Os participantes e partidas ja podem ser acompanhados pela lateral.</p>
-                </div>
-              }
-            }
-
-            @if (usaChaveamento) {
-              <div class="bracket-section" [class.after-standings]="usaClassificacao">
-                @if (usaClassificacao) {
-                  <div class="subsection-heading"><div><div class="eyebrow">Fase eliminatoria</div><h3>Chaveamento</h3></div></div>
-                }
-                <div class="bracket-board">
-                  @for (fase of partidasPorEtapa; track fase.nome) {
-                    <section class="bracket-phase">
-                      <h3>{{ fase.nome }}</h3>
-                      @if (fase.partidas.length) {
-                        @for (partida of fase.partidas; track partida.id) {
-                          <a class="bracket-match" [routerLink]="['/partida', partida.id]">
-                            <span><i class="bi bi-shield"></i>{{ nomeTime(partida.mandanteId) }}<b>{{ partida.golsMandante ?? '-' }}</b></span>
-                            <span><i class="bi bi-shield"></i>{{ nomeTime(partida.visitanteId) }}<b>{{ partida.golsVisitante ?? '-' }}</b></span>
-                          </a>
-                        }
-                      } @else {
-                        <div class="bracket-placeholder">Confrontos aguardando preparacao</div>
-                      }
-                    </section>
-                  }
-                </div>
+            @if (classificacao.length) {
+              <div class="standings-table-wrap">
+                <table class="standings-table">
+                  <thead>
+                    <tr><th>#</th><th>Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>SG</th><th>Pts</th></tr>
+                  </thead>
+                  <tbody>
+                    @for (linha of classificacao; track linha.timeId; let posicao = $index) {
+                      <tr>
+                        <td><span class="position" [class.leader]="posicao < 2">{{ posicao + 1 }}</span></td>
+                        <td><a [routerLink]="['/time', linha.timeId, 'detalhes']"><i class="bi bi-shield"></i><strong>{{ nomeTime(linha.timeId) }}</strong></a></td>
+                        <td>{{ linha.vitorias + linha.empates + linha.derrotas }}</td>
+                        <td>{{ linha.vitorias }}</td>
+                        <td>{{ linha.empates }}</td>
+                        <td>{{ linha.derrotas }}</td>
+                        <td>{{ linha.saldoGols }}</td>
+                        <td><strong>{{ linha.pontos }}</strong></td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else {
+              <div class="competition-empty">
+                <i class="bi bi-table"></i>
+                <strong>A tabela comeca com os primeiros resultados</strong>
+                <p>Os participantes e partidas ja podem ser acompanhados pela lateral.</p>
               </div>
             }
+          }
+
+          @if (aba === 'eliminatoria') {
+            <div class="content-heading bracket-heading">
+              <div>
+                <div class="eyebrow">{{ formatoLabel() }}</div>
+                <h2>Fase eliminatoria</h2>
+                <p>Acompanhe cada confronto e o caminho dos times ate o titulo.</p>
+              </div>
+              <span class="status status-green"><i class="bi bi-globe2"></i> Publico</span>
+            </div>
+
+            <div class="bracket-legend">
+              <span><i class="bi bi-check-circle-fill"></i> Classificado</span>
+              <span><i class="bi bi-broadcast"></i> Em andamento</span>
+              <span><i class="bi bi-clock"></i> Aguardando definicao</span>
+            </div>
+
+            <div class="bracket-board knockout-board" [style.--phase-count]="fasesChaveamento.length">
+              @for (fase of fasesChaveamento; track fase.nome; let ultima = $last) {
+                <section class="bracket-phase" [class.final-phase]="ultima">
+                  <header>
+                    <span>{{ fase.nome }}</span>
+                    <small>{{ fase.confrontos.length }} confronto(s)</small>
+                  </header>
+                  <div class="bracket-match-stack">
+                    @for (confronto of fase.confrontos; track confronto.posicao) {
+                      @if (confronto.partida; as partida) {
+                        <a class="bracket-match" [class.finished]="partida.encerrada" [routerLink]="['/partida', partida.id]">
+                          <small class="bracket-match-status" [class.live]="partida.iniciada && !partida.encerrada">
+                            {{ statusConfronto(partida) }}
+                          </small>
+                          <span [class.winner]="timeVencedor(partida, 'mandante')">
+                            <i class="bi bi-shield"></i>
+                            <strong>{{ nomeTime(partida.mandanteId) }}</strong>
+                            <b>{{ partida.golsMandante ?? '-' }}</b>
+                          </span>
+                          <span [class.winner]="timeVencedor(partida, 'visitante')">
+                            <i class="bi bi-shield"></i>
+                            <strong>{{ nomeTime(partida.visitanteId) }}</strong>
+                            <b>{{ partida.golsVisitante ?? '-' }}</b>
+                          </span>
+                        </a>
+                      } @else {
+                        <div class="bracket-match bracket-placeholder">
+                          <small>Aguardando definicao</small>
+                          <span><i class="bi bi-shield"></i><strong>A definir</strong><b>-</b></span>
+                          <span><i class="bi bi-shield"></i><strong>A definir</strong><b>-</b></span>
+                        </div>
+                      }
+                    }
+                  </div>
+                </section>
+              }
+            </div>
           }
 
           @if (aba === 'estatisticas') {
@@ -361,6 +399,55 @@
           }
         </section>
       </div>
+    }
+
+    @if (aba === 'publicacoes') {
+      <section class="entity-posts-shell">
+        <header>
+          <div>
+            <div class="eyebrow">Comunicacao oficial</div>
+            <h2>Publicacoes do torneio</h2>
+            <p>Somente postagens publicadas usando a identidade deste torneio aparecem aqui.</p>
+          </div>
+          <span><i class="bi bi-trophy"></i></span>
+        </header>
+
+        <div class="entity-posts">
+          @for (post of publicacoes; track post.id) {
+            <article class="entity-post">
+              <div class="entity-post-avatar">{{ iniciais(post.identidadeNome) }}</div>
+              <div>
+                <header>
+                  <span><strong>{{ post.identidadeNome }}</strong><small>&#64;{{ post.autorNomeUsuario }} · {{ tempoPublicacao(post.criadaEm) }}</small></span>
+                  <span class="status status-green">Torneio</span>
+                </header>
+                @if (post.conteudo) { <p>{{ post.conteudo }}</p> }
+                @if (post.midias.length) {
+                  <div class="entity-post-media">
+                    @for (midia of post.midias; track midia) {
+                      @if (ehVideo(midia)) {
+                        <video [src]="midia" controls preload="metadata"></video>
+                      } @else {
+                        <img [src]="midia" alt="Midia da publicacao">
+                      }
+                    }
+                  </div>
+                }
+                <footer>
+                  <span><i class="bi bi-heart"></i> {{ post.quantidadeCurtidas }}</span>
+                  <span><i class="bi bi-chat"></i> {{ post.comentarios.length }}</span>
+                </footer>
+              </div>
+            </article>
+          } @empty {
+            <div class="entity-post-empty">
+              <i class="bi bi-chat-square-text"></i>
+              <strong>Nenhuma publicacao do torneio</strong>
+              <p>Quando o organizador publicar representando este torneio, o conteudo aparecera aqui.</p>
+            </div>
+          }
+        </div>
+      </section>
     }
 
     @if (aba === 'configuracao' && podeGerenciar()) {

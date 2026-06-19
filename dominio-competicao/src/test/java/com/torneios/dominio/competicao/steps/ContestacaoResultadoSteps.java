@@ -15,7 +15,7 @@ import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
 
-public class F8Steps extends CompeticaoFuncionalidade {
+public class ContestacaoResultadoSteps extends CompeticaoFuncionalidade {
 
     @Dado("que existe uma partida finalizada com resultado oficial registrado")
     public void que_existe_partida_finalizada_com_resultado_oficial_registrado() {

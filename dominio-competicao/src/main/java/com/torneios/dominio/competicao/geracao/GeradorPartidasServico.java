@@ -2,6 +2,7 @@ package com.torneios.dominio.competicao.geracao;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
@@ -31,11 +32,17 @@ public class GeradorPartidasServico {
                                List<List<TimeId>> grupos,
                                ModoPreparacaoCompeticao modoPreparacao) {
         List<TimeId> participantesOrdenados = ordenarParticipantes(participantes, modoPreparacao);
-        return switch (formatoTorneio) {
+        List<Partida> partidas = switch (formatoTorneio) {
             case PONTOS_CORRIDOS -> gerarPontosCorridos(torneioId, quantidadeJogadoresPorEquipe, participantesOrdenados);
             case MATA_MATA, FINAL_UNICA -> gerarMataMata(torneioId, quantidadeJogadoresPorEquipe, participantesOrdenados);
             case FASE_DE_GRUPOS_COM_MATA_MATA -> gerarFaseDeGrupos(torneioId, quantidadeJogadoresPorEquipe, grupos);
         };
+        LocalDateTime inicioCalendario = LocalDateTime.now()
+                .plusDays(1).withHour(19).withMinute(0).withSecond(0).withNano(0);
+        for (int indice = 0; indice < partidas.size(); indice++) {
+            partidas.get(indice).agendar(inicioCalendario.plusDays(indice), null);
+        }
+        return partidas;
     }
 
     public List<Partida> gerarPontosCorridos(TorneioId torneioId,

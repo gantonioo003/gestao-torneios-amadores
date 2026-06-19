@@ -9,15 +9,17 @@
         }
       </div>
       <div>
-        <div class="eyebrow">Perfil do jogador</div>
+        <div class="eyebrow">Perfil de {{ tipoLabel(profissional.tipo || 'JOGADOR').toLowerCase() }}</div>
         <h1 class="page-title">{{ profissional.nome || 'Joao Silva' }}</h1>
         <p class="page-subtitle">{{ tipoLabel(profissional.tipo || 'JOGADOR') }} com historico, vinculos e estatisticas acumuladas.</p>
       </div>
     </div>
     <div style="display: flex; gap: 8px; flex-wrap: wrap">
-      <a class="btn btn-outline" [routerLink]="['/comparativo']" [queryParams]="{ tipo: 'jogador', id: profissional.id, nome: profissional.nome }">
-        <i class="bi bi-bar-chart-line"></i> Comparar
-      </a>
+      @if (profissional.tipo === 'JOGADOR') {
+        <a class="btn btn-outline" [routerLink]="['/comparativo']" [queryParams]="{ tipo: 'jogador', id: profissional.id, nome: profissional.nome }">
+          <i class="bi bi-bar-chart-line"></i> Comparar
+        </a>
+      }
       @if (podeEditar()) {
         <button class="btn btn-outline" (click)="editarPerfil()">Editar perfil</button>
       }

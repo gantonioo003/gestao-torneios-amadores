@@ -25,6 +25,7 @@ public class Escalacao {
     private final PartidaId partidaId;
     private final TimeId timeId;
     private final FormatoEquipe formatoEquipe;
+    private TipoVisualizacaoEscalacao tipoVisualizacao;
     private EsquemaTatico esquemaTatico;
     private final List<JogadorEscalado> titulares;
     private final List<JogadorId> reservas;
@@ -37,6 +38,18 @@ public class Escalacao {
                      EsquemaTatico esquemaTatico,
                      List<JogadorEscalado> titulares,
                      List<JogadorId> reservas) {
+        this(id, partidaId, timeId, formatoEquipe, TipoVisualizacaoEscalacao.MESA_TATICA,
+                esquemaTatico, titulares, reservas);
+    }
+
+    public Escalacao(EscalacaoId id,
+                     PartidaId partidaId,
+                     TimeId timeId,
+                     FormatoEquipe formatoEquipe,
+                     TipoVisualizacaoEscalacao tipoVisualizacao,
+                     EsquemaTatico esquemaTatico,
+                     List<JogadorEscalado> titulares,
+                     List<JogadorId> reservas) {
         this.id = Objects.requireNonNull(id, "O id da escalacao e obrigatorio.");
         this.partidaId = Objects.requireNonNull(partidaId, "A partida da escalacao e obrigatoria.");
         this.timeId = Objects.requireNonNull(timeId, "O time da escalacao e obrigatorio.");
@@ -45,7 +58,7 @@ public class Escalacao {
         this.titulares = new ArrayList<>();
         this.reservas = new ArrayList<>();
         this.congelada = false;
-        definirEsquemaTatico(esquemaTatico, titulares, reservas);
+        definir(tipoVisualizacao, esquemaTatico, titulares, reservas);
     }
 
     public EscalacaoId getId() {
@@ -66,6 +79,10 @@ public class Escalacao {
 
     public EsquemaTatico getEsquemaTatico() {
         return esquemaTatico;
+    }
+
+    public TipoVisualizacaoEscalacao getTipoVisualizacao() {
+        return tipoVisualizacao;
     }
 
     public List<JogadorEscalado> getTitulares() {
@@ -89,6 +106,9 @@ public class Escalacao {
     }
 
     public MesaTatica gerarMesaTatica() {
+        if (!tipoVisualizacao.usaMesaTatica()) {
+            throw new OperacaoNaoPermitidaException("A escalacao foi cadastrada para visualizacao em lista.");
+        }
         return new MesaTatica(
                 partidaId,
                 timeId,
@@ -100,26 +120,38 @@ public class Escalacao {
     public void atualizar(EsquemaTatico novoEsquema,
                           List<JogadorEscalado> novosTitulares,
                           List<JogadorId> novosReservas) {
+        atualizar(TipoVisualizacaoEscalacao.MESA_TATICA, novoEsquema, novosTitulares, novosReservas);
+    }
+
+    public void atualizar(TipoVisualizacaoEscalacao novoTipo,
+                          EsquemaTatico novoEsquema,
+                          List<JogadorEscalado> novosTitulares,
+                          List<JogadorId> novosReservas) {
         garantirNaoCongelada();
-        definirEsquemaTatico(novoEsquema, novosTitulares, novosReservas);
+        definir(novoTipo, novoEsquema, novosTitulares, novosReservas);
     }
 
     public void congelar() {
         this.congelada = true;
     }
 
-    private void definirEsquemaTatico(EsquemaTatico novoEsquema,
-                                      List<JogadorEscalado> novosTitulares,
-                                      List<JogadorId> novosReservas) {
-        Objects.requireNonNull(novoEsquema, "O esquema tatico da escalacao e obrigatorio.");
+    private void definir(TipoVisualizacaoEscalacao novoTipo,
+                         EsquemaTatico novoEsquema,
+                         List<JogadorEscalado> novosTitulares,
+                         List<JogadorId> novosReservas) {
+        Objects.requireNonNull(novoTipo, "O tipo de visualizacao da escalacao e obrigatorio.");
         Objects.requireNonNull(novosTitulares, "Os titulares da escalacao sao obrigatorios.");
         List<JogadorId> reservasParaValidar = novosReservas == null ? new ArrayList<>() : novosReservas;
 
-        validarEsquemaCompativelComFormato(novoEsquema);
         validarQuantidadeTitulares(novosTitulares);
-        validarDistribuicaoPorPosicao(novoEsquema, novosTitulares);
+        if (novoTipo.usaMesaTatica()) {
+            Objects.requireNonNull(novoEsquema, "O esquema tatico da mesa tatica e obrigatorio.");
+            validarEsquemaCompativelComFormato(novoEsquema);
+            validarDistribuicaoPorPosicao(novoEsquema, novosTitulares);
+        }
         validarSemDuplicacao(novosTitulares, reservasParaValidar);
 
+        this.tipoVisualizacao = novoTipo;
         this.esquemaTatico = novoEsquema;
         this.titulares.clear();
         this.titulares.addAll(novosTitulares);

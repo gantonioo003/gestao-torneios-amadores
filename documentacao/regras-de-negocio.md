@@ -58,7 +58,7 @@ RN19E. Toda publicacao manual guarda a conta autora real e pode ser exibida como
 
 RN19F. O responsavel pode publicar representando seus times e o organizador pode publicar representando seus torneios; nenhuma conta pode representar entidade administrada por outra pessoa.
 
-RN19G. Postagens e comentarios podem conter texto, foto ou ambos, mas nao podem ser totalmente vazios.
+RN19G. Postagens podem conter texto, emojis, uma ou mais fotos, videos ou combinacoes desses conteudos; comentarios podem conter texto, foto ou ambos, mas nenhum conteudo pode ser totalmente vazio.
 
 RN19H. Cada conta possui no maximo uma curtida por publicacao; clicar novamente remove a propria curtida, sem criar duplicidade.
 
@@ -66,11 +66,15 @@ RN19I. Comentarios pertencem a uma publicacao principal e nao devem aparecer com
 
 RN19J. O perfil publico exibe em aba separada e discreta somente as postagens pessoais da conta, usando o mesmo nome e a mesma foto do perfil.
 
+RN19JA. Postagens publicadas representando um time ou torneio aparecem apenas na aba de publicacoes da entidade representada e nunca no historico pessoal do responsavel.
+
 RN19K. Assuntos do momento sao calculados a partir das hashtags e do engajamento de curtidas, reacoes e comentarios.
 
 RN19L. Uma publicacao ativa pode ser encaminhada para conversas privadas aprovadas ou grupos acessiveis ao usuario; a mensagem guarda a referencia da publicacao e o chat exibe seu conteudo atualizado em um card.
 
-RN19M. Postagens do feed podem conter imagem ou video, respeitando o limite de tamanho definido pela interface.
+RN19M. Postagens do feed podem conter ate quatro imagens ou videos, respeitando o limite de tamanho definido pela interface.
+
+RN19N. A lateral do feed apresenta um radar com as atividades recentes de times e torneios para conectar o usuario ao que esta acontecendo na comunidade, sem expor a fila administrativa de moderacao.
 
 RN20. Uma solicitacao de conversa deve ser salva como solicitada e exibida na aba de solicitados do destinatario.
 
@@ -124,35 +128,37 @@ RN40. Comparativos temporarios nao sao salvos automaticamente.
 
 RN41. O usuario pode salvar um comparativo escolhido para consulta posterior.
 
-RN42. O usuario pode consultar comparativos salvos de um torneio.
+RN42. O usuario pode consultar comparativos gerais salvos.
 
 RN43. O usuario pode atualizar um comparativo salvo quando os dados estatisticos mudarem.
 
 RN44. O usuario pode excluir um comparativo salvo do historico.
 
-RN45. O sistema deve impedir a geracao de comparativo quando nao houver dados estatisticos suficientes para comparar os envolvidos.
+RN45. O comparativo geral deve ser exibido mesmo quando um perfil ainda nao possui scout, apresentando os indicadores ausentes com valor zero.
 
-RN46. A mesa tatica da partida e sempre opcional e funciona apenas como visualizacao da escalacao do time em campo.
+RN45A. O comparativo pode ser exportado em CSV ou compartilhado por um link que preserve os dois jogadores ou times selecionados e reabra a analise com os dados atualizados.
 
-RN47. A mesa tatica do time pode ser gerada pelo usuario responsavel pelo time ou pelo tecnico associado ao time.
+RN46. A escalacao da partida e opcional e pode ser informada como lista de titulares, lista de titulares e reservas ou mesa tatica.
 
-RN48. A mesa tatica deve indicar um esquema tatico compativel com o formato de equipe do torneio.
+RN47. Somente o tecnico responsavel pelo time pode criar ou editar sua escalacao.
 
-RN49. A quantidade de jogadores titulares na mesa tatica deve ser exatamente igual ao formato de equipe do torneio.
+RN48. A mesa tatica deve indicar um esquema compativel com o formato 3x3, 5x5, 7x7 ou 11x11 da partida.
 
-RN50. Cada titular da mesa tatica deve estar associado a uma posicao definida pelo esquema tatico escolhido e a um posicionamento em campo.
+RN49. A quantidade de titulares, em lista ou mesa, deve ser exatamente igual ao formato de equipe da partida.
 
-RN51. Os jogadores titulares e reservas da mesa tatica devem pertencer ao elenco do time.
+RN50. Na mesa tatica, cada titular deve ocupar uma posicao do esquema e as coordenadas devem distribuir dinamicamente os jogadores de cada linha sem sobreposicao.
 
-RN52. Nao ha limite maximo de jogadores reservas na mesa tatica.
+RN51. Todos os titulares e reservas devem pertencer ao elenco do time.
 
-RN53. O mesmo jogador nao pode aparecer simultaneamente como titular e reserva da mesma mesa tatica.
+RN52. Reservas sao opcionais; o modo somente titulares nao exige nem armazena reservas.
 
-RN54. A mesa tatica pode ser criada e editada ate o inicio da partida e fica congelada apos esse momento.
+RN53. O mesmo jogador nao pode aparecer simultaneamente como titular e reserva da mesma escalacao.
 
-RN55. A ausencia de mesa tatica nao impede o inicio da partida, o andamento da competicao nem o registro de eventos estatisticos.
+RN54. A escalacao fica privada e editavel ate o inicio da partida, quando e congelada e liberada para visualizacao publica.
 
-RN56. Um time pode gerar mesa tatica mesmo que o outro nao gere, pois essa visualizacao nao altera as regras da partida.
+RN55. A ausencia de escalacao nao impede o inicio da partida, o andamento da competicao nem o registro de eventos estatisticos.
+
+RN56. Duas mesas taticas so sao exibidas lado a lado quando ambos os times escolherem esse modo; se os modos forem diferentes ou apenas um time informar a escalacao, a exibicao publica usa listas.
 
 ---
 
@@ -241,6 +247,8 @@ RN85. Toda partida deve estar associada a um torneio e a dois times participante
 RN86. Apenas partidas registradas dentro de um torneio podem influenciar classificacao, chaveamento, artilharia e estatisticas.
 
 RN87. Ao registrar o resultado de uma partida, o sistema deve atualizar automaticamente a classificacao, o avanco no chaveamento e o status da partida, conforme o formato do torneio.
+
+RN87A. A visualizacao publica do torneio deve exibir Classificacao somente nos formatos que utilizam tabela e Fase eliminatoria somente nos formatos que utilizam chaveamento; torneios mistos exibem as duas areas em abas separadas.
 
 RN88. O sistema nao deve permitir registrar resultado para uma partida inexistente ou para times que nao pertencem ao torneio.
 

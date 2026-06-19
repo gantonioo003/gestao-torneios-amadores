@@ -134,14 +134,14 @@ Cenarios principais:
 - gerar comparativo temporario entre jogadores
 - gerar comparativo temporario entre times
 - salvar comparativo escolhido pelo usuario
-- consultar comparativos salvos do torneio
+- consultar comparativos gerais salvos
 - atualizar comparativo salvo apos mudanca nos dados
 - excluir comparativo salvo do historico
-- impedir comparativo quando nao houver dados estatisticos
+- exibir comparativo basico mesmo quando nao houver scout registrado
 
 ---
 
-### F8. Gerenciar a visualizacao opcional da escalacao do time em mesa tatica para uma partida
+### F8. Gerenciar a preparacao e visualizacao opcional da escalacao para uma partida
 Dominio: dominio-competicao
 Arquivo: dominio-competicao/src/test/resources/com/torneios/dominio/competicao/F8-gerar-escalacao-em-mesa-tatica.feature
 
@@ -158,6 +158,10 @@ Cenarios principais:
 - editar mesa tatica enquanto a partida nao foi iniciada
 - impedir edicao de mesa tatica apos o inicio da partida
 - aceitar quantidade qualquer de reservas, inclusive zero
+- permitir informar somente titulares em lista, sem esquema tatico
+- manter a escalacao privada antes do inicio da partida
+- divulgar e congelar a escalacao quando a partida iniciar
+- adaptar o espacamento da mesa a quantidade de jogadores de cada linha
 
 ---
 
@@ -347,17 +351,17 @@ Cenarios principais:
 - RN43. Usuario pode atualizar comparativo salvo quando os dados mudarem.
 - RN44. Usuario pode excluir comparativo salvo.
 - RN45. O sistema deve impedir comparativo sem dados estatisticos suficientes.
-- RN46. A mesa tatica e sempre opcional e funciona apenas como visualizacao da escalacao do time em campo.
-- RN47. A mesa tatica pode ser gerada pelo responsavel do time ou pelo tecnico.
-- RN48. O esquema tatico da mesa tatica deve ser compativel com o formato de equipe.
-- RN49. A quantidade de titulares da mesa tatica deve ser igual ao formato de equipe.
-- RN50. Cada titular da mesa tatica deve estar associado a uma posicao do esquema e a um posicionamento em campo.
-- RN51. Titulares e reservas da mesa tatica devem pertencer ao elenco do time.
-- RN52. Sem limite maximo de reservas na mesa tatica.
-- RN53. Mesmo jogador nao pode ser titular e reserva simultaneamente na mesma mesa tatica.
-- RN54. A mesa tatica pode ser editada ate o inicio da partida.
-- RN55. A ausencia de mesa tatica nao impede o inicio da partida, o andamento da competicao nem o registro de eventos estatisticos.
-- RN56. Um time pode gerar mesa tatica mesmo que o outro nao gere, pois essa visualizacao nao altera as regras da partida.
+- RN46. A escalacao e opcional e pode usar lista ou mesa tatica.
+- RN47. Somente o tecnico responsavel pode criar ou editar a escalacao do time.
+- RN48. O esquema da mesa deve ser compativel com 3x3, 5x5, 7x7 ou 11x11.
+- RN49. A quantidade de titulares deve ser igual ao formato de equipe.
+- RN50. A mesa distribui dinamicamente os jogadores de cada linha sem sobreposicao.
+- RN51. Titulares e reservas devem pertencer ao elenco do time.
+- RN52. Reservas sao opcionais e nao existem no modo somente titulares.
+- RN53. Mesmo jogador nao pode ser titular e reserva simultaneamente.
+- RN54. A escalacao fica privada ate o inicio, quando e congelada e publicada.
+- RN55. A ausencia de escalacao nao impede a partida nem o scout.
+- RN56. Duas mesas so aparecem juntas quando ambos os times escolherem mesa tatica; nos demais casos a exibicao publica usa listas.
 
 ### Organizacao e comunicacao
 - RN57. Apenas usuarios autenticados podem criar torneios.

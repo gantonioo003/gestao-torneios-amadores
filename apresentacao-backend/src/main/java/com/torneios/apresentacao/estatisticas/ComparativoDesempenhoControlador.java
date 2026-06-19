@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.estatisticas.comparacao.ComparativoDesempenhoServicoAplicacao;
@@ -25,7 +24,6 @@ class ComparativoDesempenhoControlador {
     ComparativoDesempenhoServicoAplicacao.ComparativoResumo compararJogadores(@RequestBody ComparativoJogadoresDto dto) {
         return comparativoDesempenhoServicoAplicacao.gerarComparativoJogadores(
                 System.currentTimeMillis(),
-                dto.torneioId,
                 dto.primeiroJogadorId,
                 dto.segundoJogadorId);
     }
@@ -34,23 +32,29 @@ class ComparativoDesempenhoControlador {
     ComparativoDesempenhoServicoAplicacao.ComparativoResumo compararTimes(@RequestBody ComparativoTimesDto dto) {
         return comparativoDesempenhoServicoAplicacao.gerarComparativoTimes(
                 System.currentTimeMillis(),
-                dto.torneioId,
                 dto.primeiroTimeId,
                 dto.segundoTimeId);
     }
 
-    @RequestMapping(method = POST, path = "salvar")
-    void salvar(@RequestBody ComparativoTimesDto dto) {
-        comparativoDesempenhoServicoAplicacao.salvarComparativo(
+    @RequestMapping(method = POST, path = "salvar-jogadores")
+    void salvarJogadores(@RequestBody ComparativoJogadoresDto dto) {
+        comparativoDesempenhoServicoAplicacao.salvarComparativoJogadores(
                 System.currentTimeMillis(),
-                dto.torneioId,
+                dto.primeiroJogadorId,
+                dto.segundoJogadorId);
+    }
+
+    @RequestMapping(method = POST, path = "salvar-times")
+    void salvarTimes(@RequestBody ComparativoTimesDto dto) {
+        comparativoDesempenhoServicoAplicacao.salvarComparativoTimes(
+                System.currentTimeMillis(),
                 dto.primeiroTimeId,
                 dto.segundoTimeId);
     }
 
-    @RequestMapping(method = GET, path = "torneio/{torneioId}")
-    List<ComparativoDesempenhoServicoAplicacao.ComparativoResumo> listarSalvos(@PathVariable long torneioId) {
-        return comparativoDesempenhoServicoAplicacao.consultarComparativosSalvos(torneioId);
+    @RequestMapping(method = GET, path = "salvos")
+    List<ComparativoDesempenhoServicoAplicacao.ComparativoResumo> listarSalvos() {
+        return comparativoDesempenhoServicoAplicacao.consultarComparativosSalvos();
     }
 
     @RequestMapping(method = POST, path = "{id}/atualizar")
@@ -68,13 +72,11 @@ class ComparativoDesempenhoControlador {
     }
 
     static class ComparativoJogadoresDto {
-        public long torneioId;
         public long primeiroJogadorId;
         public long segundoJogadorId;
     }
 
     static class ComparativoTimesDto {
-        public long torneioId;
         public long primeiroTimeId;
         public long segundoTimeId;
     }

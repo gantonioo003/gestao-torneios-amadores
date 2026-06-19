@@ -3,6 +3,7 @@ package com.torneios.apresentacao.competicao;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,16 @@ import org.springframework.http.HttpStatus;
 import com.torneios.aplicacao.competicao.andamento.PartidaResumo;
 import com.torneios.aplicacao.competicao.andamento.PartidaServicoAplicacao;
 import com.torneios.aplicacao.competicao.resultado.ResultadoCompeticaoServicoAplicacao;
+import com.torneios.aplicacao.competicao.escalacao.EscalacaoServicoAplicacao;
 import com.torneios.aplicacao.engajamento.palpite.ApuracaoAutomaticaPalpiteServicoAplicacao;
 import com.torneios.aplicacao.estatisticas.ranking.RankingServicoAplicacao;
 import com.torneios.dominio.compartilhado.partida.PartidaId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
 import com.torneios.dominio.competicao.partida.PartidaServico;
+import com.torneios.apresentacao.SessaoUsuario;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("backend/partida")
@@ -33,6 +38,7 @@ class PartidaControlador {
     @Autowired ResultadoCompeticaoServicoAplicacao resultadoCompeticaoServico;
     @Autowired RankingServicoAplicacao rankingServico;
     @Autowired ApuracaoAutomaticaPalpiteServicoAplicacao apuracaoAutomaticaPalpiteServico;
+    @Autowired EscalacaoServicoAplicacao escalacaoServicoAplicacao;
 
     @RequestMapping(method = GET, path = "pesquisa")
     List<? extends PartidaResumo> pesquisar(@RequestParam long torneioId) {
@@ -53,6 +59,19 @@ class PartidaControlador {
                 new TorneioId(torneioId),
                 new PartidaId(id),
                 new UsuarioId(organizadorId));
+        escalacaoServicoAplicacao.congelarEscalacoesDaPartida(id);
+    }
+
+    @RequestMapping(method = POST, path = "{id}/agendar")
+    void agendar(@PathVariable long id,
+                 @RequestBody AgendamentoDto dto,
+                 HttpSession sessao) {
+        partidaServico.agendarPartida(
+                new TorneioId(dto.torneioId),
+                new PartidaId(id),
+                new UsuarioId(SessaoUsuario.exigirUsuarioId(sessao)),
+                dto.dataHora,
+                dto.local);
     }
 
     @RequestMapping(method = POST, path = "{id}/registrar-resultado")
@@ -74,6 +93,12 @@ class PartidaControlador {
     public static class ResultadoDto {
         public int golsMandante;
         public int golsVisitante;
+    }
+
+    public static class AgendamentoDto {
+        public long torneioId;
+        public LocalDateTime dataHora;
+        public String local;
     }
 
     public record ResultadoPartidaCompleto(

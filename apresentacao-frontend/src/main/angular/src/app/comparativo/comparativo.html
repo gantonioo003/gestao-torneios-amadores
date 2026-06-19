@@ -2,27 +2,32 @@
   <div class="hero-row">
     <div>
       <div class="eyebrow">Analise de desempenho</div>
-      <h1 class="page-title">Comparativo entre {{ labelTipo }}s</h1>
-      <p class="page-subtitle">Compare estatisticas, historico e rankings entre dois {{ labelTipo }}s.</p>
+      <h1 class="page-title">Comparativo entre {{ labelTipoPlural }}</h1>
+      <p class="page-subtitle">Coloque os dados gerais lado a lado e entenda rapidamente os pontos fortes de cada {{ labelTipo.toLowerCase() }}.</p>
     </div>
-    <div style="display: flex; gap: 8px">
-      <button class="btn" [class.btn-outline]="tipo !== 'jogador'" [class.btn-primary]="tipo === 'jogador'" (click)="tipo = 'jogador'; trocarSegundo()">Jogadores</button>
-      <button class="btn" [class.btn-outline]="tipo !== 'time'" [class.btn-primary]="tipo === 'time'" (click)="tipo = 'time'; trocarSegundo()">Times</button>
+    <div class="comp-tipos">
+      <button class="btn" [class.btn-outline]="tipo !== 'jogador'" [class.btn-primary]="tipo === 'jogador'" (click)="alterarTipo('jogador')">Jogadores</button>
+      <button class="btn" [class.btn-outline]="tipo !== 'time'" [class.btn-primary]="tipo === 'time'" (click)="alterarTipo('time')">Times</button>
     </div>
   </div>
 
   <div class="comp-layout">
-    <!-- Painel de configuracao -->
     <section class="card panel-strong comp-config">
-      <h2 class="section-title">Configurar comparativo</h2>
+      <div class="comp-config-head">
+        <span class="comp-step">Comparacao geral</span>
+        <h2 class="section-title">Comparar com</h2>
+        <p>Busque outro {{ labelTipo.toLowerCase() }} para confrontar os dados acumulados.</p>
+      </div>
 
-      <!-- Primeiro -->
       <div class="comp-slot">
-        <div class="comp-slot-label">Primeiro {{ labelTipo }}</div>
+        <div class="comp-slot-label">{{ labelTipo }} selecionado</div>
         @if (primeiro) {
           <div class="selected-person">
             <span class="avatar">{{ nomeEntidade(primeiro).slice(0, 1) }}</span>
-            <span><strong>{{ nomeEntidade(primeiro) }}</strong></span>
+            <span class="selected-person-copy">
+              <strong>{{ nomeEntidade(primeiro) }}</strong>
+              <small>Perfil de referencia</small>
+            </span>
             <a class="btn btn-sm btn-outline" [routerLink]="rotaPerfilPrimeiro">Ver perfil</a>
           </div>
         } @else {
@@ -32,20 +37,22 @@
 
       <div class="vs-divider"><span>VS</span></div>
 
-      <!-- Segundo -->
       <div class="comp-slot">
-        <div class="comp-slot-label">Segundo {{ labelTipo }}</div>
+        <div class="comp-slot-label">{{ labelTipo }} para comparar</div>
         @if (segundo) {
           <div class="comp-selecionado">
             <span class="avatar">{{ nomeEntidade(segundo).slice(0, 1) }}</span>
-            <span><strong>{{ nomeEntidade(segundo) }}</strong></span>
+            <span class="selected-person-copy">
+              <strong>{{ nomeEntidade(segundo) }}</strong>
+              <small>Comparacao selecionada</small>
+            </span>
             <button class="btn btn-sm" (click)="trocarSegundo()">Trocar</button>
           </div>
         } @else {
-          <div class="field" style="margin: 0">
+          <div class="field comp-search-field">
             <div class="comp-busca">
               <i class="bi bi-search"></i>
-              <input [(ngModel)]="termoBusca" (input)="buscar()" placeholder="Digite o nome...">
+              <input [(ngModel)]="termoBusca" (input)="buscar()" [placeholder]="'Pesquisar ' + labelTipo.toLowerCase() + ' para comparar...'">
             </div>
             @if (resultadosBusca.length) {
               <div class="comp-resultados">
@@ -62,52 +69,92 @@
         }
       </div>
 
-      <!-- Torneio opcional -->
-      <div class="field" style="margin-top: 14px">
-        <label>Torneio</label>
-        <select [(ngModel)]="torneioId">
-          <option value="">Selecione um torneio...</option>
-          @for (t of torneios; track t.id) {
-            <option [value]="t.id">{{ t.nome }}</option>
-          }
-        </select>
-        <small class="muted">As estatisticas sao calculadas por torneio.</small>
-      </div>
-
       @if (erro) {
         <div class="comp-erro"><i class="bi bi-exclamation-circle"></i> {{ erro }}</div>
       }
 
       <button class="btn btn-primary" [disabled]="!podeComparar() || carregando" (click)="comparar()">
-        <i class="bi bi-bar-chart-line"></i> {{ carregando ? 'Gerando...' : 'Gerar comparativo' }}
+        <i class="bi bi-bar-chart-line"></i> {{ carregando ? 'Comparando...' : resultado ? 'Atualizar comparativo' : 'Gerar comparativo' }}
       </button>
     </section>
 
-    <!-- Resultado -->
     <section class="comp-resultado">
       @if (!resultado) {
         <div class="card comp-empty">
-          <i class="bi bi-bar-chart-line" style="font-size: 48px; color: var(--green-dark); opacity: .3"></i>
-          <p class="muted">Selecione dois {{ labelTipo }}s e clique em "Gerar comparativo".</p>
+          <div class="comp-empty-visual">
+            <span class="avatar">A</span>
+            <span class="comp-empty-vs">VS</span>
+            <span class="avatar ghost-avatar">B</span>
+          </div>
+          <strong>Escolha quem entra na comparacao</strong>
+          <p class="muted">Os dados gerais de carreira aparecem aqui assim que voce selecionar o segundo {{ labelTipo.toLowerCase() }}.</p>
         </div>
       } @else {
-        <div class="card comp-cabecalho">
-          <div class="comp-entidade" [class.vencedor]="melhor('primeiro')">
-            @if (melhor('primeiro')) { <span class="badge-vencedor"><i class="bi bi-trophy"></i> Melhor desempenho</span> }
-            <div class="avatar comp-avatar">{{ resultado.primeiro.rotulo.slice(0, 1) }}</div>
-            <strong>{{ resultado.primeiro.rotulo }}</strong>
-            <div class="comp-pontos">{{ resultado.primeiro.pontuacaoComparativa.toFixed(1) }} pts</div>
+        <div class="card comp-overview">
+          <div class="comp-cabecalho">
+            <div class="comp-entidade" [class.vencedor]="melhor('primeiro')">
+              @if (melhor('primeiro')) { <span class="badge-vencedor"><i class="bi bi-trophy"></i> Melhor desempenho</span> }
+              <div class="avatar comp-avatar">{{ resultado.primeiro.rotulo.slice(0, 1) }}</div>
+              <strong>{{ resultado.primeiro.rotulo }}</strong>
+              <div class="comp-pontos">{{ resultado.primeiro.pontuacaoComparativa.toFixed(1) }} pts</div>
+            </div>
+            <div class="vs-badge">VS</div>
+            <div class="comp-entidade" [class.vencedor]="melhor('segundo')">
+              @if (melhor('segundo')) { <span class="badge-vencedor"><i class="bi bi-trophy"></i> Melhor desempenho</span> }
+              <div class="avatar comp-avatar alt-avatar">{{ resultado.segundo.rotulo.slice(0, 1) }}</div>
+              <strong>{{ resultado.segundo.rotulo }}</strong>
+              <div class="comp-pontos alt-pontos">{{ resultado.segundo.pontuacaoComparativa.toFixed(1) }} pts</div>
+            </div>
           </div>
-          <div class="vs-badge">VS</div>
-          <div class="comp-entidade" [class.vencedor]="melhor('segundo')">
-            @if (melhor('segundo')) { <span class="badge-vencedor"><i class="bi bi-trophy"></i> Melhor desempenho</span> }
-            <div class="avatar comp-avatar">{{ resultado.segundo.rotulo.slice(0, 1) }}</div>
-            <strong>{{ resultado.segundo.rotulo }}</strong>
-            <div class="comp-pontos">{{ resultado.segundo.pontuacaoComparativa.toFixed(1) }} pts</div>
+
+          <div class="comp-radar-section">
+            <div class="comp-radar-copy">
+              <span class="comp-step">Visao geral dos atributos</span>
+              <h3>Leitura rapida do desempenho</h3>
+              <p>O grafico resume os dados acumulados. A tabela abaixo mostra os numeros usados na comparacao.</p>
+              <div class="comp-legenda">
+                <span><i class="legenda-cor primeiro"></i>{{ resultado.primeiro.rotulo }}</span>
+                <span><i class="legenda-cor segundo"></i>{{ resultado.segundo.rotulo }}</span>
+              </div>
+            </div>
+
+            <div class="radar-wrap" aria-label="Grafico comparativo de atributos">
+              <svg class="radar-chart" viewBox="0 0 300 252" role="img">
+                <polygon class="radar-grid radar-grid-outer" points="150,38 233.7,98.8 201.7,197.2 98.3,197.2 66.3,98.8"></polygon>
+                <polygon class="radar-grid" points="150,67 206.1,107.8 184.7,173.7 115.3,173.7 93.9,107.8"></polygon>
+                <polygon class="radar-grid" points="150,96 178.5,116.7 167.6,150.3 132.4,150.3 121.5,116.7"></polygon>
+                <line class="radar-axis" x1="150" y1="126" x2="150" y2="38"></line>
+                <line class="radar-axis" x1="150" y1="126" x2="233.7" y2="98.8"></line>
+                <line class="radar-axis" x1="150" y1="126" x2="201.7" y2="197.2"></line>
+                <line class="radar-axis" x1="150" y1="126" x2="98.3" y2="197.2"></line>
+                <line class="radar-axis" x1="150" y1="126" x2="66.3" y2="98.8"></line>
+                <polygon class="radar-data radar-data-primeiro" [attr.points]="pontosRadar('primeiro')"></polygon>
+                <polygon class="radar-data radar-data-segundo" [attr.points]="pontosRadar('segundo')"></polygon>
+                <text class="radar-label" x="150" y="20" text-anchor="middle">Ataque</text>
+                <text class="radar-label" x="246" y="94">Criacao</text>
+                <text class="radar-label" x="215" y="220">Regularidade</text>
+                <text class="radar-label" x="85" y="220" text-anchor="end">Disciplina</text>
+                <text class="radar-label" x="54" y="94" text-anchor="end">Desempenho</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="comp-resumo-stats">
+            <div><span>Gols</span><strong>{{ valorResumo('primeiro', 'gols') }} <small>x</small> {{ valorResumo('segundo', 'gols') }}</strong></div>
+            <div><span>Assistencias</span><strong>{{ valorResumo('primeiro', 'assistencias') }} <small>x</small> {{ valorResumo('segundo', 'assistencias') }}</strong></div>
+            <div><span>Partidas</span><strong>{{ valorResumo('primeiro', 'partidasComEventos') }} <small>x</small> {{ valorResumo('segundo', 'partidasComEventos') }}</strong></div>
+            <div><span>Pontuacao</span><strong>{{ valorResumo('primeiro', 'pontuacaoComparativa') }} <small>x</small> {{ valorResumo('segundo', 'pontuacaoComparativa') }}</strong></div>
           </div>
         </div>
 
-        <div class="card" style="padding: 0; overflow: hidden">
+        <div class="card comp-table-card">
+          <div class="comp-table-title">
+            <div>
+              <span class="comp-step">Numeros gerais</span>
+              <h3>Comparacao detalhada</h3>
+            </div>
+            <span class="muted">Dados acumulados em todas as competicoes</span>
+          </div>
           <table class="comp-tabela">
             <thead>
               <tr>
@@ -154,13 +201,16 @@
         <div class="comp-acoes">
           @if (salvo) {
             <span class="status status-green"><i class="bi bi-check-circle"></i> Comparativo salvo</span>
-          } @else if (tipo === 'time') {
+          } @else {
             <button class="btn btn-outline" [disabled]="salvando" (click)="salvar()">
               <i class="bi bi-bookmark"></i> {{ salvando ? 'Salvando...' : 'Salvar comparativo' }}
             </button>
           }
           <button class="btn btn-outline" (click)="exportarCsv()">
             <i class="bi bi-download"></i> Exportar CSV
+          </button>
+          <button class="btn btn-primary" (click)="compartilhar()">
+            <i class="bi bi-share"></i> {{ compartilhado ? 'Link copiado' : 'Compartilhar' }}
           </button>
         </div>
       }

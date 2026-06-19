@@ -35,8 +35,20 @@ public class EscalacaoServico {
                                                      EsquemaTatico esquemaTatico,
                                                      List<JogadorEscalado> titulares,
                                                      List<JogadorId> reservas) {
+        return definirEscalacaoPorResponsavel(id, partidaId, timeId, usuarioId,
+                TipoVisualizacaoEscalacao.MESA_TATICA, esquemaTatico, titulares, reservas);
+    }
+
+    public Escalacao definirEscalacaoPorResponsavel(EscalacaoId id,
+                                                     PartidaId partidaId,
+                                                     TimeId timeId,
+                                                     UsuarioId usuarioId,
+                                                     TipoVisualizacaoEscalacao tipoVisualizacao,
+                                                     EsquemaTatico esquemaTatico,
+                                                     List<JogadorEscalado> titulares,
+                                                     List<JogadorId> reservas) {
         validarUsuarioResponsavel(timeId, usuarioId);
-        return criarOuAtualizar(id, partidaId, timeId, esquemaTatico, titulares, reservas);
+        return criarOuAtualizar(id, partidaId, timeId, tipoVisualizacao, esquemaTatico, titulares, reservas);
     }
 
     public Escalacao definirEscalacaoPorTecnico(EscalacaoId id,
@@ -46,8 +58,20 @@ public class EscalacaoServico {
                                                  EsquemaTatico esquemaTatico,
                                                  List<JogadorEscalado> titulares,
                                                  List<JogadorId> reservas) {
+        return definirEscalacaoPorTecnico(id, partidaId, timeId, tecnicoId,
+                TipoVisualizacaoEscalacao.MESA_TATICA, esquemaTatico, titulares, reservas);
+    }
+
+    public Escalacao definirEscalacaoPorTecnico(EscalacaoId id,
+                                                 PartidaId partidaId,
+                                                 TimeId timeId,
+                                                 TecnicoId tecnicoId,
+                                                 TipoVisualizacaoEscalacao tipoVisualizacao,
+                                                 EsquemaTatico esquemaTatico,
+                                                 List<JogadorEscalado> titulares,
+                                                 List<JogadorId> reservas) {
         validarTecnicoAssociadoAoTime(timeId, tecnicoId);
-        return criarOuAtualizar(id, partidaId, timeId, esquemaTatico, titulares, reservas);
+        return criarOuAtualizar(id, partidaId, timeId, tipoVisualizacao, esquemaTatico, titulares, reservas);
     }
 
     public Escalacao obterEscalacao(PartidaId partidaId, TimeId timeId) {
@@ -58,6 +82,19 @@ public class EscalacaoServico {
 
     public List<Escalacao> listarPorPartida(PartidaId partidaId) {
         return escalacaoRepositorio.listarPorPartida(partidaId);
+    }
+
+    public Escalacao obterEscalacaoDoResponsavel(PartidaId partidaId, TimeId timeId, UsuarioId usuarioId) {
+        validarUsuarioResponsavel(timeId, usuarioId);
+        return obterEscalacao(partidaId, timeId);
+    }
+
+    public List<Escalacao> listarPublicasPorPartida(PartidaId partidaId) {
+        if (!consultaSuporte.partidaIniciada(partidaId)) {
+            throw new OperacaoNaoPermitidaException(
+                    "As escalacoes ficam publicas somente depois do inicio da partida.");
+        }
+        return listarPorPartida(partidaId);
     }
 
     public MesaTatica gerarMesaTatica(PartidaId partidaId, TimeId timeId) {
@@ -75,6 +112,7 @@ public class EscalacaoServico {
     private Escalacao criarOuAtualizar(EscalacaoId id,
                                         PartidaId partidaId,
                                         TimeId timeId,
+                                        TipoVisualizacaoEscalacao tipoVisualizacao,
                                         EsquemaTatico esquemaTatico,
                                         List<JogadorEscalado> titulares,
                                         List<JogadorId> reservas) {
@@ -86,10 +124,10 @@ public class EscalacaoServico {
         Escalacao escalacao;
         if (existente.isPresent()) {
             escalacao = existente.get();
-            escalacao.atualizar(esquemaTatico, titulares, reservas);
+            escalacao.atualizar(tipoVisualizacao, esquemaTatico, titulares, reservas);
         } else {
             escalacao = new Escalacao(id, partidaId, timeId, formatoEquipe,
-                    esquemaTatico, titulares, reservas);
+                    tipoVisualizacao, esquemaTatico, titulares, reservas);
         }
         escalacaoRepositorio.salvar(escalacao);
         return escalacao;

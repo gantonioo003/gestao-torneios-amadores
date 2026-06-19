@@ -33,23 +33,27 @@
         </select>
         <textarea [(ngModel)]="novoPost" maxlength="700"
           placeholder="O que esta acontecendo no futebol amador?"></textarea>
-        @if (midiaPreview) {
-          <div class="composer-preview">
-            @if (ehVideo(midiaPreview)) {
-              <video [src]="midiaPreview" controls preload="metadata"></video>
-            } @else {
-              <img [src]="midiaPreview" alt="Imagem selecionada">
+        @if (midiasPreview.length) {
+          <div class="composer-preview" [class.multiple]="midiasPreview.length > 1">
+            @for (midia of midiasPreview; track midia; let indice = $index) {
+              <div>
+                @if (ehVideo(midia)) {
+                  <video [src]="midia" controls preload="metadata"></video>
+                } @else {
+                  <img [src]="midia" alt="Imagem selecionada">
+                }
+                <button (click)="removerMidia(indice)" aria-label="Remover midia"><i class="bi bi-x-lg"></i></button>
+              </div>
             }
-            <button (click)="midiaPreview = ''" aria-label="Remover midia"><i class="bi bi-x-lg"></i></button>
           </div>
         }
         <div class="composer-actions">
           <label title="Adicionar foto ou video">
             <i class="bi bi-image"></i>
-            <input type="file" accept="image/*,video/*" (change)="selecionarFoto($event)">
+            <input type="file" accept="image/*,video/*" multiple (change)="selecionarFoto($event)">
           </label>
-          <span># hashtags no texto aparecem nos assuntos do momento</span>
-          <button [disabled]="(!novoPost.trim() && !midiaPreview) || publicando" (click)="publicar()">
+          <span>Texto, emojis e ate 4 fotos ou videos</span>
+          <button [disabled]="(!novoPost.trim() && !midiasPreview.length) || publicando" (click)="publicar()">
             Publicar
           </button>
         </div>
@@ -144,7 +148,13 @@
                         }
                       </span>
                       <div>
-                        <strong>{{ comentario.autorNome }}</strong>
+                        <span class="comment-author-line">
+                          <strong>{{ comentario.autorNome }}</strong>
+                          <button class="comment-report" (click)="denunciarComentario(comentario)"
+                            title="Denunciar comentario" aria-label="Denunciar comentario">
+                            <i class="bi bi-flag"></i>
+                          </button>
+                        </span>
                         <small>&#64;{{ comentario.autorNomeUsuario }} · {{ tempo(comentario.criadaEm) }}</small>
                         @if (comentario.conteudo) {
                           <p>{{ comentario.conteudo }}</p>
@@ -217,21 +227,28 @@
       }
     </section>
 
-    @if (usuario()?.podeCriarTorneio) {
-      <section class="trend-card moderation-card">
-        <div class="eyebrow">Comunidade segura</div>
-        <h2>Fila de moderacao</h2>
-        @for (denuncia of denuncias; track denuncia.id) {
-          <article>
-            <strong>{{ denuncia.tipoAlvo }} #{{ denuncia.alvoId }}</strong>
-            <span>{{ denuncia.motivo }}</span>
-            <button (click)="analisar(denuncia)">Marcar analisada</button>
-          </article>
-        } @empty {
-          <p>Nenhuma denuncia pendente.</p>
-        }
-      </section>
-    }
+    <section class="trend-card community-radar">
+      <div class="eyebrow">Movimentacao recente</div>
+      <h2>Radar da comunidade</h2>
+      @for (post of radarComunidade; track post.id) {
+        <button (click)="abrirNoRadar(post)">
+          <span class="radar-identity" [class.team]="post.tipoIdentidade === 'TIME'">
+            {{ iniciais(post.identidadeNome) }}
+          </span>
+          <span>
+            <small>
+              {{ post.tipoIdentidade === 'TIME' ? 'Time' : post.tipoIdentidade === 'TORNEIO' ? 'Torneio' : 'Partida' }}
+              · {{ tempo(post.criadaEm) }}
+            </small>
+            <strong>{{ post.identidadeNome }}</strong>
+            <em>{{ post.conteudo || 'Nova publicacao com midia' }}</em>
+          </span>
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      } @empty {
+        <p>As novidades de times e torneios aparecerao aqui.</p>
+      }
+    </section>
 
     <small class="feed-policy">Ao publicar, voce concorda em manter o respeito pela comunidade esportiva.</small>
   </aside>

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveData, Router, RouterLink, RouterStateSnapshot } from '@angular/router';
-import { catchError, finalize, of } from 'rxjs';
+import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { AuthService } from '../core/auth.service';
 
 @Component({
@@ -18,8 +18,11 @@ export class TimeDetalhes implements OnInit {
   time: any = {};
   elenco: any[] = [];
   torneios: any[] = [];
+  publicacoes: any[] = [];
+  aba: 'dados' | 'publicacoes' = 'dados';
   participacoes: any[] = [];
   confrontos: any[] = [];
+  partidas: any[] = [];
   meusTimes: any[] = [];
   timesCatalogo: any[] = [];
   abaConfrontos: 'recebidos' | 'enviados' | 'confirmados' | 'historico' = 'recebidos';
@@ -56,9 +59,15 @@ export class TimeDetalhes implements OnInit {
     this.torneios = data.torneios ?? [];
     this.podeEditarTime = data.podeEditarTime === true;
     this.podeGerenciarElenco = data.podeGerenciarElenco === true;
+    if (this.time.id) {
+      this.http.get<any[]>(`/backend/feed/identidade/TIME/${this.time.id}`)
+        .pipe(catchError(() => of([])))
+        .subscribe(publicacoes => this.publicacoes = publicacoes);
+    }
     if (this.podeEditarTime) {
       this.carregarParticipacoes();
       this.carregarConfrontos();
+      this.carregarPartidas();
     }
     if (this.usuario()?.tipo === 'TREINADOR' && this.usuario()?.podeGerenciarTimes) {
       this.carregarTimesDoTreinador();
@@ -76,6 +85,40 @@ export class TimeDetalhes implements OnInit {
       && this.usuario()?.podeGerenciarTimes === true
       && !this.podeEditarTime
       && this.meusTimes.length > 0;
+  }
+
+  get proximosJogos(): any[] {
+    return this.partidas
+      .filter(partida => !partida.encerrada)
+      .sort((a, b) => this.ordemDataPartida(a) - this.ordemDataPartida(b));
+  }
+
+  get ultimosJogos(): any[] {
+    return this.partidas
+      .filter(partida => partida.encerrada)
+      .sort((a, b) => this.ordemDataPartida(b) - this.ordemDataPartida(a));
+  }
+
+  adversarioPartida(partida: any): string {
+    const adversarioId = String(partida.mandanteId) === String(this.time.id)
+      ? partida.visitanteId
+      : partida.mandanteId;
+    return this.nomeTime(adversarioId);
+  }
+
+  torneioPartida(partida: any): string {
+    return this.torneios.find(torneio => String(torneio.id) === String(partida.torneioId))?.nome
+      ?? 'Torneio';
+  }
+
+  dataPartida(partida: any): string {
+    if (!partida.dataHoraAgendada) return 'Data a definir';
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(new Date(partida.dataHoraAgendada));
   }
 
   get confrontosRecebidos(): any[] {
@@ -169,6 +212,22 @@ export class TimeDetalhes implements OnInit {
       'Desafio enviado. O tecnico adversario foi notificado.',
       false
     );
+  }
+
+  iniciais(nome: string): string {
+    return (nome || 'T').split(/\s+/).filter(Boolean).slice(0, 2)
+      .map(parte => parte[0]).join('').toUpperCase();
+  }
+
+  tempoPublicacao(dataIso: string): string {
+    const horas = Math.floor((Date.now() - new Date(dataIso).getTime()) / 3_600_000);
+    if (horas < 1) return 'agora';
+    if (horas < 24) return `${horas}h`;
+    return `${Math.floor(horas / 24)}d`;
+  }
+
+  ehVideo(midia: string): boolean {
+    return midia.startsWith('data:video/') || /\.(mp4|webm|ogg)(\?.*)?$/i.test(midia);
   }
 
   aceitarDesafio(item: any) {
@@ -302,6 +361,27 @@ export class TimeDetalhes implements OnInit {
     this.http.get<any[]>(`/backend/desafio-amistoso/time?timeId=${this.time.id}`)
       .pipe(catchError(() => of([])))
       .subscribe(itens => this.confrontos = itens);
+  }
+
+  private carregarPartidas() {
+    if (!this.torneios.length) {
+      this.partidas = [];
+      return;
+    }
+    forkJoin(this.torneios.map(torneio =>
+      this.http.get<any[]>(`/backend/partida/pesquisa?torneioId=${torneio.id}`)
+        .pipe(catchError(() => of([])))
+    )).subscribe(resultados => {
+      this.partidas = resultados.flat().filter(partida =>
+        String(partida.mandanteId) === String(this.time.id)
+        || String(partida.visitanteId) === String(this.time.id));
+    });
+  }
+
+  private ordemDataPartida(partida: any): number {
+    return partida.dataHoraAgendada
+      ? new Date(partida.dataHoraAgendada).getTime()
+      : Number.MAX_SAFE_INTEGER;
   }
 
   private carregarTimesDoTreinador() {

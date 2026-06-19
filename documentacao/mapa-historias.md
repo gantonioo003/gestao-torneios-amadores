@@ -70,14 +70,14 @@
 - Como responsavel por um time, quero editar e remover o tecnico associado para manter a comissao tecnica correta.
 - Como organizador, quero visualizar elenco e tecnico dos times participantes para validar a composicao das equipes.
 
-## 6. Mesa tatica da partida
-- Como responsavel por um time, quero escolher o esquema tatico da minha mesa tatica para uma partida para definir como meu time se posicionara em campo.
-- Como responsavel por um time, quero indicar os jogadores titulares por posicao para montar minha mesa tatica inicial.
-- Como responsavel por um time, quero indicar os jogadores reservas da partida para deixar a equipe completa e organizada antes do jogo.
-- Como tecnico associado ao time, quero definir e ajustar a mesa tatica da partida ate seu inicio para garantir a melhor formacao possivel.
-- Como responsavel por um time, quero poder deixar a partida sem mesa tatica para simplificar torneios menores quando eu nao quiser montar essa visualizacao.
-- Como responsavel por um time, quero gerar a mesa tatica mesmo que o outro time nao gere, porque essa visualizacao representa apenas meu time.
-- Como organizador, quero visualizar as mesas taticas confirmadas dos times antes da partida para validar a competicao.
+## 6. Escalacao da partida
+- Como tecnico, quero consultar os proximos jogos do meu time para preparar cada partida.
+- Como tecnico, quero informar somente titulares ou titulares e reservas em lista para montar rapidamente a escalacao.
+- Como tecnico, quero escolher uma formacao compativel com 3x3, 5x5, 7x7 ou 11x11 para montar a mesa tatica.
+- Como tecnico, quero editar a escalacao em sigilo ate o inicio da partida.
+- Como visitante, quero visualizar as escalacoes somente depois que a partida iniciar.
+- Como visitante, quero ver duas mesas taticas quando ambos os times escolherem esse modo e listas quando os formatos forem diferentes.
+- Como organizador, quero agendar data, horario e local das partidas antes do inicio.
 
 ## 7. Gestao de partidas e andamento da competicao
 - Como organizador, quero registrar o resultado de uma partida para atualizar o andamento do torneio.
