@@ -4,8 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
 import { AuthService } from '../core/auth.service';
+import {
+  CentralPalpites,
+  EventoTorneioPalpite,
+  OpcaoPalpite,
+  PalpiteService,
+  PartidaPalpite,
+  TorneioPalpite
+} from '../core/palpite.service';
 
-type AbaTorneio = 'competicao' | 'estatisticas' | 'regras' | 'configuracao';
+type AbaTorneio = 'competicao' | 'palpites' | 'estatisticas' | 'regras' | 'configuracao';
 
 @Component({
   selector: 'app-torneio-detalhes',
@@ -24,6 +32,7 @@ export class TorneioDetalhes implements OnInit {
   artilharia: any[] = [];
   assistencias: any[] = [];
   chaveamento: any = null;
+  oportunidadesPalpite: CentralPalpites = { torneios: [], partidas: [] };
   solicitacoesPendentes: any[] = [];
   meusTimes: any[] = [];
 
@@ -40,7 +49,8 @@ export class TorneioDetalhes implements OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly route: ActivatedRoute,
-    private readonly auth: AuthService
+    private readonly auth: AuthService,
+    readonly palpites: PalpiteService
   ) {}
 
   ngOnInit() {
@@ -90,6 +100,16 @@ export class TorneioDetalhes implements OnInit {
 
   get partidaDestaque(): any | undefined {
     return this.partidas.find(partida => !partida.encerrada) ?? this.partidas[0];
+  }
+
+  get torneioPalpite(): TorneioPalpite | undefined {
+    return this.oportunidadesPalpite.torneios
+      .find(torneio => String(torneio.id) === String(this.torneioId));
+  }
+
+  get partidasPalpite(): PartidaPalpite[] {
+    return this.oportunidadesPalpite.partidas
+      .filter(partida => String(partida.torneioId) === String(this.torneioId));
   }
 
   get timesDisponiveisParaAdicionar(): any[] {
@@ -157,11 +177,11 @@ export class TorneioDetalhes implements OnInit {
   }
 
   nomeTime(timeId: number): string {
-    return this.times.find(time => time.id === timeId)?.nome ?? `Time #${timeId}`;
+    return this.times.find(time => String(time.id) === String(timeId))?.nome ?? `Time #${timeId}`;
   }
 
   nomeProfissional(jogadorId: number): string {
-    return this.profissionais.find(profissional => profissional.id === jogadorId)?.nome
+    return this.profissionais.find(profissional => String(profissional.id) === String(jogadorId))?.nome
       ?? `Jogador #${jogadorId}`;
   }
 
@@ -169,6 +189,60 @@ export class TorneioDetalhes implements OnInit {
     return partida.encerrada && partida.golsMandante != null && partida.golsVisitante != null
       ? `${partida.golsMandante} - ${partida.golsVisitante}`
       : 'x';
+  }
+
+  votarEventoTorneio(evento: EventoTorneioPalpite, opcao: OpcaoPalpite) {
+    const torneio = this.torneioPalpite;
+    if (!torneio || this.processando) return;
+    this.processando = `${evento.tipo}-${opcao.id}`;
+    this.mensagem = '';
+    this.erro = '';
+    this.palpites.votar(evento.tipo, String(torneio.id), null, String(opcao.id))
+      .pipe(finalize(() => this.processando = ''))
+      .subscribe({
+        next: () => {
+          this.mensagem = `Seu palpite em ${opcao.nome} foi registrado.`;
+          this.atualizarPercentuaisEvento(torneio, evento);
+        },
+        error: erro => this.erro = this.mensagemErroPalpite(erro)
+      });
+  }
+
+  votarPartida(partida: PartidaPalpite, opcao: OpcaoPalpite) {
+    if (this.processando) return;
+    this.processando = `partida-${partida.id}-${opcao.id}`;
+    this.mensagem = '';
+    this.erro = '';
+    this.palpites.votar(
+      'VENCEDOR_PARTIDA',
+      String(partida.torneioId),
+      String(partida.id),
+      String(opcao.id)
+    ).pipe(finalize(() => this.processando = '')).subscribe({
+      next: () => {
+        this.mensagem = `Palpite em ${opcao.nome} registrado.`;
+        this.atualizarPercentuaisPartida(partida);
+      },
+      error: erro => this.erro = this.mensagemErroPalpite(erro)
+    });
+  }
+
+  escolhaEventoTorneio(evento: EventoTorneioPalpite): string | null {
+    return this.palpites.escolha(evento.tipo, this.torneioId, null);
+  }
+
+  iconeEventoTorneio(evento: EventoTorneioPalpite): string {
+    if (evento.tipo === 'CAMPEAO_TORNEIO') return 'bi bi-trophy';
+    if (evento.tipo === 'ARTILHEIRO_TORNEIO') return 'bi bi-bullseye';
+    return 'bi bi-person-check';
+  }
+
+  escolhaPartida(partida: PartidaPalpite): string | null {
+    return this.palpites.escolha(
+      'VENCEDOR_PARTIDA',
+      String(partida.torneioId),
+      String(partida.id)
+    );
   }
 
   salvarNome() {
@@ -306,7 +380,9 @@ export class TorneioDetalhes implements OnInit {
       artilharia: this.http.get<any[]>(`/backend/ranking-estatistico/${this.torneioId}/artilharia`)
         .pipe(catchError(() => of([]))),
       assistencias: this.http.get<any[]>(`/backend/ranking-estatistico/${this.torneioId}/assistencias`)
-        .pipe(catchError(() => of([])))
+        .pipe(catchError(() => of([]))),
+      palpites: this.palpites.oportunidades()
+        .pipe(catchError(() => of({ torneios: [], partidas: [] } as CentralPalpites)))
     }).pipe(finalize(() => this.carregando = false)).subscribe(dados => {
       this.torneio = dados.torneio;
       this.nomeEdicao = this.torneio.nome ?? '';
@@ -318,6 +394,7 @@ export class TorneioDetalhes implements OnInit {
       this.chaveamento = dados.chaveamento;
       this.artilharia = dados.artilharia;
       this.assistencias = dados.assistencias;
+      this.oportunidadesPalpite = dados.palpites;
       if (this.route.snapshot.queryParamMap.get('configurar') === 'true' && this.podeGerenciar()) {
         this.aba = 'configuracao';
       }
@@ -375,5 +452,28 @@ export class TorneioDetalhes implements OnInit {
     if (this.torneio.formato === 'MATA_MATA') return 'Chaveamento';
     if (this.torneio.formato === 'FASE_DE_GRUPOS_COM_MATA_MATA') return 'Fase eliminatoria';
     return 'Rodadas';
+  }
+
+  private atualizarPercentuaisEvento(torneio: TorneioPalpite, evento: EventoTorneioPalpite) {
+    this.palpites.percentuais(evento.tipo, String(torneio.id), null)
+      .subscribe(percentuais => {
+        evento.percentuais = percentuais;
+        if (evento.tipo === 'CAMPEAO_TORNEIO') torneio.percentuais = percentuais;
+      });
+  }
+
+  private atualizarPercentuaisPartida(partida: PartidaPalpite) {
+    this.palpites.percentuais(
+      'VENCEDOR_PARTIDA',
+      String(partida.torneioId),
+      String(partida.id)
+    ).subscribe(percentuais => partida.percentuais = percentuais);
+  }
+
+  private mensagemErroPalpite(erro: any): string {
+    return erro?.error?.mensagem
+      ?? erro?.error?.detail
+      ?? erro?.error?.message
+      ?? 'Nao foi possivel registrar o palpite.';
   }
 }

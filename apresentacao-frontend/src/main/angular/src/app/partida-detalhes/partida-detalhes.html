@@ -1,73 +1,328 @@
-<main class="page">
-  <div class="hero-row">
-    <div>
-      <div class="eyebrow">Placar oficial</div>
-      <h1 class="page-title">Partida / placar oficial</h1>
-      <p class="page-subtitle">Salvar resultado atualiza status, classificacao e chaveamento. A mesa tatica e apenas visualizacao opcional da escalacao.</p>
-    </div>
-    <a class="btn btn-outline" routerLink="/torneio/1"><i class="bi bi-arrow-left"></i> Voltar ao torneio</a>
-  </div>
+<main class="page match-page">
+  @if (carregando) {
+    <section class="empty-state">Carregando partida...</section>
+  } @else {
+    <a class="match-back" [routerLink]="['/torneio', partida.torneioId]">
+      <i class="bi bi-arrow-left"></i> {{ torneio.nome || 'Voltar ao torneio' }}
+    </a>
 
-  <div class="grid layout-2-1">
-    <section class="grid">
-      <div class="card panel-strong">
-        <div class="score">
-          <div style="text-align: center"><div class="crest"><i class="bi bi-shield"></i></div><strong>Unidos do Bairro</strong></div>
-          <input class="score-number" style="width: 80px; text-align: center; border: 0; background: transparent" type="number" [(ngModel)]="golsCasa">
-          <span class="score-number">x</span>
-          <input class="score-number" style="width: 80px; text-align: center; border: 0; background: transparent" type="number" [(ngModel)]="golsVisitante">
-          <div style="text-align: center"><div class="crest"><i class="bi bi-shield"></i></div><strong>Real Esperanca</strong></div>
-        </div>
-        <button class="btn btn-primary btn-block" style="margin-top: 16px">Salvar placar oficial</button>
-        <p class="small muted" style="text-align: center; margin: 8px 0 0">Placar funciona mesmo sem evento estatistico.</p>
+    <header class="match-hero">
+      <div>
+        <div class="eyebrow">{{ torneio.nome || 'Torneio' }} · {{ partida.etapa || 'Partida' }}</div>
+        <h1>{{ nomeMandante }} x {{ nomeVisitante }}</h1>
       </div>
+      <span class="status" [class.status-green]="!partida.encerrada">
+        {{ partida.encerrada ? 'Finalizada' : partida.iniciada ? 'Em andamento' : 'Agendada' }}
+      </span>
+    </header>
 
-      <div class="card">
-        <div class="mini-row" style="border: 0">
-          <strong>Unidos do Bairro</strong>
-          <span class="status status-green">{{ esquemaCasa }}</span>
-          <span class="status status-green">{{ esquemaVisitante }}</span>
-          <strong>Real Esperanca</strong>
-        </div>
-        <div class="field-board">
-          @for (j of jogadoresCasa; track j.n) {
-            <div class="player-dot" [style.left.%]="j.x" [style.top.%]="j.y">
-              <div class="player-face"><i class="bi bi-person-fill"></i></div>
-              <span class="rating">{{ j.nota }}</span>
-              <span>{{ j.n }}</span>
-            </div>
+    @if (mensagem) {
+      <div class="match-message success"><i class="bi bi-check-circle"></i> {{ mensagem }}</div>
+    }
+    @if (erro) {
+      <div class="match-message error"><i class="bi bi-exclamation-circle"></i> {{ erro }}</div>
+    }
+
+    <section class="card panel-strong match-score-card">
+      <div class="match-score">
+        <a [routerLink]="['/time', partida.mandanteId, 'detalhes']">
+          <span><i class="bi bi-shield"></i></span>
+          <strong>{{ nomeMandante }}</strong>
+        </a>
+        <div>
+          @if (partida.encerrada) {
+            <strong>{{ partida.golsMandante }} <small>-</small> {{ partida.golsVisitante }}</strong>
+            <span>Resultado final</span>
+          } @else if (partida.iniciada) {
+            <strong><i class="bi bi-broadcast"></i></strong>
+            <span>Partida em andamento</span>
+          } @else {
+            <strong><i class="bi bi-clock"></i></strong>
+            <span>Aguardando inicio</span>
           }
-          @for (j of jogadoresVisitante; track j.n) {
-            <div class="player-dot" [style.left.%]="j.x" [style.top.%]="j.y">
-              <div class="player-face"><i class="bi bi-person-fill"></i></div>
-              <span class="rating">{{ j.nota }}</span>
-              <span>{{ j.n }}</span>
-            </div>
-          }
         </div>
-        <div class="grid grid-3" style="margin-top: 12px">
-          <button class="btn btn-outline">Editar mesa tatica</button>
-          <a class="btn btn-outline" routerLink="/sumula">Abrir sumula</a>
-          <a class="btn btn-outline" routerLink="/buscar">Buscar torneio</a>
-        </div>
+        <a [routerLink]="['/time', partida.visitanteId, 'detalhes']">
+          <span><i class="bi bi-shield"></i></span>
+          <strong>{{ nomeVisitante }}</strong>
+        </a>
       </div>
     </section>
 
-    <aside class="grid">
-      <div class="card">
-        <h2 class="section-title">Classificacao - Grupo A</h2>
-        @for (linha of classificacao; track linha.pos) {
-          <div class="mini-row">
-            <span>{{ linha.pos }}. {{ linha.nome }}</span>
-            <strong>{{ linha.pts }} pts</strong>
+    <nav class="match-tabs" aria-label="Areas da partida">
+      <button [class.active]="aba === 'resumo'" (click)="abrirAba('resumo')">
+        <i class="bi bi-house"></i> Resumo
+      </button>
+      <button [class.active]="aba === 'estatisticas'" (click)="abrirAba('estatisticas')">
+        <i class="bi bi-bar-chart"></i> Estatisticas
+      </button>
+      @if (podeGerenciarPartida) {
+        <button [class.active]="aba === 'gerenciar'" (click)="abrirAba('gerenciar')">
+          <i class="bi bi-sliders"></i> Gerenciar partida
+        </button>
+      }
+    </nav>
+
+    @if (aba === 'resumo') {
+      <div class="match-layout">
+        <section class="card panel-strong match-summary">
+          @if (!partida.iniciada && !partida.encerrada && oportunidade) {
+            <section class="match-voting">
+              <div class="match-voting-heading">
+                <div><div class="eyebrow">Palpite da comunidade</div><h2>Quem vence?</h2></div>
+                <span>{{ percentuais.totalPalpites }} voto(s)</span>
+              </div>
+              <div class="match-vote-options">
+                <button
+                  [class.selected]="escolhaAtual() === '' + oportunidade.mandante.id"
+                  [disabled]="!!processando"
+                  (click)="votar(oportunidade.mandante)">
+                  <i class="bi bi-shield"></i><strong>{{ oportunidade.mandante.nome }}</strong>
+                  <span><i [style.width.%]="palpites.percentual(percentuais, oportunidade.mandante.id)"></i></span>
+                  <b>{{ palpites.percentual(percentuais, oportunidade.mandante.id) }}%</b>
+                </button>
+                <button
+                  class="draw-option"
+                  [class.selected]="escolhaAtual() === '' + oportunidade.empate.id"
+                  [disabled]="!!processando"
+                  (click)="votar(oportunidade.empate)">
+                  <i class="bi bi-dash-circle"></i><strong>Empate</strong>
+                  <span><i [style.width.%]="palpites.percentual(percentuais, oportunidade.empate.id)"></i></span>
+                  <b>{{ palpites.percentual(percentuais, oportunidade.empate.id) }}%</b>
+                </button>
+                <button
+                  [class.selected]="escolhaAtual() === '' + oportunidade.visitante.id"
+                  [disabled]="!!processando"
+                  (click)="votar(oportunidade.visitante)">
+                  <i class="bi bi-shield"></i><strong>{{ oportunidade.visitante.nome }}</strong>
+                  <span><i [style.width.%]="palpites.percentual(percentuais, oportunidade.visitante.id)"></i></span>
+                  <b>{{ palpites.percentual(percentuais, oportunidade.visitante.id) }}%</b>
+                </button>
+              </div>
+              <p>O voto e publico. Entre na sua conta para acompanhar o historico de palpites.</p>
+            </section>
+          } @else if (!partida.iniciada && !partida.encerrada) {
+            <div class="match-unavailable">
+              <i class="bi bi-hourglass-split"></i> Esta partida ainda nao esta disponivel para palpites.
+            </div>
+          } @else {
+            <div class="match-overview-state">
+              <i class="bi" [class.bi-flag]="partida.encerrada" [class.bi-broadcast]="!partida.encerrada"></i>
+              <div>
+                <strong>{{ partida.encerrada ? 'Partida encerrada' : 'Bola rolando' }}</strong>
+                <span>{{ eventos.length }} evento(s) registrado(s) na sumula.</span>
+              </div>
+            </div>
+          }
+        </section>
+
+        <aside class="card match-context">
+          <div class="eyebrow">Informacoes</div>
+          <h2>{{ torneio.nome || 'Competicao' }}</h2>
+          <div><span>Etapa</span><strong>{{ partida.etapa || 'Partida' }}</strong></div>
+          <div><span>Status</span><strong>{{ partida.encerrada ? 'Finalizada' : partida.iniciada ? 'Em andamento' : 'Pendente' }}</strong></div>
+          <div><span>Scout</span><strong>{{ eventos.length ? eventos.length + ' eventos' : 'Nao informado' }}</strong></div>
+          <a class="btn btn-outline btn-block" [routerLink]="['/torneio', partida.torneioId]">
+            Ver torneio
+          </a>
+        </aside>
+      </div>
+    }
+
+    @if (aba === 'estatisticas') {
+      <div class="statistics-layout">
+        <section class="card scout-events public-events">
+          <div class="subsection-heading">
+            <div><div class="eyebrow">Linha do tempo</div><h2>Eventos da partida</h2></div>
+            <span>{{ eventos.length }}</span>
           </div>
+          @for (evento of eventos; track evento.id) {
+            <article [class.automatic-event]="evento.automatico">
+              <span class="event-icon"><i class="bi bi-activity"></i></span>
+              <div>
+                <strong>{{ nomeJogador(evento.jogadorId) }}</strong>
+                <small>{{ evento.tipo.replaceAll('_', ' ') }} @if (evento.automatico) { · automatico }</small>
+              </div>
+              @if (notaJogador(evento.jogadorId); as nota) {
+                <b class="player-rating">{{ nota.toFixed(1) }}</b>
+              }
+            </article>
+          } @empty {
+            <div class="match-unavailable">O organizador nao informou scout detalhado para esta partida.</div>
+          }
+        </section>
+
+        <section class="card scout-ranking-preview">
+          <div class="eyebrow">Destaques do torneio</div>
+          <h2>Rankings atualizados</h2>
+          <div class="ranking-preview-block">
+            <strong>Artilharia</strong>
+            @for (item of artilharia.slice(0, 3); track item.jogadorId; let posicao = $index) {
+              <span><b>{{ posicao + 1 }}</b>{{ nomeJogador(item.jogadorId) }}<em>{{ item.gols }} gol(s)</em></span>
+            } @empty { <small>Sem gols registrados.</small> }
+          </div>
+          <div class="ranking-preview-block">
+            <strong>Assistencias</strong>
+            @for (item of assistencias.slice(0, 3); track item.jogadorId; let posicao = $index) {
+              <span><b>{{ posicao + 1 }}</b>{{ nomeJogador(item.jogadorId) }}<em>{{ item.assistencias }}</em></span>
+            } @empty { <small>Sem assistencias registradas.</small> }
+          </div>
+          <div class="ranking-preview-block">
+            <strong>Melhores notas</strong>
+            @for (item of melhoresNotas.slice(0, 3); track item.jogadorId; let posicao = $index) {
+              <span><b>{{ posicao + 1 }}</b>{{ nomeJogador(item.jogadorId) }}<em>{{ item.media.toFixed(1) }}</em></span>
+            } @empty { <small>As notas aparecem quando houver scout.</small> }
+          </div>
+        </section>
+      </div>
+    }
+
+    @if (aba === 'gerenciar' && podeGerenciarPartida) {
+      <section class="organizer-flow">
+        <header>
+          <div><div class="eyebrow">Somente organizador</div><h2>Gerenciar partida</h2></div>
+          <p>1. Inicie a partida. 2. Adicione scout se desejar. 3. Confirme o placar oficial.</p>
+        </header>
+
+        @if (podeIniciarPartida) {
+          <section class="card organizer-step">
+            <span>1</span>
+            <div><h3>Iniciar partida</h3><p>Fecha os palpites e libera o registro do jogo.</p></div>
+            <button class="btn btn-primary" [disabled]="!!processando" (click)="iniciarPartida()">
+              <i class="bi bi-play-fill"></i> Iniciar
+            </button>
+          </section>
         }
-      </div>
-      <div class="card">
-        <h2 class="section-title">Proximos jogos</h2>
-        <div class="mini-row"><span>Vila FC</span><strong>x</strong><span>Os Parcas</span></div>
-        <div class="mini-row"><span>Resenha FC</span><strong>x</strong><span>Unidos do Bairro</span></div>
-      </div>
-    </aside>
-  </div>
+
+        @if (podeGerenciarScout) {
+          <section class="card organizer-step organizer-step-block">
+            <span>2</span>
+            <div>
+              <h3>Scout estatistico <small>opcional</small></h3>
+              <p>Gols, assistencias, cartoes e substituicoes alimentam notas e rankings automaticamente.</p>
+            </div>
+            <button class="btn btn-outline" (click)="scoutAtivo = !scoutAtivo">
+              {{ scoutAtivo ? 'Recolher' : 'Preencher scout' }}
+            </button>
+
+            @if (scoutAtivo) {
+              <div class="scout-entry-grid organizer-step-content">
+                <section>
+                  <h3>Evento individual</h3>
+                  <label>Jogador
+                    <select [(ngModel)]="jogadorSelecionado">
+                      <option value="">Selecione</option>
+                      @for (jogador of jogadores; track jogador.id) {
+                        <option [value]="jogador.id">{{ jogador.nome }} · {{ jogador.time }}</option>
+                      }
+                    </select>
+                  </label>
+                  <label>Evento
+                    <select [(ngModel)]="tipoEvento">
+                      <option value="GOL">Gol</option>
+                      <option value="ASSISTENCIA">Assistencia</option>
+                      <option value="CARTAO_AMARELO">Cartao amarelo</option>
+                      <option value="CARTAO_VERMELHO">Cartao vermelho</option>
+                    </select>
+                  </label>
+                  <button class="btn btn-primary" [disabled]="!jogadorSelecionado || !!processando" (click)="registrarEvento()">
+                    Registrar evento
+                  </button>
+                </section>
+
+                <section>
+                  <h3>Substituicao</h3>
+                  <label>Jogador que saiu
+                    <select [(ngModel)]="jogadorSaiuId">
+                      <option value="">Selecione</option>
+                      @for (jogador of jogadores; track jogador.id) {
+                        <option [value]="jogador.id">{{ jogador.nome }}</option>
+                      }
+                    </select>
+                  </label>
+                  <label>Jogador que entrou
+                    <select [(ngModel)]="jogadorEntrouId">
+                      <option value="">Selecione</option>
+                      @for (jogador of jogadores; track jogador.id) {
+                        <option [value]="jogador.id">{{ jogador.nome }}</option>
+                      }
+                    </select>
+                  </label>
+                  <div class="scout-inline-fields">
+                    <label>Parada<input type="number" min="1" [(ngModel)]="ordemParadaJogo"></label>
+                    <label>Observacao<input [(ngModel)]="descricaoParadaJogo" placeholder="Opcional"></label>
+                  </div>
+                  <button class="btn btn-outline" [disabled]="!jogadorSaiuId || !jogadorEntrouId || !!processando" (click)="registrarSubstituicao()">
+                    Registrar substituicao
+                  </button>
+                </section>
+              </div>
+
+              <div class="scout-content-grid organizer-step-content">
+                <section class="scout-events">
+                  <div class="subsection-heading">
+                    <div><div class="eyebrow">Sumula</div><h3>Eventos registrados</h3></div>
+                    <span>{{ eventos.length }}</span>
+                  </div>
+                  @for (evento of eventos; track evento.id) {
+                    <article [class.automatic-event]="evento.automatico">
+                      <span class="event-icon"><i class="bi bi-activity"></i></span>
+                      <div><strong>{{ nomeJogador(evento.jogadorId) }}</strong><small>{{ evento.tipo.replaceAll('_', ' ') }}</small></div>
+                      @if (!evento.automatico && evento.tipo !== 'SUBSTITUICAO') {
+                        <select [value]="evento.tipo" (change)="corrigirEvento(evento, $any($event.target).value)">
+                          <option value="GOL">Gol</option>
+                          <option value="ASSISTENCIA">Assistencia</option>
+                          <option value="CARTAO_AMARELO">Amarelo</option>
+                          <option value="CARTAO_VERMELHO">Vermelho</option>
+                        </select>
+                      }
+                      @if (!evento.automatico) {
+                        <button title="Remover evento" [disabled]="!!processando" (click)="removerEvento(evento)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      }
+                    </article>
+                  } @empty {
+                    <div class="match-unavailable">Scout vazio. Voce pode seguir diretamente para o placar.</div>
+                  }
+                </section>
+                <section class="scout-ranking-preview">
+                  <div class="eyebrow">Previa automatica</div><h3>Impacto nos rankings</h3>
+                  <div class="ranking-preview-block">
+                    <strong>Artilharia</strong>
+                    @for (item of artilharia.slice(0, 3); track item.jogadorId; let posicao = $index) {
+                      <span><b>{{ posicao + 1 }}</b>{{ nomeJogador(item.jogadorId) }}<em>{{ item.gols }}</em></span>
+                    } @empty { <small>Sem gols.</small> }
+                  </div>
+                  <div class="ranking-preview-block">
+                    <strong>Assistencias</strong>
+                    @for (item of assistencias.slice(0, 3); track item.jogadorId; let posicao = $index) {
+                      <span><b>{{ posicao + 1 }}</b>{{ nomeJogador(item.jogadorId) }}<em>{{ item.assistencias }}</em></span>
+                    } @empty { <small>Sem assistencias.</small> }
+                  </div>
+                </section>
+              </div>
+            }
+          </section>
+
+          @if (podeRegistrarResultado) {
+            <section class="card organizer-step result-step">
+              <span>3</span>
+              <div>
+                <h3>Confirmar placar oficial <small>obrigatorio</small></h3>
+                <p>Ao salvar, classificacao ou chaveamento, status, palpites e rankings sao atualizados.</p>
+              </div>
+              <div class="official-score-input">
+                <label>{{ nomeMandante }}<input type="number" min="0" [(ngModel)]="golsMandante"></label>
+                <b>x</b>
+                <label>{{ nomeVisitante }}<input type="number" min="0" [(ngModel)]="golsVisitante"></label>
+              </div>
+              <button class="btn btn-primary" [disabled]="!!processando" (click)="salvarResultado()">
+                Salvar e atualizar competicao
+              </button>
+            </section>
+          }
+        }
+      </section>
+    }
+  }
 </main>

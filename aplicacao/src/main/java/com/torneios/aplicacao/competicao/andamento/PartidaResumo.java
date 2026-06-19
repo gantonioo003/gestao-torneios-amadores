@@ -6,6 +6,7 @@ public interface PartidaResumo {
     Long getMandanteId();
     Long getVisitanteId();
     String getEtapa();
+    boolean isIniciada();
     boolean isEncerrada();
     Integer getGolsMandante();
     Integer getGolsVisitante();

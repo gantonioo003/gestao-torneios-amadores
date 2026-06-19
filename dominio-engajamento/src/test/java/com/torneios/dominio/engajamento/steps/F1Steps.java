@@ -39,6 +39,24 @@ public class F1Steps extends EngajamentoFuncionalidade {
         assertTrue(palpiteRepositorio.buscarPorUsuarioEEvento(USUARIO_ID, eventoAlvo).isPresent());
     }
 
+    @Quando("ele registrar um palpite indicando empate na partida")
+    public void ele_registrar_palpite_empate_partida() {
+        try {
+            palpite = palpiteServico.registrarOuAtualizar(
+                    palpiteId(13L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(OpcaoPalpite.EMPATE));
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve armazenar o empate como opcao do palpite")
+    public void sistema_deve_armazenar_empate_como_opcao() {
+        assertNull(excecaoCapturada);
+        assertEquals(
+                OpcaoPalpite.EMPATE,
+                palpiteRepositorio.buscarPorUsuarioEEvento(USUARIO_ID, eventoAlvo).orElseThrow().getOpcao().valor());
+    }
+
     @Dado("que existe um torneio que ainda nao foi iniciado")
     public void que_existe_torneio_nao_iniciado() {
         configurarEventoCampeaoAberto();
@@ -214,6 +232,16 @@ public class F1Steps extends EngajamentoFuncionalidade {
     @Dado("que a opcao escolhida pelo usuario nao corresponde ao resultado real")
     public void que_opcao_nao_corresponde_resultado_real() {
         resultadoReal = TIME_B_ID;
+    }
+
+    @Dado("que o usuario escolheu empate e a partida terminou empatada")
+    public void usuario_escolheu_empate_e_partida_terminou_empatada() {
+        consultaPalpite.autenticar(USUARIO_ID);
+        configurarEventoDePartidaAberto();
+        palpite = palpiteServico.registrarOuAtualizar(
+                palpiteId(14L), USUARIO_ID, eventoAlvo, new OpcaoPalpite(OpcaoPalpite.EMPATE));
+        consultaPalpite.encerrarPartida(PARTIDA_ID);
+        resultadoReal = OpcaoPalpite.EMPATE;
     }
 
     @Quando("o sistema apurar o evento alvo")

@@ -32,6 +32,7 @@ class PartidaJpa {
     Long visitanteId;
     String etapa;
     int quantidadeJogadoresPorEquipe;
+    boolean iniciada;
     boolean encerrada;
 
     @Column(nullable = true)
@@ -63,6 +64,7 @@ class PartidaRepositorioImpl implements PartidaRepositorio {
         jpa.visitanteId = partida.getVisitante().valor();
         jpa.etapa = partida.getEtapa();
         jpa.quantidadeJogadoresPorEquipe = partida.getQuantidadeJogadoresPorEquipe();
+        jpa.iniciada = partida.estaIniciada();
         jpa.encerrada = partida.estaEncerrada();
 
         if (partida.getResultado() != null) {
@@ -101,6 +103,8 @@ class PartidaRepositorioImpl implements PartidaRepositorio {
         if (jpa.encerrada && jpa.golsMandante != null && jpa.golsVisitante != null && jpa.dataHoraRegistroResultado != null) {
             partida.registrarResultado(new ResultadoPartida(jpa.golsMandante, jpa.golsVisitante),
                     jpa.dataHoraRegistroResultado);
+        } else if (jpa.iniciada) {
+            partida.iniciar();
         }
 
         return partida;

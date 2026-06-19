@@ -5,7 +5,7 @@ import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { AuthService } from '../core/auth.service';
 
 interface OpcaoPalpite {
-  id: number;
+  id: string;
   nome: string;
 }
 
@@ -15,7 +15,7 @@ interface Percentuais {
 }
 
 interface TorneioDisponivel {
-  id: number;
+  id: string;
   nome: string;
   status: string;
   opcoes: OpcaoPalpite[];
@@ -23,21 +23,22 @@ interface TorneioDisponivel {
 }
 
 interface PartidaDisponivel {
-  id: number;
-  torneioId: number;
+  id: string;
+  torneioId: string;
   torneioNome: string;
   etapa: string;
   mandante: OpcaoPalpite;
+  empate: OpcaoPalpite;
   visitante: OpcaoPalpite;
   percentuais: Percentuais;
 }
 
 interface PalpiteUsuario {
-  id: number;
+  id: string;
   tipo: string;
-  torneioId: number;
-  partidaId?: number;
-  opcao: number;
+  torneioId: string;
+  partidaId?: string;
+  opcao: string;
   apurado: boolean;
   acertou?: boolean;
 }
@@ -86,14 +87,14 @@ export class Palpites implements OnInit {
     });
   }
 
-  percentual(percentuais: Percentuais, opcaoId: number): number {
+  percentual(percentuais: Percentuais, opcaoId: string): number {
     return Math.round(percentuais?.percentuaisPorOpcao?.[String(opcaoId)] ?? 0);
   }
 
   nomeOpcao(palpite: PalpiteUsuario): string {
     if (palpite.tipo === 'VENCEDOR_PARTIDA') {
       const partida = this.partidas.find(item => item.id === palpite.partidaId);
-      return [partida?.mandante, partida?.visitante]
+      return [partida?.mandante, partida?.empate, partida?.visitante]
         .find(opcao => opcao?.id === palpite.opcao)?.nome ?? `Time #${palpite.opcao}`;
     }
     const torneio = this.torneios.find(item => item.id === palpite.torneioId);
@@ -141,9 +142,9 @@ export class Palpites implements OnInit {
 
   private salvarPalpite(
     tipo: string,
-    torneioId: number,
-    partidaId: number | null,
-    opcao: number,
+    torneioId: string,
+    partidaId: string | null,
+    opcao: string,
     depoisDeSalvar: () => void
   ) {
     const chave = `${tipo}:${torneioId}:${partidaId ?? 'torneio'}`;

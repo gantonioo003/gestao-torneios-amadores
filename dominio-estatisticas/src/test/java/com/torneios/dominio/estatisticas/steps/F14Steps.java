@@ -148,4 +148,31 @@ public class F14Steps extends EstatisticasFuncionalidade {
         assertTrue(historicoJogador.isEmpty());
         assertNull(notaEstatistica);
     }
+
+    @Dado("que existem jogadores com assistencias e notas diferentes")
+    public void que_existem_jogadores_com_assistencias_e_notas_diferentes() {
+        configurarCenarioPadrao();
+        eventoEstatisticoServico.registrarGol(40L, TORNEIO_ID, PARTIDA_ID, ORGANIZADOR_ID, JOGADOR_A_ID);
+        eventoEstatisticoServico.registrarAssistencia(41L, TORNEIO_ID, PARTIDA_ID, ORGANIZADOR_ID, JOGADOR_B_ID);
+        eventoEstatisticoServico.registrarAssistencia(42L, TORNEIO_ID, PARTIDA_ID, ORGANIZADOR_ID, JOGADOR_B_ID);
+    }
+
+    @Quando("o sistema ordenar os rankings individuais do torneio")
+    public void sistema_ordenar_rankings_individuais() {
+        try {
+            rankingAssistencias = estatisticaServico.listarLideresAssistencias(TORNEIO_ID);
+            rankingNotas = estatisticaServico.listarMelhoresMediasDeNota(TORNEIO_ID, 1);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o lider de assistencias e o jogador de maior nota devem aparecer primeiro")
+    public void lider_assistencias_e_maior_nota_devem_aparecer_primeiro() {
+        assertNull(excecaoCapturada);
+        assertEquals(JOGADOR_B_ID, rankingAssistencias.get(0).getJogadorId());
+        assertEquals(2, rankingAssistencias.get(0).getAssistencias());
+        assertEquals(JOGADOR_B_ID, rankingNotas.get(0).jogadorId());
+        assertTrue(rankingNotas.get(0).media() > rankingNotas.get(1).media());
+    }
 }

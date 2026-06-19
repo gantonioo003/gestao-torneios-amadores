@@ -1,11 +1,11 @@
 # Funcionalidades do Sistema
 
 ## Conta, comunicacao e participacao inicial
-F1. Gerenciar ciclo completo de palpites sobre partidas e rankings do torneio, com registro de votos, janela de participacao, percentuais em tempo real e apuracao automatica
+F1. Gerenciar palpites publicos em torneios e partidas, permitindo votos de visitantes e usuarios em vencedor ou empate, campeao, artilheiro e lider de assistencias, com janelas de participacao, percentuais em tempo real, apuracao automatica e historico privado para contas autenticadas.
 
-F2. Gerenciar identidade, conta, autenticacao, perfil e permissoes, permitindo cadastro por funcao no futebol, entrada local ou externa, edicao segura, exclusao da propria conta, pagina publica, torneios organizados ou disputados, torneios salvos e historico privado de palpites
+F2. Gerenciar identidade, autenticacao, perfil e permissoes por funcao no futebol, mantendo torneios sob responsabilidade do organizador, times e elencos sob responsabilidade do treinador e paginas publicas de jogadores, times, usuarios e torneios.
 
-F3. Gerenciar comunicacao privada entre usuarios com solicitacoes de conversa, permitindo solicitar contato, aprovar ou recusar pedidos, liberar mensagens apos aprovacao e consultar historico das conversas
+F3. Gerenciar o chat privado autenticado entre usuarios, com solicitacao de conversa, aprovacao ou recusa, envio de mensagens somente apos aprovacao e consulta segura do historico pelos participantes.
 
 F4. Gerenciar inscricoes, curadoria e composicao final dos participantes do torneio, permitindo candidatura, acompanhamento, cancelamento, avaliacao, aprovacao, rejeicao e ajuste da lista final antes do inicio
 

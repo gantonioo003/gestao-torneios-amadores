@@ -18,6 +18,7 @@ import com.torneios.dominio.engajamento.feed.FeedTorneioServico;
 import com.torneios.dominio.engajamento.feed.PublicacaoFeed;
 import com.torneios.dominio.engajamento.feed.PublicacaoFeedId;
 import com.torneios.dominio.engajamento.palpite.EventoAlvoPalpite;
+import com.torneios.dominio.engajamento.palpite.OpcaoPalpite;
 import com.torneios.dominio.engajamento.palpite.Palpite;
 import com.torneios.dominio.engajamento.palpite.PalpiteId;
 import com.torneios.dominio.engajamento.palpite.PalpiteServico;
@@ -114,7 +115,7 @@ public abstract class EngajamentoFuncionalidade {
 
     protected void configurarEventoDePartidaAberto() {
         eventoAlvo = EventoAlvoPalpite.paraPartida(TORNEIO_ID, PARTIDA_ID);
-        consultaPalpite.registrarOpcoesValidas(eventoAlvo, TIME_A_ID, TIME_B_ID);
+        consultaPalpite.registrarOpcoesValidas(eventoAlvo, OpcaoPalpite.EMPATE, TIME_A_ID, TIME_B_ID);
     }
 
     protected void configurarEventoCampeaoAberto() {

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.torneios.dominio.compartilhado.enumeracao.FormatoEquipe;
 import com.torneios.dominio.compartilhado.enumeracao.FormatoTorneio;
 import com.torneios.dominio.compartilhado.enumeracao.StatusTorneio;
+import com.torneios.dominio.compartilhado.excecao.RegraDeNegocioException;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
@@ -106,7 +107,17 @@ class TorneioRepositorioImpl implements TorneioRepositorio {
 
     @Override
     public List<Torneio> listarTodos() {
-        return repositorio.findAll().stream().map(this::toDomain).toList();
+        return repositorio.findAll().stream()
+                .flatMap(jpa -> reconstruirSeValido(jpa).stream())
+                .toList();
+    }
+
+    private Optional<Torneio> reconstruirSeValido(TorneioJpa jpa) {
+        try {
+            return Optional.of(toDomain(jpa));
+        } catch (RegraDeNegocioException excecao) {
+            return Optional.empty();
+        }
     }
 
     @Override

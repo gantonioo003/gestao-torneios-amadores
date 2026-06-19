@@ -8,8 +8,16 @@ export const authGuard: CanActivateFn = (_, state) => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
+  const acesso = state.url.startsWith('/chat')
+    ? 'chat'
+    : state.url.startsWith('/palpites')
+      ? 'palpites'
+      : state.url.startsWith('/feed')
+        ? 'feed'
+        : 'restrito';
+
   const redirecionarParaLogin = () => router.createUrlTree(['/login'], {
-    queryParams: { returnUrl: state.url, acesso: state.url.startsWith('/chat') ? 'chat' : 'restrito' }
+    queryParams: { returnUrl: state.url, acesso }
   });
 
   if (!auth.estaAutenticado()) {

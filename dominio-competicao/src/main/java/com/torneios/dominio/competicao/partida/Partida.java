@@ -18,6 +18,7 @@ public class Partida {
     private final int quantidadeJogadoresPorEquipe;
     private ResultadoPartida resultado;
     private LocalDateTime dataHoraRegistroResultado;
+    private boolean iniciada;
     private boolean encerrada;
 
     public Partida(PartidaId id, TorneioId torneioId, TimeId mandante, TimeId visitante) {
@@ -45,6 +46,7 @@ public class Partida {
         }
         this.etapa = etapa.trim();
         this.quantidadeJogadoresPorEquipe = quantidadeJogadoresPorEquipe;
+        this.iniciada = false;
         this.encerrada = false;
     }
 
@@ -84,6 +86,17 @@ public class Partida {
         return encerrada;
     }
 
+    public boolean estaIniciada() {
+        return iniciada;
+    }
+
+    public void iniciar() {
+        if (encerrada) {
+            throw new IllegalStateException("Nao e permitido iniciar uma partida encerrada.");
+        }
+        this.iniciada = true;
+    }
+
     public void registrarResultado(ResultadoPartida resultado) {
         registrarResultado(resultado, LocalDateTime.now());
     }
@@ -95,6 +108,7 @@ public class Partida {
         this.resultado = Objects.requireNonNull(resultado, "O resultado da partida e obrigatorio.");
         this.dataHoraRegistroResultado = Objects.requireNonNull(dataHoraRegistro,
                 "A data de registro do resultado e obrigatoria.");
+        this.iniciada = true;
         this.encerrada = true;
     }
 

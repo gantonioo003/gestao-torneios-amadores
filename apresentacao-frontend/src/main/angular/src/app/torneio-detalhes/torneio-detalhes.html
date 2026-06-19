@@ -34,6 +34,9 @@
       <button [class.active]="aba === 'estatisticas'" (click)="abrirAba('estatisticas')">
         <i class="bi bi-bar-chart"></i> Estatisticas
       </button>
+      <button [class.active]="aba === 'palpites'" (click)="abrirAba('palpites')">
+        <i class="bi bi-lightning-charge"></i> Palpites
+      </button>
       <button [class.active]="aba === 'regras'" (click)="abrirAba('regras')">
         <i class="bi bi-journal-text"></i> Regras
       </button>
@@ -228,6 +231,103 @@
             </div>
           }
 
+          @if (aba === 'palpites') {
+            <div class="content-heading">
+              <div>
+                <div class="eyebrow">Opiniao da comunidade</div>
+                <h2>Palpites do torneio</h2>
+                <p>Vote enquanto a janela estiver aberta. O voto de visitante tambem entra nos percentuais.</p>
+              </div>
+              <span class="status status-green"><i class="bi bi-broadcast"></i> Tempo real</span>
+            </div>
+
+            @if (torneioPalpite; as oportunidade) {
+              <div class="tournament-season-predictions">
+                @for (evento of oportunidade.eventos; track evento.tipo) {
+                  <section class="tournament-prediction-block">
+                    <div class="prediction-block-heading">
+                      <span><i [class]="iconeEventoTorneio(evento)"></i></span>
+                      <div>
+                        <div class="eyebrow">
+                          {{ evento.tipo === 'CAMPEAO_TORNEIO' ? 'Titulo do torneio' : 'Destaque individual' }}
+                        </div>
+                        <h3>{{ evento.titulo }}</h3>
+                      </div>
+                      <small>{{ evento.percentuais.totalPalpites }} voto(s)</small>
+                    </div>
+                    <div class="champion-vote-grid">
+                      @for (opcao of evento.opcoes; track opcao.id) {
+                        <button
+                          [class.selected]="escolhaEventoTorneio(evento) === '' + opcao.id"
+                          [disabled]="!!processando"
+                          (click)="votarEventoTorneio(evento, opcao)">
+                          <span>
+                            <i [class]="evento.tipo === 'CAMPEAO_TORNEIO' ? 'bi bi-shield' : 'bi bi-person'"></i>
+                            <strong>{{ opcao.nome }}</strong>
+                          </span>
+                          <span class="prediction-bar">
+                            <i [style.width.%]="palpites.percentual(evento.percentuais, opcao.id)"></i>
+                          </span>
+                          <b>{{ palpites.percentual(evento.percentuais, opcao.id) }}%</b>
+                        </button>
+                      }
+                    </div>
+                  </section>
+                }
+              </div>
+            }
+
+            <section class="match-prediction-block">
+              <div class="subsection-heading">
+                <div><div class="eyebrow">Proximos confrontos</div><h3>Quem vence cada partida?</h3></div>
+                <span>{{ partidasPalpite.length }}</span>
+              </div>
+              @if (partidasPalpite.length) {
+                <div class="tournament-match-votes">
+                  @for (partida of partidasPalpite; track partida.id) {
+                    <article>
+                      <header><strong>{{ partida.etapa || 'Proxima rodada' }}</strong><a [routerLink]="['/partida', partida.id]">Ver partida</a></header>
+                      <div>
+                        <button
+                          [class.selected]="escolhaPartida(partida) === '' + partida.mandante.id"
+                          [disabled]="!!processando"
+                          (click)="votarPartida(partida, partida.mandante)">
+                          <i class="bi bi-shield"></i><strong>{{ partida.mandante.nome }}</strong>
+                          <span class="prediction-bar"><i [style.width.%]="palpites.percentual(partida.percentuais, partida.mandante.id)"></i></span>
+                          <b>{{ palpites.percentual(partida.percentuais, partida.mandante.id) }}%</b>
+                        </button>
+                        <button
+                          class="draw-option"
+                          [class.selected]="escolhaPartida(partida) === '' + partida.empate.id"
+                          [disabled]="!!processando"
+                          (click)="votarPartida(partida, partida.empate)">
+                          <i class="bi bi-dash-circle"></i><strong>Empate</strong>
+                          <span class="prediction-bar"><i [style.width.%]="palpites.percentual(partida.percentuais, partida.empate.id)"></i></span>
+                          <b>{{ palpites.percentual(partida.percentuais, partida.empate.id) }}%</b>
+                        </button>
+                        <button
+                          [class.selected]="escolhaPartida(partida) === '' + partida.visitante.id"
+                          [disabled]="!!processando"
+                          (click)="votarPartida(partida, partida.visitante)">
+                          <i class="bi bi-shield"></i><strong>{{ partida.visitante.nome }}</strong>
+                          <span class="prediction-bar"><i [style.width.%]="palpites.percentual(partida.percentuais, partida.visitante.id)"></i></span>
+                          <b>{{ palpites.percentual(partida.percentuais, partida.visitante.id) }}%</b>
+                        </button>
+                      </div>
+                      <footer>{{ partida.percentuais.totalPalpites }} palpite(s) registrados</footer>
+                    </article>
+                  }
+                </div>
+              } @else if (!torneioPalpite) {
+                <div class="competition-empty">
+                  <i class="bi bi-hourglass-split"></i>
+                  <strong>Nenhuma janela de palpite aberta</strong>
+                  <p>Novas votacoes aparecem quando houver participantes ou partidas pendentes.</p>
+                </div>
+              }
+            </section>
+          }
+
           @if (aba === 'regras') {
             <div class="content-heading">
               <div>
@@ -362,6 +462,20 @@
             @if (torneio.status === 'ESTRUTURA_GERADA') {
               <button class="btn btn-primary btn-block" [disabled]="!!processando" (click)="iniciarTorneio()"><i class="bi bi-play-fill"></i> Iniciar torneio</button>
             } @else if (torneio.status === 'INICIADO') {
+              <div class="config-match-management">
+                <div class="eyebrow">Partidas da edicao</div>
+                @for (partida of partidas; track partida.id) {
+                  <a [routerLink]="['/partida', partida.id]" [queryParams]="{ gerenciar: true }">
+                    <span>
+                      <strong>{{ nomeTime(partida.mandanteId) }} x {{ nomeTime(partida.visitanteId) }}</strong>
+                      <small>{{ partida.encerrada ? placarPartida(partida) + ' · finalizada' : partida.iniciada ? 'Em andamento' : 'Aguardando inicio' }}</small>
+                    </span>
+                    <b>{{ partida.encerrada ? 'Revisar' : 'Gerenciar' }} <i class="bi bi-chevron-right"></i></b>
+                  </a>
+                } @empty {
+                  <p class="config-help">Nenhuma partida foi gerada para esta edicao.</p>
+                }
+              </div>
               <button class="btn btn-danger btn-block" [disabled]="!!processando" (click)="finalizarTorneio()"><i class="bi bi-flag"></i> Finalizar edicao</button>
             } @else if (torneio.status === 'FINALIZADO') {
               <button class="btn btn-primary btn-block" [disabled]="!!processando" (click)="repetirTorneio()"><i class="bi bi-arrow-repeat"></i> Criar nova edicao</button>

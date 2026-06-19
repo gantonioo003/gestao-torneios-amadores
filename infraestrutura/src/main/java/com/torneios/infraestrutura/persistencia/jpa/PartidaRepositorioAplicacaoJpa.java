@@ -1,6 +1,7 @@
 package com.torneios.infraestrutura.persistencia.jpa;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,12 @@ class PartidaRepositorioAplicacaoImpl implements PartidaRepositorioAplicacao {
         return repositorio.findByTorneioId(torneioId).stream()
                 .map(jpa -> (PartidaResumo) new PartidaJpaResumo(jpa))
                 .toList();
+    }
+
+    @Override
+    public Optional<PartidaResumo> buscarResumoPorId(long partidaId) {
+        return repositorio.findById(partidaId)
+                .map(jpa -> (PartidaResumo) new PartidaJpaResumo(jpa));
     }
 }
 
@@ -46,6 +53,11 @@ record PartidaJpaResumo(PartidaJpa jpa) implements PartidaResumo {
     @Override
     public String getEtapa() {
         return jpa.etapa;
+    }
+
+    @Override
+    public boolean isIniciada() {
+        return jpa.iniciada;
     }
 
     @Override

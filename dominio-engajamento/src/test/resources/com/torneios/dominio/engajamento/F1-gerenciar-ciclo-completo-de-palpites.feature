@@ -34,6 +34,12 @@ Feature: Gerenciar ciclo completo de palpites sobre partidas e rankings do torne
     When ele registrar um palpite como visitante indicando o time vencedor da partida
     Then o sistema deve armazenar o palpite do visitante para a partida
 
+  Scenario: Registrar palpite de empate em uma partida
+    Given que o usuario esta autenticado
+    And que existe uma partida cadastrada com janela de votacao aberta
+    When ele registrar um palpite indicando empate na partida
+    Then o sistema deve armazenar o empate como opcao do palpite
+
   Scenario: Substituir palpite anterior do mesmo usuario para o mesmo evento alvo
     Given que o usuario esta autenticado
     And que ele ja registrou um palpite para um evento com janela de votacao aberta
@@ -74,6 +80,11 @@ Feature: Gerenciar ciclo completo de palpites sobre partidas e rankings do torne
     And que a opcao escolhida pelo usuario nao corresponde ao resultado real
     When o sistema apurar o evento alvo
     Then o palpite do usuario deve ser marcado como nao acertado
+
+  Scenario: Apurar palpite de empate automaticamente
+    Given que o usuario escolheu empate e a partida terminou empatada
+    When o sistema apurar o evento alvo
+    Then o palpite do usuario deve ser marcado como acertado
 
   Scenario: Impedir alteracao de um palpite apos a apuracao
     Given que existe um palpite ja apurado

@@ -182,9 +182,13 @@
 .match-options {
   padding: 16px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: center;
   gap: 10px;
+}
+
+.match-options .draw-prediction {
+  background: #fffaf0;
 }
 
 .match-options button,

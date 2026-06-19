@@ -532,6 +532,183 @@
   gap: 12px;
 }
 
+.tournament-prediction-block {
+  margin-bottom: 26px;
+  padding: 18px;
+  background: linear-gradient(135deg, #f7fbf8, #fffaf0);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.tournament-season-predictions {
+  display: grid;
+  gap: 18px;
+}
+
+.config-match-management {
+  margin: 16px 0;
+  display: grid;
+  gap: 8px;
+}
+
+.config-match-management a {
+  padding: 11px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--ink);
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+}
+
+.config-match-management a span {
+  display: grid;
+  gap: 2px;
+}
+
+.config-match-management a small {
+  color: var(--muted);
+}
+
+.config-match-management a b {
+  color: var(--green-dark);
+  font-size: 12px;
+}
+
+.prediction-block-heading {
+  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.prediction-block-heading > span {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  color: #9a6a08;
+  background: #fff1c7;
+  border-radius: 13px;
+}
+
+.prediction-block-heading h3 {
+  margin: 3px 0 0;
+}
+
+.prediction-block-heading small {
+  color: var(--muted);
+}
+
+.champion-vote-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.champion-vote-grid button,
+.tournament-match-votes button {
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  cursor: pointer;
+}
+
+.champion-vote-grid button {
+  min-height: 56px;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(80px, .8fr) 38px;
+  align-items: center;
+  gap: 10px;
+}
+
+.champion-vote-grid button > span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.champion-vote-grid button.selected,
+.tournament-match-votes button.selected {
+  background: var(--green-soft);
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgba(18, 184, 95, .08);
+}
+
+.prediction-bar {
+  height: 7px;
+  overflow: hidden;
+  background: #e3eae5;
+  border-radius: 999px;
+}
+
+.prediction-bar i {
+  height: 100%;
+  display: block;
+  background: linear-gradient(90deg, var(--green-dark), var(--green));
+  border-radius: inherit;
+}
+
+.match-prediction-block {
+  padding-top: 2px;
+}
+
+.tournament-match-votes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tournament-match-votes article {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+}
+
+.tournament-match-votes header,
+.tournament-match-votes footer {
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  background: #f8faf8;
+}
+
+.tournament-match-votes header a {
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.tournament-match-votes article > div {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 8px;
+}
+
+.tournament-match-votes .draw-option {
+  background: #fffaf0;
+}
+
+.tournament-match-votes button {
+  min-height: 108px;
+  padding: 10px;
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+}
+
+.tournament-match-votes footer {
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .stat-ranking {
   padding: 16px;
   background: #fbfcfb;
@@ -1033,7 +1210,9 @@
   .statistics-columns,
   .statistics-overview,
   .rules-grid,
-  .participant-grid {
+  .participant-grid,
+  .champion-vote-grid,
+  .tournament-match-votes {
     grid-template-columns: 1fr;
   }
 

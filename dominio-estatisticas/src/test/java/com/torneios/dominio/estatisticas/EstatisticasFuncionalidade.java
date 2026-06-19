@@ -16,6 +16,7 @@ import com.torneios.dominio.estatisticas.evento.EventoEstatistico;
 import com.torneios.dominio.estatisticas.evento.EventoEstatisticoServico;
 import com.torneios.dominio.estatisticas.nota.CalculadoraNotaEstatistica;
 import com.torneios.dominio.estatisticas.nota.NotaEstatistica;
+import com.torneios.dominio.estatisticas.nota.NotaMediaJogador;
 import com.torneios.infraestrutura.persistencia.memoria.ComparativoDesempenhoRepositorioMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaComparacaoDesempenhoMemoria;
 import com.torneios.infraestrutura.persistencia.memoria.ConsultaEstatisticaCompeticaoMemoria;
@@ -53,6 +54,7 @@ public abstract class EstatisticasFuncionalidade {
     protected NotaEstatistica notaEstatistica;
     protected List<EstatisticaJogador> rankingArtilharia;
     protected List<EstatisticaJogador> rankingAssistencias;
+    protected List<NotaMediaJogador> rankingNotas;
     protected List<EstatisticaJogador> estatisticasJogadores;
     protected List<EventoEstatistico> historicoJogador;
     protected List<ComparativoDesempenho> comparativosSalvos;

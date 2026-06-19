@@ -1,4 +1,4 @@
-Feature: Consolidar estatisticas e rankings do torneio
+Feature: Gerenciar a consolidacao historica das estatisticas e rankings do torneio
 
   As a usuario da plataforma
   I want que o sistema consolide notas, rankings e historico dos jogadores
@@ -23,3 +23,8 @@ Feature: Consolidar estatisticas e rankings do torneio
     Given que existe uma partida sem eventos estatisticos registrados
     When o sistema tentar consolidar estatisticas sem eventos
     Then o sistema deve manter apenas o placar oficial sem scout detalhado
+
+  Scenario: Ordenar lideres de assistencias e melhores notas
+    Given que existem jogadores com assistencias e notas diferentes
+    When o sistema ordenar os rankings individuais do torneio
+    Then o lider de assistencias e o jogador de maior nota devem aparecer primeiro

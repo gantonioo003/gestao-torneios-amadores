@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -16,7 +16,7 @@ declare global {
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
-export class Login implements AfterViewInit {
+export class Login implements OnInit, AfterViewInit {
   aba: 'entrar' | 'criar' = 'entrar';
   email = '';
   senha = '';
@@ -31,7 +31,7 @@ export class Login implements AfterViewInit {
   tipo = 'JOGADOR';
   carregando = false;
   erro = '';
-  avisoChat = false;
+  avisoAcesso = '';
   googleHabilitado = false;
   configuracaoCarregada = false;
 
@@ -48,8 +48,17 @@ export class Login implements AfterViewInit {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly auth: AuthService
-  ) {
-    this.avisoChat = this.route.snapshot.queryParamMap.get('acesso') === 'chat';
+  ) {}
+
+  ngOnInit() {
+    const avisos: Record<string, string> = {
+      chat: 'Faca login para acessar suas conversas e mensagens privadas.',
+      feed: 'Faca login para entrar no feed social, publicar e interagir.',
+      palpites: 'Faca login para acompanhar seus palpites, resultados e historico.'
+    };
+    this.route.queryParamMap.subscribe(parametros => {
+      this.avisoAcesso = avisos[parametros.get('acesso') ?? ''] ?? '';
+    });
   }
 
   ngAfterViewInit() {

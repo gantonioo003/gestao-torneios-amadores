@@ -56,23 +56,48 @@
             <div class="eyebrow">Opiniao da comunidade</div>
             <h2>Mais palpitados hoje</h2>
           </div>
-          <a class="btn btn-sm btn-outline" routerLink="/palpites">Participar</a>
-        </div>
-
-        <div class="prediction-list">
-          @for (p of palpites; track p.pergunta) {
-            <div class="prediction-row">
-              <span>
-                <strong>{{ p.opcao }}</strong>
-                <small>{{ p.pergunta }}</small>
-              </span>
-              <span class="prediction-progress">
-                <i [style.width]="p.pct + '%'"></i>
-              </span>
-              <b>{{ p.pct }}%</b>
-            </div>
+          @if (usuario()) {
+            <a class="btn btn-sm btn-outline" routerLink="/palpites">Meus palpites</a>
           }
         </div>
+
+        @if (mensagemPalpite) {
+          <div class="home-vote-message success">{{ mensagemPalpite }}</div>
+        }
+        @if (erroPalpite) {
+          <div class="home-vote-message error">{{ erroPalpite }}</div>
+        }
+
+        @if (partidasPalpite.length) {
+          <div class="home-prediction-list">
+            @for (partida of partidasPalpite; track partida.id) {
+              <article class="home-prediction-card">
+                <header>
+                  <span><strong>{{ partida.torneioNome }}</strong><small>{{ partida.etapa || 'Proxima partida' }}</small></span>
+                  <a [routerLink]="['/partida', partida.id]">Ver jogo</a>
+                </header>
+                <div>
+                  @for (opcao of [partida.mandante, partida.empate, partida.visitante]; track opcao.id) {
+                    <button
+                      [class.selected]="escolhaPartida(partida) === '' + opcao.id"
+                      [disabled]="!!votando"
+                      (click)="votarPartida(partida, opcao)">
+                      <strong>{{ opcao.nome }}</strong>
+                      <span><i [style.width.%]="palpitesService.percentual(partida.percentuais, opcao.id)"></i></span>
+                      <b>{{ palpitesService.percentual(partida.percentuais, opcao.id) }}%</b>
+                    </button>
+                  }
+                </div>
+                <footer>{{ partida.percentuais.totalPalpites }} voto(s) · fecha quando a partida iniciar</footer>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="home-prediction-empty">
+            <i class="bi bi-hourglass-split"></i>
+            <span><strong>Nenhuma partida aberta agora</strong><small>Os palpites aparecem quando os confrontos forem preparados.</small></span>
+          </div>
+        }
       </article>
 
       <section class="card social-feed">

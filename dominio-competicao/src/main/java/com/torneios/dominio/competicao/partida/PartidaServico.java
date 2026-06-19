@@ -126,6 +126,16 @@ public class PartidaServico {
         return atualizarCompeticaoAposResultado(torneioId);
     }
 
+    public void iniciarPartida(TorneioId torneioId, PartidaId partidaId, UsuarioId usuarioId) {
+        validarOrganizador(torneioId, usuarioId);
+        Partida partida = obterPartida(partidaId);
+        if (!partida.getTorneioId().equals(torneioId)) {
+            throw new OperacaoNaoPermitidaException("A partida informada nao pertence ao torneio.");
+        }
+        partida.iniciar();
+        partidaRepositorio.salvar(partida);
+    }
+
     public List<Partida> listarPorTorneio(TorneioId torneioId) {
         return partidaRepositorio.listarPorTorneio(torneioId);
     }

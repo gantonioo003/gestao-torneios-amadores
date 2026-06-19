@@ -30,11 +30,7 @@ class ResultadoCompeticaoControlador {
     ResultadoCompeticaoServicoAplicacao.AtualizacaoCompeticaoResumo registrarResultado(
             @RequestBody ResultadoDto dto) {
         var atualizacao = resultadoCompeticaoServicoAplicacao.registrarResultado(
-                dto.torneioId,
-                dto.partidaId,
-                dto.organizadorId,
-                dto.golsMandante,
-                dto.golsVisitante);
+                dto.torneioId, dto.partidaId, dto.organizadorId, dto.golsMandante, dto.golsVisitante);
         apuracaoAutomaticaPalpiteServico.apurarVencedorPartida(
                 dto.torneioId,
                 dto.partidaId,

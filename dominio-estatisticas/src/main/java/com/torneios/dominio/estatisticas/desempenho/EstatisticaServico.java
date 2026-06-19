@@ -67,7 +67,7 @@ public class EstatisticaServico {
         Map<JogadorId, Double> medias = mediasDeNotaPorJogador(torneioId);
         return estatisticaTorneioComoLista(consolidarTorneio(torneioId)).stream()
                 .sorted(Comparator.comparingInt(EstatisticaJogador::getAssistencias).reversed()
-                        .thenComparingInt(EstatisticaJogador::getGols).reversed()
+                        .thenComparing(Comparator.comparingInt(EstatisticaJogador::getGols).reversed())
                         .thenComparing((EstatisticaJogador estatisticaJogador) ->
                                 medias.getOrDefault(estatisticaJogador.getJogadorId(), 0.0), Comparator.reverseOrder())
                         .thenComparingInt(EstatisticaJogador::getCartoesVermelhos)
@@ -117,7 +117,7 @@ public class EstatisticaServico {
                 .filter(entrada -> entrada.getValue().size() >= minimoPartidas)
                 .map(entrada -> converterMedia(torneioId, entrada.getKey(), entrada.getValue()))
                 .sorted(Comparator.comparingDouble(NotaMediaJogador::media).reversed()
-                        .thenComparingInt(NotaMediaJogador::partidasConsideradas).reversed()
+                        .thenComparing(Comparator.comparingInt(NotaMediaJogador::partidasConsideradas).reversed())
                         .thenComparingLong(notaMediaJogador -> notaMediaJogador.jogadorId().valor()))
                 .toList();
     }

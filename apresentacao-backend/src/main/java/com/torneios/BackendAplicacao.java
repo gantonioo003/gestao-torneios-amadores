@@ -84,6 +84,7 @@ import com.torneios.dominio.participacao.responsavel.ResponsavelTimeServico;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoRepositorio;
 import com.torneios.dominio.participacao.solicitacao.SolicitacaoParticipacaoServico;
 import com.torneios.dominio.participacao.time.TimeRepositorio;
+import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoRepositorio;
 import com.torneios.dominio.participacao.time.TimeServico;
 import com.torneios.dominio.torneio.estrutura.GeradorEstruturaCompeticaoServico;
 import com.torneios.dominio.torneio.organizador.OrganizadorTorneioServico;
@@ -378,13 +379,15 @@ public class BackendAplicacao {
                                                            PalpiteRepositorio palpiteRepositorio,
                                                            TorneioRepositorio torneioRepositorio,
                                                            PartidaRepositorio partidaRepositorio,
-                                                           TimeRepositorio timeRepositorio) {
+                                                           TimeRepositorio timeRepositorio,
+                                                           ProfissionalEsportivoRepositorio profissionalRepositorio) {
         return new PalpiteServicoAplicacao(
                 palpiteServico,
                 palpiteRepositorio,
                 torneioRepositorio,
                 partidaRepositorio,
-                timeRepositorio);
+                timeRepositorio,
+                profissionalRepositorio);
     }
 
     @Bean

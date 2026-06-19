@@ -8,10 +8,10 @@
       <p class="muted">Sua identidade no futebol amador, dentro e fora de campo.</p>
     </div>
 
-    @if (avisoChat) {
+    @if (avisoAcesso) {
       <div class="login-notice">
         <i class="bi bi-lock"></i>
-        Entre ou crie uma conta para acessar suas mensagens privadas.
+        {{ avisoAcesso }}
       </div>
     }
 

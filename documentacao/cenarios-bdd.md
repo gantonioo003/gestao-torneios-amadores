@@ -2,7 +2,7 @@
 
 ## Funcionalidades com cenarios definidos
 
-### F1. Gerenciar ciclo completo de palpites de usuarios e visitantes
+### F1. Gerenciar palpites publicos em torneios e partidas
 Dominio: dominio-engajamento
 Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F1-gerenciar-ciclo-completo-de-palpites.feature
 
@@ -23,7 +23,7 @@ Cenarios principais:
 
 ---
 
-### F2. Gerenciar identidade, conta, autenticacao, perfil e permissoes
+### F2. Gerenciar identidade, autenticacao, perfil e permissoes por funcao
 Dominio: dominio-participacao
 Arquivo: dominio-participacao/src/test/resources/com/torneios/dominio/participacao/F2-gerenciar-identidade-conta-autenticacao-e-permissoes.feature
 
@@ -46,7 +46,7 @@ Cenarios principais:
 
 ---
 
-### F3. Gerenciar comunicacao privada com solicitacoes de conversa
+### F3. Gerenciar o chat privado autenticado entre usuarios
 Dominio: dominio-engajamento
 Arquivo: dominio-engajamento/src/test/resources/com/torneios/dominio/engajamento/F3-gerenciar-chat-privado-com-solicitacoes-de-conversa.feature
 
@@ -254,6 +254,7 @@ Cenarios principais:
 - gerar ranking de artilharia
 - atualizar estatisticas apos novos eventos
 - nao consolidar estatisticas detalhadas quando nao houver eventos registrados
+- ordenar lideres de assistencias e melhores notas do maior para o menor
 
 ---
 

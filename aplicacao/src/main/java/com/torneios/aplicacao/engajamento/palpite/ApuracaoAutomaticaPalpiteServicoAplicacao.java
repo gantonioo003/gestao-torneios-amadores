@@ -10,6 +10,7 @@ import com.torneios.dominio.engajamento.palpite.EventoAlvoPalpite;
 import com.torneios.dominio.engajamento.palpite.Palpite;
 import com.torneios.dominio.engajamento.palpite.PalpiteServico;
 import com.torneios.dominio.engajamento.palpite.TipoPalpite;
+import com.torneios.dominio.engajamento.palpite.OpcaoPalpite;
 
 public class ApuracaoAutomaticaPalpiteServicoAplicacao {
 
@@ -33,13 +34,12 @@ public class ApuracaoAutomaticaPalpiteServicoAplicacao {
                                                long partidaId,
                                                int golsMandante,
                                                int golsVisitante) {
-        if (golsMandante == golsVisitante) {
-            return List.of();
-        }
         var partida = partidaRepositorio.buscarPorId(new PartidaId(partidaId)).orElseThrow();
-        long vencedorId = golsMandante > golsVisitante
-                ? partida.getMandante().valor()
-                : partida.getVisitante().valor();
+        long vencedorId = golsMandante == golsVisitante
+                ? OpcaoPalpite.EMPATE
+                : golsMandante > golsVisitante
+                    ? partida.getMandante().valor()
+                    : partida.getVisitante().valor();
         return palpiteServico.apurar(
                 EventoAlvoPalpite.paraPartida(
                         new com.torneios.dominio.compartilhado.torneio.TorneioId(torneioId),

@@ -44,7 +44,7 @@ class ConsultaSuportePalpiteJpa implements ConsultaSuportePalpite {
     @Override
     public boolean partidaIniciada(PartidaId partidaId) {
         return partidaRepositorio.buscarPorId(partidaId)
-                .map(Partida::estaEncerrada)
+                .map(Partida::estaIniciada)
                 .orElse(false);
     }
 
@@ -76,7 +76,8 @@ class ConsultaSuportePalpiteJpa implements ConsultaSuportePalpite {
         Objects.requireNonNull(opcao, "A opcao do palpite e obrigatoria.");
         return switch (eventoAlvo.getTipo()) {
             case VENCEDOR_PARTIDA -> partidaRepositorio.buscarPorId(eventoAlvo.getPartidaId())
-                    .map(partida -> partida.getMandante().valor() == opcao.valor()
+                    .map(partida -> opcao.valor() == OpcaoPalpite.EMPATE
+                            || partida.getMandante().valor() == opcao.valor()
                             || partida.getVisitante().valor() == opcao.valor())
                     .orElse(false);
             case CAMPEAO_TORNEIO -> torneioRepositorio.buscarPorId(eventoAlvo.getTorneioId())

@@ -98,7 +98,12 @@
                   <small>{{ percentual(partida.percentuais, partida.mandante.id) }}%</small>
                 </button>
 
-                <div class="versus">x</div>
+                <button class="draw-prediction" (click)="votarPartida(partida, partida.empate)" [disabled]="!!votando">
+                  <span class="team-shield"><i class="bi bi-dash-circle"></i></span>
+                  <strong>Empate</strong>
+                  <span class="vote-bar"><i [style.width.%]="percentual(partida.percentuais, partida.empate.id)"></i></span>
+                  <small>{{ percentual(partida.percentuais, partida.empate.id) }}%</small>
+                </button>
 
                 <button (click)="votarPartida(partida, partida.visitante)" [disabled]="!!votando">
                   <span class="team-shield"><i class="bi bi-shield"></i></span>

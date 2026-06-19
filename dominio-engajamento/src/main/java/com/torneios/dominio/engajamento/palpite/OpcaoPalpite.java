@@ -4,9 +4,11 @@ import java.util.Objects;
 
 public record OpcaoPalpite(long valor) {
 
+    public static final long EMPATE = 0L;
+
     public OpcaoPalpite {
-        if (valor <= 0) {
-            throw new IllegalArgumentException("O valor da opcao do palpite deve ser maior que zero.");
+        if (valor < 0) {
+            throw new IllegalArgumentException("O valor da opcao do palpite nao pode ser negativo.");
         }
     }
 
