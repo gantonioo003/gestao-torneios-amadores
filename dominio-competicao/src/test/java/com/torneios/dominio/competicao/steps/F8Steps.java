@@ -15,7 +15,7 @@ import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
 
-public class EscalacaoSteps extends CompeticaoFuncionalidade {
+public class F8Steps extends CompeticaoFuncionalidade {
 
     private List<Escalacao> escalacoesPublicas;
 
