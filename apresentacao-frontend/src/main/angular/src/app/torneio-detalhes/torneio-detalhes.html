@@ -384,17 +384,19 @@
 
         <div class="configuration-grid">
           <section class="config-card">
-            <div class="config-card-head"><span>1</span><div><h3>Identidade e inscricoes</h3><p>Ajustes permitidos antes do inicio.</p></div></div>
+            <div class="config-card-head"><span>1</span><div><h3>Dados internos</h3><p>O organizador pode ajustar estes dados antes do inicio.</p></div></div>
             <div class="field"><label>Nome do torneio</label><input [(ngModel)]="nomeEdicao" [disabled]="!podeConfigurarAntesDoInicio()"></div>
-            <button class="btn btn-outline" [disabled]="!podeConfigurarAntesDoInicio() || !!processando" (click)="salvarNome()">Salvar nome</button>
-            <div class="config-summary">
-              <div><span>Formato</span><strong>{{ formatoLabel() }}</strong></div>
-              <div><span>Equipe</span><strong>{{ formatoEquipeLabel() }}</strong></div>
+            <label class="registration-choice config-registration-choice">
+              <input type="checkbox" [(ngModel)]="aceitaSolicitacoesEdicao" [disabled]="!podeConfigurarAntesDoInicio()">
+              <span><i class="bi bi-people"></i></span>
+              <span><strong>Aceitar solicitacoes de times</strong><small>Treinadores poderao candidatar seus times.</small></span>
+            </label>
+            <button class="btn btn-primary btn-block" [disabled]="!podeConfigurarAntesDoInicio() || !!processando" (click)="salvarConfiguracao()">Salvar dados internos</button>
+            <div class="config-summary immutable-summary">
+              <div><span>Formato imutavel</span><strong>{{ formatoLabel() }}</strong><small>Definido na criacao</small></div>
+              <div><span>Equipe imutavel</span><strong>{{ formatoEquipeLabel() }}</strong><small>Definida na criacao</small></div>
             </div>
-            <button class="setting-toggle" [disabled]="!podeConfigurarAntesDoInicio() || !!processando" (click)="alternarSolicitacoes()">
-              <span><i class="bi" [class.bi-toggle-on]="torneio.aceitaSolicitacoes" [class.bi-toggle-off]="!torneio.aceitaSolicitacoes"></i></span>
-              <span><strong>Solicitacoes de times</strong><small>{{ torneio.aceitaSolicitacoes ? 'Abertas para treinadores' : 'Fechadas' }}</small></span>
-            </button>
+            <p class="immutable-note"><i class="bi bi-lock-fill"></i> Formato, quantidade em campo, organizador e numero da edicao nao podem ser trocados.</p>
           </section>
 
           <section class="config-card config-participants">
@@ -458,9 +460,33 @@
               <i class="bi" [class.bi-check-circle]="participantesSuficientes" [class.bi-exclamation-circle]="!participantesSuficientes"></i>
               <span><strong>{{ participantesSuficientes ? 'Participantes suficientes' : 'Faltam participantes' }}</strong><small>Minimo exigido: {{ quantidadeMinimaParticipantes }}</small></span>
             </div>
-            <button class="btn btn-primary btn-block" [disabled]="torneio.status !== 'CONFIGURADO' || !participantesSuficientes || !!processando" (click)="prepararCompeticao()">
-              <i class="bi bi-shuffle"></i> Gerar estrutura e partidas
-            </button>
+            @if (torneio.status === 'CONFIGURADO') {
+              <div class="preparation-mode">
+                <button [class.active]="modoPreparacao === 'SORTEIO'" (click)="modoPreparacao = 'SORTEIO'">
+                  <i class="bi bi-shuffle"></i><span><strong>Sorteio automatico</strong><small>O sistema distribui os confrontos.</small></span>
+                </button>
+                <button [class.active]="modoPreparacao === 'MANUAL'" (click)="modoPreparacao = 'MANUAL'">
+                  <i class="bi bi-list-ol"></i><span><strong>Montagem manual</strong><small>Defina a ordem usada na geracao.</small></span>
+                </button>
+              </div>
+              @if (modoPreparacao === 'MANUAL' && participantes.length) {
+                <div class="manual-order">
+                  @for (timeId of ordemManualParticipantes; track timeId; let indice = $index) {
+                    <div>
+                      <b>{{ indice + 1 }}</b><strong>{{ nomeTime(timeId) }}</strong>
+                      <span>
+                        <button [disabled]="indice === 0" (click)="moverParticipante(indice, -1)" aria-label="Mover para cima"><i class="bi bi-arrow-up"></i></button>
+                        <button [disabled]="indice === ordemManualParticipantes.length - 1" (click)="moverParticipante(indice, 1)" aria-label="Mover para baixo"><i class="bi bi-arrow-down"></i></button>
+                      </span>
+                    </div>
+                  }
+                </div>
+              }
+              <button class="btn btn-primary btn-block" [disabled]="!participantesSuficientes || !!processando" (click)="prepararCompeticao()">
+                <i class="bi" [class.bi-shuffle]="modoPreparacao === 'SORTEIO'" [class.bi-list-ol]="modoPreparacao === 'MANUAL'"></i>
+                {{ modoPreparacao === 'SORTEIO' ? 'Sortear estrutura e partidas' : 'Gerar com ordem manual' }}
+              </button>
+            }
             @if (torneio.status !== 'CONFIGURADO') {
               <small class="config-complete"><i class="bi bi-check-circle"></i> Estrutura preparada com {{ partidas.length }} partida(s).</small>
             }

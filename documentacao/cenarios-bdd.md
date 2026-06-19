@@ -159,7 +159,7 @@ Cenarios principais:
 
 ---
 
-### F9. Gerenciar o ciclo estrutural do torneio e a preparacao da competicao
+### F9. Gerenciar torneios pela conta organizadora da criacao a nova edicao
 Dominio: dominio-torneio
 Arquivos:
 - dominio-torneio/src/test/resources/com/torneios/dominio/torneio/F9-criar-e-configurar-torneio.feature
@@ -167,6 +167,9 @@ Arquivos:
 
 Cenarios principais:
 - criar torneio com formato de competicao e formato de equipe validos
+- editar nome e regra de entrada antes do inicio
+- manter formato, quantidade por equipe, organizador e edicao imutaveis
+- impedir edicao por outro usuario ou depois do inicio
 - gerar estrutura do torneio por sorteio
 - gerar estrutura do torneio por montagem manual
 - repetir torneio mantendo historico da edicao anterior

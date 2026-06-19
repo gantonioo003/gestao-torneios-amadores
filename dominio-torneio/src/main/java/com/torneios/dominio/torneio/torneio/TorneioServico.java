@@ -24,23 +24,27 @@ public class TorneioServico {
     private final OrganizadorTorneioServico organizadorTorneioServico;
     private final GeradorEstruturaCompeticaoServico geradorEstruturaCompeticaoServico;
     private final ConsultaElegibilidadeParticipanteTorneio consultaElegibilidadeParticipanteTorneio;
+    private final PreparacaoCompeticaoInvalidador preparacaoCompeticaoInvalidador;
     private final EventoBarramento barramento;
 
     public TorneioServico(TorneioRepositorio torneioRepositorio,
                           OrganizadorTorneioServico organizadorTorneioServico,
                           GeradorEstruturaCompeticaoServico geradorEstruturaCompeticaoServico,
                           ConsultaElegibilidadeParticipanteTorneio consultaElegibilidadeParticipanteTorneio,
+                          PreparacaoCompeticaoInvalidador preparacaoCompeticaoInvalidador,
                           EventoBarramento barramento) {
         notNull(torneioRepositorio, "O repositorio de torneios e obrigatorio.");
         notNull(organizadorTorneioServico, "O servico de organizador do torneio e obrigatorio.");
         notNull(geradorEstruturaCompeticaoServico, "O gerador de estrutura da competicao e obrigatorio.");
         notNull(consultaElegibilidadeParticipanteTorneio, "A consulta de elegibilidade do participante e obrigatoria.");
+        notNull(preparacaoCompeticaoInvalidador, "O invalidador da preparacao e obrigatorio.");
         notNull(barramento, "O barramento de eventos e obrigatorio.");
 
         this.torneioRepositorio = torneioRepositorio;
         this.organizadorTorneioServico = organizadorTorneioServico;
         this.geradorEstruturaCompeticaoServico = geradorEstruturaCompeticaoServico;
         this.consultaElegibilidadeParticipanteTorneio = consultaElegibilidadeParticipanteTorneio;
+        this.preparacaoCompeticaoInvalidador = preparacaoCompeticaoInvalidador;
         this.barramento = barramento;
     }
 
@@ -60,7 +64,10 @@ public class TorneioServico {
         Torneio torneio = obterTorneio(torneioId);
         organizadorTorneioServico.validarPermissao(torneio, organizadorId);
         validarParticipantesElegiveis(torneio, timesIds);
+        boolean possuiaEstrutura = torneio.getStatus()
+                == com.torneios.dominio.compartilhado.enumeracao.StatusTorneio.ESTRUTURA_GERADA;
         torneio.adicionarParticipantes(timesIds);
+        invalidarPreparacaoSeNecessario(torneioId, possuiaEstrutura);
         timesIds.forEach(timeId -> consultaElegibilidadeParticipanteTorneio.vincularTimeAoTorneio(timeId, torneioId));
         torneio.fecharSolicitacoes();
         torneioRepositorio.salvar(torneio);
@@ -70,7 +77,10 @@ public class TorneioServico {
         Torneio torneio = obterTorneio(torneioId);
         organizadorTorneioServico.validarPermissao(torneio, organizadorId);
         validarParticipanteElegivel(torneio, timeId);
+        boolean possuiaEstrutura = torneio.getStatus()
+                == com.torneios.dominio.compartilhado.enumeracao.StatusTorneio.ESTRUTURA_GERADA;
         torneio.adicionarParticipante(timeId);
+        invalidarPreparacaoSeNecessario(torneioId, possuiaEstrutura);
         consultaElegibilidadeParticipanteTorneio.vincularTimeAoTorneio(timeId, torneioId);
         torneioRepositorio.salvar(torneio);
     }
@@ -78,7 +88,10 @@ public class TorneioServico {
     public void removerParticipante(TorneioId torneioId, UsuarioId organizadorId, TimeId timeId) {
         Torneio torneio = obterTorneio(torneioId);
         organizadorTorneioServico.validarPermissao(torneio, organizadorId);
+        boolean possuiaEstrutura = torneio.getStatus()
+                == com.torneios.dominio.compartilhado.enumeracao.StatusTorneio.ESTRUTURA_GERADA;
         torneio.removerParticipante(timeId);
+        invalidarPreparacaoSeNecessario(torneioId, possuiaEstrutura);
         consultaElegibilidadeParticipanteTorneio.removerVinculoDoTimeAoTorneio(timeId, torneioId);
         torneioRepositorio.salvar(torneio);
     }
@@ -100,12 +113,17 @@ public class TorneioServico {
     public void renomearTorneio(TorneioId torneioId, UsuarioId organizadorId, String novoNome) {
         Torneio torneio = obterTorneio(torneioId);
         organizadorTorneioServico.validarPermissao(torneio, organizadorId);
-        if (torneio.getStatus() == com.torneios.dominio.compartilhado.enumeracao.StatusTorneio.INICIADO
-                || torneio.getStatus() == com.torneios.dominio.compartilhado.enumeracao.StatusTorneio.FINALIZADO) {
-            throw new com.torneios.dominio.compartilhado.excecao.OperacaoNaoPermitidaException(
-                    "O nome do torneio nao pode ser alterado depois do inicio.");
-        }
         torneio.renomear(novoNome);
+        torneioRepositorio.salvar(torneio);
+    }
+
+    public void atualizarConfiguracao(TorneioId torneioId,
+                                      UsuarioId organizadorId,
+                                      String nome,
+                                      boolean aceitaSolicitacoes) {
+        Torneio torneio = obterTorneio(torneioId);
+        organizadorTorneioServico.validarPermissao(torneio, organizadorId);
+        torneio.atualizarConfiguracao(nome, aceitaSolicitacoes);
         torneioRepositorio.salvar(torneio);
     }
 
@@ -182,6 +200,12 @@ public class TorneioServico {
                 < torneio.getFormatoEquipe().getQuantidadeJogadores()) {
             throw new RegraDeNegocioException(
                     "O time nao possui jogadores suficientes para o formato de equipe do torneio.");
+        }
+    }
+
+    private void invalidarPreparacaoSeNecessario(TorneioId torneioId, boolean possuiaEstrutura) {
+        if (possuiaEstrutura) {
+            preparacaoCompeticaoInvalidador.invalidar(torneioId);
         }
     }
 }

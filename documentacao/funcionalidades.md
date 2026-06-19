@@ -19,7 +19,7 @@ F7. Gerenciar analises comparativas de desempenho entre times e jogadores, permi
 F8. Gerenciar a visualizacao opcional da escalacao do time em mesa tatica para partidas, incluindo esquema tatico, titulares posicionados em campo e reservas quando o time quiser montar essa visao
 
 ## Organizacao e comunicacao
-F9. Gerenciar o ciclo estrutural do torneio, cobrindo criacao, configuracao, repeticao e preparacao da competicao, com definicao de formato, equipe, regras de entrada, participantes iniciais, novas edicoes com historico preservado e geracao de estrutura, rodadas e partidas por sorteio automatico ou montagem manual
+F9. Gerenciar torneios pela conta organizadora, permitindo criar a competicao com formato e quantidade por equipe imutaveis, editar dados internos e participantes antes do inicio, preparar estrutura, rodadas e partidas por sorteio automatico ou ordem manual e repetir novas edicoes com o historico preservado.
 
 F10. Gerenciar o ciclo social de desafios e amistosos opcionais entre times, permitindo propor confrontos, aceitar ou recusar convites, reagendar partidas e registrar resultados no historico esportivo dos times
 

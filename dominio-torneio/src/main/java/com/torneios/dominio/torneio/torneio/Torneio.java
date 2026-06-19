@@ -89,19 +89,24 @@ public class Torneio {
     }
 
     public void renomear(String nome) {
+        validarNaoIniciado();
         this.nome = validarNome(nome);
+    }
+
+    public void atualizarConfiguracao(String nome, boolean aceitaSolicitacoes) {
+        validarNaoIniciado();
+        this.nome = validarNome(nome);
+        this.aceitaSolicitacoes = aceitaSolicitacoes;
     }
 
     public void abrirParaSolicitacoes() {
         validarNaoIniciado();
         this.aceitaSolicitacoes = true;
-        this.status = StatusTorneio.CONFIGURADO;
     }
 
     public void fecharSolicitacoes() {
         validarNaoIniciado();
         this.aceitaSolicitacoes = false;
-        this.status = StatusTorneio.CONFIGURADO;
     }
 
     public void adicionarParticipante(TimeId timeId) {
@@ -109,7 +114,9 @@ public class Torneio {
         if (timeId == null) {
             throw new IllegalArgumentException("O time participante e obrigatorio.");
         }
-        participantesAprovados.add(new ParticipanteTorneio(timeId, id));
+        if (participantesAprovados.add(new ParticipanteTorneio(timeId, id))) {
+            invalidarEstruturaGerada();
+        }
     }
 
     public void adicionarParticipantes(Collection<TimeId> timesIds) {
@@ -122,6 +129,7 @@ public class Torneio {
         if (!participantesAprovados.remove(new ParticipanteTorneio(timeId, id))) {
             throw new RegraDeNegocioException("O time informado nao esta entre os participantes aprovados.");
         }
+        invalidarEstruturaGerada();
     }
 
     public boolean possuiParticipante(TimeId timeId) {
@@ -192,6 +200,12 @@ public class Torneio {
         if (status == StatusTorneio.INICIADO || status == StatusTorneio.FINALIZADO) {
             throw new OperacaoNaoPermitidaException(
                     "Nao e permitido alterar participantes ou configuracoes apos o inicio do torneio.");
+        }
+    }
+
+    private void invalidarEstruturaGerada() {
+        if (status == StatusTorneio.ESTRUTURA_GERADA) {
+            status = StatusTorneio.CONFIGURADO;
         }
     }
 }

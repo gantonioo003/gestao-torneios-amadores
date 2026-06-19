@@ -114,6 +114,7 @@ O engajamento tambem ocorre por meio do feed social. Visitantes podem visualizar
 Um torneio pode ser criado ja com participantes definidos ou com vagas abertas para candidaturas de entrada de times.
 
 Durante a criacao do torneio, o organizador define tanto o formato da competicao quanto o formato de equipe, indicando quantos jogadores cada time deve ter em campo, por exemplo 3x3, 5x5, 7x7 ou 11x11.
+Essas duas definicoes, assim como o organizador responsavel e o numero da edicao, tornam-se imutaveis depois da criacao. Antes do inicio, o organizador pode editar no proprio torneio apenas os dados internos permitidos, como nome, abertura de inscricoes, participantes e modo de preparacao.
 
 Usuarios com times cadastrados podem gerenciar inscricoes em torneios abertos, solicitando participacao, acompanhando o status e cancelando candidaturas ainda pendentes. No mesmo fluxo, cabe ao organizador aprovar ou rejeitar essas solicitacoes e ajustar a lista final de participantes antes do inicio da competicao.
 

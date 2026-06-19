@@ -261,6 +261,66 @@ public class F9Steps extends TorneioFuncionalidade {
         torneio = criarTorneioPadrao(FormatoTorneio.PONTOS_CORRIDOS, FormatoEquipe.CINCO_POR_CINCO, false);
     }
 
+    @Quando("o organizador alterar o nome e a regra de entrada do torneio")
+    public void organizador_alterar_dados_internos() {
+        try {
+            torneioServico.atualizarConfiguracao(
+                    TORNEIO_ID, ORGANIZADOR_ID, "Copa Atualizada", true);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Entao("o sistema deve atualizar os dados internos sem alterar os formatos")
+    public void atualizar_dados_sem_alterar_formatos() {
+        assertNull(excecaoCapturada);
+        assertEquals("Copa Atualizada", torneio.getNome());
+        assertTrue(torneio.aceitaSolicitacoes());
+        assertEquals(FormatoTorneio.PONTOS_CORRIDOS, torneio.getFormato());
+        assertEquals(FormatoEquipe.CINCO_POR_CINCO, torneio.getFormatoEquipe());
+    }
+
+    @Quando("outro usuario tentar editar os dados internos do torneio")
+    public void outro_usuario_tentar_editar_dados_internos() {
+        try {
+            torneioServico.atualizarConfiguracao(
+                    TORNEIO_ID, OUTRO_USUARIO_ID, "Nome indevido", true);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Quando("o organizador tentar editar os dados internos do torneio")
+    public void organizador_tentar_editar_torneio_iniciado() {
+        try {
+            torneioServico.atualizarConfiguracao(
+                    TORNEIO_ID, ORGANIZADOR_ID, "Nome tardio", true);
+        } catch (Exception e) {
+            excecaoCapturada = e;
+        }
+    }
+
+    @Dado("que existe um torneio com estrutura gerada")
+    public void existe_torneio_com_estrutura_gerada() {
+        configurarTimesElegiveis(5);
+        torneio = criarTorneioPadrao(
+                FormatoTorneio.PONTOS_CORRIDOS, FormatoEquipe.CINCO_POR_CINCO, false);
+        torneioServico.definirParticipantesIniciais(
+                TORNEIO_ID, ORGANIZADOR_ID, List.of(TIME_A_ID, TIME_B_ID));
+        torneioServico.gerarEstruturaCompeticao(TORNEIO_ID, ORGANIZADOR_ID);
+    }
+
+    @Quando("o organizador remover um participante antes do inicio")
+    public void organizador_remover_participante_antes_inicio() {
+        torneioServico.removerParticipante(TORNEIO_ID, ORGANIZADOR_ID, TIME_A_ID);
+    }
+
+    @Entao("o sistema deve invalidar a preparacao anterior")
+    public void sistema_invalidar_preparacao_anterior() {
+        assertEquals(StatusTorneio.CONFIGURADO, torneio.getStatus());
+        assertTrue(preparacoesInvalidadas.contains(TORNEIO_ID));
+    }
+
     @Dado("que o torneio não possui participantes suficientes")
     public void que_torneio_nao_possui_participantes_suficientes() {
     }
@@ -353,6 +413,11 @@ public class F9Steps extends TorneioFuncionalidade {
         assertNotNull(excecaoCapturada);
     }
 
+    @Entao("o sistema deve impedir a operacao")
+    public void o_sistema_deve_impedir_operacao_sem_acento() {
+        o_sistema_deve_impedir_operacao();
+    }
+
     @Dado("que existe um torneio já iniciado")
     public void que_existe_torneio_ja_iniciado() {
         configurarTimesElegiveis(5);
@@ -360,6 +425,11 @@ public class F9Steps extends TorneioFuncionalidade {
         torneioServico.definirParticipantesIniciais(TORNEIO_ID, ORGANIZADOR_ID, List.of(TIME_A_ID, TIME_B_ID));
         torneioServico.gerarEstruturaCompeticao(TORNEIO_ID, ORGANIZADOR_ID);
         torneioServico.iniciarTorneio(TORNEIO_ID, ORGANIZADOR_ID);
+    }
+
+    @Dado("que existe um torneio ja iniciado")
+    public void que_existe_torneio_ja_iniciado_sem_acento() {
+        que_existe_torneio_ja_iniciado();
     }
 
     @Quando("ele tentar alterar a lista de participantes aprovados")

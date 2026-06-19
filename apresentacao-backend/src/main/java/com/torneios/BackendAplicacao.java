@@ -281,12 +281,15 @@ public class BackendAplicacao {
     @Bean
     public TorneioServico torneioServico(TorneioRepositorio torneioRepositorio,
                                          ConsultaElegibilidadeParticipanteTorneio consultaElegibilidade,
+                                         com.torneios.dominio.torneio.torneio.PreparacaoCompeticaoInvalidador
+                                                 preparacaoCompeticaoInvalidador,
                                          EventoBarramento barramento) {
         return new TorneioServico(
                 torneioRepositorio,
                 new OrganizadorTorneioServico(),
                 new GeradorEstruturaCompeticaoServico(),
                 consultaElegibilidade,
+                preparacaoCompeticaoInvalidador,
                 barramento);
     }
 

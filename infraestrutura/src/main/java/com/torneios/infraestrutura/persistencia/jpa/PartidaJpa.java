@@ -14,6 +14,7 @@ import com.torneios.dominio.compartilhado.torneio.TorneioId;
 import com.torneios.dominio.competicao.partida.Partida;
 import com.torneios.dominio.competicao.partida.PartidaRepositorio;
 import com.torneios.dominio.competicao.resultado.ResultadoPartida;
+import com.torneios.dominio.torneio.torneio.PreparacaoCompeticaoInvalidador;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,10 +48,11 @@ class PartidaJpa {
 
 interface PartidaJpaRepository extends JpaRepository<PartidaJpa, Long> {
     List<PartidaJpa> findByTorneioId(Long torneioId);
+    void deleteByTorneioId(Long torneioId);
 }
 
 @Repository
-class PartidaRepositorioImpl implements PartidaRepositorio {
+class PartidaRepositorioImpl implements PartidaRepositorio, PreparacaoCompeticaoInvalidador {
 
     @Autowired
     PartidaJpaRepository repositorio;
@@ -89,6 +91,11 @@ class PartidaRepositorioImpl implements PartidaRepositorio {
     public List<Partida> listarPorTorneio(TorneioId torneioId) {
         return repositorio.findByTorneioId(torneioId.valor())
                           .stream().map(this::toDomain).toList();
+    }
+
+    @Override
+    public void invalidar(TorneioId torneioId) {
+        repositorio.deleteByTorneioId(torneioId.valor());
     }
 
     private Partida toDomain(PartidaJpa jpa) {

@@ -985,6 +985,119 @@
   font-size: 11px;
 }
 
+.immutable-summary > div {
+  position: relative;
+  border: 1px solid #dde4df;
+}
+
+.immutable-summary small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.immutable-note {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  color: #6e6552;
+  background: #fff9ea;
+  border: 1px solid #eee0b8;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+.config-registration-choice {
+  margin-top: 12px;
+}
+
+.preparation-mode {
+  margin: 14px 0 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.preparation-mode button {
+  min-height: 74px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.preparation-mode button.active {
+  background: var(--green-soft);
+  border-color: var(--green);
+}
+
+.preparation-mode button > i {
+  color: var(--green-dark);
+  font-size: 20px;
+}
+
+.preparation-mode button span {
+  display: grid;
+  gap: 2px;
+}
+
+.preparation-mode button small {
+  color: var(--muted);
+  line-height: 1.25;
+}
+
+.manual-order {
+  margin: 10px 0;
+  display: grid;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.manual-order > div {
+  min-height: 45px;
+  padding: 7px 9px;
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border-top: 1px solid var(--line);
+}
+
+.manual-order > div:first-child {
+  border-top: 0;
+}
+
+.manual-order > div > b {
+  color: var(--green-dark);
+}
+
+.manual-order > div > span {
+  display: flex;
+  gap: 4px;
+}
+
+.manual-order button {
+  width: 28px;
+  height: 28px;
+  color: var(--green-dark);
+  background: var(--green-soft);
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.manual-order button:disabled {
+  opacity: .35;
+  cursor: default;
+}
+
 .setting-toggle {
   width: 100%;
   min-height: 58px;

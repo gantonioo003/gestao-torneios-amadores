@@ -90,6 +90,18 @@ public class PreparacaoTorneioServicoAplicacao {
         return obterTorneio(torneioId);
     }
 
+    public TorneioResumoAplicacao atualizarConfiguracao(long torneioId,
+                                                        long organizadorId,
+                                                        String nome,
+                                                        boolean aceitaSolicitacoes) {
+        torneioServico.atualizarConfiguracao(
+                new TorneioId(torneioId),
+                new UsuarioId(organizadorId),
+                nome,
+                aceitaSolicitacoes);
+        return obterTorneio(torneioId);
+    }
+
     public EstruturaCompeticaoResumo gerarEstruturaPorSorteio(long torneioId, long organizadorId) {
         return converter(torneioServico.gerarEstruturaCompeticao(
                 new TorneioId(torneioId),
@@ -106,6 +118,11 @@ public class PreparacaoTorneioServicoAplicacao {
     }
 
     public PreparacaoCompeticaoResumo prepararCompeticaoPorSorteio(long torneioId, long organizadorId) {
+        Torneio torneio = torneioServico.obterTorneio(new TorneioId(torneioId));
+        if (torneio.getStatus() == com.torneios.dominio.compartilhado.enumeracao.StatusTorneio.CONFIGURADO) {
+            torneioServico.gerarEstruturaCompeticao(
+                    new TorneioId(torneioId), new UsuarioId(organizadorId));
+        }
         return converter(partidaServico.prepararCompeticaoPorSorteio(
                 new TorneioId(torneioId),
                 new UsuarioId(organizadorId)));
@@ -114,10 +131,16 @@ public class PreparacaoTorneioServicoAplicacao {
     public PreparacaoCompeticaoResumo prepararCompeticaoManual(long torneioId,
                                                                long organizadorId,
                                                                List<Long> ordemManualParticipantes) {
+        Torneio torneio = torneioServico.obterTorneio(new TorneioId(torneioId));
+        List<TimeId> ordem = ordemManualParticipantes.stream().map(TimeId::new).toList();
+        if (torneio.getStatus() == com.torneios.dominio.compartilhado.enumeracao.StatusTorneio.CONFIGURADO) {
+            torneioServico.gerarEstruturaManual(
+                    new TorneioId(torneioId), new UsuarioId(organizadorId), ordem);
+        }
         return converter(partidaServico.prepararCompeticaoManual(
                 new TorneioId(torneioId),
                 new UsuarioId(organizadorId),
-                ordemManualParticipantes.stream().map(TimeId::new).toList()));
+                ordem));
     }
 
     public TorneioResumoAplicacao iniciarTorneio(long torneioId, long organizadorId) {
@@ -147,7 +170,7 @@ public class PreparacaoTorneioServicoAplicacao {
                 torneio.getNome(),
                 torneio.getFormato().name(),
                 torneio.getFormatoEquipe().name(),
-                torneio.getOrganizadorId().valor(),
+                String.valueOf(torneio.getOrganizadorId().valor()),
                 torneio.aceitaSolicitacoes(),
                 torneio.getStatus().name(),
                 torneio.getEdicaoAtual(),
@@ -212,7 +235,7 @@ public class PreparacaoTorneioServicoAplicacao {
                                          String nome,
                                          String formato,
                                          String formatoEquipe,
-                                         long organizadorId,
+                                         String organizadorId,
                                          boolean aceitaSolicitacoes,
                                          String status,
                                          int edicaoAtual,

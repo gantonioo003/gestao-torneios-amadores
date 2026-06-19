@@ -142,6 +142,14 @@ RN63. Todo torneio deve definir a quantidade de jogadores por equipe em campo.
 
 RN64. As partidas do torneio devem respeitar a quantidade de jogadores definida no formato de equipe.
 
+RN64A. Apenas uma conta organizadora pode criar torneios e somente o organizador responsavel pode configurar o proprio torneio.
+
+RN64B. Formato da competicao, quantidade de jogadores por equipe, organizador responsavel e numero da edicao sao imutaveis depois da criacao.
+
+RN64C. Nome, regra de entrada, participantes e modo de preparacao podem ser ajustados pelo organizador enquanto o torneio nao tiver iniciado.
+
+RN64D. A preparacao pode ser automatica por sorteio ou manual pela ordem dos participantes e deve gerar estrutura, rodadas e partidas em um unico fluxo.
+
 RN65. O uso de desafios e amistosos e opcional e nao impede o funcionamento dos torneios oficiais.
 
 RN66. Apenas o treinador responsavel por um time pode propor desafio amistoso para outro time.

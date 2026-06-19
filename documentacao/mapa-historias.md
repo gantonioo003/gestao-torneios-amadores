@@ -32,6 +32,8 @@
 - Como organizador, quero definir o formato do torneio para estruturar a competicao.
 - Como organizador, quero definir a quantidade de jogadores por equipe, como 3x3, 5x5 ou 11x11, para adequar o torneio ao formato desejado.
 - Como organizador, quero escolher se o torneio sera criado ja com todos os participantes ou com vagas abertas para candidaturas de entrada.
+- Como organizador, quero editar nome e regra de entrada no proprio torneio antes do inicio.
+- Como organizador, quero que formato, quantidade por equipe e responsavel permanecam imutaveis depois da criacao.
 - Como organizador, quero preparar a competicao gerando estrutura, rodadas e partidas para visualizar grupos, tabela, chaveamento e jogos.
 - Como organizador, quero preparar a competicao por sorteio para distribuir os times automaticamente.
 - Como organizador, quero preparar a competicao manualmente para escolher a ordem dos confrontos ou a distribuicao dos times.

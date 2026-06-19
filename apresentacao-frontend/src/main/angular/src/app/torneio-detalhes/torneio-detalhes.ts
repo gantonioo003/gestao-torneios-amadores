@@ -42,6 +42,9 @@ export class TorneioDetalhes implements OnInit {
   mensagem = '';
   erro = '';
   nomeEdicao = '';
+  aceitaSolicitacoesEdicao = false;
+  modoPreparacao: 'SORTEIO' | 'MANUAL' = 'SORTEIO';
+  ordemManualParticipantes: number[] = [];
   timeSelecionado?: number;
   timeInscricaoSelecionado?: number;
   readonly usuario = this.auth.usuario;
@@ -133,7 +136,7 @@ export class TorneioDetalhes implements OnInit {
 
   podeGerenciar(): boolean {
     return this.usuario()?.podeCriarTorneio === true
-      && this.usuario()?.id === this.torneio.organizadorId;
+      && String(this.usuario()?.id) === String(this.torneio.organizadorId);
   }
 
   podeConfigurarAntesDoInicio(): boolean {
@@ -141,7 +144,8 @@ export class TorneioDetalhes implements OnInit {
   }
 
   torneioEstaSalvo(): boolean {
-    return !!this.torneio.id && (this.usuario()?.torneiosSalvos ?? []).includes(this.torneio.id);
+    return !!this.torneio.id && (this.usuario()?.torneiosSalvos ?? [])
+      .some(id => String(id) === String(this.torneio.id));
   }
 
   abrirAba(aba: AbaTorneio) {
@@ -260,27 +264,27 @@ export class TorneioDetalhes implements OnInit {
     );
   }
 
-  salvarNome() {
+  salvarConfiguracao() {
     if (!this.nomeEdicao.trim()) {
       this.erro = 'Informe um nome para o torneio.';
       return;
     }
     this.executar(
-      'nome',
-      this.http.post(`/backend/preparacao-torneio/${this.torneioId}/renomear`, {
-        nome: this.nomeEdicao.trim()
+      'configuracao',
+      this.http.post(`/backend/preparacao-torneio/${this.torneioId}/configuracao`, {
+        nome: this.nomeEdicao.trim(),
+        aceitaSolicitacoes: this.aceitaSolicitacoesEdicao
       }),
-      'Nome do torneio atualizado.'
+      'Configuracao interna atualizada.'
     );
   }
 
-  alternarSolicitacoes() {
-    const acao = this.torneio.aceitaSolicitacoes ? 'fechar-solicitacoes' : 'abrir-solicitacoes';
-    this.executar(
-      'solicitacoes',
-      this.http.post(this.urlPreparacao(acao), {}),
-      this.torneio.aceitaSolicitacoes ? 'Inscricoes fechadas.' : 'Inscricoes abertas.'
-    );
+  moverParticipante(indice: number, deslocamento: number) {
+    const destino = indice + deslocamento;
+    if (destino < 0 || destino >= this.ordemManualParticipantes.length) return;
+    const novaOrdem = [...this.ordemManualParticipantes];
+    [novaOrdem[indice], novaOrdem[destino]] = [novaOrdem[destino], novaOrdem[indice]];
+    this.ordemManualParticipantes = novaOrdem;
   }
 
   adicionarParticipante() {
@@ -331,10 +335,16 @@ export class TorneioDetalhes implements OnInit {
   }
 
   prepararCompeticao() {
+    const manual = this.modoPreparacao === 'MANUAL';
     this.executar(
       'preparar',
-      this.http.post(this.urlPreparacao('preparar-competicao-sorteio'), {}),
-      'Estrutura, rodadas e partidas geradas.'
+      this.http.post(
+        this.urlPreparacao(manual ? 'preparar-competicao-manual' : 'preparar-competicao-sorteio'),
+        manual ? this.ordemManualParticipantes : {}
+      ),
+      manual
+        ? 'Estrutura, rodadas e partidas geradas na ordem definida.'
+        : 'Estrutura, rodadas e partidas geradas por sorteio.'
     );
   }
 
@@ -406,6 +416,8 @@ export class TorneioDetalhes implements OnInit {
     }).pipe(finalize(() => this.carregando = false)).subscribe(dados => {
       this.torneio = dados.torneio;
       this.nomeEdicao = this.torneio.nome ?? '';
+      this.aceitaSolicitacoesEdicao = this.torneio.aceitaSolicitacoes === true;
+      this.ordemManualParticipantes = [...(this.torneio.participantesAprovados ?? [])];
       this.times = dados.times;
       this.profissionais = dados.profissionais;
       this.partidas = dados.partidas;

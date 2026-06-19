@@ -95,9 +95,15 @@ export class HomeLogada implements OnInit {
     this.http.get<any[]>('/backend/torneio/pesquisa')
       .pipe(catchError(() => of([])))
       .subscribe(torneios => {
-        this.meusTorneios = torneios.filter(torneio => torneio.organizadorId === conta.id);
         this.destaques = torneios.filter(torneio => torneio.status !== 'FINALIZADO').slice(0, 3);
       });
+
+    if (conta.podeCriarTorneio) {
+      this.http.get<any[]>(
+        `/backend/torneio/pesquisa?organizadorId=${encodeURIComponent(String(conta.id))}`
+      ).pipe(catchError(() => of([])))
+        .subscribe(torneios => this.meusTorneios = torneios);
+    }
 
     this.http.get<ContaAtividade>(
       `/backend/conta-usuario/perfil/${encodeURIComponent(conta.nomeUsuario)}/atividade`

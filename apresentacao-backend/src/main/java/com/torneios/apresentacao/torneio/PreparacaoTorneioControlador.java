@@ -6,6 +6,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("backend/preparacao-torneio")
+@Transactional
 class PreparacaoTorneioControlador {
 
     @Autowired
@@ -91,6 +93,15 @@ class PreparacaoTorneioControlador {
                                                                       HttpSession sessao) {
         return preparacaoTorneioServicoAplicacao.renomearTorneio(
                 id, exigirOrganizador(sessao), dto.nome);
+    }
+
+    @RequestMapping(method = POST, path = "{id}/configuracao")
+    PreparacaoTorneioServicoAplicacao.TorneioResumoAplicacao atualizarConfiguracao(
+            @PathVariable long id,
+            @RequestBody ConfiguracaoTorneioDto dto,
+            HttpSession sessao) {
+        return preparacaoTorneioServicoAplicacao.atualizarConfiguracao(
+                id, exigirOrganizador(sessao), dto.nome, dto.aceitaSolicitacoes);
     }
 
     @RequestMapping(method = POST, path = "{id}/gerar-estrutura-sorteio")
@@ -164,5 +175,10 @@ class PreparacaoTorneioControlador {
 
     static class RenomearTorneioDto {
         public String nome;
+    }
+
+    static class ConfiguracaoTorneioDto {
+        public String nome;
+        public boolean aceitaSolicitacoes;
     }
 }

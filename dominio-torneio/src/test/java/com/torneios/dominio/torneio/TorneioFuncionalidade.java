@@ -33,8 +33,10 @@ public class TorneioFuncionalidade implements EventoBarramento {
     protected final OrganizadorTorneioServico organizadorTorneioServico = new OrganizadorTorneioServico();
     protected final GeradorEstruturaCompeticaoServico geradorEstruturaCompeticaoServico = new GeradorEstruturaCompeticaoServico();
     protected final ConsultaElegibilidadeParticipanteTorneioMemoria consultaElegibilidade = new ConsultaElegibilidadeParticipanteTorneioMemoria();
+    protected final List<TorneioId> preparacoesInvalidadas = new ArrayList<>();
     protected final TorneioServico torneioServico = new TorneioServico(
-            repositorio, organizadorTorneioServico, geradorEstruturaCompeticaoServico, consultaElegibilidade, this);
+            repositorio, organizadorTorneioServico, geradorEstruturaCompeticaoServico,
+            consultaElegibilidade, preparacoesInvalidadas::add, this);
 
     protected List<Object> eventos = new ArrayList<>();
 

@@ -1,4 +1,4 @@
-Feature: Gerenciar criacao, configuracao, repeticao e preparacao da competicao do torneio
+Feature: Gerenciar torneios pela conta organizadora da criacao a nova edicao
 
   As a usuario autenticado organizador
   I want criar, configurar, repetir e preparar a competicao de um torneio
@@ -16,6 +16,26 @@ Feature: Gerenciar criacao, configuracao, repeticao e preparacao da competicao d
     When ele criar um torneio informando nome, formato valido e formato de equipe 11x11
     And informar os participantes iniciais
     Then o sistema deve registrar o torneio com os times definidos
+
+  Scenario: Organizador editar dados internos antes do inicio
+    Given que existe um torneio configurado
+    When o organizador alterar o nome e a regra de entrada do torneio
+    Then o sistema deve atualizar os dados internos sem alterar os formatos
+
+  Scenario: Impedir outro usuario de editar o torneio
+    Given que existe um torneio configurado
+    When outro usuario tentar editar os dados internos do torneio
+    Then o sistema deve impedir a operacao
+
+  Scenario: Impedir edicao estrutural depois do inicio
+    Given que existe um torneio ja iniciado
+    When o organizador tentar editar os dados internos do torneio
+    Then o sistema deve impedir a operacao
+
+  Scenario: Regerar competicao depois de ajustar participantes
+    Given que existe um torneio com estrutura gerada
+    When o organizador remover um participante antes do inicio
+    Then o sistema deve invalidar a preparacao anterior
 
   Scenario: Gerar estrutura do torneio por sorteio
     Given que existe um torneio com formato fase de grupos com mata-mata
