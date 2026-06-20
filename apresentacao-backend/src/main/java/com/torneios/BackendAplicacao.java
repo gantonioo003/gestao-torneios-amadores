@@ -513,14 +513,16 @@ public class BackendAplicacao {
             ResultadoCompeticaoServicoAplicacao resultadoCompeticaoServicoAplicacao,
             RankingServicoAplicacao rankingServicoAplicacao,
             PalpiteRepositorio palpiteRepositorio,
-            ProgressoPalpiteServico progressoPalpiteServico) {
+            ProgressoPalpiteServico progressoPalpiteServico,
+            TorneioRepositorio torneioRepositorio) {
         return new ApuracaoAutomaticaPalpiteServicoAplicacao(
                 palpiteServico,
                 partidaRepositorio,
                 resultadoCompeticaoServicoAplicacao,
                 rankingServicoAplicacao,
                 palpiteRepositorio,
-                progressoPalpiteServico);
+                progressoPalpiteServico,
+                torneioRepositorio);
     }
 
     @Bean

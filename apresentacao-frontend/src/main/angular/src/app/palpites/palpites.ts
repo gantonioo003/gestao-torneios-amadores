@@ -42,6 +42,11 @@ interface PalpiteUsuario {
   opcao: string;
   apurado: boolean;
   acertou?: boolean;
+  torneioNome?: string;
+  eventoNome?: string;
+  opcaoNome?: string;
+  opcaoImagemUrl?: string;
+  resultadoDescricao?: string;
 }
 
 interface ProgressoPalpite {
@@ -167,6 +172,7 @@ export class Palpites implements OnInit {
   }
 
   nomeOpcao(palpite: PalpiteUsuario): string {
+    if (palpite.opcaoNome) return palpite.opcaoNome;
     if (palpite.tipo === 'VENCEDOR_PARTIDA') {
       const partida = this.partidas.find(item => item.id === palpite.partidaId);
       return [partida?.mandante, partida?.empate, partida?.visitante]
@@ -178,6 +184,7 @@ export class Palpites implements OnInit {
   }
 
   nomeEvento(palpite: PalpiteUsuario): string {
+    if (palpite.eventoNome) return palpite.eventoNome;
     const torneio = this.torneios.find(item => item.id === palpite.torneioId);
     if (palpite.tipo === 'VENCEDOR_PARTIDA') {
       const partida = this.partidas.find(item => item.id === palpite.partidaId);

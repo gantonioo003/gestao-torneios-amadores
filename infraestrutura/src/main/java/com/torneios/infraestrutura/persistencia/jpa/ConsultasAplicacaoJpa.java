@@ -2,6 +2,8 @@ package com.torneios.infraestrutura.persistencia.jpa;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -116,6 +118,9 @@ class TimeRepositorioAplicacaoImpl implements TimeRepositorioAplicacao {
     @Autowired
     TimeJpaRepository repositorio;
 
+    @Autowired
+    ProfissionalJpaRepository profissionalRepositorio;
+
     @Override
     public List<TimeResumo> pesquisarResumos(String nome) {
         return repositorio.findByNomeContainingIgnoreCaseOrderByNomeAsc(nome).stream()
@@ -132,7 +137,15 @@ class TimeRepositorioAplicacaoImpl implements TimeRepositorioAplicacao {
 
     @Override
     public List<TimeResumo> pesquisarResumosGerenciaveis(long usuarioId) {
-        return repositorio.findByResponsavelId(usuarioId).stream()
+        Set<Long> perfisTreinador = profissionalRepositorio.findByCadastranteId(usuarioId).stream()
+                .filter(profissional -> "TREINADOR".equalsIgnoreCase(profissional.tipo))
+                .map(profissional -> profissional.id)
+                .collect(Collectors.toSet());
+        return repositorio.findAll().stream()
+                .filter(time -> time.responsavelId == usuarioId
+                        || time.elenco.stream().anyMatch(vinculo ->
+                                "TREINADOR".equalsIgnoreCase(vinculo.funcao)
+                                        && perfisTreinador.contains(vinculo.profissionalId)))
                 .map(jpa -> (TimeResumo) new TimeJpaResumo(jpa))
                 .toList();
     }

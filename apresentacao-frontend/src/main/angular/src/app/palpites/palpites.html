@@ -281,9 +281,12 @@
               <span class="history-icon pending"><i class="bi bi-hourglass-split"></i></span>
               <span>
                 <strong>{{ nomeEvento(palpite) }}</strong>
-                <small>{{ tipoLabel(palpite.tipo) }}</small>
+                <small>{{ palpite.torneioNome || tipoLabel(palpite.tipo) }}</small>
               </span>
-              <span class="chosen-option">{{ nomeOpcao(palpite) }}</span>
+              <span class="chosen-option">
+                <small>Seu palpite</small>
+                {{ nomeOpcao(palpite) }}
+              </span>
               <span class="status status-warn">Em andamento</span>
             </article>
           }
@@ -328,9 +331,15 @@
               </span>
               <span>
                 <strong>{{ nomeEvento(palpite) }}</strong>
-                <small>{{ tipoLabel(palpite.tipo) }}</small>
+                <small>{{ palpite.torneioNome || tipoLabel(palpite.tipo) }}</small>
               </span>
-              <span class="chosen-option">{{ nomeOpcao(palpite) }}</span>
+              <span class="chosen-option">
+                <small>Seu palpite</small>
+                {{ nomeOpcao(palpite) }}
+                @if (palpite.resultadoDescricao) {
+                  <em>{{ palpite.resultadoDescricao }}</em>
+                }
+              </span>
               <span class="status" [class.status-green]="palpite.acertou" [class.status-red]="!palpite.acertou">
                 {{ palpite.acertou ? 'Acertou' : 'Nao acertou' }}
               </span>

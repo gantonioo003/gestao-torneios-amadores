@@ -15,6 +15,10 @@ public interface ConsultaSuporteEscalacao {
 
     boolean usuarioEhResponsavelDoTime(TimeId timeId, UsuarioId usuarioId);
 
+    default boolean usuarioPodeEscalarTime(TimeId timeId, UsuarioId usuarioId) {
+        return usuarioEhResponsavelDoTime(timeId, usuarioId);
+    }
+
     boolean tecnicoEstaAssociadoAoTime(TimeId timeId, TecnicoId tecnicoId);
 
     List<JogadorId> listarElencoDoTime(TimeId timeId);

@@ -185,6 +185,21 @@ public class Torneio {
         this.status = StatusTorneio.FINALIZADO;
     }
 
+    public void finalizarAutomaticamente(boolean competicaoConcluida) {
+        if (!competicaoConcluida) {
+            throw new OperacaoNaoPermitidaException(
+                    "O torneio nao pode ser finalizado enquanto houver partidas pendentes.");
+        }
+        if (status == StatusTorneio.FINALIZADO) {
+            return;
+        }
+        if (status != StatusTorneio.ESTRUTURA_GERADA && status != StatusTorneio.INICIADO) {
+            throw new OperacaoNaoPermitidaException(
+                    "O torneio so pode ser finalizado automaticamente apos gerar sua estrutura.");
+        }
+        this.status = StatusTorneio.FINALIZADO;
+    }
+
     public HistoricoEdicaoTorneio repetirComoNovaEdicao(boolean abrirSolicitacoes) {
         if (status != StatusTorneio.FINALIZADO) {
             throw new OperacaoNaoPermitidaException(

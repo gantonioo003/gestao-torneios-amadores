@@ -248,7 +248,7 @@
                   : 'A escalacao deste time fica protegida ate o inicio da partida.' }}
             </div>
           } @else {
-            @if (escalacaoAtiva.tipoVisualizacao === 'MESA_TATICA' && !partida.iniciada) {
+            @if (escalacaoAtiva.tipoVisualizacao === 'MESA_TATICA') {
               <div class="escalacao-esquema-label">
                 <i class="bi bi-diagram-3"></i>
                 {{ formacaoLabel(escalacaoAtiva.esquemaTatico) }}

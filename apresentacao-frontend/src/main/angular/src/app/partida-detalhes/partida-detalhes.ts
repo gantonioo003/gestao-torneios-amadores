@@ -228,10 +228,7 @@ export class PartidaDetalhes implements OnInit {
   }
 
   get exibirMesasTaticas(): boolean {
-    return this.partida.iniciada
-      && this.modoExibicaoPublica === 'MESAS_TATICAS'
-      && !!this.escalacaoMandante
-      && !!this.escalacaoVisitante;
+    return false;
   }
 
   selecionarTimeEscalacao(lado: 'mandante' | 'visitante') {
@@ -529,8 +526,8 @@ export class PartidaDetalhes implements OnInit {
             ))
           ))),
         times: this.http.get<any[]>('/backend/time/pesquisa?nome=').pipe(catchError(() => of([]))),
-        oportunidades: this.palpites.oportunidades()
-          .pipe(catchError(() => of({ torneios: [], partidas: [] } as CentralPalpites))),
+        oportunidade: this.palpites.oportunidadePartida(this.partidaId)
+          .pipe(catchError(() => of(undefined))),
         mandante: this.http.get<any>(`/backend/time/${partida.mandanteId}/edicao`).pipe(catchError(() => of(null))),
         visitante: this.http.get<any>(`/backend/time/${partida.visitanteId}/edicao`).pipe(catchError(() => of(null))),
         eventos: this.http.get<any[]>(`/backend/sumula-estatistica/partida/${this.partidaId}`)
@@ -565,8 +562,11 @@ export class PartidaDetalhes implements OnInit {
         ];
         this.elencoMandante = dados.mandante?.time?.elenco ?? [];
         this.elencoVisitante = dados.visitante?.time?.elenco ?? [];
-        this.podeEditarMandante = dados.mandante?.podeEditarTime === true;
-        this.podeEditarVisitante = dados.visitante?.podeEditarTime === true;
+        this.podeEditarMandante = dados.mandante?.podeEscalarTime === true;
+        this.podeEditarVisitante = dados.visitante?.podeEscalarTime === true;
+        if (!this.podeEditarMandante && this.podeEditarVisitante) {
+          this.timeAtivoEscalacao = 'visitante';
+        }
         const jogadoresElenco = elencos
           .filter((vinculo: any) => vinculo.tipoProfissional === 'JOGADOR'
             || String(vinculo.funcao).toUpperCase() === 'JOGADOR')
@@ -580,9 +580,7 @@ export class PartidaDetalhes implements OnInit {
           nome: profissional.nome,
           time: jogadoresElenco.find((item: any) => String(item.id) === String(profissional.id))?.time
         }));
-        this.oportunidade = dados.oportunidades.partidas.find(
-          item => String(item.id) === String(this.partidaId)
-        );
+        this.oportunidade = dados.oportunidade;
         if (this.oportunidade) {
           this.percentuais = this.oportunidade.percentuais;
         } else if (this.partida.torneioId) {

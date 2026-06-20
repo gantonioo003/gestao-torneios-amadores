@@ -5,13 +5,16 @@ import java.util.List;
 
 import com.torneios.aplicacao.participacao.time.TimeResumo;
 import com.torneios.aplicacao.participacao.time.VinculoProfissionalResumo;
+import com.torneios.aplicacao.torneio.criacao.TorneioResumo;
 
 public class TimeFormulario {
 
     public TimeDto time;
     public List<? extends TimeResumo> times;
+    public List<? extends TorneioResumo> torneios;
     public boolean podeEditarTime;
     public boolean podeGerenciarElenco;
+    public boolean podeEscalarTime;
 
     public TimeFormulario(TimeDto time) {
         this.time = time;

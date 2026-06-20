@@ -51,6 +51,18 @@ public class EscalacaoServico {
         return criarOuAtualizar(id, partidaId, timeId, tipoVisualizacao, esquemaTatico, titulares, reservas);
     }
 
+    public Escalacao definirEscalacaoPorUsuario(EscalacaoId id,
+                                                PartidaId partidaId,
+                                                TimeId timeId,
+                                                UsuarioId usuarioId,
+                                                TipoVisualizacaoEscalacao tipoVisualizacao,
+                                                EsquemaTatico esquemaTatico,
+                                                List<JogadorEscalado> titulares,
+                                                List<JogadorId> reservas) {
+        validarUsuarioPodeEscalar(timeId, usuarioId);
+        return criarOuAtualizar(id, partidaId, timeId, tipoVisualizacao, esquemaTatico, titulares, reservas);
+    }
+
     public Escalacao definirEscalacaoPorTecnico(EscalacaoId id,
                                                  PartidaId partidaId,
                                                  TimeId timeId,
@@ -86,6 +98,11 @@ public class EscalacaoServico {
 
     public Escalacao obterEscalacaoDoResponsavel(PartidaId partidaId, TimeId timeId, UsuarioId usuarioId) {
         validarUsuarioResponsavel(timeId, usuarioId);
+        return obterEscalacao(partidaId, timeId);
+    }
+
+    public Escalacao obterEscalacaoDoUsuario(PartidaId partidaId, TimeId timeId, UsuarioId usuarioId) {
+        validarUsuarioPodeEscalar(timeId, usuarioId);
         return obterEscalacao(partidaId, timeId);
     }
 
@@ -145,6 +162,14 @@ public class EscalacaoServico {
         if (!consultaSuporte.usuarioEhResponsavelDoTime(timeId, usuarioId)) {
             throw new OperacaoNaoPermitidaException(
                     "Apenas o usuario responsavel pelo time pode gerar a mesa tatica.");
+        }
+    }
+
+    private void validarUsuarioPodeEscalar(TimeId timeId, UsuarioId usuarioId) {
+        Objects.requireNonNull(usuarioId, "O usuario responsavel pela escalacao e obrigatorio.");
+        if (!consultaSuporte.usuarioPodeEscalarTime(timeId, usuarioId)) {
+            throw new OperacaoNaoPermitidaException(
+                    "Apenas o responsavel ou o treinador vinculado ao time pode definir a escalacao.");
         }
     }
 

@@ -59,7 +59,7 @@ class EscalacaoControlador {
             @PathVariable long partidaId,
             @PathVariable long timeId,
             HttpSession sessao) {
-        return escalacaoServicoAplicacao.obterEscalacaoDoResponsavel(
+        return escalacaoServicoAplicacao.obterEscalacaoDoUsuario(
                 partidaId, timeId, SessaoUsuario.exigirUsuarioId(sessao));
     }
 

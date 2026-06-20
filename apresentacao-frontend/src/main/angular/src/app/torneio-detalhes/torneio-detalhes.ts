@@ -473,7 +473,7 @@ export class TorneioDetalhes implements OnInit {
         .pipe(catchError(() => of([]))),
       publicacoes: this.http.get<any[]>(`/backend/feed/identidade/TORNEIO/${this.torneioId}`)
         .pipe(catchError(() => of([]))),
-      palpites: this.palpites.oportunidades()
+      palpites: this.palpites.oportunidadesTorneio(this.torneioId)
         .pipe(catchError(() => of({ torneios: [], partidas: [] } as CentralPalpites)))
     }).pipe(finalize(() => this.carregando = false)).subscribe(dados => {
       this.torneio = dados.torneio;

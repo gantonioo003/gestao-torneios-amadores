@@ -64,6 +64,18 @@ export class PalpiteService {
     return this.http.get<CentralPalpites>('/backend/palpites/oportunidades');
   }
 
+  oportunidadesTorneio(torneioId: string): Observable<CentralPalpites> {
+    return this.http.get<CentralPalpites>(
+      `/backend/palpites/oportunidades/torneio/${encodeURIComponent(torneioId)}`
+    );
+  }
+
+  oportunidadePartida(partidaId: string): Observable<PartidaPalpite> {
+    return this.http.get<PartidaPalpite>(
+      `/backend/palpites/oportunidades/partida/${encodeURIComponent(partidaId)}`
+    );
+  }
+
   votar(
     tipo: TipoPalpite,
     torneioId: string,

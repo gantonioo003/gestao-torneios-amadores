@@ -548,7 +548,22 @@
 }
 
 .chosen-option {
+  display: grid;
+  gap: 2px;
   font-weight: 900;
+}
+
+.chosen-option small,
+.chosen-option em {
+  color: var(--muted);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.chosen-option em {
+  margin-top: 2px;
+  font-size: 12px;
 }
 
 .prediction-empty-state {

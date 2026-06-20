@@ -77,9 +77,15 @@ public class EscalacaoServicoAplicacao {
                                             String esquemaTatico,
                                             List<JogadorEscaladoEntrada> titulares,
                                             List<Long> reservas) {
-        return definirEscalacaoPorResponsavel(
-                escalacaoId, partidaId, timeId, usuarioId, tipoVisualizacao,
-                esquemaTatico, titulares, reservas);
+        return converter(escalacaoServico.definirEscalacaoPorUsuario(
+                new EscalacaoId(escalacaoId),
+                new PartidaId(partidaId),
+                new TimeId(timeId),
+                new UsuarioId(usuarioId),
+                TipoVisualizacaoEscalacao.valueOf(tipoVisualizacao),
+                converterEsquema(esquemaTatico),
+                converterTitulares(titulares),
+                converterReservas(reservas)));
     }
 
     public EscalacaoResumo obterEscalacao(long partidaId, long timeId) {
@@ -97,14 +103,17 @@ public class EscalacaoServicoAplicacao {
                 new PartidaId(partidaId), new TimeId(timeId), new UsuarioId(usuarioId)));
     }
 
+    public EscalacaoResumo obterEscalacaoDoUsuario(long partidaId, long timeId, long usuarioId) {
+        return converter(escalacaoServico.obterEscalacaoDoUsuario(
+                new PartidaId(partidaId), new TimeId(timeId), new UsuarioId(usuarioId)));
+    }
+
     public VisualizacaoPublicaResumo visualizarPublicamente(long partidaId) {
         List<EscalacaoResumo> escalacoes = escalacaoServico.listarPublicasPorPartida(new PartidaId(partidaId))
                 .stream()
                 .map(this::converter)
                 .toList();
-        boolean duasMesas = escalacoes.size() == 2
-                && escalacoes.stream().allMatch(item -> "MESA_TATICA".equals(item.tipoVisualizacao()));
-        return new VisualizacaoPublicaResumo(duasMesas ? "MESAS_TATICAS" : "LISTAS", escalacoes);
+        return new VisualizacaoPublicaResumo("INDEPENDENTES", escalacoes);
     }
 
     public MesaTaticaResumo gerarMesaTatica(long partidaId, long timeId) {

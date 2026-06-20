@@ -43,6 +43,7 @@ export class TimeDetalhes implements OnInit {
   erro = '';
   podeEditarTime = false;
   podeGerenciarElenco = false;
+  podeEscalarTime = false;
   readonly usuario = this.auth.usuario;
 
   constructor(
@@ -59,6 +60,7 @@ export class TimeDetalhes implements OnInit {
     this.torneios = data.torneios ?? [];
     this.podeEditarTime = data.podeEditarTime === true;
     this.podeGerenciarElenco = data.podeGerenciarElenco === true;
+    this.podeEscalarTime = data.podeEscalarTime === true;
     if (this.time.id) {
       this.http.get<any[]>(`/backend/feed/identidade/TIME/${this.time.id}`)
         .pipe(catchError(() => of([])))
@@ -67,6 +69,8 @@ export class TimeDetalhes implements OnInit {
     if (this.podeEditarTime) {
       this.carregarParticipacoes();
       this.carregarConfrontos();
+    }
+    if (this.podeEscalarTime) {
       this.carregarPartidas();
     }
     if (this.usuario()?.tipo === 'TREINADOR' && this.usuario()?.podeGerenciarTimes) {
@@ -345,7 +349,7 @@ export class TimeDetalhes implements OnInit {
       .subscribe({
         next: () => {
           this.mensagem = mensagem;
-          this.carregarParticipacoes();
+          this.recarregar(true);
         },
         error: erro => alert(this.extrairMensagem(erro) ?? 'Nao foi possivel concluir a acao.')
       });
@@ -385,7 +389,7 @@ export class TimeDetalhes implements OnInit {
   }
 
   private carregarTimesDoTreinador() {
-    this.http.get<any[]>('/backend/time/pesquisa?meus=true')
+    this.http.get<any[]>('/backend/time/pesquisa?gerenciaveis=true')
       .pipe(catchError(() => of([])))
       .subscribe(times => {
         this.meusTimes = times.filter(time => String(time.id) !== String(this.time.id));
@@ -422,10 +426,21 @@ export class TimeDetalhes implements OnInit {
     try { return JSON.parse(e.error)?.mensagem ?? null; } catch { return e.error?.mensagem ?? e.error?.message ?? null; }
   }
 
-  private recarregar() {
+  private recarregar(recarregarAgenda = false) {
     this.http.get<any>(`/backend/time/${this.time.id}/edicao`)
       .pipe(catchError(() => of({})))
-      .subscribe(r => { this.elenco = r.time?.elenco ?? []; });
+      .subscribe(r => {
+        this.time = r.time ?? this.time;
+        this.elenco = r.time?.elenco ?? [];
+        this.torneios = r.torneios ?? [];
+        this.podeEditarTime = r.podeEditarTime === true;
+        this.podeGerenciarElenco = r.podeGerenciarElenco === true;
+        this.podeEscalarTime = r.podeEscalarTime === true;
+        if (recarregarAgenda) {
+          this.carregarParticipacoes();
+          this.carregarPartidas();
+        }
+      });
   }
 }
 

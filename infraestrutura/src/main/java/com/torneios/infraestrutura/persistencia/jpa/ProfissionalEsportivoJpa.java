@@ -60,6 +60,7 @@ class RegistroDeCarreiraJpa {
 
 interface ProfissionalJpaRepository extends JpaRepository<ProfissionalEsportivoJpa, Long> {
     List<ProfissionalEsportivoJpa> findByNomeContainingIgnoreCase(String nome);
+    List<ProfissionalEsportivoJpa> findByCadastranteId(Long cadastranteId);
 }
 
 @Repository

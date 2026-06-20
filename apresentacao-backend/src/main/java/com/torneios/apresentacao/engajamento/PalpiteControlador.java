@@ -7,9 +7,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import com.torneios.aplicacao.engajamento.palpite.PalpiteServicoAplicacao;
 import com.torneios.apresentacao.SessaoUsuario;
@@ -70,6 +73,20 @@ class PalpiteControlador {
     @RequestMapping(method = GET, path = "oportunidades")
     PalpiteServicoAplicacao.CentralPalpitesResumo oportunidades() {
         return palpiteServicoAplicacao.listarOportunidades();
+    }
+
+    @RequestMapping(method = GET, path = "oportunidades/torneio/{torneioId}")
+    PalpiteServicoAplicacao.CentralPalpitesResumo oportunidadesDoTorneio(
+            @PathVariable long torneioId) {
+        return palpiteServicoAplicacao.listarOportunidadesDoTorneio(torneioId);
+    }
+
+    @RequestMapping(method = GET, path = "oportunidades/partida/{partidaId}")
+    PalpiteServicoAplicacao.PartidaPalpiteResumo oportunidadeDaPartida(
+            @PathVariable long partidaId) {
+        return palpiteServicoAplicacao.buscarOportunidadePartida(partidaId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "A partida nao esta aberta para palpites."));
     }
 
     @RequestMapping(method = GET, path = "meus")

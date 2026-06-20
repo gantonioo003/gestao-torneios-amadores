@@ -18,6 +18,7 @@ import com.torneios.dominio.competicao.escalacao.ConsultaSuporteEscalacao;
 import com.torneios.dominio.competicao.escalacao.Escalacao;
 import com.torneios.dominio.competicao.escalacao.EscalacaoRepositorio;
 import com.torneios.dominio.competicao.partida.PartidaRepositorio;
+import com.torneios.dominio.participacao.profissional.ProfissionalEsportivoRepositorio;
 import com.torneios.dominio.participacao.profissional.TipoProfissional;
 import com.torneios.dominio.participacao.time.TimeRepositorio;
 
@@ -56,6 +57,9 @@ class ConsultaSuporteEscalacaoInfra implements ConsultaSuporteEscalacao {
     @Autowired
     TimeRepositorio timeRepositorio;
 
+    @Autowired
+    ProfissionalEsportivoRepositorio profissionalRepositorio;
+
     @Override
     public boolean partidaIniciada(PartidaId partidaId) {
         return partidaRepositorio.buscarPorId(partidaId)
@@ -67,6 +71,21 @@ class ConsultaSuporteEscalacaoInfra implements ConsultaSuporteEscalacao {
     public boolean usuarioEhResponsavelDoTime(TimeId timeId, UsuarioId usuarioId) {
         return timeRepositorio.buscarPorId(timeId)
                 .map(time -> time.getResponsavel().equals(usuarioId))
+                .orElse(false);
+    }
+
+    @Override
+    public boolean usuarioPodeEscalarTime(TimeId timeId, UsuarioId usuarioId) {
+        return timeRepositorio.buscarPorId(timeId)
+                .map(time -> time.getResponsavel().equals(usuarioId)
+                        || time.getElenco().stream()
+                                .filter(vinculo -> TipoProfissional.TREINADOR.name()
+                                        .equalsIgnoreCase(vinculo.getFuncao()))
+                                .map(vinculo -> profissionalRepositorio
+                                        .buscarPorId(vinculo.getProfissionalId()).orElse(null))
+                                .filter(java.util.Objects::nonNull)
+                                .anyMatch(profissional -> profissional.getTipo() == TipoProfissional.TREINADOR
+                                        && profissional.getCadastranteId().equals(usuarioId)))
                 .orElse(false);
     }
 

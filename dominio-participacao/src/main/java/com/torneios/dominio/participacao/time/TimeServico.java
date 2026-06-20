@@ -201,6 +201,16 @@ public class TimeServico {
                 .orElse(false);
     }
 
+    public boolean podeEscalarTime(TimeId timeId, UsuarioId usuarioId) {
+        if (usuarioId == null) {
+            return false;
+        }
+        return timeRepositorio.buscarPorId(timeId)
+                .map(time -> time.getResponsavel().equals(usuarioId)
+                        || usuarioEhTreinadorVinculado(time, usuarioId))
+                .orElse(false);
+    }
+
     public void validarCadastroProfissional(TimeId timeId, UsuarioId usuarioId,
             TipoProfissional tipoProfissional) {
         autenticacaoServico.exigirAutenticacao(usuarioId);
@@ -220,6 +230,19 @@ public class TimeServico {
                     "Apenas o treinador responsavel pelo time pode gerenciar o elenco.");
         }
         return time;
+    }
+
+    private boolean usuarioEhTreinadorVinculado(Time time, UsuarioId usuarioId) {
+        if (profissionalRepositorio == null) {
+            return false;
+        }
+        return time.getElenco().stream()
+                .filter(vinculo -> TipoProfissional.TREINADOR.name()
+                        .equalsIgnoreCase(vinculo.getFuncao()))
+                .map(vinculo -> profissionalRepositorio.buscarPorId(vinculo.getProfissionalId()).orElse(null))
+                .filter(Objects::nonNull)
+                .anyMatch(profissional -> profissional.getTipo() == TipoProfissional.TREINADOR
+                        && profissional.getCadastranteId().equals(usuarioId));
     }
 
     private void validarComposicaoElenco(Time time, TipoProfissional tipoProfissional) {

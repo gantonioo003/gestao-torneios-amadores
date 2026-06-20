@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.time.LocalDate;
 
@@ -198,68 +199,48 @@ public class PalpiteServicoAplicacao {
     }
 
     public CentralPalpitesResumo listarOportunidades() {
-        notNull(torneioRepositorio, "O repositorio de torneios e obrigatorio para listar oportunidades.");
-        notNull(partidaRepositorio, "O repositorio de partidas e obrigatorio para listar oportunidades.");
-        notNull(timeRepositorio, "O repositorio de times e obrigatorio para listar oportunidades.");
-        notNull(profissionalRepositorio, "O repositorio de profissionais e obrigatorio para listar oportunidades.");
+        validarRepositoriosDeOportunidades();
 
         var torneios = torneioRepositorio.listarTodos();
         var torneiosDisponiveis = torneios.stream()
                 .filter(torneio -> torneio.getStatus() == StatusTorneio.CONFIGURADO
                         || torneio.getStatus() == StatusTorneio.ESTRUTURA_GERADA)
                 .filter(torneio -> !torneio.getParticipantesAprovados().isEmpty())
-                .map(torneio -> {
-                    long torneioId = torneio.getId().valor();
-                    List<OpcaoResumo> times = torneio.getParticipantesAprovados().stream()
-                            .map(participante -> opcaoTime(participante.getTimeId().valor()))
-                            .toList();
-                    List<OpcaoResumo> jogadores = torneio.getParticipantesAprovados().stream()
-                            .flatMap(participante -> timeRepositorio.buscarPorId(participante.getTimeId()).stream())
-                            .flatMap(time -> time.getElenco().stream())
-                            .filter(vinculo -> TipoProfissional.JOGADOR.name().equalsIgnoreCase(vinculo.getFuncao()))
-                            .map(vinculo -> opcaoJogador(vinculo.getProfissionalId().valor()))
-                            .distinct()
-                            .toList();
-                    var campeao = eventoTorneio(
-                            TipoPalpite.CAMPEAO_TORNEIO, "Quem sera o campeao?", times, torneioId);
-                    List<EventoTorneioPalpiteResumo> eventos = jogadores.isEmpty()
-                            ? List.of(campeao)
-                            : List.of(
-                                    campeao,
-                                    eventoTorneio(TipoPalpite.ARTILHEIRO_TORNEIO,
-                                            "Quem sera o artilheiro?", jogadores, torneioId),
-                                    eventoTorneio(TipoPalpite.LIDER_ASSISTENCIAS_TORNEIO,
-                                            "Quem liderara em assistencias?", jogadores, torneioId));
-                    return new TorneioPalpiteResumo(
-                            torneioId,
-                            torneio.getNome(),
-                            torneio.getImagemUrl(),
-                            torneio.getStatus().name(),
-                            times,
-                            campeao.percentuais(),
-                            eventos);
-                })
+                .map(this::converterOportunidadeTorneio)
                 .toList();
 
         var partidasDisponiveis = torneios.stream()
                 .flatMap(torneio -> partidaRepositorio.listarPorTorneio(torneio.getId()).stream()
                         .filter(partida -> !partida.estaIniciada() && !partida.estaEncerrada())
-                        .map(partida -> new PartidaPalpiteResumo(
-                                partida.getId().valor(),
-                                torneio.getId().valor(),
-                                torneio.getNome(),
-                                partida.getEtapa(),
-                                opcaoTime(partida.getMandante().valor()),
-                                new OpcaoResumo(OpcaoPalpite.EMPATE, "Empate", null),
-                                opcaoTime(partida.getVisitante().valor()),
-                                obterPercentuais(
-                                        TipoPalpite.VENCEDOR_PARTIDA.name(),
-                                        torneio.getId().valor(),
-                                        partida.getId().valor()))))
+                        .map(partida -> converterOportunidadePartida(torneio, partida)))
                 .limit(12)
                 .toList();
 
         return new CentralPalpitesResumo(torneiosDisponiveis, partidasDisponiveis);
+    }
+
+    public CentralPalpitesResumo listarOportunidadesDoTorneio(long torneioId) {
+        validarRepositoriosDeOportunidades();
+        var torneio = torneioRepositorio.buscarPorId(new TorneioId(torneioId))
+                .orElseThrow(() -> new IllegalArgumentException("Torneio nao encontrado."));
+        List<TorneioPalpiteResumo> torneios = (torneio.getStatus() == StatusTorneio.CONFIGURADO
+                || torneio.getStatus() == StatusTorneio.ESTRUTURA_GERADA)
+                && !torneio.getParticipantesAprovados().isEmpty()
+                        ? List.of(converterOportunidadeTorneio(torneio))
+                        : List.of();
+        List<PartidaPalpiteResumo> partidas = partidaRepositorio.listarPorTorneio(torneio.getId()).stream()
+                .filter(partida -> !partida.estaIniciada() && !partida.estaEncerrada())
+                .map(partida -> converterOportunidadePartida(torneio, partida))
+                .toList();
+        return new CentralPalpitesResumo(torneios, partidas);
+    }
+
+    public Optional<PartidaPalpiteResumo> buscarOportunidadePartida(long partidaId) {
+        validarRepositoriosDeOportunidades();
+        return partidaRepositorio.buscarPorId(new PartidaId(partidaId))
+                .filter(partida -> !partida.estaIniciada() && !partida.estaEncerrada())
+                .flatMap(partida -> torneioRepositorio.buscarPorId(partida.getTorneioId())
+                        .map(torneio -> converterOportunidadePartida(torneio, partida)));
     }
 
     private EventoAlvoPalpite criarEventoAlvo(String tipo, long torneioId, Long partidaId) {
@@ -273,12 +254,18 @@ public class PalpiteServicoAplicacao {
     }
 
     private OpcaoResumo opcaoTime(long timeId) {
+        if (timeRepositorio == null) {
+            return new OpcaoResumo(timeId, "Time #" + timeId, null);
+        }
         return timeRepositorio.buscarPorId(new TimeId(timeId))
                 .map(time -> new OpcaoResumo(timeId, time.getNome(), time.getImagemUrl()))
                 .orElse(new OpcaoResumo(timeId, "Time #" + timeId, null));
     }
 
     private OpcaoResumo opcaoJogador(long jogadorId) {
+        if (profissionalRepositorio == null) {
+            return new OpcaoResumo(jogadorId, "Jogador #" + jogadorId, null);
+        }
         return profissionalRepositorio.buscarPorId(new ProfissionalEsportivoId(jogadorId))
                 .map(profissional -> new OpcaoResumo(
                         jogadorId, profissional.getNome(), profissional.getFotoUrl()))
@@ -296,7 +283,65 @@ public class PalpiteServicoAplicacao {
                 obterPercentuais(tipo.name(), torneioId, null));
     }
 
+    private TorneioPalpiteResumo converterOportunidadeTorneio(
+            com.torneios.dominio.torneio.torneio.Torneio torneio) {
+        long torneioId = torneio.getId().valor();
+        List<OpcaoResumo> times = torneio.getParticipantesAprovados().stream()
+                .map(participante -> opcaoTime(participante.getTimeId().valor()))
+                .toList();
+        List<OpcaoResumo> jogadores = torneio.getParticipantesAprovados().stream()
+                .flatMap(participante -> timeRepositorio.buscarPorId(participante.getTimeId()).stream())
+                .flatMap(time -> time.getElenco().stream())
+                .filter(vinculo -> TipoProfissional.JOGADOR.name().equalsIgnoreCase(vinculo.getFuncao()))
+                .map(vinculo -> opcaoJogador(vinculo.getProfissionalId().valor()))
+                .distinct()
+                .toList();
+        var campeao = eventoTorneio(
+                TipoPalpite.CAMPEAO_TORNEIO, "Quem sera o campeao?", times, torneioId);
+        List<EventoTorneioPalpiteResumo> eventos = jogadores.isEmpty()
+                ? List.of(campeao)
+                : List.of(
+                        campeao,
+                        eventoTorneio(TipoPalpite.ARTILHEIRO_TORNEIO,
+                                "Quem sera o artilheiro?", jogadores, torneioId),
+                        eventoTorneio(TipoPalpite.LIDER_ASSISTENCIAS_TORNEIO,
+                                "Quem liderara em assistencias?", jogadores, torneioId));
+        return new TorneioPalpiteResumo(
+                torneioId,
+                torneio.getNome(),
+                torneio.getImagemUrl(),
+                torneio.getStatus().name(),
+                times,
+                campeao.percentuais(),
+                eventos);
+    }
+
+    private PartidaPalpiteResumo converterOportunidadePartida(
+            com.torneios.dominio.torneio.torneio.Torneio torneio,
+            com.torneios.dominio.competicao.partida.Partida partida) {
+        return new PartidaPalpiteResumo(
+                partida.getId().valor(),
+                torneio.getId().valor(),
+                torneio.getNome(),
+                partida.getEtapa(),
+                opcaoTime(partida.getMandante().valor()),
+                new OpcaoResumo(OpcaoPalpite.EMPATE, "Empate", null),
+                opcaoTime(partida.getVisitante().valor()),
+                obterPercentuais(
+                        TipoPalpite.VENCEDOR_PARTIDA.name(),
+                        torneio.getId().valor(),
+                        partida.getId().valor()));
+    }
+
+    private void validarRepositoriosDeOportunidades() {
+        notNull(torneioRepositorio, "O repositorio de torneios e obrigatorio para listar oportunidades.");
+        notNull(partidaRepositorio, "O repositorio de partidas e obrigatorio para listar oportunidades.");
+        notNull(timeRepositorio, "O repositorio de times e obrigatorio para listar oportunidades.");
+        notNull(profissionalRepositorio, "O repositorio de profissionais e obrigatorio para listar oportunidades.");
+    }
+
     private PalpiteResumo converter(Palpite palpite) {
+        DetalhesPalpite detalhes = detalhar(palpite);
         return new PalpiteResumo(
                 palpite.getId().valor(),
                 palpite.getUsuarioId() == null ? null : palpite.getUsuarioId().valor(),
@@ -306,7 +351,70 @@ public class PalpiteServicoAplicacao {
                 palpite.getEventoAlvo().getPartidaId() == null ? null : palpite.getEventoAlvo().getPartidaId().valor(),
                 palpite.getOpcao().valor(),
                 palpite.estaApurado(),
-                palpite.acertou().orElse(null));
+                palpite.acertou().orElse(null),
+                detalhes.torneioNome(),
+                detalhes.eventoNome(),
+                detalhes.opcaoNome(),
+                detalhes.opcaoImagemUrl(),
+                detalhes.resultadoDescricao());
+    }
+
+    private DetalhesPalpite detalhar(Palpite palpite) {
+        long torneioId = palpite.getEventoAlvo().getTorneioId().valor();
+        String torneioNome = torneioRepositorio == null
+                ? "Torneio #" + torneioId
+                : torneioRepositorio.buscarPorId(new TorneioId(torneioId))
+                        .map(torneio -> torneio.getNome())
+                        .orElse("Torneio #" + torneioId);
+        TipoPalpite tipo = palpite.getEventoAlvo().getTipo();
+        if (tipo == TipoPalpite.VENCEDOR_PARTIDA) {
+            Long partidaId = palpite.getEventoAlvo().getPartidaId().valor();
+            if (partidaRepositorio == null) {
+                return new DetalhesPalpite(torneioNome, "Partida #" + partidaId,
+                        opcaoTime(palpite.getOpcao().valor()).nome(), null, null);
+            }
+            return partidaRepositorio.buscarPorId(new PartidaId(partidaId))
+                    .map(partida -> {
+                        OpcaoResumo mandante = opcaoTime(partida.getMandante().valor());
+                        OpcaoResumo visitante = opcaoTime(partida.getVisitante().valor());
+                        OpcaoResumo escolhida = palpite.getOpcao().valor() == OpcaoPalpite.EMPATE
+                                ? new OpcaoResumo(OpcaoPalpite.EMPATE, "Empate", null)
+                                : palpite.getOpcao().valor() == partida.getMandante().valor()
+                                        ? mandante
+                                        : visitante;
+                        String resultado = partida.getResultado() == null
+                                ? null
+                                : "Placar final: " + mandante.nome() + " "
+                                        + partida.getResultado().golsMandante() + " x "
+                                        + partida.getResultado().golsVisitante() + " " + visitante.nome();
+                        return new DetalhesPalpite(
+                                torneioNome,
+                                mandante.nome() + " x " + visitante.nome(),
+                                escolhida.nome(),
+                                escolhida.imagemUrl(),
+                                resultado);
+                    })
+                    .orElse(new DetalhesPalpite(torneioNome, "Partida #" + partidaId,
+                            opcaoTime(palpite.getOpcao().valor()).nome(), null, null));
+        }
+
+        boolean opcaoJogador = tipo == TipoPalpite.ARTILHEIRO_TORNEIO
+                || tipo == TipoPalpite.LIDER_ASSISTENCIAS_TORNEIO;
+        OpcaoResumo escolhida = opcaoJogador
+                ? opcaoJogador(palpite.getOpcao().valor())
+                : opcaoTime(palpite.getOpcao().valor());
+        String eventoNome = switch (tipo) {
+            case CAMPEAO_TORNEIO -> "Campeao de " + torneioNome;
+            case ARTILHEIRO_TORNEIO -> "Artilheiro de " + torneioNome;
+            case LIDER_ASSISTENCIAS_TORNEIO -> "Lider de assistencias de " + torneioNome;
+            case VENCEDOR_PARTIDA -> throw new IllegalStateException("Tipo de partida ja tratado.");
+        };
+        return new DetalhesPalpite(
+                torneioNome,
+                eventoNome,
+                escolhida.nome(),
+                escolhida.imagemUrl(),
+                palpite.estaApurado() ? "Resultado oficial apurado" : null);
     }
 
     private PercentuaisPalpiteResumo converterPercentuais(PercentuaisPalpite percentuaisPalpite) {
@@ -331,7 +439,19 @@ public class PalpiteServicoAplicacao {
                                 Long partidaId,
                                 Long opcao,
                                 boolean apurado,
-                                Boolean acertou) {
+                                Boolean acertou,
+                                String torneioNome,
+                                String eventoNome,
+                                String opcaoNome,
+                                String opcaoImagemUrl,
+                                String resultadoDescricao) {
+    }
+
+    private record DetalhesPalpite(String torneioNome,
+                                   String eventoNome,
+                                   String opcaoNome,
+                                   String opcaoImagemUrl,
+                                   String resultadoDescricao) {
     }
 
     public record PercentuaisPalpiteResumo(String tipo,

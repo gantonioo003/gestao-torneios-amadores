@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.torneios.aplicacao.participacao.time.TimeResumo;
 import com.torneios.aplicacao.participacao.time.TimeServicoAplicacao;
+import com.torneios.aplicacao.torneio.criacao.TorneioRepositorioAplicacao;
 import com.torneios.apresentacao.SessaoUsuario;
 import com.torneios.dominio.compartilhado.time.TimeId;
 import com.torneios.dominio.compartilhado.usuario.UsuarioId;
@@ -32,6 +33,7 @@ class TimeControlador {
 
     @Autowired TimeServico timeServico;
     @Autowired TimeServicoAplicacao timeServicoConsulta;
+    @Autowired TorneioRepositorioAplicacao torneioRepositorioAplicacao;
     @Autowired ProfissionalEsportivoRepositorio profissionalRepositorio;
     @Autowired ProfissionalEsportivoServico profissionalServico;
     @Autowired ContaUsuarioServico contaUsuarioServico;
@@ -87,6 +89,12 @@ class TimeControlador {
         formulario.podeEditarTime = usuarioId != null && time.getResponsavel().valor() == usuarioId;
         formulario.podeGerenciarElenco = usuarioId != null
                 && timeServico.podeGerenciarElenco(new TimeId(id), new UsuarioId(usuarioId));
+        formulario.podeEscalarTime = usuarioId != null
+                && timeServico.podeEscalarTime(new TimeId(id), new UsuarioId(usuarioId));
+        formulario.torneios = torneioRepositorioAplicacao.pesquisarResumos().stream()
+                .filter(torneio -> time.getTorneiosVinculados().stream()
+                        .anyMatch(vinculo -> vinculo.valor() == torneio.getId()))
+                .toList();
         return formulario;
     }
 
