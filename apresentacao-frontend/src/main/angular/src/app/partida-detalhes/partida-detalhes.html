@@ -293,13 +293,13 @@
             <h2 class="section-title">Montar escalacao — {{ timeAtivoEscalacao === 'mandante' ? nomeMandante : nomeVisitante }}</h2>
 
             <div class="lineup-mode-grid">
-              <button [class.active]="tipoVisualizacaoEditando === 'LISTA_TITULARES'" (click)="tipoVisualizacaoEditando = 'LISTA_TITULARES'; atualizarSlotsEsquema()">
+              <button [class.active]="tipoVisualizacaoEditando === 'LISTA_TITULARES'" (click)="selecionarTipoEscalacao('LISTA_TITULARES')">
                 <i class="bi bi-list-ol"></i><strong>So titulares</strong><small>Rapido e direto.</small>
               </button>
-              <button [class.active]="tipoVisualizacaoEditando === 'LISTA_COMPLETA'" (click)="tipoVisualizacaoEditando = 'LISTA_COMPLETA'; atualizarSlotsEsquema()">
+              <button [class.active]="tipoVisualizacaoEditando === 'LISTA_COMPLETA'" (click)="selecionarTipoEscalacao('LISTA_COMPLETA')">
                 <i class="bi bi-person-lines-fill"></i><strong>Titulares + reservas</strong><small>Lista completa.</small>
               </button>
-              <button [class.active]="tipoVisualizacaoEditando === 'MESA_TATICA'" (click)="tipoVisualizacaoEditando = 'MESA_TATICA'; atualizarSlotsEsquema()">
+              <button [class.active]="tipoVisualizacaoEditando === 'MESA_TATICA'" (click)="selecionarTipoEscalacao('MESA_TATICA')">
                 <i class="bi bi-diagram-3"></i><strong>Mesa tatica</strong><small>Posicoes em campo.</small>
               </button>
             </div>
@@ -323,10 +323,8 @@
                     <label>{{ slot.label }}</label>
                     <select [(ngModel)]="titularesEditando[$index]">
                       <option value="">Selecione</option>
-                      @for (v of elencoAtivoEscalacao; track v.profissionalId) {
-                        @if (v.tipoProfissional === 'JOGADOR' || v.funcao === 'JOGADOR') {
-                          <option [value]="v.profissionalId">{{ v.nomeProfissional }}</option>
-                        }
+                      @for (v of jogadoresDisponiveisParaSlot($index); track v.profissionalId) {
+                        <option [value]="v.profissionalId">{{ v.nomeProfissional }}</option>
                       }
                     </select>
                   </div>

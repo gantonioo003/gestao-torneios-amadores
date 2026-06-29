@@ -83,6 +83,18 @@ export class Palpites implements OnInit {
   meusPalpites: PalpiteUsuario[] = [];
   progresso: ProgressoPalpite | null = null;
   ranking: RankingPalpite[] = [];
+  readonly recompensas = [
+    { titulo: '+25 XP', descricao: 'Acertar vencedor de partida', icone: 'bi-lightning-charge-fill' },
+    { titulo: '+75 XP', descricao: 'Acertar artilheiro ou assistencias', icone: 'bi-bullseye' },
+    { titulo: '+100 XP', descricao: 'Cravar o campeao do torneio', icone: 'bi-trophy-fill' }
+  ];
+  readonly selosDisponiveis = [
+    'PRIMEIRO_PALPITE',
+    'TRES_DIAS_SEGUIDOS',
+    'SETE_DIAS_SEGUIDOS',
+    'DEZ_ACERTOS',
+    'CINQUENTA_PALPITES'
+  ];
   carregando = true;
   votando = '';
   aba: 'disponiveis' | 'andamento' | 'historico' = 'disponiveis';
@@ -106,6 +118,20 @@ export class Palpites implements OnInit {
 
   get palpitesAnteriores(): PalpiteUsuario[] {
     return this.meusPalpites.filter(palpite => palpite.apurado);
+  }
+
+  get progressoAtual(): ProgressoPalpite {
+    return this.progresso ?? {
+      pontos: 0,
+      nivel: 1,
+      pontosProximoNivel: 100,
+      sequenciaAtual: 0,
+      maiorSequencia: 0,
+      totalPalpites: 0,
+      totalAcertos: 0,
+      posicaoRanking: 0,
+      selos: []
+    };
   }
 
   get partidasFiltradas(): PartidaDisponivel[] {
@@ -139,9 +165,18 @@ export class Palpites implements OnInit {
   }
 
   get percentualNivel(): number {
-    if (!this.progresso) return 0;
-    const inicioNivel = (this.progresso.nivel - 1) * 100;
-    return Math.max(0, Math.min(100, this.progresso.pontos - inicioNivel));
+    const progresso = this.progressoAtual;
+    const inicioNivel = (progresso.nivel - 1) * 100;
+    return Math.max(0, Math.min(100, progresso.pontos - inicioNivel));
+  }
+
+  get xpRestanteNivel(): number {
+    const progresso = this.progressoAtual;
+    return Math.max(0, progresso.pontosProximoNivel - progresso.pontos);
+  }
+
+  seloDesbloqueado(selo: string): boolean {
+    return this.progressoAtual.selos.includes(selo);
   }
 
   seloLabel(selo: string): string {

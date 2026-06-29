@@ -586,6 +586,9 @@ textarea {
 }
 
 .group-builder-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
   margin: 0 -24px;
   padding: 14px 24px;
   display: flex;
@@ -812,7 +815,7 @@ textarea {
 .message-history {
   min-height: 0;
   flex: 1;
-  padding: 24px clamp(18px, 5vw, 70px) 94px;
+  padding: 24px clamp(18px, 5vw, 70px);
   overflow-y: auto;
   scroll-behavior: smooth;
 }
@@ -960,12 +963,8 @@ textarea {
 }
 
 .message-composer {
-  position: absolute;
-  z-index: 2;
-  right: 20px;
-  bottom: 18px;
-  left: 20px;
-  margin: 0;
+  min-height: 58px;
+  margin: 0 20px 18px;
   padding: 7px 8px;
   display: flex;
   align-items: flex-end;

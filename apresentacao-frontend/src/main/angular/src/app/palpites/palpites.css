@@ -105,13 +105,71 @@
   padding: 7px 9px;
   color: #164d35;
   background: #fff7d8;
+  border: 1px solid rgba(255, 224, 123, .55);
   border-radius: 999px;
   font-size: 10px;
   font-weight: 900;
 }
 
+.badge-rack span.locked {
+  color: rgba(255, 255, 255, .72);
+  background: rgba(255, 255, 255, .1);
+  border-color: rgba(255, 255, 255, .16);
+}
+
 .badge-rack small {
   color: rgba(255,255,255,.72);
+}
+
+.prediction-rewards {
+  margin: -4px 0 14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.prediction-rewards article {
+  min-width: 0;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(18, 32, 27, .06);
+}
+
+.prediction-rewards i {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: #075d38;
+  background: #ffe07b;
+  border-radius: 12px;
+}
+
+.prediction-rewards strong,
+.prediction-rewards small {
+  display: block;
+}
+
+.prediction-rewards strong {
+  color: var(--text);
+  font-size: 13px;
+}
+
+.prediction-rewards small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.prediction-rewards .reward-prize {
+  background:
+    radial-gradient(circle at 92% 16%, rgba(255, 224, 123, .4), transparent 8rem),
+    linear-gradient(135deg, #fff7d8, #f1fff6);
 }
 
 .prediction-ranking {
@@ -150,6 +208,11 @@
 .ranking-strip article.current-user {
   background: var(--green-soft);
   box-shadow: inset 0 0 0 1px #a7d9bc;
+}
+
+.ranking-strip article.ranking-placeholder {
+  border: 1px dashed var(--line);
+  background: rgba(11, 140, 80, .06);
 }
 
 .ranking-strip b {
@@ -619,6 +682,7 @@
   }
 
   .prediction-overview,
+  .prediction-rewards,
   .match-grid,
   .tournament-grid {
     grid-template-columns: 1fr;

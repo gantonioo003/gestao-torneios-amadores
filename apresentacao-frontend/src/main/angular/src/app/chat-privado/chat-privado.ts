@@ -309,8 +309,12 @@ export class ChatPrivado implements OnInit {
   }
 
   nomeAutorGrupo(mensagem: MensagemChat): string {
-    return this.grupoAtivo?.participantes.find(pessoa => pessoa.id === mensagem.autorId)?.nome
+    return this.grupoAtivo?.participantes.find(pessoa => String(pessoa.id) === String(mensagem.autorId))?.nome
       ?? 'Participante';
+  }
+
+  ehMinhaMensagem(mensagem: MensagemChat): boolean {
+    return String(mensagem.autorId) === String(this.usuario.id);
   }
 
   iniciais(nome: string): string {
@@ -335,7 +339,7 @@ export class ChatPrivado implements OnInit {
     const mensagens = conversa.mensagens;
     if (!mensagens.length) return 'Conversa liberada. Envie a primeira mensagem.';
     const ultima = mensagens[mensagens.length - 1];
-    return `${ultima.autorId === this.usuario.id ? 'Voce: ' : ''}${this.resumoMensagem(ultima)}`;
+    return `${this.ehMinhaMensagem(ultima) ? 'Voce: ' : ''}${this.resumoMensagem(ultima)}`;
   }
 
   resumoMensagem(mensagem: MensagemChat): string {

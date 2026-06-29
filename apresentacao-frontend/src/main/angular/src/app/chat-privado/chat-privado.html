@@ -1,5 +1,7 @@
 <main class="chat-page">
-  <section class="messenger-shell" [class.conversation-open]="visao === 'conversa'">
+  <section
+    class="messenger-shell"
+    [class.conversation-open]="visao === 'conversa' || visao === 'grupo' || visao === 'criar-grupo' || visao === 'explorar' || visao === 'solicitacoes'">
     <aside class="messenger-sidebar">
       <header class="inbox-header">
         <div>
@@ -372,7 +374,7 @@
           </div>
 
           @for (mensagem of conversaAtiva.mensagens; track mensagem.id) {
-            <div class="message-row" [class.mine]="mensagem.autorId === usuario.id">
+            <div class="message-row" [class.mine]="ehMinhaMensagem(mensagem)">
               <div class="message-bubble">
                 @if (publicacaoDaMensagem(mensagem); as publicacao) {
                   <a class="shared-post-card" routerLink="/feed"
@@ -445,9 +447,9 @@
             <small>Somente membros aceitos podem acessar e enviar mensagens.</small>
           </div>
           @for (mensagem of grupoAtivo.mensagens; track mensagem.id) {
-            <div class="message-row" [class.mine]="mensagem.autorId === usuario.id">
+            <div class="message-row" [class.mine]="ehMinhaMensagem(mensagem)">
               <div class="message-bubble">
-                @if (mensagem.autorId !== usuario.id) {
+                @if (!ehMinhaMensagem(mensagem)) {
                   <strong class="group-message-author">{{ nomeAutorGrupo(mensagem) }}</strong>
                 }
                 @if (publicacaoDaMensagem(mensagem); as publicacao) {

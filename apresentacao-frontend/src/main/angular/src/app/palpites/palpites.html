@@ -16,33 +16,53 @@
     }
   </div>
 
-  @if (usuario() && progresso) {
+  @if (usuario()) {
     <section class="prediction-game card panel-strong">
       <div class="game-level">
-        <span class="level-orbit">{{ progresso.nivel }}</span>
+        <span class="level-orbit">{{ progressoAtual.nivel }}</span>
         <div>
           <div class="eyebrow">Liga dos palpiteiros</div>
-          <h2>Nivel {{ progresso.nivel }} · {{ progresso.pontos }} XP</h2>
+          <h2>Nivel {{ progressoAtual.nivel }} - {{ progressoAtual.pontos }} XP</h2>
           <div class="xp-track" aria-label="Progresso do nivel">
             <i [style.width.%]="percentualNivel"></i>
           </div>
-          <small>{{ progresso.pontosProximoNivel - progresso.pontos }} XP para o proximo nivel</small>
+          <small>{{ xpRestanteNivel }} XP para o proximo nivel</small>
         </div>
       </div>
 
       <div class="game-metrics">
-        <span><i class="bi bi-fire"></i><strong>{{ progresso.sequenciaAtual }}</strong><small>dias seguidos</small></span>
-        <span><i class="bi bi-bullseye"></i><strong>{{ progresso.totalAcertos }}</strong><small>acertos</small></span>
-        <span><i class="bi bi-bar-chart"></i><strong>#{{ progresso.posicaoRanking }}</strong><small>no ranking</small></span>
+        <span><i class="bi bi-fire"></i><strong>{{ progressoAtual.sequenciaAtual }}</strong><small>dias seguidos</small></span>
+        <span><i class="bi bi-bullseye"></i><strong>{{ progressoAtual.totalAcertos }}</strong><small>acertos</small></span>
+        <span><i class="bi bi-bar-chart"></i><strong>{{ progressoAtual.posicaoRanking ? '#' + progressoAtual.posicaoRanking : '-' }}</strong><small>no ranking</small></span>
       </div>
 
       <div class="badge-rack">
-        @for (selo of progresso.selos; track selo) {
-          <span title="{{ seloLabel(selo) }}"><i class="bi bi-patch-check-fill"></i> {{ seloLabel(selo) }}</span>
-        } @empty {
-          <small>Faca seu primeiro palpite para liberar um selo.</small>
+        @for (selo of selosDisponiveis; track selo) {
+          <span [class.locked]="!seloDesbloqueado(selo)" title="{{ seloLabel(selo) }}">
+            <i class="bi" [class.bi-patch-check-fill]="seloDesbloqueado(selo)" [class.bi-lock-fill]="!seloDesbloqueado(selo)"></i>
+            {{ seloLabel(selo) }}
+          </span>
         }
       </div>
+    </section>
+
+    <section class="prediction-rewards" aria-label="Recompensas dos palpites">
+      @for (recompensa of recompensas; track recompensa.titulo) {
+        <article>
+          <i class="bi {{ recompensa.icone }}"></i>
+          <div>
+            <strong>{{ recompensa.titulo }}</strong>
+            <small>{{ recompensa.descricao }}</small>
+          </div>
+        </article>
+      }
+      <article class="reward-prize">
+        <i class="bi bi-gift-fill"></i>
+        <div>
+          <strong>Premios da temporada</strong>
+          <small>Selos, destaque no ranking e recompensas internas para os melhores.</small>
+        </div>
+      </article>
     </section>
   }
 
@@ -72,24 +92,28 @@
     </article>
   </section>
 
-  @if (ranking.length) {
-    <section class="card prediction-ranking">
-      <div>
-        <div class="eyebrow">Temporada da comunidade</div>
-        <h2>Ranking de palpiteiros</h2>
-        <p>Acertos valem 25 XP em jogos, 75 XP em rankings e 100 XP no campeao.</p>
-      </div>
-      <div class="ranking-strip">
-        @for (item of ranking.slice(0, 5); track item.usuarioId; let posicao = $index) {
-          <article [class.current-user]="item.usuarioId === usuario()?.id">
-            <b>#{{ posicao + 1 }}</b>
-            <span>{{ item.nome }}</span>
-            <strong>{{ item.pontos }} XP</strong>
-          </article>
-        }
-      </div>
-    </section>
-  }
+  <section class="card prediction-ranking">
+    <div>
+      <div class="eyebrow">Temporada da comunidade</div>
+      <h2>Ranking de palpiteiros</h2>
+      <p>XP so sobe quando o resultado for apurado e voce acertar. Palpite de torneio vale mais que jogo.</p>
+    </div>
+    <div class="ranking-strip">
+      @for (item of ranking.slice(0, 5); track item.usuarioId; let posicao = $index) {
+        <article [class.current-user]="item.usuarioId === usuario()?.id">
+          <b>#{{ posicao + 1 }}</b>
+          <span>{{ item.nome }}</span>
+          <strong>{{ item.pontos }} XP</strong>
+        </article>
+      } @empty {
+        <article class="ranking-placeholder">
+          <b>#1</b>
+          <span>Seja o primeiro</span>
+          <strong>0 XP</strong>
+        </article>
+      }
+    </div>
+  </section>
 
   <section class="card panel-strong prediction-hub">
     <div>

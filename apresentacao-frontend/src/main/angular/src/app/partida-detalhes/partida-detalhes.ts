@@ -99,7 +99,7 @@ export class PartidaDetalhes implements OnInit {
     DOIS_UM_UM:         { GOLEIRO: 1, DEFENSOR: 2, MEIO_CAMPISTA: 1, ATACANTE: 1 },
     DOIS_DOIS:          { GOLEIRO: 1, DEFENSOR: 2, MEIO_CAMPISTA: 0, ATACANTE: 2 },
     UM_UM:              { GOLEIRO: 1, DEFENSOR: 1, MEIO_CAMPISTA: 0, ATACANTE: 1 },
-    DOIS_UM:            { GOLEIRO: 1, DEFENSOR: 2, MEIO_CAMPISTA: 0, ATACANTE: 1 }
+    DOIS_UM:            { GOLEIRO: 0, DEFENSOR: 2, MEIO_CAMPISTA: 0, ATACANTE: 1 }
   };
 
   constructor(
@@ -197,15 +197,30 @@ export class PartidaDetalhes implements OnInit {
       SETE_POR_SETE: 7,
       ONZE_POR_ONZE: 11
     };
-    return quantidades[this.formatoTorneio] ?? 11;
+    if (quantidades[this.formatoTorneio]) return quantidades[this.formatoTorneio];
+    const quantidadePartida = Number(this.partida?.quantidadeJogadoresPorEquipe);
+    return Number.isFinite(quantidadePartida) && quantidadePartida > 0 ? quantidadePartida : 11;
   }
 
   get esquemasDisponiveis(): { valor: string; label: string }[] {
-    return this.esquemasPorFormato[this.formatoTorneio] ?? [];
+    const porFormato = this.esquemasPorFormato[this.formatoTorneio] ?? [];
+    if (porFormato.length) return porFormato;
+    const porQuantidade: Record<number, string> = {
+      3: 'TRES_POR_TRES',
+      5: 'CINCO_POR_CINCO',
+      7: 'SETE_POR_SETE',
+      11: 'ONZE_POR_ONZE'
+    };
+    return this.esquemasPorFormato[porQuantidade[this.quantidadeJogadoresFormato]] ?? [];
   }
 
   get formatoTorneio(): string {
-    return this.torneio?.formatoEquipe ?? 'ONZE_POR_ONZE';
+    if (this.torneio?.formatoEquipe) return this.torneio.formatoEquipe;
+    const quantidadePartida = Number(this.partida?.quantidadeJogadoresPorEquipe);
+    if (quantidadePartida === 3) return 'TRES_POR_TRES';
+    if (quantidadePartida === 5) return 'CINCO_POR_CINCO';
+    if (quantidadePartida === 7) return 'SETE_POR_SETE';
+    return 'ONZE_POR_ONZE';
   }
 
   get elencoAtivoEscalacao(): any[] {
@@ -252,7 +267,20 @@ export class PartidaDetalhes implements OnInit {
     this.editandoEscalacao = true;
   }
 
+  selecionarTipoEscalacao(tipo: 'LISTA_TITULARES' | 'LISTA_COMPLETA' | 'MESA_TATICA') {
+    this.tipoVisualizacaoEditando = tipo;
+    if (tipo === 'MESA_TATICA' && !this.esquemasDisponiveis.some(e => e.valor === this.esquemaEditando)) {
+      this.esquemaEditando = this.esquemasDisponiveis[0]?.valor ?? '';
+    }
+    this.erro = '';
+    this.atualizarSlotsEsquema();
+  }
+
   atualizarSlotsEsquema() {
+    if (this.tipoVisualizacaoEditando === 'MESA_TATICA'
+        && !this.esquemasDisponiveis.some(e => e.valor === this.esquemaEditando)) {
+      this.esquemaEditando = this.esquemasDisponiveis[0]?.valor ?? '';
+    }
     const total = this.slotsEditando.length;
     const novos: string[] = Array(total).fill('');
     for (let i = 0; i < Math.min(novos.length, this.titularesEditando.length); i++) {
@@ -262,11 +290,24 @@ export class PartidaDetalhes implements OnInit {
   }
 
   salvarEscalacao() {
-    if (this.tipoVisualizacaoEditando === 'MESA_TATICA' && !this.esquemaEditando) return;
+    if (this.tipoVisualizacaoEditando === 'MESA_TATICA' && !this.esquemaEditando) {
+      this.erro = 'Escolha uma formacao antes de salvar a mesa tatica.';
+      return;
+    }
     if (this.salvandoEscalacao) return;
+    const jogadoresDoElenco = this.elencoAtivoEscalacao
+      .filter(v => v.tipoProfissional === 'JOGADOR' || v.funcao === 'JOGADOR');
+    if (jogadoresDoElenco.length < this.slotsEditando.length) {
+      this.erro = `Este time tem ${jogadoresDoElenco.length} jogador(es) no elenco, mas esta partida exige ${this.slotsEditando.length} titular(es).`;
+      return;
+    }
     const titularesValidos = this.titularesEditando.filter(id => !!id);
     if (titularesValidos.length !== this.slotsEditando.length) {
       this.erro = 'Preencha todos os titulares antes de salvar.';
+      return;
+    }
+    if (new Set(titularesValidos).size !== titularesValidos.length) {
+      this.erro = 'Um mesmo jogador nao pode aparecer em mais de uma posicao.';
       return;
     }
     this.salvandoEscalacao = true;
@@ -306,6 +347,15 @@ export class PartidaDetalhes implements OnInit {
     const nome = this.nomeJogador(jogadorId);
     const partes = nome.split(' ');
     return partes.length > 1 ? `${partes[0]} ${partes[partes.length - 1]}` : nome;
+  }
+
+  jogadoresDisponiveisParaSlot(indiceSlot: number): any[] {
+    const selecionadoNoSlot = String(this.titularesEditando[indiceSlot] ?? '');
+    return this.elencoAtivoEscalacao.filter(v => {
+      if (!(v.tipoProfissional === 'JOGADOR' || v.funcao === 'JOGADOR')) return false;
+      const id = String(v.profissionalId);
+      return id === selecionadoNoSlot || !this.titularesEditando.includes(id);
+    });
   }
 
   tipoEscalacaoLabel(tipo: string): string {
