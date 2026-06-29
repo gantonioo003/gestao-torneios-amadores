@@ -98,7 +98,9 @@
       </div>
     </aside>
 
-    <section class="messenger-content">
+    <section
+      class="messenger-content"
+      [class.thread-open]="visao === 'conversa' || visao === 'grupo'">
       @if (erro || sucesso) {
         <div class="chat-toast" [class.error]="erro">
           <i class="bi" [class.bi-exclamation-circle]="erro" [class.bi-check-circle]="sucesso"></i>

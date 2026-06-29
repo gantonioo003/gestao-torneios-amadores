@@ -1,6 +1,8 @@
 :host {
   display: block;
-  min-height: calc(100vh - 62px);
+  height: calc(100dvh - 66px);
+  min-height: 0;
+  overflow: hidden;
 }
 
 button,
@@ -11,14 +13,16 @@ textarea {
 
 .chat-page {
   width: min(1480px, 100%);
-  height: calc(100vh - 62px);
-  min-height: 650px;
+  height: 100%;
+  min-height: 0;
   margin: 0 auto;
   padding: 18px;
+  overflow: hidden;
 }
 
 .messenger-shell {
   height: 100%;
+  min-height: 0;
   display: grid;
   grid-template-columns: 350px minmax(0, 1fr);
   overflow: hidden;
@@ -34,6 +38,7 @@ textarea {
 
 .messenger-sidebar {
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--line);
@@ -369,6 +374,11 @@ textarea {
   background:
     radial-gradient(circle at 80% 0, rgba(18,184,95,.05), transparent 28rem),
     #fcfdfb;
+}
+
+.messenger-content.thread-open {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
 }
 
 .chat-toast {
@@ -802,7 +812,7 @@ textarea {
 .message-history {
   min-height: 0;
   flex: 1;
-  padding: 24px clamp(18px, 5vw, 70px);
+  padding: 24px clamp(18px, 5vw, 70px) 94px;
   overflow-y: auto;
   scroll-behavior: smooth;
 }
@@ -950,7 +960,12 @@ textarea {
 }
 
 .message-composer {
-  margin: 0 20px 18px;
+  position: absolute;
+  z-index: 2;
+  right: 20px;
+  bottom: 18px;
+  left: 20px;
+  margin: 0;
   padding: 7px 8px;
   display: flex;
   align-items: flex-end;
